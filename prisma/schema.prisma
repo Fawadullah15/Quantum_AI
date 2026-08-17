@@ -1,0 +1,243 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// NOTE: SQLite does not support native enums.
+// Enum-like fields use String with application-level validation.
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  name         String
+  password     String
+  role         String        @default("EDITOR") // SUPER_ADMIN | ADMIN | EDITOR
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  activityLogs ActivityLog[]
+}
+
+model SiteSettings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model NavigationItem {
+  id       String  @id @default(cuid())
+  label    String
+  href     String
+  order    Int     @default(0)
+  external Boolean @default(false)
+}
+
+// Legacy model kept for migration compatibility
+model Founder {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String
+  photo     String?
+  linkedin  String?
+  twitter   String?
+  github    String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TeamMember {
+  id        String   @id @default(cuid())
+  name      String
+  role      String
+  bio       String?
+  photo     String?
+  linkedin  String?
+  twitter   String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Full Leadership Directory
+model Leadership {
+  id           String   @id @default(cuid())
+  publicId     String   @unique // e.g. "QA-001"
+  slug         String   @unique // e.g. "fawadullah-imraj"
+  name         String
+  // Position: CEO | CTO | CHAIRMAN | COO | CFO | DIRECTOR | LEAD_ENGINEER | RESEARCHER | ADVISOR | OTHER
+  position     String
+  department   String?
+  shortBio     String
+  fullBio      String?
+  photo        String?
+  email        String?
+  linkedin     String?
+  website      String?
+  location     String?
+  displayOrder Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+
+model Product {
+  id           String           @id @default(cuid())
+  name         String
+  slug         String           @unique
+  description  String
+  category     String
+  status       String           @default("IN_DEVELOPMENT") // LIVE | BETA | IN_DEVELOPMENT | PLANNED
+  heroImage    String?
+  demoUrl      String?
+  docsUrl      String?
+  features     ProductFeature[]
+  technologies String
+  published    Boolean          @default(false)
+  order        Int              @default(0)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model ProductFeature {
+  id          String  @id @default(cuid())
+  productId   String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  order       Int     @default(0)
+}
+
+model CaseStudy {
+  id             String            @id @default(cuid())
+  title          String
+  slug           String            @unique
+  client         String
+  industry       String
+  problem        String
+  solution       String
+  implementation String
+  technologies   String
+  results        String
+  year           Int
+  services       String
+  heroImage      String?
+  gallery        String            @default("[]") // JSON string array of image URLs
+  externalUrl    String?
+  metrics        CaseStudyMetric[]
+  published      Boolean           @default(false)
+  order          Int               @default(0)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+model CaseStudyMetric {
+  id          String    @id @default(cuid())
+  caseStudyId String
+  caseStudy   CaseStudy @relation(fields: [caseStudyId], references: [id], onDelete: Cascade)
+  label       String
+  value       String
+  description String?
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  category    String   // AI | SOFTWARE | PRODUCT | CONSULTING
+  description String
+  icon        String?
+  order       Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Technology {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  category    String   // AI/ML | Frontend | Backend | Database | Infrastructure | DevOps | API | Other
+  usage       String?
+  projects    String?
+  icon        String?
+  order       Int      @default(0)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String
+  content     String
+  coverImage  String?
+  category    String?
+  tags        String    @default("[]") // JSON array
+  author      String
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  metaTitle   String?
+  metaDesc    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  company   String?
+  role      String?
+  content   String
+  rating    Int      @default(5)
+  photo     String?
+  published Boolean  @default(false)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactSubmission {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  company     String?
+  phone       String?
+  projectType String?
+  budget      String?
+  message     String
+  status      String   @default("NEW") // NEW | CONTACTED | IN_PROGRESS | CLOSED | ARCHIVED
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  type      String
+  size      Int
+  alt       String?
+  createdAt DateTime @default(now())
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  entity    String
+  entityId  String?
+  details   String?
+  createdAt DateTime @default(now())
+}

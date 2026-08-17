@@ -1,0 +1,122 @@
+.section {
+  padding: clamp(6rem, 15vh, 12rem) clamp(1.5rem, 5vw, 4rem);
+  background-color: var(--color-bg-primary, #030508);
+  color: var(--color-text-primary, #ffffff);
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 6rem;
+}
+
+.label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted, #8a8f98);
+  margin-bottom: 2rem;
+}
+
+.heading {
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 0 0 2rem 0;
+  text-transform: uppercase;
+}
+
+.subheading {
+  font-size: clamp(1.1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  max-width: 600px;
+  color: var(--color-text-muted, #8a8f98);
+  margin: 0;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+}
+
+.columnTitle {
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  color: var(--color-text-primary, #ffffff);
+  border-bottom: 1px solid var(--color-border, #1a1e23);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.serviceList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.serviceItem {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1rem;
+  border-left: 2px solid transparent;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.serviceLine {
+  width: 24px;
+  height: 1px;
+  background-color: var(--color-border, #333);
+  margin-top: 12px;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.serviceContent {
+  flex: 1;
+}
+
+.serviceName {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+}
+
+.serviceDesc {
+  font-size: 0.875rem;
+  color: var(--color-text-muted, #8a8f98);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.aiItem:hover {
+  border-left-color: var(--color-brand-cyan, #00f0ff);
+  background: linear-gradient(90deg, rgba(0, 240, 255, 0.05) 0%, transparent 100%);
+}
+
+.aiItem:hover .serviceLine {
+  width: 48px;
+  background-color: var(--color-brand-cyan, #00f0ff);
+}
+
+.softwareItem:hover {
+  border-left-color: var(--color-brand-violet, #b829ff);
+  background: linear-gradient(90deg, rgba(184, 41, 255, 0.05) 0%, transparent 100%);
+}
+
+.softwareItem:hover .serviceLine {
+  width: 48px;
+  background-color: var(--color-brand-violet, #b829ff);
+}
+
+@media (max-width: 900px) {
+  .columns {
+    grid-template-columns: 1fr;
+  }
+}

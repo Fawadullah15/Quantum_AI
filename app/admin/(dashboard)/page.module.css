@@ -1,0 +1,169 @@
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #fff;
+  margin: 0;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.statCard {
+  background-color: #0a0f1a;
+  border: 1px solid #1f2937;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.statHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.statTitle {
+  font-size: 0.875rem;
+  color: #9ca3af;
+  margin: 0;
+  font-weight: 500;
+}
+
+.statBadge {
+  background-color: rgba(6, 182, 212, 0.1);
+  color: #06b6d4;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.statValue {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.actionsRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.actionBtn, .actionBtnSecondary {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.actionBtn {
+  background-color: #fff;
+  color: #030712;
+}
+
+.actionBtn:hover {
+  background-color: #e5e7eb;
+}
+
+.actionBtnSecondary {
+  background-color: #111827;
+  color: #fff;
+  border: 1px solid #374151;
+}
+
+.actionBtnSecondary:hover {
+  background-color: #1f2937;
+}
+
+.recentSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #fff;
+  margin: 0;
+}
+
+.tableWrapper {
+  background-color: #0a0f1a;
+  border: 1px solid #1f2937;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table th {
+  background-color: #111827;
+  padding: 12px 24px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid #1f2937;
+}
+
+.table td {
+  padding: 16px 24px;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #1f2937;
+  color: #d1d5db;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover {
+  background-color: #111827;
+}
+
+.statusBadge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.statusNEW {
+  background-color: rgba(6, 182, 212, 0.1);
+  color: #06b6d4;
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+.statusCONTACTED {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.viewLink {
+  color: #06b6d4;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.viewLink:hover {
+  text-decoration: underline;
+}
