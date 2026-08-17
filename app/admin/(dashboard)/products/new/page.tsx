@@ -38,7 +38,7 @@ export default function NewProductPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const value = e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value
-    let newFormData = { ...formData, [e.target.name]: value }
+    const newFormData = { ...formData, [e.target.name]: value }
     
     // Auto-generate slug from name if name is changed and slug is untouched or matches previous name
     if (e.target.name === 'name' && typeof value === 'string') {

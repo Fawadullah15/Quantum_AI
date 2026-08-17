@@ -193,7 +193,7 @@ function ConnectionArc({
   });
 
   return (
-    // @ts-ignore – line is a valid R3F element
+    // @ts-expect-error – line is a valid R3F element
     <line ref={lineRef} geometry={geom}>
       <lineBasicMaterial
         color="#4F46E5"

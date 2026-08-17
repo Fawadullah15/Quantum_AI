@@ -1,8 +1,0 @@
-/*
- * Premium3DGlobe
- *
- * Learn More: https://www.framer.com/asset-urls
- */
-
-export * from "https://framerusercontent.com/modules/5hrOW1mbNLHWVpTtEby6/4lKVewin2HqvNa6z1JWV/Premium3DGlobe.js"
-export { default } from "https://framerusercontent.com/modules/5hrOW1mbNLHWVpTtEby6/4lKVewin2HqvNa6z1JWV/Premium3DGlobe.js"

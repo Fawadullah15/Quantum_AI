@@ -53,7 +53,7 @@ export default function AboutClient({ founders, team }: { founders: any[], team:
         </div>
         
         <div style={{ marginTop: 'var(--space-16)', textAlign: 'center' }}>
-           <a href="/leadership" style={{
+           <Link href="/leadership/" style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.75rem',
               fontFamily: 'var(--font-mono)', fontSize: '0.85rem',
               letterSpacing: '0.2em', color: 'var(--color-text-primary)',
@@ -61,7 +61,7 @@ export default function AboutClient({ founders, team }: { founders: any[], team:
               transition: 'border-color 0.2s',
             }} onMouseEnter={(e) => e.currentTarget.style.borderColor = 'var(--color-core)'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--color-border-2)'}>
               VIEW FULL LEADERSHIP PROFILES ↗
-            </a>
+            </Link>
         </div>
       </div>
     </div>

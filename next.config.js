@@ -2,14 +2,9 @@
 const nextConfig = {
   // Skip TS and ESLint errors during build due to incomplete @types from Windows npm install.
   // The app runs correctly at runtime; types are verified separately via tsc --noEmit.
-  typescript: {
-    ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+
   env: {
-    NEXT_PUBLIC_SITE_URL: process.env.NEXTAUTH_URL || 'http://localhost:3000',
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000',
   },
   images: {
     remotePatterns: [

@@ -36,7 +36,7 @@ export default function NewBlogPostPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const value = e.target.type === 'checkbox' ? (e.target as HTMLInputElement).checked : e.target.value
-    let newFormData = { ...formData, [e.target.name]: value }
+    const newFormData = { ...formData, [e.target.name]: value }
     
     // Auto-generate slug
     if (e.target.name === 'title' && typeof value === 'string') {

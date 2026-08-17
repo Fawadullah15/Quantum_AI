@@ -163,7 +163,7 @@ export default function ParticleText({
       // Smart wrapping & centering
       const lineHeight = actualFontSize * 1.1;
       const totalHeight = lines.length * lineHeight;
-      let startY = (ch - totalHeight) / 2;
+      const startY = (ch - totalHeight) / 2;
 
       lines.forEach((line, i) => {
         const metrics = offCtx.measureText(line);
