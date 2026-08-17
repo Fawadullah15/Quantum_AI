@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import prisma from '@/lib/db';
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -16,11 +18,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: product.name,
     description: product.description,
   };
-}
-
-export async function generateStaticParams() {
-  const products = await prisma.product.findMany({ where: { published: true }, select: { slug: true } }).catch(() => []);
-  return products.map((product: { slug: string }) => ({ slug: product.slug }));
 }
 
 export default async function ProductPage({ params }: Props) {

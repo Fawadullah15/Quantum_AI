@@ -2,6 +2,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import prisma from '@/lib/db';
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Insights on AI, software engineering, and the future of technology.',
