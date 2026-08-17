@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { put } from '@vercel/blob';
+import { writeFile, mkdir } from 'fs/promises';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
 export async function GET() {
   try {
@@ -40,15 +43,31 @@ export async function POST(request: Request) {
     }
 
     const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-    
-    const blob = await put(fileName, file, {
-      access: 'public',
-    });
+    let url = '';
+
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      // Use Vercel Blob if token is available
+      const blob = await put(fileName, file, { access: 'public' });
+      url = blob.url;
+    } else {
+      // Fallback to local fs for local development
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const publicDir = join(process.cwd(), 'public', 'uploads');
+      
+      if (!existsSync(publicDir)) {
+         await mkdir(publicDir, { recursive: true });
+      }
+      
+      const path = join(publicDir, fileName);
+      await writeFile(path, buffer);
+      url = `/uploads/${fileName}`;
+    }
 
     const media = await prisma.media.create({
       data: {
         filename: file.name,
-        url: blob.url,
+        url,
         mimeType: file.type,
         size: file.size,
       },
