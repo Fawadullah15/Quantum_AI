@@ -3,18 +3,18 @@ import Link from "next/link"
 import { revalidatePath } from "next/cache"
 // import prisma from "@/lib/db"
 
-export default async function MessageDetail({ params }: { params: { id: string } }) {
+export default async function MessageDetail({ params }: { params: Promise<{ id: string }> }) {
   // Mock data fetching
   /*
   const message = await prisma.contactSubmission.findUnique({
-    where: { id: params.id }
+    where: { id: (await params).id }
   })
   
   if (!message) notFound()
   */
 
   const message = {
-    id: params.id,
+    id: (await params).id,
     name: 'John Doe',
     email: 'john@example.com',
     company: 'Acme Corp',
@@ -33,11 +33,11 @@ export default async function MessageDetail({ params }: { params: { id: string }
     const status = formData.get('status') as string
     /*
     await prisma.contactSubmission.update({
-      where: { id: params.id },
+      where: { id: (await params).id },
       data: { status }
     })
     */
-    revalidatePath(`/admin/messages/${params.id}`)
+    revalidatePath(`/admin/messages/${(await params).id}`)
   }
 
   async function updateNotes(formData: FormData) {
@@ -45,11 +45,11 @@ export default async function MessageDetail({ params }: { params: { id: string }
     const notes = formData.get('notes') as string
     /*
     await prisma.contactSubmission.update({
-      where: { id: params.id },
+      where: { id: (await params).id },
       data: { notes }
     })
     */
-    revalidatePath(`/admin/messages/${params.id}`)
+    revalidatePath(`/admin/messages/${(await params).id}`)
   }
 
   return (

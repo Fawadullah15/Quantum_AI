@@ -103,9 +103,13 @@ function IntelligenceCore() {
       </mesh>
 
       {/* Connection line */}
+      <>
+{/* @ts-expect-error React Three Fiber Line conflict */}
+
       <line geometry={lineGeom}>
         <lineBasicMaterial color="#00e5ff" transparent opacity={0.4} blending={THREE.AdditiveBlending} />
       </line>
+</>
 
       {/* Core glow */}
       <pointLight position={[0, 5, 0]} intensity={5} color="#00e5ff" distance={30} decay={2} />

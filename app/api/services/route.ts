@@ -6,7 +6,7 @@ import prisma from '@/lib/db';
 export async function GET() {
   try {
     const services = await prisma.service.findMany({
-      where: { isPublished: true },
+      where: { published: true },
       orderBy: { order: 'asc' },
     });
     return NextResponse.json(services);

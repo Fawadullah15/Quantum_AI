@@ -6,7 +6,7 @@ import prisma from '@/lib/db';
 export async function GET() {
   try {
     const caseStudies = await prisma.caseStudy.findMany({
-      where: { isPublished: true },
+      where: { published: true },
       orderBy: { createdAt: 'desc' },
     });
     return NextResponse.json(caseStudies);

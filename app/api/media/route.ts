@@ -68,7 +68,7 @@ export async function POST(request: Request) {
       data: {
         filename: file.name,
         url,
-        mimeType: file.type,
+        type: file.type,
         size: file.size,
       },
     });

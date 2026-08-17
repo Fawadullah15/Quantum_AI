@@ -25,7 +25,7 @@ input, button, textarea, select {
   font: inherit;
 }
 
-p, h1, h2, h3, h4, h5, h6 {
+.public-layout p, .public-layout h1, .public-layout h2, .public-layout h3, .public-layout h4, .public-layout h5, .public-layout h6 {
   overflow-wrap: break-word;
 }
 
@@ -84,7 +84,7 @@ body {
 /* ============================================================
    TYPOGRAPHY
    ============================================================ */
-h1, h2, h3, h4, h5, h6 {
+.public-layout h1, .public-layout h2, .public-layout h3, .public-layout h4, .public-layout h5, .public-layout h6 {
   font-family: var(--font-sans);
   font-weight: var(--weight-bold);
   line-height: var(--leading-tight);
@@ -92,14 +92,14 @@ h1, h2, h3, h4, h5, h6 {
   text-transform: uppercase;
 }
 
-h1 { font-size: clamp(var(--text-5xl), 10vw, var(--text-9xl)); letter-spacing: -0.05em; }
-h2 { font-size: clamp(var(--text-4xl), 8vw, var(--text-7xl)); letter-spacing: -0.04em; }
-h3 { font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl)); letter-spacing: -0.03em; }
-h4 { font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl)); letter-spacing: -0.02em; }
-h5 { font-size: var(--text-xl); letter-spacing: -0.02em; }
-h6 { font-size: var(--text-base); letter-spacing: var(--tracking-widest); }
+.public-layout h1 { font-size: clamp(var(--text-5xl), 10vw, var(--text-9xl)); letter-spacing: -0.05em; }
+.public-layout h2 { font-size: clamp(var(--text-4xl), 8vw, var(--text-7xl)); letter-spacing: -0.04em; }
+.public-layout h3 { font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl)); letter-spacing: -0.03em; }
+.public-layout h4 { font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl)); letter-spacing: -0.02em; }
+.public-layout h5 { font-size: var(--text-xl); letter-spacing: -0.02em; }
+.public-layout h6 { font-size: var(--text-base); letter-spacing: var(--tracking-widest); }
 
-p {
+.public-layout p {
   color: var(--color-text-secondary);
   margin-bottom: var(--space-4);
   max-width: var(--max-width-text);
@@ -174,7 +174,7 @@ a {
   to { opacity: 1; }
 }
 
-@keyframes slideUp {
+@keyframes slideU.public-layout p {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
 }

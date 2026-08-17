@@ -6,7 +6,7 @@ import prisma from '@/lib/db';
 export async function GET() {
   try {
     const founders = await prisma.founder.findMany({
-      where: { isPublished: true },
+      where: { published: true },
       orderBy: { order: 'asc' },
     });
     return NextResponse.json(founders);

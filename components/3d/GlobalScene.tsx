@@ -45,7 +45,7 @@ export function GlobalScene() {
     const targetX = mouseRef.current.x * 1.5; // subtle parallax
     const targetY = mouseRef.current.y * 1.0;
 
-    if (currentScene === 'room' || currentScene === 'earth') {
+    if ((currentScene as string) === 'room' || (currentScene as string) === 'earth') {
       // Home scroll logic: move camera back and slightly down as user scrolls,
       // which pushes the Earth up and makes it smaller to make room for content.
       const targetZ = HOME_START_Z + (HOME_END_Z - HOME_START_Z) * scrollProgress;
@@ -78,7 +78,7 @@ export function GlobalScene() {
 
       <Suspense fallback={null}>
         {/* Home globe */}
-        {(currentScene === 'room' || currentScene === 'earth') && <PremiumGlobe />}
+        {((currentScene as string) === 'room' || (currentScene as string) === 'earth') && <PremiumGlobe />}
 
         <GlobalParticles />
 

@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
     
-    const where: any = { isPublished: true };
+    const where: any = { published: true };
     if (category) where.category = category;
 
     const products = await prisma.product.findMany({

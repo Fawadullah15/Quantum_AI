@@ -193,7 +193,9 @@ function ConnectionArc({
   });
 
   return (
-    // @ts-expect-error – line is a valid R3F element
+    <>
+{/* @ts-expect-error React Three Fiber Line conflict */}
+
     <line ref={lineRef} geometry={geom}>
       <lineBasicMaterial
         color="#4F46E5"
@@ -202,6 +204,7 @@ function ConnectionArc({
         blending={THREE.AdditiveBlending}
       />
     </line>
+</>
   );
 }
 

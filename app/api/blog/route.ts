@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
     const skip = (page - 1) * limit;
 
-    const where: any = { isPublished: true };
+    const where: any = { published: true };
     if (category) where.category = category;
     if (tag) {
       where.tags = { has: tag };

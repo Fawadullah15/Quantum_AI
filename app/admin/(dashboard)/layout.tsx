@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
 import styles from './layout.module.css'
+import '../admin-tailwind.css'
 
 const navSections = [
   {
@@ -26,7 +27,6 @@ const navSections = [
     label: 'PEOPLE',
     links: [
       { href: '/admin/leadership', label: 'Leadership' },
-      { href: '/admin/founders', label: 'Founders' },
       { href: '/admin/team', label: 'Team' },
     ],
   },

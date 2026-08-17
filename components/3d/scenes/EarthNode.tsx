@@ -146,8 +146,12 @@ function Arc({ start, end, radius }: { start: any, end: any, radius: number }) {
   });
 
   return (
-    <line ref={lineRef} geometry={geom}>
+        <>
+{/* @ts-expect-error React Three Fiber Line conflict */}
+
+        <line ref={lineRef} geometry={geom}>
       <lineBasicMaterial color="#00e5ff" transparent opacity={0.3} blending={THREE.AdditiveBlending} />
     </line>
+</>
   );
 }

@@ -1,39 +1,41 @@
 import { NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth/next';
+import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
-import { unlink } from 'fs/promises';
-import { join } from 'path';
+import { del } from '@vercel/blob';
 
-export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
     const session = await getServerSession(authOptions);
-    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    const media = await prisma.media.findUnique({
-      where: { id: (await params).id },
-    });
+    const { id } = await params;
+
+    const media = await prisma.media.findUnique({ where: { id } });
 
     if (!media) {
-      return NextResponse.json({ error: 'Not Found' }, { status: 404 });
+      return NextResponse.json({ error: 'Media not found' }, { status: 404 });
     }
 
-    // Try to remove from disk
-    const fileName = media.url.replace('/uploads/', '');
-    const path = join(process.cwd(), 'public', 'uploads', fileName);
-    try {
-      await unlink(path);
-    } catch (err) {
-      console.error('Failed to delete file from disk:', err);
-      // Proceed to delete from DB even if disk deletion fails
+    // Attempt to delete from Vercel Blob if the URL is hosted there
+    if (media.url.includes('public.blob.vercel-storage.com')) {
+      try {
+        await del(media.url);
+      } catch (blobErr) {
+        console.error('Error deleting from Vercel Blob:', blobErr);
+      }
     }
 
-    await prisma.media.delete({
-      where: { id: (await params).id },
-    });
+    await prisma.media.delete({ where: { id } });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, message: 'Media deleted' });
   } catch (error) {
+    console.error('DELETE /api/media/[id] error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

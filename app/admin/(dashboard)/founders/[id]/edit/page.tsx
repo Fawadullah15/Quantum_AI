@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import AdminForm from "@/components/admin/AdminForm"
 
-export default function EditFounderPage({ params }: { params: { id: string } }) {
+export default function EditFounderPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
