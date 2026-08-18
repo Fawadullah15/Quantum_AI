@@ -45,9 +45,11 @@ export async function POST(request: Request) {
     const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
     let url = '';
 
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
+    const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.DATABASE_URL_READ_WRITE_TOKEN;
+
+    if (token) {
       // Use Vercel Blob if token is available
-      const blob = await put(fileName, file, { access: 'public' });
+      const blob = await put(fileName, file, { access: 'public', token });
       url = blob.url;
     } else {
       // Fallback to local fs for local development
