@@ -10,12 +10,18 @@ export const dynamic = "force-dynamic";
 async function deleteMember(id: string) {
   "use server";
   await prisma.leadership.delete({ where: { id } });
+  revalidatePath("/");
+  revalidatePath("/leadership");
+  revalidatePath("/team");
   revalidatePath("/admin/leadership");
 }
 
 async function toggleActive(id: string, isActive: boolean) {
   "use server";
   await prisma.leadership.update({ where: { id }, data: { isActive: !isActive } });
+  revalidatePath("/");
+  revalidatePath("/leadership");
+  revalidatePath("/team");
   revalidatePath("/admin/leadership");
 }
 

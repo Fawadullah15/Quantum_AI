@@ -44,10 +44,18 @@ export default function NewLeadershipPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, photo: photoUrl || null, slug }),
       });
-      if (res.ok) router.push("/admin/leadership");
-      else { const d = await res.json(); setError(d.error || "Failed to create member"); }
-    } catch { setError("An unexpected error occurred"); }
-    finally { setLoading(false); }
+      if (res.ok) {
+        router.push("/admin/leadership");
+        router.refresh();
+      } else {
+        const d = await res.json();
+        setError(d.error || "Failed to create member");
+      }
+    } catch {
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const inp: React.CSSProperties = { width: "100%", background: "#111827", border: "1px solid #374151", borderRadius: "6px", padding: "0.625rem 0.875rem", color: "#F8FAFC", fontSize: "0.9rem", boxSizing: "border-box" };
