@@ -254,7 +254,7 @@ export default function ParticleText({
       container?.removeEventListener('mouseleave', handleMouseLeave);
       cancelAnimationFrame(animationRef.current);
     };
-  }, [text, fontSize, fontFamily, fontWeight, textColor, particleDensity, particleSize, friction, ease, mouseRadius, mouseRepelForce]);
+  }, [text, lines, fontSize, fontFamily, fontWeight, textColor, particleDensity, particleSize, friction, ease, mouseRadius, mouseRepelForce]);
 
   return (
     <div 
