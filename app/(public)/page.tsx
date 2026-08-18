@@ -48,12 +48,43 @@ export default function HomePage() {
     }
   ]);
 
+  // Dynamic Case Studies state synced with database / admin panel
+  const [caseStudies, setCaseStudies] = useState<any[]>([
+    {
+      id: '1',
+      title: 'Smart School Fee Management System',
+      industry: 'Education',
+      problem: 'A unified platform managing students, fee structures, parent communication, attendance, and multi-channel billing systems.',
+      technologies: 'Next.js, React, FastAPI, PostgreSQL, Docker',
+      results: 'Consolidated school administrative workflows into one platform, reducing processing delays by 50%.',
+      slug: 'smart-school-fee-management-system',
+    },
+    {
+      id: '2',
+      title: 'Sales Pipeline Automation Engine',
+      industry: 'Enterprise Automation',
+      problem: 'Real-time sync pipeline linking CRM workflows, invoice state tracking, and external communication triggers.',
+      technologies: 'Python, FastAPI, Redis, Webhooks, Slack APIs',
+      results: 'Increased pipeline processing throughput and removed data duplication with zero staff overhead.',
+      slug: 'sales-pipeline-automation-system',
+    }
+  ]);
+
   useEffect(() => {
     fetch('/api/leadership')
       .then(res => res.ok ? res.json() : [])
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           setLeaders(data.filter((m: any) => m.isActive !== false));
+        }
+      })
+      .catch(() => {});
+
+    fetch('/api/case-studies')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setCaseStudies(data.filter((s: any) => s.published !== false));
         }
       })
       .catch(() => {});
@@ -565,116 +596,117 @@ export default function HomePage() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-              {[
-                {
-                  name: 'School Operations Manager',
-                  category: 'Business Software',
-                  desc: 'A unified platform managing students, billing, attendance, staff, and multi-channel notification systems.',
-                  tech: ['Next.js', 'React', 'FastAPI', 'PostgreSQL', 'Docker'],
-                  purpose: 'Consolidated school admin processes into one portal, reducing manual overhead by 40%.'
-                },
-                {
-                  name: 'Sales pipeline automation system',
-                  category: 'Workflow Automation',
-                  desc: 'Real-time sync pipeline linking CRM workflows, invoice state tracking, and external communication triggers.',
-                  tech: ['Python', 'FastAPI', 'Redis', 'Webhooks', 'Slack APIs'],
-                  purpose: 'Increased pipeline processing throughput and removed data duplication with zero staff overhead.'
-                },
-                {
-                  name: 'Vector Search Knowledge Base',
-                  category: 'AI Systems',
-                  desc: 'RAG system enabling low-latency semantic queries across thousands of structural business documents.',
-                  tech: ['Next.js', 'Vector DB', 'PyTorch', 'OpenAI API', 'FastAPI'],
-                  purpose: 'Reduced support search lookup resolution from several minutes to sub-second responses.'
-                }
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  style={{
-                    backgroundColor: 'rgba(6, 21, 43, 0.5)',
-                    border: '1px solid rgba(22, 119, 255, 0.1)',
-                    borderRadius: 16,
-                    padding: 'clamp(2rem, 5vw, 3.5rem)',
-                    display: 'grid',
-                    gridTemplateColumns: '1fr',
-                    gap: '2rem',
-                    transition: 'border-color 0.3s, transform 0.3s',
-                  }}
-                  className="case-study-panel"
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.3)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.1)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                >
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-                      <span style={{
-                        fontFamily: 'var(--font-mono)',
-                        fontSize: '0.75rem',
-                        letterSpacing: '0.2em',
-                        color: '#1677FF',
-                        textTransform: 'uppercase',
-                        fontWeight: 600
-                      }}>
-                        {item.category}
-                      </span>
-                    </div>
-                    
-                    <h3 style={{
-                      fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-                      fontWeight: 700,
-                      color: '#F8FAFF',
-                      lineHeight: 1.15,
-                      letterSpacing: '-0.02em',
-                      textTransform: 'none'
-                    }}>
-                      {item.name}
-                    </h3>
-                    
-                    <p style={{ color: '#94A3B8', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: 800, fontWeight: 300 }}>
-                      {item.desc}
-                    </p>
+              {caseStudies.map((item, i) => {
+                const techList = item.technologies ? (typeof item.technologies === 'string' ? item.technologies.split(',').map((t: string) => t.trim()) : item.technologies) : (item.tech || []);
+                const slug = item.slug || 'smart-school-fee-management-system';
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem', marginTop: '1rem', borderTop: '1px solid rgba(22, 119, 255, 0.08)', paddingTop: '1.5rem' }}>
-                      <div>
-                        <h4 style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.1em', marginBottom: '0.5rem', textTransform: 'uppercase' }}>TECHNOLOGY</h4>
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                          {item.tech.map(t => (
-                            <span key={t} style={{ fontSize: '0.75rem', color: '#F8FAFF', backgroundColor: 'rgba(22, 119, 255, 0.1)', padding: '0.25rem 0.5rem', borderRadius: 4, fontFamily: 'var(--font-mono)' }}>{t}</span>
-                          ))}
-                        </div>
+                return (
+                  <div
+                    key={item.id || i}
+                    style={{
+                      backgroundColor: 'rgba(6, 21, 43, 0.5)',
+                      border: '1px solid rgba(22, 119, 255, 0.15)',
+                      borderRadius: 16,
+                      padding: 'clamp(1.75rem, 4vw, 3rem)',
+                      display: 'grid',
+                      gridTemplateColumns: '1fr',
+                      gap: '1.5rem',
+                      transition: 'border-color 0.3s, transform 0.3s',
+                    }}
+                    className="case-study-panel"
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.35)';
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.15)';
+                      e.currentTarget.style.transform = 'translateY(0)';
+                    }}
+                  >
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+                        <span style={{
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '0.75rem',
+                          letterSpacing: '0.2em',
+                          color: '#1677FF',
+                          textTransform: 'uppercase',
+                          fontWeight: 600
+                        }}>
+                          {item.industry || item.category || 'BUSINESS SOFTWARE'}
+                        </span>
+                        {item.year && (
+                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#64748B' }}>
+                            {item.year}
+                          </span>
+                        )}
                       </div>
-                      <div>
-                        <h4 style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.1em', marginBottom: '0.5rem', textTransform: 'uppercase' }}>RESULT & PURPOSE</h4>
-                        <p style={{ color: '#94A3B8', fontSize: '0.9rem', lineHeight: 1.5, margin: 0, fontWeight: 300 }}>{item.purpose}</p>
+                      
+                      <Link href={`/work/${slug}`} style={{ textDecoration: 'none' }}>
+                        <h3 style={{
+                          fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+                          fontWeight: 700,
+                          color: '#F8FAFF',
+                          lineHeight: 1.15,
+                          letterSpacing: '-0.02em',
+                          textTransform: 'none',
+                          margin: 0,
+                          transition: 'color 0.2s',
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = '#38BDF8'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = '#F8FAFF'; }}
+                        >
+                          {item.title || item.name}
+                        </h3>
+                      </Link>
+                      
+                      <p style={{ color: '#94A3B8', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: 800, fontWeight: 300, margin: 0 }}>
+                        {item.problem || item.desc || item.solution}
+                      </p>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginTop: '0.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.08)', paddingTop: '1.25rem' }}>
+                        {techList.length > 0 && (
+                          <div>
+                            <h4 style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.1em', marginBottom: '0.5rem', textTransform: 'uppercase' }}>TECHNOLOGY</h4>
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                              {techList.map((t: string) => (
+                                <span key={t} style={{ fontSize: '0.75rem', color: '#55D6FF', backgroundColor: 'rgba(22, 119, 255, 0.1)', padding: '0.25rem 0.5rem', borderRadius: 4, fontFamily: 'var(--font-mono)' }}>{t}</span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {(item.results || item.purpose) && (
+                          <div>
+                            <h4 style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.1em', marginBottom: '0.5rem', textTransform: 'uppercase' }}>RESULT & PURPOSE</h4>
+                            <p style={{ color: '#94A3B8', fontSize: '0.9rem', lineHeight: 1.5, margin: 0, fontWeight: 300 }}>{item.results || item.purpose}</p>
+                          </div>
+                        )}
                       </div>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '0.5rem' }}>
+                      <Link
+                        href={`/work/${slug}`}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                          color: '#1677FF',
+                          textDecoration: 'none',
+                          fontSize: '0.85rem',
+                          fontFamily: 'var(--font-mono)',
+                          letterSpacing: '0.1em',
+                          fontWeight: 600
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = '#55D6FF'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = '#1677FF'; }}
+                      >
+                        VIEW CASE STUDY <span>→</span>
+                      </Link>
                     </div>
                   </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '1rem' }}>
-                    <Link
-                      href="/work"
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        color: '#1677FF',
-                        textDecoration: 'none',
-                        fontSize: '0.9rem',
-                        fontWeight: 600
-                      }}
-                      onMouseEnter={(e) => { e.currentTarget.style.color = '#55D6FF'; }}
-                      onMouseLeave={(e) => { e.currentTarget.style.color = '#1677FF'; }}
-                    >
-                      VIEW CASE STUDY <span>→</span>
-                    </Link>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
