@@ -29,12 +29,25 @@ export default async function LeadershipPage() {
         .ldr-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.2em; color: #64748B; text-transform: uppercase; margin-bottom: 1.5rem; }
         .ldr-h1 { font-size: clamp(3rem, 8vw, 7rem); font-weight: 700; line-height: 0.93; letter-spacing: -0.045em; color: #F8FAFC; text-transform: uppercase; margin-bottom: 1.75rem; }
         .ldr-desc { font-size: clamp(1rem, 1.5vw, 1.2rem); color: #A8B3C7; max-width: 560px; line-height: 1.7; margin-bottom: 4.5rem; }
-        .ldr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-        @media (max-width: 1024px) {
-          .ldr-grid { grid-template-columns: repeat(2, 1fr); }
+        .ldr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.75rem; max-width: 960px; }
+        @media (max-width: 768px) {
+          .ldr-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         }
-        @media (max-width: 480px) {
-          .ldr-grid { grid-template-columns: 1fr; }
+        @media (max-width: 540px) {
+          .ldr-grid { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; }
+          .ldr-page { padding-inline: 0.75rem; padding-top: calc(var(--nav-height, 80px) + 2rem); }
+          .id-card { border-radius: 8px; }
+          .id-header { padding: 0.5rem 0.65rem; }
+          .id-brand { font-size: 0.52rem; letter-spacing: 0.1em; }
+          .id-pid { font-size: 0.52rem; }
+          .id-photo { aspect-ratio: 1/1; max-height: 180px; }
+          .id-body { padding: 0.65rem; }
+          .id-name { font-size: 0.875rem; line-height: 1.2; margin-bottom: 0.2rem; }
+          .id-pos { font-size: 0.58rem; margin-bottom: 0.4rem; }
+          .id-bio { font-size: 0.72rem; line-height: 1.35; -webkit-line-clamp: 2; }
+          .id-footer { padding: 0.45rem 0.65rem; }
+          .id-link { font-size: 0.62rem; }
+          .id-more { font-size: 0.55rem; letter-spacing: 0.04em; }
         }
         .id-card { background: var(--color-deep, #07152F); border: 1px solid rgba(30,58,138,0.45); border-radius: 10px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; position: relative; }
         .id-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at top left, rgba(79,70,229,0.07) 0%, transparent 60%); pointer-events: none; z-index: 0; }
@@ -42,7 +55,7 @@ export default async function LeadershipPage() {
         .id-header { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; padding: 0.875rem 1.25rem; border-bottom: 1px solid rgba(30,58,138,0.3); }
         .id-brand { font-family: var(--font-mono, monospace); font-size: 0.6rem; letter-spacing: 0.18em; color: rgba(59,130,246,0.65); text-transform: uppercase; }
         .id-pid { font-family: var(--font-mono, monospace); font-size: 0.6rem; color: rgba(100,116,139,0.7); letter-spacing: 0.1em; }
-        .id-photo { position: relative; z-index: 1; width: 100%; aspect-ratio: 3/4; max-height: 240px; background: linear-gradient(135deg, #0A1628 0%, #07152F 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .id-photo { position: relative; z-index: 1; width: 100%; aspect-ratio: 3/4; max-height: 280px; background: linear-gradient(135deg, #0A1628 0%, #07152F 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
         .id-photo img { width: 100%; height: 100%; object-fit: cover; }
         .id-photo-placeholder { width: 52px; height: 52px; border-radius: 6px; background: rgba(30,58,138,0.3); display: flex; align-items: center; justify-content: center; color: rgba(59,130,246,0.4); }
         .id-body { position: relative; z-index: 1; padding: 1.125rem 1.25rem; flex: 1; display: flex; flex-direction: column; }
