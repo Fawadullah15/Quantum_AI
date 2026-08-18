@@ -5,7 +5,7 @@ export default async function WorkPage() {
   const caseStudies = await prisma.caseStudy.findMany({
     where: { published: true },
     orderBy: { order: 'asc' },
-  })
+  }).catch(() => [])
 
   return (
     <div style={{ paddingTop: 'calc(var(--nav-height) * 2)' }} className="container section">

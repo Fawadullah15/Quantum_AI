@@ -12,7 +12,7 @@ export default async function LeadershipPage() {
   const members = await prisma.leadership.findMany({
     where: { isActive: true },
     orderBy: { displayOrder: "asc" },
-  });
+  }).catch(() => []);
 
   return (
     <>

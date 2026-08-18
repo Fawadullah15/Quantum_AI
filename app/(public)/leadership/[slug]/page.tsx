@@ -5,13 +5,13 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const m = await prisma.leadership.findUnique({ where: { slug: (await params).slug } });
+  const m = await prisma.leadership.findUnique({ where: { slug: (await params).slug } }).catch(() => null);
   if (!m) return { title: "Not Found" };
   return { title: m.name, description: m.shortBio };
 }
 
 export default async function LeadershipProfilePage({ params }: { params: Promise<{ slug: string }> }) {
-  const m = await prisma.leadership.findUnique({ where: { slug: (await params).slug } });
+  const m = await prisma.leadership.findUnique({ where: { slug: (await params).slug } }).catch(() => null);
   if (!m || !m.isActive) notFound();
 
   return (

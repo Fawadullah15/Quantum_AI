@@ -6,7 +6,7 @@ export default async function TechnologyPage() {
   const technologies = await prisma.technology.findMany({
     where: { published: true },
     orderBy: [{ category: 'asc' }, { order: 'asc' }],
-  })
+  }).catch(() => [])
 
   // Group by category
   const grouped = technologies.reduce((acc, tech) => {

@@ -6,7 +6,7 @@ export default async function ServicesPage() {
   const services = await prisma.service.findMany({
     where: { published: true },
     orderBy: { order: 'asc' },
-  })
+  }).catch(() => [])
 
   return (
     <div style={{ paddingTop: 'calc(var(--nav-height) * 2)', paddingBottom: 'var(--space-32)' }} className="container section">
