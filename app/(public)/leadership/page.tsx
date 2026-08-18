@@ -80,10 +80,10 @@ export default async function LeadershipPage() {
                 <p style={{ fontSize: '1.1rem', color: '#94A3B8', lineHeight: 1.7, maxWidth: 400, margin: '0 auto 1.5rem' }}>Our leadership team directory is currently being updated. Please check back soon or contact us directly.</p>
                 <Link href="/contact" style={{ display: 'inline-flex', padding: '0.75rem 1.5rem', backgroundColor: 'rgba(22,119,255,0.12)', border: '1px solid rgba(22,119,255,0.3)', borderRadius: 8, color: '#F8FAFF', textDecoration: 'none', fontSize: '0.875rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>CONTACT US</Link>
               </div>
-            ) : members.map((m) => (
+            ) : members.map((m, index) => (
               <Link key={m.id} href={`/leadership/${m.slug}`} className="id-card">
                 <div className="id-header">
-                  <span className="id-brand">QUANTUM AI</span>
+                  <span className="id-brand">QUANTUM AI · {String(index + 1).padStart(2, '0')}</span>
                   <span className="id-pid">{m.publicId}</span>
                 </div>
                 <div className="id-photo">

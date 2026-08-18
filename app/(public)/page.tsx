@@ -70,6 +70,38 @@ export default function HomePage() {
     }
   ]);
 
+  // Dynamic Services / Solutions state synced with database / admin panel
+  const [services, setServices] = useState<any[]>([
+    { id: '1', name: 'AI Systems', description: 'Custom AI systems for business workflows and intelligent decision making.', category: 'AI', order: 1 },
+    { id: '2', name: 'Business Software', description: 'Web applications and internal systems designed around real business processes.', category: 'SOFTWARE', order: 2 },
+    { id: '3', name: 'Automation', description: 'Automated workflows that reduce repetitive manual work.', category: 'AUTOMATION', order: 3 },
+    { id: '4', name: 'Digital Products', description: 'Customer facing software products, platforms, and intelligent tools.', category: 'PRODUCT', order: 4 },
+  ]);
+
+  // Dynamic Technology Stack state synced with database / admin panel
+  const [techGroups, setTechGroups] = useState<any[]>([
+    {
+      title: 'AI & Machine Learning',
+      desc: 'Models, neural networks, retrieval platforms, and agentic workflows.',
+      tags: ['Python', 'PyTorch', 'TensorFlow', 'LLMs', 'RAG', 'AI Agents']
+    },
+    {
+      title: 'Applications',
+      desc: 'Robust frontend rendering engines and high-throughput backend APIs.',
+      tags: ['Next.js', 'React', 'TypeScript', 'Node.js', 'FastAPI']
+    },
+    {
+      title: 'Data Systems',
+      desc: 'Transactional, document-store, cache, and vector memory instances.',
+      tags: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis']
+    },
+    {
+      title: 'Infrastructure',
+      desc: 'Virtualization, cloud computation, secure configurations, and automation pipelines.',
+      tags: ['Docker', 'AWS', 'Linux', 'REST APIs', 'DevOps']
+    }
+  ]);
+
   useEffect(() => {
     fetch('/api/leadership')
       .then(res => res.ok ? res.json() : [])
@@ -85,6 +117,42 @@ export default function HomePage() {
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           setCaseStudies(data.filter((s: any) => s.published !== false));
+        }
+      })
+      .catch(() => {});
+
+    fetch('/api/services')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setServices(data.filter((s: any) => s.published !== false));
+        }
+      })
+      .catch(() => {});
+
+    fetch('/api/technology')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const published = data.filter((t: any) => t.published !== false);
+          const grouped: Record<string, string[]> = {};
+          const descMap: Record<string, string> = {
+            'AI & Machine Learning': 'Models, neural networks, retrieval platforms, and agentic workflows.',
+            'Applications': 'Robust frontend rendering engines and high-throughput backend APIs.',
+            'Data Systems': 'Transactional, document-store, cache, and vector memory instances.',
+            'Infrastructure': 'Virtualization, cloud computation, secure configurations, and automation pipelines.'
+          };
+          published.forEach((t: any) => {
+            const cat = t.category || 'General';
+            if (!grouped[cat]) grouped[cat] = [];
+            grouped[cat].push(t.name);
+          });
+          const list = Object.entries(grouped).map(([title, tags]) => ({
+            title,
+            desc: descMap[title] || `Engineering capabilities and stack for ${title}.`,
+            tags
+          }));
+          if (list.length > 0) setTechGroups(list);
         }
       })
       .catch(() => {});
@@ -343,56 +411,9 @@ export default function HomePage() {
                 overflow: 'hidden',
               }}
             >
-              {[
-                {
-                  num: '01',
-                  title: 'AI Systems',
-                  desc: 'Custom AI systems for business workflows and intelligent decision making.',
-                  visual: (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <circle cx="12" cy="12" r="4" stroke="#1677FF" fill="rgba(22,119,255,0.1)" />
-                      <line x1="12" y1="2" x2="12" y2="8" stroke="#55D6FF" />
-                      <line x1="12" y1="16" x2="12" y2="22" stroke="#55D6FF" />
-                      <line x1="2" y1="12" x2="8" y2="12" stroke="#55D6FF" />
-                      <line x1="16" y1="12" x2="22" y2="12" stroke="#55D6FF" />
-                    </svg>
-                  )
-                },
-                {
-                  num: '02',
-                  title: 'Business Software',
-                  desc: 'Web applications and internal systems designed around real business processes.',
-                  visual: (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <rect x="3" y="3" width="18" height="18" rx="2" stroke="#1677FF" />
-                      <line x1="3" y1="9" x2="21" y2="9" stroke="#55D6FF" />
-                      <line x1="9" y1="21" x2="9" y2="9" stroke="#55D6FF" />
-                    </svg>
-                  )
-                },
-                {
-                  num: '03',
-                  title: 'Automation',
-                  desc: 'Automated workflows that reduce repetitive manual work.',
-                  visual: (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l.73-.73" stroke="#1677FF" strokeLinecap="round" />
-                    </svg>
-                  )
-                },
-                {
-                  num: '04',
-                  title: 'Digital Products',
-                  desc: 'Customer facing software products, platforms, and intelligent tools.',
-                  visual: (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#1677FF" strokeLinejoin="round" />
-                    </svg>
-                  )
-                }
-              ].map((item, i) => (
+              {services.map((item, i) => (
                 <Link
-                  key={i}
+                  key={item.id || i}
                   href="/services"
                   style={{
                     display: 'flex',
@@ -407,8 +428,18 @@ export default function HomePage() {
                   onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(6, 21, 43, 0.7)'; }}
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: '#1677FF', fontWeight: 600 }}>{item.num}</span>
-                    <div style={{ color: '#55D6FF', opacity: 0.8 }}>{item.visual}</div>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: '#1677FF', fontWeight: 600 }}>
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <div style={{ color: '#55D6FF', opacity: 0.8 }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <circle cx="12" cy="12" r="4" stroke="#1677FF" fill="rgba(22,119,255,0.1)" />
+                        <line x1="12" y1="2" x2="12" y2="8" stroke="#55D6FF" />
+                        <line x1="12" y1="16" x2="12" y2="22" stroke="#55D6FF" />
+                        <line x1="2" y1="12" x2="8" y2="12" stroke="#55D6FF" />
+                        <line x1="16" y1="12" x2="22" y2="12" stroke="#55D6FF" />
+                      </svg>
+                    </div>
                   </div>
                   <h3 style={{
                     fontSize: '1.4rem',
@@ -418,11 +449,29 @@ export default function HomePage() {
                     lineHeight: 1.2,
                     marginTop: '0.5rem'
                   }}>
-                    {item.title}
+                    {item.name || item.title}
                   </h3>
-                  <p style={{ color: '#94A3B8', lineHeight: 1.6, fontSize: '0.975rem', maxWidth: 'none', fontWeight: 300 }}>{item.desc}</p>
-                  <span style={{ color: '#1677FF', fontSize: '0.875rem', fontWeight: 600, marginTop: 'auto', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                    Learn more <span style={{ transition: 'transform 0.2s' }}>→</span>
+                  <p style={{
+                    fontSize: '0.95rem',
+                    color: '#94A3B8',
+                    lineHeight: 1.6,
+                    margin: 0,
+                    fontWeight: 300,
+                  }}>
+                    {item.description || item.desc}
+                  </p>
+                  <span style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: '0.75rem',
+                    color: '#1677FF',
+                    letterSpacing: '0.1em',
+                    marginTop: 'auto',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.25rem',
+                    fontWeight: 500
+                  }}>
+                    DISCOVER SOLUTION →
                   </span>
                 </Link>
               ))}
@@ -476,28 +525,7 @@ export default function HomePage() {
                 gap: '1.5rem'
               }}
             >
-              {[
-                {
-                  title: 'AI & Machine Learning',
-                  desc: 'Models, neural networks, retrieval platforms, and agentic workflows.',
-                  tags: ['Python', 'PyTorch', 'TensorFlow', 'LLMs', 'RAG', 'AI Agents']
-                },
-                {
-                  title: 'Applications',
-                  desc: 'Robust frontend rendering engines and high-throughput backend APIs.',
-                  tags: ['Next.js', 'React', 'TypeScript', 'Node.js', 'FastAPI']
-                },
-                {
-                  title: 'Data Systems',
-                  desc: 'Transactional, document-store, cache, and vector memory instances.',
-                  tags: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis']
-                },
-                {
-                  title: 'Infrastructure',
-                  desc: 'Virtualization, cloud computation, secure configurations, and automation pipelines.',
-                  tags: ['Docker', 'AWS', 'Linux', 'REST APIs', 'DevOps']
-                }
-              ].map((group, idx) => (
+              {techGroups.map((group, idx) => (
                 <div
                   key={idx}
                   style={{
@@ -538,7 +566,7 @@ export default function HomePage() {
                     marginTop: 'auto',
                     paddingTop: '1rem'
                   }}>
-                    {group.tags.map(t => (
+                    {group.tags.map((t: string) => (
                       <span
                         key={t}
                         style={{
@@ -826,7 +854,7 @@ export default function HomePage() {
                 margin: '0 auto',
               }}
             >
-              {leaders.map((person) => (
+              {leaders.slice(0, 2).map((person) => (
                 <Link
                   key={person.id || person.slug}
                   href={`/leadership/${person.slug || 'fawadullah-imraj'}`}
