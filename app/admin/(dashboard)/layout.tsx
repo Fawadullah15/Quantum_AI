@@ -39,13 +39,11 @@ const navSections = [
   },
 ]
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  let session = null
-  try {
-    session = await getServerSession(authOptions)
-  } catch (err) {
-    console.error('Error fetching admin session:', err)
-  }
+  const session = await getServerSession(authOptions)
 
   if (!session) {
     redirect('/admin/login')
