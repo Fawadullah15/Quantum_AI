@@ -161,6 +161,8 @@ export default function HomePage() {
     } finally {
       setIsSubmitting(false);
     }
+  };
+
   return (
     <>
       <ButtonStyles />
