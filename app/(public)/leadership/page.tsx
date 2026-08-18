@@ -55,11 +55,11 @@ export default async function LeadershipPage() {
         .id-header { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; padding: 0.875rem 1.25rem; border-bottom: 1px solid rgba(30,58,138,0.3); }
         .id-brand { font-family: var(--font-mono, monospace); font-size: 0.6rem; letter-spacing: 0.18em; color: rgba(59,130,246,0.65); text-transform: uppercase; }
         .id-pid { font-family: var(--font-mono, monospace); font-size: 0.6rem; color: rgba(100,116,139,0.7); letter-spacing: 0.1em; }
-        .id-photo { position: relative; z-index: 1; width: 100%; aspect-ratio: 3/4; max-height: 280px; background: linear-gradient(135deg, #0A1628 0%, #07152F 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .id-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .id-photo { position: relative; z-index: 1; width: 100%; aspect-ratio: 3/4; max-height: 300px; background: linear-gradient(135deg, #0A1628 0%, #07152F 100%); overflow: hidden; display: flex; align-items: flex-start; justify-content: center; }
+        .id-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
         .id-photo-placeholder { width: 52px; height: 52px; border-radius: 6px; background: rgba(30,58,138,0.3); display: flex; align-items: center; justify-content: center; color: rgba(59,130,246,0.4); }
         .id-body { position: relative; z-index: 1; padding: 1.125rem 1.25rem; flex: 1; display: flex; flex-direction: column; }
-        .id-name { font-size: 1.05rem; font-weight: 600; color: #F8FAFC; margin-bottom: 0.2rem; letter-spacing: -0.02em; }
+        .id-name { font-size: clamp(0.9rem, 2.5vw, 1.05rem); font-weight: 600; color: #F8FAFC; margin-bottom: 0.2rem; letter-spacing: -0.01em; word-break: break-word; overflow-wrap: break-word; line-height: 1.3; }
         .id-pos { font-family: var(--font-mono, monospace); font-size: 0.65rem; color: #3B82F6; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
         .id-bio { font-size: 0.85rem; color: #A8B3C7; line-height: 1.6; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         .id-footer { position: relative; z-index: 1; padding: 0.75rem 1.25rem; border-top: 1px solid rgba(30,58,138,0.2); display: flex; align-items: center; gap: 0.875rem; }

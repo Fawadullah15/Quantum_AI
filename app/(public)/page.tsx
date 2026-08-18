@@ -235,6 +235,9 @@ export default function HomePage() {
     <>
       <ButtonStyles />
       <style>{`
+        /* ── Prevent horizontal overflow on all screens ── */
+        html, body { max-width: 100vw !important; overflow-x: hidden !important; }
+        * { box-sizing: border-box !important; }
         /* ── Mobile Responsive Grid Overrides ── */
         @media (max-width: 380px) {
           .solutions-grid { grid-template-columns: 1fr !important; }
@@ -289,7 +292,7 @@ export default function HomePage() {
           canvas { display: none !important; }
         }
       `}</style>
-      <div style={{ position: 'relative', width: '100%', pointerEvents: 'none' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: '100vw', overflowX: 'hidden', pointerEvents: 'none' }}>
 
         {/* ═══════════════════════════════════════════════════════════
             HERO SECTION
@@ -898,19 +901,19 @@ export default function HomePage() {
                   {/* Photo Container */}
                   <div style={{
                     width: '100%',
-                    aspectRatio: '4/3',
-                    maxHeight: 260,
+                    aspectRatio: '3/4',
+                    maxHeight: 280,
                     backgroundColor: '#030712',
                     overflow: 'hidden',
                     display: 'flex',
-                    alignItems: 'center',
+                    alignItems: 'flex-start',
                     justifyContent: 'center',
                   }}>
                     {person.photo ? (
                       <img
                         src={person.photo}
                         alt={person.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
                       />
                     ) : (
                       <div style={{ color: '#64748B', fontSize: '2rem' }}>👤</div>
@@ -918,18 +921,27 @@ export default function HomePage() {
                   </div>
 
                   {/* Body Content */}
-                  <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#F8FAFF', margin: '0 0 0.25rem 0', letterSpacing: '-0.01em', textTransform: 'none' }}>
+                  <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <h3 style={{
+                      fontSize: 'clamp(0.875rem, 2.5vw, 1.15rem)',
+                      fontWeight: 600,
+                      color: '#F8FAFF',
+                      margin: '0 0 0.25rem 0',
+                      letterSpacing: '-0.01em',
+                      textTransform: 'none',
+                      wordBreak: 'break-word',
+                      overflowWrap: 'break-word',
+                      lineHeight: 1.3,
+                    }}>
                       {person.name}
                     </h3>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#55D6FF', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.75rem' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(0.55rem, 1.6vw, 0.68rem)', color: '#55D6FF', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.5rem', lineHeight: 1.4, display: 'block' }}>
                       {person.position}
                     </span>
-                    <p style={{ color: '#94A3B8', fontSize: '0.875rem', lineHeight: 1.55, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    <p style={{ color: '#94A3B8', fontSize: 'clamp(0.72rem, 1.8vw, 0.85rem)', lineHeight: 1.5, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {person.shortBio}
                     </p>
-                    
-                    <span style={{ marginTop: 'auto', paddingTop: '1rem', color: '#1677FF', fontSize: '0.75rem', fontWeight: 600, fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
+                    <span style={{ marginTop: 'auto', paddingTop: '0.75rem', color: '#1677FF', fontSize: 'clamp(0.6rem, 1.6vw, 0.72rem)', fontWeight: 600, fontFamily: 'var(--font-mono)', letterSpacing: '0.06em' }}>
                       VIEW PROFILE →
                     </span>
                   </div>
