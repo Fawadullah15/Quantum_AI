@@ -97,10 +97,6 @@ export default function HomePage() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  if (!isMounted) return null;
-
   return (
     <>
       <ButtonStyles />
