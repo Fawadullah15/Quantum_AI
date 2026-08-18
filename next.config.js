@@ -12,6 +12,7 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
   },
+  turbopack: {},
   webpack: (config) => {
     config.externals = config.externals || []
     return config

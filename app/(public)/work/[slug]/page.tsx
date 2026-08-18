@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import prisma from '@/lib/db';
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -19,11 +21,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: caseStudy.heroImage ? [caseStudy.heroImage] : [],
     },
   };
-}
-
-export async function generateStaticParams() {
-  const studies = await prisma.caseStudy.findMany({ where: { published: true }, select: { slug: true } }).catch(() => []);
-  return studies.map((study: { slug: string }) => ({ slug: study.slug }));
 }
 
 export default async function CaseStudyPage({ params }: Props) {
