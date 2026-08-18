@@ -161,17 +161,28 @@ model Service {
 }
 
 model Technology {
-  id          String   @id @default(cuid())
-  name        String
-  description String
-  category    String   // AI/ML | Frontend | Backend | Database | Infrastructure | DevOps | API | Other
-  usage       String?
-  projects    String?
-  icon        String?
-  order       Int      @default(0)
-  published   Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  name             String
+  shortDescription String
+  category         String   // AI/ML | Frontend | Backend | Database | Infrastructure | DevOps | API | Other
+  heroTitle        String?
+  heroDescription  String?
+  heroImage        String?
+  content          String?  // Rich text content for the page
+  features         String?  @default("[]") // JSON array of feature objects
+  useCases         String?  @default("[]") // JSON array of use case objects
+  ctaTitle         String?
+  ctaDescription   String?
+  ctaText          String?
+  ctaLink          String?
+  usage            String?
+  projects         String?
+  icon             String?
+  order            Int      @default(0)
+  published        Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }
 
 model BlogPost {

@@ -29,7 +29,13 @@ export default async function LeadershipPage() {
         .ldr-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.2em; color: #64748B; text-transform: uppercase; margin-bottom: 1.5rem; }
         .ldr-h1 { font-size: clamp(3rem, 8vw, 7rem); font-weight: 700; line-height: 0.93; letter-spacing: -0.045em; color: #F8FAFC; text-transform: uppercase; margin-bottom: 1.75rem; }
         .ldr-desc { font-size: clamp(1rem, 1.5vw, 1.2rem); color: #A8B3C7; max-width: 560px; line-height: 1.7; margin-bottom: 4.5rem; }
-        .ldr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.5rem; }
+        .ldr-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        @media (max-width: 1024px) {
+          .ldr-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+          .ldr-grid { grid-template-columns: 1fr; }
+        }
         .id-card { background: var(--color-deep, #07152F); border: 1px solid rgba(30,58,138,0.45); border-radius: 10px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; position: relative; }
         .id-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at top left, rgba(79,70,229,0.07) 0%, transparent 60%); pointer-events: none; z-index: 0; }
         .id-card:hover { border-color: rgba(37,99,235,0.6); box-shadow: 0 0 0 1px rgba(37,99,235,0.2), 0 12px 40px rgba(0,0,0,0.5); transform: translateY(-4px); }

@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { signIn } from "next-auth/react"
+import { useState, useEffect } from "react"
+import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import styles from "./page.module.css"
 
@@ -12,6 +12,15 @@ export default function AdminLogin() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const { data: session, status } = useSession()
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      router.push("/admin")
+      router.refresh()
+    }
+  }, [status, session, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,14 +36,33 @@ export default function AdminLogin() {
 
       if (res?.error) {
         setError("Invalid email or password")
-      } else {
+      } else if (res?.ok) {
+        // Force a refresh to ensure session is established
         router.push("/admin")
+        router.refresh()
+      } else {
+        setError("Authentication failed")
       }
     } catch (err) {
       setError("An unexpected error occurred")
     } finally {
       setLoading(false)
     }
+  }
+
+  // Show loading while checking session
+  if (status === "loading") {
+    return (
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <div className={styles.coreVisual}>
+            <div className={styles.glowingDot}></div>
+          </div>
+          <h1 className={styles.title}>ADMIN PANEL</h1>
+          <p style={{ color: '#64748B', textAlign: 'center' }}>Loading...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -57,6 +85,7 @@ export default function AdminLogin() {
               onChange={(e) => setEmail(e.target.value)}
               className={styles.input}
               required
+              autoComplete="email"
             />
           </div>
           
@@ -70,6 +99,7 @@ export default function AdminLogin() {
                 onChange={(e) => setPassword(e.target.value)}
                 className={styles.input}
                 required
+                autoComplete="current-password"
               />
               <button 
                 type="button"

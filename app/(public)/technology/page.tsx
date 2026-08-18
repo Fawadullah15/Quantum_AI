@@ -1,7 +1,5 @@
 import prisma from '@/lib/db'
 
-export const dynamic = "force-dynamic";
-
 export default async function TechnologyPage() {
   const technologies = await prisma.technology.findMany({
     where: { published: true },
@@ -46,7 +44,7 @@ export default async function TechnologyPage() {
                     </h3>
                     <div>
                       <p style={{ color: 'var(--color-text-secondary)', fontSize: '1rem', lineHeight: 1.6 }}>
-                        {tech.description}
+                        {tech.shortDescription}
                       </p>
                       {tech.usage && (
                         <div style={{ marginTop: '1rem', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--color-core)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>

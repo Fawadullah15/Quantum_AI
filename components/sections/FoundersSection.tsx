@@ -23,7 +23,7 @@ const DEFAULT_FOUNDERS: FounderData[] = [
   },
   {
     name: 'Fahad Khan',
-    role: 'Co-Founder & CTO',
+    role: 'Co-Founder & Executive chairman',
     bio: '[Placeholder — edit in admin panel]'
   }
 ];

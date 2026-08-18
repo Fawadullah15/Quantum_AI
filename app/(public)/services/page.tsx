@@ -1,7 +1,5 @@
 import prisma from '@/lib/db'
 
-export const dynamic = "force-dynamic";
-
 export default async function ServicesPage() {
   const services = await prisma.service.findMany({
     where: { published: true },
@@ -17,7 +15,7 @@ export default async function ServicesPage() {
         </h1>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-16)', borderTop: '1px solid var(--color-border)', paddingTop: 'var(--space-16)' }}>
+      <div className="services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-16)', borderTop: '1px solid var(--color-border)', paddingTop: 'var(--space-16)' }}>
         {services.map((service, idx) => (
           <div key={service.id} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
             <div className="eyebrow">MODULE {String(idx + 1).padStart(2, '0')}</div>
@@ -28,6 +26,22 @@ export default async function ServicesPage() {
           </div>
         ))}
       </div>
+
+      <style>{`
+        .services-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @media (max-width: 1024px) {
+          .services-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 480px) {
+          .services-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   )
 }

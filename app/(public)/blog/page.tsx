@@ -2,8 +2,6 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import prisma from '@/lib/db';
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: 'Blog',
   description: 'Insights on AI, software engineering, and the future of technology.',
@@ -24,7 +22,7 @@ export default async function BlogPage() {
           <p>No articles published yet.</p>
         </div>
       ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+        <div className="blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
           {posts.map((post) => (
             <Link key={post.id} href={`/blog/${post.slug}`} style={{ display: 'flex', flexDirection: 'column', height: '100%', border: '1px solid var(--color-border)', background: 'var(--color-surface)', textDecoration: 'none', color: 'inherit' }}>
               {post.coverImage ? (
@@ -47,13 +45,29 @@ export default async function BlogPage() {
                   {post.excerpt}
                 </p>
                 <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--color-border)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-primary)' }}>
-                  Read Article &rarr;
+                 	Read Article &rarr;
                 </div>
               </div>
             </Link>
           ))}
         </div>
       )}
+
+      <style>{`
+        .blog-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        @media (max-width: 1024px) {
+          .blog-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+        @media (max-width: 480px) {
+          .blog-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -27,10 +27,10 @@ const NAV_ITEMS: NavItem[] = [
   {
     href: '/technology', label: 'Technology',
     dropdown: [
-      { href: '/technology#ai', label: 'Artificial Intelligence', desc: 'Models, agents, and AI systems' },
-      { href: '/technology#ml', label: 'Machine Learning', desc: 'Learning from your data' },
-      { href: '/technology#cloud', label: 'Cloud Systems', desc: 'Scalable infrastructure' },
-      { href: '/technology#data', label: 'Data Systems', desc: 'Structured data at scale' },
+      { href: '/technologies/artificial-intelligence', label: 'Artificial Intelligence', desc: 'Models, agents, and AI systems' },
+      { href: '/technologies/machine-learning', label: 'Machine Learning', desc: 'Learning from your data' },
+      { href: '/technologies/cloud-systems', label: 'Cloud Systems', desc: 'Scalable infrastructure' },
+      { href: '/technologies/data-systems', label: 'Data Systems', desc: 'Structured data at scale' },
     ],
   },
   { href: '/about', label: 'About' },

@@ -142,7 +142,7 @@ export default function HomePage() {
               marginBottom: '2rem',
             }}>
               <ParticleText
-                text={`WE BUILD\nINTELLIGENT\nSOFTWARE.`}
+                text={`WE BUILD\nINTELLIGENT\nSOFTWARES`}
                 fontSize={95}
                 particleDensity={3}
                 particleSize={1.4}
@@ -705,7 +705,7 @@ export default function HomePage() {
                 },
                 {
                   name: 'Fahad Khan',
-                  role: 'Co-Founder & CTO',
+                  role: 'Co-Founder & Executive chairman',
                   bio: 'Leads technical architecture, cloud engineering, database structure, and model deployment systems.'
                 }
               ].map((person, idx) => (

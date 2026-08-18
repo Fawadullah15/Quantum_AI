@@ -4,8 +4,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import prisma from '@/lib/db';
 
-export const dynamic = "force-dynamic";
-
 interface Props {
   params: Promise<{ slug: string }>;
 }
@@ -24,6 +22,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       publishedTime: post.publishedAt?.toISOString() ?? post.createdAt.toISOString(),
     },
   };
+}
+
+export async function generateStaticParams() {
+  const posts = await prisma.blogPost.findMany({ where: { published: true }, select: { slug: true } }).catch(() => []);
+  return posts.map((post: { slug: string }) => ({ slug: post.slug }));
 }
 
 export default async function BlogPostPage({ params }: Props) {

@@ -49,7 +49,7 @@ async function main() {
     },
     {
       name: 'Fahad Khan',
-      role: 'Co-Founder & CTO',
+      role: 'Co-Founder & Executive chairman',
       bio: '[Placeholder — edit this biography in the admin panel. Describe your technical background, expertise, and engineering philosophy.]',
       order: 2,
     },
@@ -91,24 +91,24 @@ async function main() {
 
   // 5. Seed Technologies
   const technologies = [
-    { name: 'Python', category: 'Language', description: 'Primary language for AI, data science, and backend systems.', usage: 'AI development, data pipelines, FastAPI backends' },
-    { name: 'TypeScript', category: 'Language', description: 'Strongly typed JavaScript for robust, maintainable web applications.', usage: 'Frontend and full-stack development' },
-    { name: 'React', category: 'Frontend', description: 'Component-based UI library for building interactive interfaces.', usage: 'Web application frontends' },
-    { name: 'Next.js', category: 'Frontend', description: 'Production-grade React framework with server-side rendering and API routes.', usage: 'Full-stack web applications, this website' },
-    { name: 'FastAPI', category: 'Backend', description: 'Modern, high-performance Python web framework for building APIs.', usage: 'AI service APIs, data processing endpoints' },
-    { name: 'Node.js', category: 'Backend', description: 'JavaScript runtime for scalable server-side applications.', usage: 'Real-time applications, microservices' },
-    { name: 'PostgreSQL', category: 'Database', description: 'Advanced open-source relational database for production workloads.', usage: 'Primary application database' },
-    { name: 'Docker', category: 'Infrastructure', description: 'Containerisation platform for consistent development and deployment.', usage: 'Service containerisation, CI/CD' },
-    { name: 'AWS', category: 'Cloud', description: 'Comprehensive cloud platform for scalable infrastructure.', usage: 'Cloud hosting, storage, compute' },
-    { name: 'OpenAI API', category: 'AI/ML', description: 'GPT-4 and vision models for language understanding and generation.', usage: 'LLM integration, text and vision tasks' },
-    { name: 'Anthropic API', category: 'AI/ML', description: 'Claude models optimised for safety, capability, and long context.', usage: 'LLM integration, complex reasoning tasks' },
-    { name: 'LangChain', category: 'AI/ML', description: 'Framework for building LLM-powered applications and chains.', usage: 'AI agent orchestration, RAG pipelines' },
-    { name: 'LangGraph', category: 'AI/ML', description: 'Graph-based framework for stateful multi-agent AI workflows.', usage: 'Complex AI agent systems' },
-    { name: 'RAG', category: 'AI/ML', description: 'Retrieval-Augmented Generation for grounded, factual AI responses.', usage: 'Knowledge base integration, document Q&A' },
-    { name: 'Vector Databases', category: 'Database', description: 'Databases optimised for semantic search and embedding storage.', usage: 'RAG systems, semantic search' },
-    { name: 'MCP', category: 'AI/ML', description: 'Model Context Protocol for standardised AI tool and resource integration.', usage: 'AI agent tooling' },
-    { name: 'Three.js', category: 'Frontend', description: 'JavaScript 3D graphics library for WebGL experiences.', usage: 'Website 3D intelligence core' },
-    { name: 'React Three Fiber', category: 'Frontend', description: 'React renderer for Three.js enabling declarative 3D scenes.', usage: 'Website 3D intelligence core' },
+    { name: 'Python', slug: 'python', category: 'Language', shortDescription: 'Primary language for AI, data science, and backend systems.', usage: 'AI development, data pipelines, FastAPI backends' },
+    { name: 'TypeScript', slug: 'typescript', category: 'Language', shortDescription: 'Strongly typed JavaScript for robust, maintainable web applications.', usage: 'Frontend and full-stack development' },
+    { name: 'React', slug: 'react', category: 'Frontend', shortDescription: 'Component-based UI library for building interactive interfaces.', usage: 'Web application frontends' },
+    { name: 'Next.js', slug: 'nextjs', category: 'Frontend', shortDescription: 'Production-grade React framework with server-side rendering and API routes.', usage: 'Full-stack web applications, this website' },
+    { name: 'FastAPI', slug: 'fastapi', category: 'Backend', shortDescription: 'Modern, high-performance Python web framework for building APIs.', usage: 'AI service APIs, data processing endpoints' },
+    { name: 'Node.js', slug: 'nodejs', category: 'Backend', shortDescription: 'JavaScript runtime for scalable server-side applications.', usage: 'Real-time applications, microservices' },
+    { name: 'PostgreSQL', slug: 'postgresql', category: 'Database', shortDescription: 'Advanced open-source relational database for production workloads.', usage: 'Primary application database' },
+    { name: 'Docker', slug: 'docker', category: 'Infrastructure', shortDescription: 'Containerisation platform for consistent development and deployment.', usage: 'Service containerisation, CI/CD' },
+    { name: 'AWS', slug: 'aws', category: 'Cloud', shortDescription: 'Comprehensive cloud platform for scalable infrastructure.', usage: 'Cloud hosting, storage, compute' },
+    { name: 'OpenAI API', slug: 'openai-api', category: 'AI/ML', shortDescription: 'GPT-4 and vision models for language understanding and generation.', usage: 'LLM integration, text and vision tasks' },
+    { name: 'Anthropic API', slug: 'anthropic-api', category: 'AI/ML', shortDescription: 'Claude models optimised for safety, capability, and long context.', usage: 'LLM integration, complex reasoning tasks' },
+    { name: 'LangChain', slug: 'langchain', category: 'AI/ML', shortDescription: 'Framework for building LLM-powered applications and chains.', usage: 'AI agent orchestration, RAG pipelines' },
+    { name: 'LangGraph', slug: 'langgraph', category: 'AI/ML', shortDescription: 'Graph-based framework for stateful multi-agent AI workflows.', usage: 'Complex AI agent systems' },
+    { name: 'RAG', slug: 'rag', category: 'AI/ML', shortDescription: 'Retrieval-Augmented Generation for grounded, factual AI responses.', usage: 'Knowledge base integration, document Q&A' },
+    { name: 'Vector Databases', slug: 'vector-databases', category: 'Database', shortDescription: 'Databases optimised for semantic search and embedding storage.', usage: 'RAG systems, semantic search' },
+    { name: 'MCP', slug: 'mcp', category: 'AI/ML', shortDescription: 'Model Context Protocol for standardised AI tool and resource integration.', usage: 'AI agent tooling' },
+    { name: 'Three.js', slug: 'threejs', category: 'Frontend', shortDescription: 'JavaScript 3D graphics library for WebGL experiences.', usage: 'Website 3D intelligence core' },
+    { name: 'React Three Fiber', slug: 'react-three-fiber', category: 'Frontend', shortDescription: 'React renderer for Three.js enabling declarative 3D scenes.', usage: 'Website 3D intelligence core' },
   ]
   for (let i = 0; i < technologies.length; i++) {
     const t = technologies[i]
@@ -119,6 +119,7 @@ async function main() {
       })
     }
   }
+
 
   // 6. Seed Navigation Items
   const navItems = [
