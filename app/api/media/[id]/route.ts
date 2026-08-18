@@ -25,7 +25,7 @@ export async function DELETE(
     // Attempt to delete from Vercel Blob if the URL is hosted there
     if (media.url.includes('public.blob.vercel-storage.com')) {
       try {
-        const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.DATABASE_URL_READ_WRITE_TOKEN;
+          const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.DATABASE_URL_READ_WRITE_TOKEN;
         await del(media.url, { token });
       } catch (blobErr) {
         console.error('Error deleting from Vercel Blob:', blobErr);

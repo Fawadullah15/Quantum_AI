@@ -7,7 +7,7 @@ export default async function ProductsPage() {
   const products = await prisma.product.findMany({
     where: { published: true },
     orderBy: { order: 'asc' },
-  }).catch(() => [])
+  })
 
   return (
     <div style={{ paddingTop: 'calc(var(--nav-height) * 2)' }} className="container section">

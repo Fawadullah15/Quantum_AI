@@ -8,7 +8,7 @@ export default async function InsightsPage() {
     where: { published: true },
     orderBy: { publishedAt: 'desc' },
     take: 20,
-  }).catch(() => []);
+  });
 
   return (
     <div style={{ paddingTop: 'calc(var(--nav-height) * 2)', paddingBottom: 'var(--space-32)' }}>
