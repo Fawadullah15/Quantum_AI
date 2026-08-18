@@ -76,8 +76,8 @@ export default function Footer({
             gap: '2rem',
           }}
         >
-          {/* Brand - spans 1 column */}
-          <div style={{ gridColumn: 'span 1' }}>
+          {/* Brand - spans full width on mobile, 1 col on desktop */}
+          <div className="footer-brand" style={{ gridColumn: 'span 1' }}>
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', textDecoration: 'none', marginBottom: '1.25rem' }}>
               <QuantumLogo width={28} height={28} />
               <span style={{
@@ -95,7 +95,7 @@ export default function Footer({
               color: '#64748B',
               fontSize: '0.8125rem',
               lineHeight: 1.6,
-              maxWidth: 200,
+              maxWidth: 240,
               fontWeight: 400,
               fontFamily: 'var(--font-sans)',
             }}>
@@ -105,7 +105,7 @@ export default function Footer({
 
           {/* Link columns - each spans 1 column */}
           {Object.entries(footerLinks).map(([section, links]) => (
-            <div key={section}>
+            <div key={section} className="footer-col">
               <div style={{
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.65rem',
@@ -179,12 +179,23 @@ export default function Footer({
         @media (max-width: 768px) {
           .footer-grid {
             grid-template-columns: repeat(2, 1fr) !important;
-            gap: 2rem !important;
+            gap: 2rem 1.25rem !important;
+          }
+          .footer-brand {
+            grid-column: 1 / -1 !important;
+            margin-bottom: 0.5rem;
+          }
+          .footer-brand p {
+            max-width: 100% !important;
           }
         }
         @media (max-width: 480px) {
           .footer-grid {
-            grid-template-columns: 1fr !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 2rem 1rem !important;
+          }
+          .footer-col a {
+            font-size: 0.8125rem !important;
           }
           footer {
             padding: 3rem 1.25rem 2rem !important;

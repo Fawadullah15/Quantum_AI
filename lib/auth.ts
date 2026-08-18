@@ -5,7 +5,7 @@ import prisma from './db'
 
 export const authOptions: NextAuthOptions = {
   session: { strategy: 'jwt' },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || process.env.AUTH_SECRET || 'quantum-ai-secret-encryption-key-production-32-chars',
   pages: { signIn: '/admin/login' },
   providers: [
     CredentialsProvider({

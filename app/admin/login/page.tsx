@@ -1,26 +1,15 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { SessionProvider, signIn, useSession } from "next-auth/react"
-import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { signIn } from "next-auth/react"
 import styles from "./page.module.css"
 
-function AdminLoginForm() {
+export default function AdminLogin() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
-  const router = useRouter()
-  const { data: session, status } = useSession()
-
-  // Redirect if already logged in
-  useEffect(() => {
-    if (status === "authenticated" && session) {
-      router.push("/admin")
-      router.refresh()
-    }
-  }, [status, session, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,9 +26,7 @@ function AdminLoginForm() {
       if (res?.error) {
         setError("Invalid email or password")
       } else if (res?.ok) {
-        // Force a refresh to ensure session is established
-        router.push("/admin")
-        router.refresh()
+        window.location.href = "/admin"
       } else {
         setError("Authentication failed")
       }
@@ -48,21 +35,6 @@ function AdminLoginForm() {
     } finally {
       setLoading(false)
     }
-  }
-
-  // Show loading while checking session
-  if (status === "loading") {
-    return (
-      <div className={styles.container}>
-        <div className={styles.card}>
-          <div className={styles.coreVisual}>
-            <div className={styles.glowingDot}></div>
-          </div>
-          <h1 className={styles.title}>ADMIN PANEL</h1>
-          <p style={{ color: '#64748B', textAlign: 'center' }}>Loading...</p>
-        </div>
-      </div>
-    )
   }
 
   return (
@@ -86,6 +58,7 @@ function AdminLoginForm() {
               className={styles.input}
               required
               autoComplete="email"
+              placeholder="admin@quantumai.dev"
             />
           </div>
           
@@ -100,6 +73,7 @@ function AdminLoginForm() {
                 className={styles.input}
                 required
                 autoComplete="current-password"
+                placeholder="••••••••"
               />
               <button 
                 type="button"
@@ -119,12 +93,3 @@ function AdminLoginForm() {
     </div>
   )
 }
-
-export default function AdminLogin() {
-  return (
-    <SessionProvider>
-      <AdminLoginForm />
-    </SessionProvider>
-  )
-}
-

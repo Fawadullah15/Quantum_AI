@@ -14,19 +14,19 @@ export default async function AdminDashboardPage() {
     recentMessages,
     recentPosts,
   ] = await Promise.all([
-    prisma.teamMember.count(),
-    prisma.product.count(),
-    prisma.caseStudy.count(),
-    prisma.blogPost.count(),
-    prisma.contactSubmission.count({ where: { status: 'NEW' } }),
+    prisma.teamMember.count().catch(() => 0),
+    prisma.product.count().catch(() => 0),
+    prisma.caseStudy.count().catch(() => 0),
+    prisma.blogPost.count().catch(() => 0),
+    prisma.contactSubmission.count({ where: { status: 'NEW' } }).catch(() => 0),
     prisma.contactSubmission.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
-    }),
+    }).catch(() => []),
     prisma.blogPost.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
-    }),
+    }).catch(() => []),
   ]);
 
   const formatDate = (date: Date) => {

@@ -41,13 +41,18 @@ const navSections = [
 ]
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession(authOptions)
+  let session = null
+  try {
+    session = await getServerSession(authOptions)
+  } catch (err) {
+    console.error('Error fetching admin session:', err)
+  }
 
   if (!session) {
     redirect('/admin/login')
   }
 
-  const user = session.user as { name?: string; email?: string; role?: string }
+  const user = session?.user as { name?: string; email?: string; role?: string } | undefined
 
   const sidebarContent = (
     <>
