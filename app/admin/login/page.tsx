@@ -1,11 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { signIn, useSession } from "next-auth/react"
+import { SessionProvider, signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import styles from "./page.module.css"
 
-export default function AdminLogin() {
+function AdminLoginForm() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -119,3 +119,12 @@ export default function AdminLogin() {
     </div>
   )
 }
+
+export default function AdminLogin() {
+  return (
+    <SessionProvider>
+      <AdminLoginForm />
+    </SessionProvider>
+  )
+}
+
