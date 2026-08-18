@@ -4,9 +4,8 @@ import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboardPage() {
-  // Fetch statistics and recent data concurrently
   const [
-    teamMemberCount,
+    leadershipCount,
     productCount,
     caseStudyCount,
     blogPostCount,
@@ -14,7 +13,7 @@ export default async function AdminDashboardPage() {
     recentMessages,
     recentPosts,
   ] = await Promise.all([
-    prisma.teamMember.count().catch(() => 0),
+    prisma.leadership.count({ where: { isActive: true } }).catch(() => 0),
     prisma.product.count().catch(() => 0),
     prisma.caseStudy.count().catch(() => 0),
     prisma.blogPost.count().catch(() => 0),
@@ -37,144 +36,200 @@ export default async function AdminDashboardPage() {
     }).format(new Date(date));
   };
 
+  const statCards = [
+    { label: 'Unread Messages', count: unreadMessagesCount, icon: '💬', color: '#38BDF8', href: '/admin/messages', alert: unreadMessagesCount > 0 },
+    { label: 'Leadership / Team', count: leadershipCount, icon: '👥', color: '#818CF8', href: '/admin/leadership' },
+    { label: 'Products', count: productCount, icon: '📦', color: '#34D399', href: '/admin/products' },
+    { label: 'Case Studies', count: caseStudyCount, icon: '📁', color: '#FBBF24', href: '/admin/case-studies' },
+    { label: 'Blog Posts', count: blogPostCount, icon: '📝', color: '#F472B6', href: '/admin/blog' },
+  ];
+
   return (
-    <div style={{ backgroundColor: '#111827', color: '#ffffff', minHeight: '100vh', padding: '2rem', fontFamily: 'sans-serif' }}>
-      <header style={{ marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: 'bold', margin: 0 }}>Dashboard Overview</h1>
-        <p style={{ color: '#9ca3af', marginTop: '0.5rem' }}>Welcome to the admin control panel.</p>
-      </header>
-
-      {/* Stats Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
-        
-        {/* Unread Messages Card */}
-        <div style={{ backgroundColor: '#1f2937', padding: '1.5rem', borderRadius: '0.5rem', border: '1px solid #374151', borderLeft: '4px solid #1677FF' }}>
-          <h2 style={{ fontSize: '0.875rem', textTransform: 'uppercase', color: '#9ca3af', marginBottom: '0.5rem' }}>Unread Messages</h2>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{unreadMessagesCount}</div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: 1200, margin: '0 auto' }}>
+      
+      {/* Welcome Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>Dashboard Overview</h1>
+          <p style={{ color: '#64748B', fontSize: '0.825rem', marginTop: '0.25rem' }}>
+            Welcome to the Quantum AI administration control panel.
+          </p>
         </div>
-
-        {/* Blog Posts Card */}
-        <div style={{ backgroundColor: '#1f2937', padding: '1.5rem', borderRadius: '0.5rem', border: '1px solid #374151' }}>
-          <h2 style={{ fontSize: '0.875rem', textTransform: 'uppercase', color: '#9ca3af', marginBottom: '0.5rem' }}>Blog Posts</h2>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{blogPostCount}</div>
-        </div>
-
-        {/* Products Card */}
-        <div style={{ backgroundColor: '#1f2937', padding: '1.5rem', borderRadius: '0.5rem', border: '1px solid #374151' }}>
-          <h2 style={{ fontSize: '0.875rem', textTransform: 'uppercase', color: '#9ca3af', marginBottom: '0.5rem' }}>Products</h2>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{productCount}</div>
-        </div>
-
-        {/* Case Studies Card */}
-        <div style={{ backgroundColor: '#1f2937', padding: '1.5rem', borderRadius: '0.5rem', border: '1px solid #374151' }}>
-          <h2 style={{ fontSize: '0.875rem', textTransform: 'uppercase', color: '#9ca3af', marginBottom: '0.5rem' }}>Case Studies</h2>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{caseStudyCount}</div>
-        </div>
-
-        {/* Team Members Card */}
-        <div style={{ backgroundColor: '#1f2937', padding: '1.5rem', borderRadius: '0.5rem', border: '1px solid #374151' }}>
-          <h2 style={{ fontSize: '0.875rem', textTransform: 'uppercase', color: '#9ca3af', marginBottom: '0.5rem' }}>Team Members</h2>
-          <div style={{ fontSize: '2rem', fontWeight: 'bold' }}>{teamMemberCount}</div>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <Link
+            href="/admin/leadership/new"
+            style={{
+              padding: '0.45rem 0.875rem',
+              backgroundColor: 'rgba(56, 189, 248, 0.1)',
+              border: '1px solid rgba(56, 189, 248, 0.25)',
+              borderRadius: 6,
+              color: '#38BDF8',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              textDecoration: 'none',
+            }}
+          >
+            + Add Leader
+          </Link>
+          <Link
+            href="/admin/case-studies/new"
+            style={{
+              padding: '0.45rem 0.875rem',
+              backgroundColor: '#2563EB',
+              borderRadius: 6,
+              color: '#FFFFFF',
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              textDecoration: 'none',
+            }}
+          >
+            + New Case Study
+          </Link>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem' }}>
+      {/* Stats Cards Grid - 5 concise cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+        {statCards.map((stat, idx) => (
+          <Link
+            key={idx}
+            href={stat.href}
+            style={{
+              backgroundColor: '#0B111E',
+              border: '1px solid #1E293B',
+              borderRadius: 10,
+              padding: '1rem 1.25rem',
+              textDecoration: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+              transition: 'border-color 0.15s, transform 0.15s',
+              borderLeft: stat.alert ? '3px solid #EF4444' : `3px solid ${stat.color}`,
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {stat.label}
+              </span>
+              <span style={{ fontSize: '1.1rem' }}>{stat.icon}</span>
+            </div>
+            <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#F8FAFC', lineHeight: 1 }}>
+              {stat.count}
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {/* 2-Column Split: Recent Messages & Recent Blog Posts */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
         
-        {/* Recent Messages */}
-        <section style={{ backgroundColor: '#1f2937', borderRadius: '0.5rem', border: '1px solid #374151', overflow: 'hidden' }}>
-          <div style={{ padding: '1.5rem', borderBottom: '1px solid #374151', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0 }}>Recent Messages</h2>
-            <Link href="/admin/messages" style={{ color: '#1677FF', textDecoration: 'none', fontSize: '0.875rem' }}>View All</Link>
+        {/* Recent Messages Section */}
+        <div style={{ backgroundColor: '#0B111E', borderRadius: 10, border: '1px solid #1E293B', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ padding: '0.875rem 1.25rem', borderBottom: '1px solid #1E293B', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#090E1A' }}>
+            <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#F8FAFC' }}>Recent Inquiries</h2>
+            <Link href="/admin/messages" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 500 }}>
+              View All →
+            </Link>
           </div>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#111827', color: '#9ca3af', fontSize: '0.875rem' }}>
-                  <th style={{ padding: '0.75rem 1.5rem', fontWeight: '500' }}>Name</th>
-                  <th style={{ padding: '0.75rem 1.5rem', fontWeight: '500' }}>Email</th>
-                  <th style={{ padding: '0.75rem 1.5rem', fontWeight: '500' }}>Date</th>
-                  <th style={{ padding: '0.75rem 1.5rem', fontWeight: '500' }}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentMessages.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} style={{ padding: '1.5rem', textAlign: 'center', color: '#9ca3af' }}>No recent messages.</td>
+
+          <div style={{ overflowX: 'auto', flex: 1 }}>
+            {recentMessages.length === 0 ? (
+              <div style={{ padding: '2.5rem 1.5rem', textAlign: 'center', color: '#64748B', fontSize: '0.85rem' }}>
+                No inquiries submitted yet.
+              </div>
+            ) : (
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.825rem' }}>
+                <thead>
+                  <tr style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)', color: '#64748B', borderBottom: '1px solid #1E293B' }}>
+                    <th style={{ padding: '0.6rem 1rem', fontWeight: 600 }}>Sender</th>
+                    <th style={{ padding: '0.6rem 1rem', fontWeight: 600 }}>Project</th>
+                    <th style={{ padding: '0.6rem 1rem', fontWeight: 600 }}>Date</th>
+                    <th style={{ padding: '0.6rem 1rem', fontWeight: 600 }}>Status</th>
                   </tr>
-                ) : (
-                  recentMessages.map((msg) => (
-                    <tr key={msg.id} style={{ borderBottom: '1px solid #374151' }}>
-                      <td style={{ padding: '1rem 1.5rem' }}>{msg.name}</td>
-                      <td style={{ padding: '1rem 1.5rem', color: '#9ca3af' }}>{msg.email}</td>
-                      <td style={{ padding: '1rem 1.5rem', color: '#9ca3af' }}>{formatDate(msg.createdAt)}</td>
-                      <td style={{ padding: '1rem 1.5rem' }}>
-                        <span style={{ 
-                          padding: '0.25rem 0.5rem', 
-                          borderRadius: '9999px', 
-                          fontSize: '0.75rem', 
-                          fontWeight: '500',
-                          backgroundColor: msg.status === 'NEW' ? 'rgba(22, 119, 255, 0.2)' : 'rgba(156, 163, 175, 0.2)',
-                          color: msg.status === 'NEW' ? '#1677FF' : '#9ca3af'
+                </thead>
+                <tbody>
+                  {recentMessages.map((msg) => (
+                    <tr key={msg.id} style={{ borderBottom: '1px solid rgba(30, 41, 59, 0.5)' }}>
+                      <td style={{ padding: '0.75rem 1rem' }}>
+                        <div style={{ fontWeight: 600, color: '#F1F5F9' }}>{msg.name}</div>
+                        <div style={{ fontSize: '0.72rem', color: '#64748B' }}>{msg.email}</div>
+                      </td>
+                      <td style={{ padding: '0.75rem 1rem', color: '#94A3B8' }}>{msg.projectType || 'General'}</td>
+                      <td style={{ padding: '0.75rem 1rem', color: '#64748B', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>{formatDate(msg.createdAt)}</td>
+                      <td style={{ padding: '0.75rem 1rem' }}>
+                        <span style={{
+                          padding: '0.2rem 0.5rem',
+                          borderRadius: 4,
+                          fontSize: '0.68rem',
+                          fontWeight: 600,
+                          backgroundColor: msg.status === 'NEW' ? 'rgba(56, 189, 248, 0.15)' : 'rgba(100, 116, 139, 0.15)',
+                          color: msg.status === 'NEW' ? '#38BDF8' : '#94A3B8',
                         }}>
                           {msg.status}
                         </span>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
-        </section>
+        </div>
 
-        {/* Recent Blog Posts */}
-        <section style={{ backgroundColor: '#1f2937', borderRadius: '0.5rem', border: '1px solid #374151', overflow: 'hidden' }}>
-          <div style={{ padding: '1.5rem', borderBottom: '1px solid #374151', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', margin: 0 }}>Recent Blog Posts</h2>
-            <Link href="/admin/blog" style={{ color: '#1677FF', textDecoration: 'none', fontSize: '0.875rem' }}>View All</Link>
+        {/* Recent Posts Section */}
+        <div style={{ backgroundColor: '#0B111E', borderRadius: 10, border: '1px solid #1E293B', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ padding: '0.875rem 1.25rem', borderBottom: '1px solid #1E293B', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#090E1A' }}>
+            <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#F8FAFC' }}>Recent Blog Posts</h2>
+            <Link href="/admin/blog" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 500 }}>
+              View All →
+            </Link>
           </div>
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ backgroundColor: '#111827', color: '#9ca3af', fontSize: '0.875rem' }}>
-                  <th style={{ padding: '0.75rem 1.5rem', fontWeight: '500' }}>Title</th>
-                  <th style={{ padding: '0.75rem 1.5rem', fontWeight: '500' }}>Status</th>
-                  <th style={{ padding: '0.75rem 1.5rem', fontWeight: '500' }}>Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentPosts.length === 0 ? (
-                  <tr>
-                    <td colSpan={3} style={{ padding: '1.5rem', textAlign: 'center', color: '#9ca3af' }}>No recent blog posts.</td>
+
+          <div style={{ overflowX: 'auto', flex: 1 }}>
+            {recentPosts.length === 0 ? (
+              <div style={{ padding: '2.5rem 1.5rem', textAlign: 'center', color: '#64748B', fontSize: '0.85rem' }}>
+                No blog posts created yet.
+              </div>
+            ) : (
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.825rem' }}>
+                <thead>
+                  <tr style={{ backgroundColor: 'rgba(15, 23, 42, 0.6)', color: '#64748B', borderBottom: '1px solid #1E293B' }}>
+                    <th style={{ padding: '0.6rem 1rem', fontWeight: 600 }}>Title</th>
+                    <th style={{ padding: '0.6rem 1rem', fontWeight: 600 }}>Status</th>
+                    <th style={{ padding: '0.6rem 1rem', fontWeight: 600 }}>Date</th>
                   </tr>
-                ) : (
-                  recentPosts.map((post) => (
-                    <tr key={post.id} style={{ borderBottom: '1px solid #374151' }}>
-                      <td style={{ padding: '1rem 1.5rem', maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                </thead>
+                <tbody>
+                  {recentPosts.map((post) => (
+                    <tr key={post.id} style={{ borderBottom: '1px solid rgba(30, 41, 59, 0.5)' }}>
+                      <td style={{ padding: '0.75rem 1rem', fontWeight: 500, color: '#F1F5F9' }}>
                         {post.title}
                       </td>
-                      <td style={{ padding: '1rem 1.5rem' }}>
-                        <span style={{ 
-                          padding: '0.25rem 0.5rem', 
-                          borderRadius: '9999px', 
-                          fontSize: '0.75rem', 
-                          fontWeight: '500',
-                          backgroundColor: post.published ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)',
-                          color: post.published ? '#10b981' : '#f59e0b'
+                      <td style={{ padding: '0.75rem 1rem' }}>
+                        <span style={{
+                          padding: '0.2rem 0.5rem',
+                          borderRadius: 4,
+                          fontSize: '0.68rem',
+                          fontWeight: 600,
+                          backgroundColor: post.published ? 'rgba(52, 211, 153, 0.15)' : 'rgba(251, 191, 36, 0.15)',
+                          color: post.published ? '#34D399' : '#FBBF24',
                         }}>
                           {post.published ? 'Published' : 'Draft'}
                         </span>
                       </td>
-                      <td style={{ padding: '1rem 1.5rem', color: '#9ca3af' }}>{formatDate(post.createdAt)}</td>
+                      <td style={{ padding: '0.75rem 1rem', color: '#64748B', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>
+                        {formatDate(post.createdAt)}
+                      </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
-        </section>
+        </div>
 
       </div>
+
     </div>
   );
 }

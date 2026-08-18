@@ -26,6 +26,39 @@ export default function HomePage() {
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
+  // Leadership state synced with database / admin panel
+  const [leaders, setLeaders] = useState<any[]>([
+    {
+      id: '1',
+      name: 'Fawadullah Imraj',
+      position: 'Co-Founder & CEO',
+      shortBio: 'Co Founder and CEO of Quantum AI, building AI powered software and digital solutions for schools, colleges, and businesses',
+      photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049252241-Screenshot_2025-02-11_170816.png',
+      slug: 'fawadullah-imraj',
+      publicId: 'QA-001'
+    },
+    {
+      id: '2',
+      name: 'Fahad Khan',
+      position: 'Co-Founder & Executive Chairman',
+      shortBio: 'Co Founder and Executive Chairman of Quantum AI, supporting strategic direction, technical vision, and long term growth.',
+      photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049467020-Screenshot_2026-08-18_153738.png',
+      slug: 'fahad-khan',
+      publicId: 'QA-002'
+    }
+  ]);
+
+  useEffect(() => {
+    fetch('/api/leadership')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setLeaders(data.filter((m: any) => m.isActive !== false));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     setIsMounted(true);
     const handleScroll = () => {
@@ -119,6 +152,32 @@ export default function HomePage() {
           section { padding-left: clamp(1rem, 4vw, 2rem) !important; padding-right: clamp(1rem, 4vw, 2rem) !important; }
           /* Contact form 2-column selects → 1-col on tiny screens */
           .form-selects-row { grid-template-columns: 1fr !important; }
+          /* Leadership 2by2 on phone */
+          .home-leadership-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.75rem !important;
+          }
+          .home-leadership-grid > a {
+            border-radius: 8px !important;
+          }
+          .home-leadership-grid > a > div:first-child {
+            padding: 0.4rem 0.6rem !important;
+          }
+          .home-leadership-grid > a > div:nth-child(2) {
+            aspect-ratio: 1/1 !important;
+            max-height: 160px !important;
+          }
+          .home-leadership-grid > a > div:last-child {
+            padding: 0.75rem !important;
+          }
+          .home-leadership-grid h3 {
+            font-size: 0.95rem !important;
+          }
+          .home-leadership-grid p {
+            font-size: 0.75rem !important;
+            line-height: 1.35 !important;
+            -webkit-line-clamp: 2 !important;
+          }
         }
         @media (max-width: 480px) {
           /* Tag overflow fix */
@@ -723,50 +782,96 @@ export default function HomePage() {
               Engineers and architects building enterprise products.
             </p>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '2rem'
-            }}>
-              {[
-                {
-                  name: 'Fawadullah Imraj',
-                  role: 'Co-Founder & CEO',
-                  bio: 'Directs company vision and strategic engineering execution, aligning AI technology with business goals.'
-                },
-                {
-                  name: 'Fahad Khan',
-                  role: 'Co-Founder & Executive chairman',
-                  bio: 'Leads technical architecture, cloud engineering, database structure, and model deployment systems.'
-                }
-              ].map((person, idx) => (
-                <div
-                  key={idx}
+            <div
+              className="home-leadership-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '1.75rem',
+                maxWidth: 960,
+                margin: '0 auto',
+              }}
+            >
+              {leaders.map((person) => (
+                <Link
+                  key={person.id || person.slug}
+                  href={`/leadership/${person.slug || 'fawadullah-imraj'}`}
                   style={{
-                    backgroundColor: 'rgba(6, 21, 43, 0.6)',
-                    border: '1px solid rgba(22, 119, 255, 0.12)',
+                    backgroundColor: 'rgba(6, 21, 43, 0.75)',
+                    border: '1px solid rgba(22, 119, 255, 0.2)',
                     borderRadius: 12,
-                    padding: '2.5rem',
+                    overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '1rem',
-                    transition: 'border-color 0.25s',
+                    textDecoration: 'none',
+                    transition: 'transform 0.2s, border-color 0.2s, box-shadow 0.2s',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.35)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.12)'; }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.5)';
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.5)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.2)';
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
-                  <div>
-                    <h3 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#F8FAFF', margin: '0 0 0.25rem 0', textTransform: 'none' }}>
-                      {person.name}
-                    </h3>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#1677FF', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 600 }}>
-                      {person.role}
+                  {/* Card Header Tag */}
+                  <div style={{
+                    padding: '0.65rem 1rem',
+                    borderBottom: '1px solid rgba(22, 119, 255, 0.12)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', color: '#1677FF', textTransform: 'uppercase' }}>
+                      QUANTUM AI
+                    </span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#64748B' }}>
+                      {person.publicId || 'QA-LEAD'}
                     </span>
                   </div>
-                  <p style={{ color: '#94A3B8', fontSize: '0.975rem', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
-                    {person.bio}
-                  </p>
-                </div>
+
+                  {/* Photo Container */}
+                  <div style={{
+                    width: '100%',
+                    aspectRatio: '4/3',
+                    maxHeight: 260,
+                    backgroundColor: '#030712',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                    {person.photo ? (
+                      <img
+                        src={person.photo}
+                        alt={person.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <div style={{ color: '#64748B', fontSize: '2rem' }}>👤</div>
+                    )}
+                  </div>
+
+                  {/* Body Content */}
+                  <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#F8FAFF', margin: '0 0 0.25rem 0', letterSpacing: '-0.01em', textTransform: 'none' }}>
+                      {person.name}
+                    </h3>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#55D6FF', letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.75rem' }}>
+                      {person.position}
+                    </span>
+                    <p style={{ color: '#94A3B8', fontSize: '0.875rem', lineHeight: 1.55, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                      {person.shortBio}
+                    </p>
+                    
+                    <span style={{ marginTop: 'auto', paddingTop: '1rem', color: '#1677FF', fontSize: '0.75rem', fontWeight: 600, fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
+                      VIEW PROFILE →
+                    </span>
+                  </div>
+                </Link>
               ))}
             </div>
           </div>

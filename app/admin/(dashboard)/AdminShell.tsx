@@ -1,9 +1,22 @@
 'use client'
+
 import React, { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import Link from 'next/link'
 import styles from './layout.module.css'
+import { AdminNotifications } from './AdminNotifications'
 
-export function AdminShell({ sidebar, children }: { sidebar: React.ReactNode; children: React.ReactNode }) {
+export function AdminShell({
+  sidebar,
+  children,
+  userName = 'Admin',
+  userRole = 'ADMIN',
+}: {
+  sidebar: React.ReactNode
+  children: React.ReactNode
+  userName?: string
+  userRole?: string
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
 
@@ -12,65 +25,130 @@ export function AdminShell({ sidebar, children }: { sidebar: React.ReactNode; ch
     setSidebarOpen(false)
   }, [pathname])
 
+  // Get current section name
+  const getPageTitle = () => {
+    if (pathname === '/admin') return 'Dashboard'
+    const parts = pathname.split('/').filter(Boolean)
+    if (parts.length > 1) {
+      const section = parts[1]
+      return section.charAt(0).toUpperCase() + section.slice(1).replace(/-/g, ' ')
+    }
+    return 'Admin'
+  }
+
   return (
     <div className={styles.adminLayout}>
-      {/* Mobile overlay */}
+      {/* Mobile overlay backdrop */}
       {sidebarOpen && (
         <div
           onClick={() => setSidebarOpen(false)}
           style={{
-            position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.7)',
-            zIndex: 40, display: 'none'
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backdropFilter: 'blur(3px)',
+            zIndex: 45,
           }}
-          className="mobile-overlay"
         />
       )}
-      
-      {/* Mobile header bar */}
-      <div className="admin-mobile-header">
-        <button
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          aria-label="Toggle navigation"
-          style={{
-            background: 'transparent', border: 'none', color: '#9ca3af',
-            cursor: 'pointer', padding: '0.5rem', borderRadius: 6
-          }}
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            <path d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        <span style={{ color: '#fff', fontWeight: 700, letterSpacing: '0.05em', fontSize: '0.9rem' }}>ADMIN PANEL</span>
-        <div style={{ width: 38 }} />
-      </div>
 
       {/* Sidebar */}
       <aside className={`${styles.sidebar} ${sidebarOpen ? styles.open : ''}`}>
         {sidebar}
       </aside>
 
-      {/* Main Content */}
-      <main className={styles.mainContent}>
-        <div className={styles.contentArea}>{children}</div>
-      </main>
+      {/* Main Content Area */}
+      <div className={styles.mainContent}>
+        {/* Universal Top Bar for both PC and Mobile */}
+        <header className={styles.topBar}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            {/* Mobile Hamburger Toggle */}
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              aria-label="Toggle navigation"
+              className="admin-hamburger"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: '#94A3B8',
+                cursor: 'pointer',
+                padding: '0.4rem',
+                borderRadius: 6,
+                display: 'none',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
+            {/* Breadcrumb / Title */}
+            <div className={styles.breadcrumb}>
+              <span style={{ color: '#475569' }}>Admin</span>
+              <span style={{ color: '#334155' }}>/</span>
+              <span style={{ color: '#F1F5F9', fontWeight: 600 }}>{getPageTitle()}</span>
+            </div>
+          </div>
+
+          {/* Right Action Icons */}
+          <div className={styles.topBarActions}>
+            <Link
+              href="/"
+              target="_blank"
+              style={{
+                fontSize: '0.75rem',
+                color: '#94A3B8',
+                textDecoration: 'none',
+                padding: '0.35rem 0.65rem',
+                borderRadius: 6,
+                backgroundColor: 'rgba(255, 255, 255, 0.04)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                transition: 'all 0.15s',
+              }}
+            >
+              <span>View Site</span>
+              <span style={{ fontSize: '0.85rem' }}>↗</span>
+            </Link>
+
+            {/* Notification Bell Component */}
+            <AdminNotifications />
+
+            {/* User Mini Indicator */}
+            <div
+              style={{
+                width: 32,
+                height: 32,
+                borderRadius: 6,
+                background: 'linear-gradient(135deg, #1E3A8A, #0284C7)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                color: '#fff',
+              }}
+            >
+              {userName.charAt(0).toUpperCase()}
+            </div>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className={styles.contentArea}>
+          {children}
+        </main>
+      </div>
 
       <style>{`
-        .admin-mobile-header {
-          display: none;
-          position: fixed;
-          top: 0; left: 0; right: 0;
-          height: 56px;
-          background: #0a0f1a;
-          border-bottom: 1px solid #1f2937;
-          align-items: center;
-          justify-content: space-between;
-          padding: 0 1rem;
-          z-index: 45;
-        }
         @media (max-width: 768px) {
-          .admin-mobile-header { display: flex; }
-          .mobile-overlay { display: block !important; }
-          .${styles.mainContent} { margin-top: 56px; }
+          .admin-hamburger {
+            display: flex !important;
+          }
         }
       `}</style>
     </div>
