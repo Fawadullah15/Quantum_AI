@@ -119,6 +119,21 @@ export default function Navigation({ companyName }: { companyName?: string }) {
     setMobileOpen(false);
   }, [pathname]);
 
+  // Lock body scroll and listen for Escape key when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+      const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileOpen(false); };
+      document.addEventListener('keydown', onKey);
+      return () => {
+        document.body.style.overflow = '';
+        document.removeEventListener('keydown', onKey);
+      };
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [mobileOpen]);
+
   const handleNavEnter = (href: string, hasDropdown: boolean) => {
     if (leaveTimer.current) clearTimeout(leaveTimer.current);
     setHoveredItem(href);
@@ -386,6 +401,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
               exit={{ opacity: 0, y: '-100%' }}
               transition={{ type: 'spring', damping: 28, stiffness: 220, mass: 0.9 }}
               role="dialog"
+              aria-modal="true"
               aria-label="Mobile navigation menu"
               style={{
                 position: 'fixed',
@@ -559,7 +575,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
         }
         @media (max-width: 900px) {
           .nav-desktop-links { display: none !important; }
-          .nav-wordmark-text { display: none; }
+          .nav-wordmark-text { font-size: 0.78rem !important; }
           .nav-hamburger { display: flex !important; }
           .nav-cta-btn { display: none !important; }
         }

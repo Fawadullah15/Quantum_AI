@@ -62,7 +62,11 @@ export default async function LeadershipPage() {
           <p className="ldr-desc">The people shaping the systems, products, and technology behind Quantum AI.</p>
           <div className="ldr-grid">
             {members.length === 0 ? (
-              <div className="ldr-empty">[NO ACTIVE MEMBERS]</div>
+              <div className="ldr-empty" style={{ textAlign: 'center', padding: '5rem 2rem', color: '#475569', gridColumn: '1 / -1' }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#1677FF', marginBottom: '1rem' }}>QUANTUM AI</div>
+                <p style={{ fontSize: '1.1rem', color: '#94A3B8', lineHeight: 1.7, maxWidth: 400, margin: '0 auto 1.5rem' }}>Our leadership team directory is currently being updated. Please check back soon or contact us directly.</p>
+                <Link href="/contact" style={{ display: 'inline-flex', padding: '0.75rem 1.5rem', backgroundColor: 'rgba(22,119,255,0.12)', border: '1px solid rgba(22,119,255,0.3)', borderRadius: 8, color: '#F8FAFF', textDecoration: 'none', fontSize: '0.875rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>CONTACT US</Link>
+              </div>
             ) : members.map((m) => (
               <Link key={m.id} href={`/leadership/${m.slug}`} className="id-card">
                 <div className="id-header">

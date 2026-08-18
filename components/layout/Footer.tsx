@@ -68,11 +68,14 @@ export default function Footer({
       <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
 
         {/* Top grid - Desktop: 5 columns, Tablet: 3 columns, Mobile: 2 columns */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gap: '2rem',
-        }}>
+        <div
+          className="footer-grid"
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(5, 1fr)',
+            gap: '2rem',
+          }}
+        >
           {/* Brand - spans 1 column */}
           <div style={{ gridColumn: 'span 1' }}>
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', textDecoration: 'none', marginBottom: '1.25rem' }}>
@@ -169,22 +172,22 @@ export default function Footer({
       {/* Responsive styles */}
       <style>{`
         @media (max-width: 1024px) {
-          footer > div > div:first-child {
-            grid-template-columns: repeat(3, 1fr);
+          .footer-grid {
+            grid-template-columns: repeat(3, 1fr) !important;
           }
         }
         @media (max-width: 768px) {
-          footer > div > div:first-child {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 2rem;
+          .footer-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 2rem !important;
           }
         }
         @media (max-width: 480px) {
-          footer > div > div:first-child {
-            grid-template-columns: 1fr;
+          .footer-grid {
+            grid-template-columns: 1fr !important;
           }
           footer {
-            padding: 3rem 1.25rem 2rem;
+            padding: 3rem 1.25rem 2rem !important;
           }
         }
       `}</style>

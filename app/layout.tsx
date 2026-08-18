@@ -38,11 +38,15 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
+import { Providers } from './providers'
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${spaceMono.variable}`}>
       <body>
-        {children}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   )

@@ -104,6 +104,35 @@ export default function HomePage() {
   return (
     <>
       <ButtonStyles />
+      <style>{`
+        /* ── Mobile Responsive Grid Overrides ── */
+        @media (max-width: 380px) {
+          .solutions-grid { grid-template-columns: 1fr !important; }
+          .tech-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (min-width: 381px) and (max-width: 640px) {
+          .solutions-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .solutions-grid > a { padding: 1.25rem !important; }
+          .tech-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.875rem !important; }
+          .tech-grid > div { padding: 1.25rem !important; }
+        }
+        @media (max-width: 640px) {
+          /* Hero heading */
+          .hero-eyebrow { letter-spacing: 0.15em !important; font-size: 0.7rem !important; }
+          /* Section padding */
+          section { padding-left: clamp(1rem, 4vw, 2rem) !important; padding-right: clamp(1rem, 4vw, 2rem) !important; }
+          /* Contact form 2-column selects → 1-col on tiny screens */
+          .form-selects-row { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 480px) {
+          /* Tag overflow fix */
+          .tech-grid > div [style*="whiteSpace: nowrap"] { white-space: normal !important; }
+        }
+        /* Reduced motion: skip particle canvas */
+        @media (prefers-reduced-motion: reduce) {
+          canvas { display: none !important; }
+        }
+      `}</style>
       <div style={{ position: 'relative', width: '100%', pointerEvents: 'none' }}>
 
         {/* ═══════════════════════════════════════════════════════════
@@ -137,8 +166,8 @@ export default function HomePage() {
 
             {/* ParticleText visual headline */}
             <div style={{
-              height: 'clamp(180px, 28vw, 340px)',
-              width: 'clamp(300px, 90vw, 860px)',
+              height: 'clamp(220px, 35vw, 340px)',
+              width: 'clamp(280px, 92vw, 860px)',
               marginBottom: '2rem',
             }}>
               <ParticleText
@@ -214,15 +243,18 @@ export default function HomePage() {
               We construct custom software architectures designed to fit directly into your business model and operational workflow.
             </p>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '1.5px',
-              background: 'rgba(22, 119, 255, 0.08)',
-              border: '1px solid rgba(22, 119, 255, 0.08)',
-              borderRadius: 16,
-              overflow: 'hidden',
-            }}>
+            <div
+              className="solutions-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '1.5px',
+                background: 'rgba(22, 119, 255, 0.08)',
+                border: '1px solid rgba(22, 119, 255, 0.08)',
+                borderRadius: 16,
+                overflow: 'hidden',
+              }}
+            >
               {[
                 {
                   num: '01',
@@ -348,11 +380,14 @@ export default function HomePage() {
               We construct systems using production-proven languages and platforms capable of scaling seamlessly.
             </p>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: '1.5rem'
-            }}>
+            <div
+              className="tech-grid"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '1.5rem'
+              }}
+            >
               {[
                 {
                   title: 'AI & Machine Learning',
@@ -876,7 +911,7 @@ export default function HomePage() {
                       />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div className="form-selects-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                         <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase' }}>PROJECT TYPE</label>
                         <select

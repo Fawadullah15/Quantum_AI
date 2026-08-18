@@ -97,6 +97,13 @@ export default function ContactPage() {
         minHeight: '100vh',
       }}
     >
+      <style>{`
+        @media (max-width: 768px) {
+          input, select, textarea {
+            font-size: 16px !important;
+          }
+        }
+      `}</style>
       <div style={{ maxWidth: 'var(--max-width)', margin: '0 auto' }}>
         {/* Statement headline */}
         <div style={{ position: 'relative', marginBottom: 'var(--space-32)' }}>
