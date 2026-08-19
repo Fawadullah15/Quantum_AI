@@ -8,11 +8,48 @@ export const metadata = {
   description: 'AI systems, custom software platforms, intelligent automation, and digital products engineered for scale.',
 };
 
+const DEFAULT_SERVICES = [
+  {
+    id: 's-ai',
+    name: 'AI Systems',
+    category: 'AI',
+    description: 'Custom artificial intelligence systems, multi-agent workflows, retrieval-augmented generation (RAG), and neural architectures engineered for enterprise decision making.',
+    icon: 'Brain',
+    order: 1,
+  },
+  {
+    id: 's-software',
+    name: 'Business Software',
+    category: 'SOFTWARE',
+    description: 'Scalable enterprise web applications, administrative dashboards, ERP systems, and internal operational platforms designed around real business processes.',
+    icon: 'LayoutDashboard',
+    order: 2,
+  },
+  {
+    id: 's-automation',
+    name: 'Automation',
+    category: 'AUTOMATION',
+    description: 'End-to-end workflow automation, event-driven pipelines, API integrations, and synchronization bots that eliminate repetitive manual operational tasks.',
+    icon: 'Bot',
+    order: 3,
+  },
+  {
+    id: 's-products',
+    name: 'Digital Products',
+    category: 'PRODUCT',
+    description: 'Consumer-facing SaaS platforms, intelligent mobile-responsive tools, and full-stack software products built for high user concurrency and scale.',
+    icon: 'Layers',
+    order: 4,
+  },
+];
+
 export default async function ServicesPage() {
-  const services = await prisma.service.findMany({
+  const dbServices = await prisma.service.findMany({
     where: { published: true },
     orderBy: { order: 'asc' },
   }).catch(() => []);
+
+  const services = dbServices && dbServices.length > 0 ? dbServices : DEFAULT_SERVICES;
 
   return (
     <div style={{ paddingTop: 'calc(var(--nav-height, 80px) * 2)', paddingBottom: 'var(--space-32, 6rem)', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container section">
@@ -24,27 +61,38 @@ export default async function ServicesPage() {
           </h1>
         </div>
 
-        {services.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '5rem 2rem', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: 12, color: '#94A3B8' }}>
-            <p style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.875rem', letterSpacing: '0.1em', marginBottom: '1.5rem' }}>SERVICES ARE BEING CONFIGURED</p>
-            <Link href="/contact" style={{ display: 'inline-block', padding: '0.75rem 1.5rem', backgroundColor: '#1677FF', color: '#fff', borderRadius: 6, textDecoration: 'none', fontWeight: 600 }}>CONTACT US</Link>
-          </div>
-        ) : (
-          <div className="services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 'var(--space-16, 2.5rem)', borderTop: '1px solid var(--color-border, rgba(255,255,255,0.1))', paddingTop: 'var(--space-16, 2.5rem)' }}>
-            {services.map((service, idx) => {
-              const anchorId = (service.category?.toLowerCase() || service.name.toLowerCase().replace(/\s+/g, '-'));
-              return (
-                <div key={service.id} id={anchorId} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6, 1rem)', scrollMarginTop: 'calc(var(--nav-height, 80px) + 2rem)' }}>
-                  <div className="eyebrow" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', color: '#1677FF', letterSpacing: '0.15em' }}>MODULE {String(idx + 1).padStart(2, '0')}{service.category ? ` · ${service.category}` : ''}</div>
-                  <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 600, color: 'var(--color-text-primary, #F8FAFC)', margin: 0 }}>{service.name}</h2>
-                  <p style={{ color: 'var(--color-text-secondary, #94A3B8)', lineHeight: 1.6, margin: 0 }}>
-                    {service.description}
-                  </p>
+        <div className="services-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--space-16, 2rem)', borderTop: '1px solid var(--color-border, rgba(255,255,255,0.1))', paddingTop: 'var(--space-16, 2.5rem)' }}>
+          {services.map((service, idx) => {
+            const anchorId = (service.category?.toLowerCase() || service.name.toLowerCase().replace(/\s+/g, '-'));
+            return (
+              <div
+                key={service.id}
+                id={anchorId}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 'var(--space-6, 1rem)',
+                  scrollMarginTop: 'calc(var(--nav-height, 80px) + 2rem)',
+                  padding: '2rem',
+                  backgroundColor: 'rgba(6, 21, 43, 0.55)',
+                  border: '1px solid rgba(22, 119, 255, 0.2)',
+                  borderRadius: 14,
+                  transition: 'border-color 0.2s, box-shadow 0.2s',
+                }}
+              >
+                <div className="eyebrow" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', color: '#1677FF', letterSpacing: '0.15em', fontWeight: 600 }}>
+                  MODULE {String(idx + 1).padStart(2, '0')}{service.category ? ` · ${service.category}` : ''}
                 </div>
-              );
-            })}
-          </div>
-        )}
+                <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.2rem)', fontWeight: 700, color: 'var(--color-text-primary, #F8FAFC)', margin: 0 }}>
+                  {service.name}
+                </h2>
+                <p style={{ color: 'var(--color-text-secondary, #94A3B8)', lineHeight: 1.65, margin: 0, fontSize: '1rem', fontWeight: 300 }}>
+                  {service.description}
+                </p>
+              </div>
+            );
+          })}
+        </div>
 
         <div style={{ marginTop: '5rem', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '3rem', textAlign: 'center' }}>
           <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.5rem)', color: '#F8FAFC', marginBottom: '1rem', fontWeight: 700 }}>HAVE A SPECIFIC SYSTEM IN MIND?</h2>
@@ -57,14 +105,9 @@ export default async function ServicesPage() {
 
       <style>{`
         .services-grid {
-          grid-template-columns: repeat(3, 1fr);
+          grid-template-columns: repeat(2, 1fr);
         }
-        @media (max-width: 1024px) {
-          .services-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
           .services-grid {
             grid-template-columns: 1fr;
           }

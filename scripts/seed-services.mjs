@@ -1,9 +1,9 @@
-import prisma from '@/lib/db'
-import ServicesClient from './client'
+import { PrismaClient } from '@prisma/client';
 
-const DEFAULT_SERVICES = [
+const prisma = new PrismaClient();
+
+const mockServices = [
   {
-    id: 's-ai',
     name: 'AI Systems',
     category: 'AI',
     description: 'Custom artificial intelligence systems, multi-agent workflows, retrieval-augmented generation (RAG), and neural architectures engineered for enterprise decision making.',
@@ -12,7 +12,6 @@ const DEFAULT_SERVICES = [
     published: true,
   },
   {
-    id: 's-software',
     name: 'Business Software',
     category: 'SOFTWARE',
     description: 'Scalable enterprise web applications, administrative dashboards, ERP systems, and internal operational platforms designed around real business processes.',
@@ -21,7 +20,6 @@ const DEFAULT_SERVICES = [
     published: true,
   },
   {
-    id: 's-automation',
     name: 'Automation',
     category: 'AUTOMATION',
     description: 'End-to-end workflow automation, event-driven pipelines, API integrations, and synchronization bots that eliminate repetitive manual operational tasks.',
@@ -30,7 +28,6 @@ const DEFAULT_SERVICES = [
     published: true,
   },
   {
-    id: 's-products',
     name: 'Digital Products',
     category: 'PRODUCT',
     description: 'Consumer-facing SaaS platforms, intelligent mobile-responsive tools, and full-stack software products built for high user concurrency and scale.',
@@ -40,12 +37,36 @@ const DEFAULT_SERVICES = [
   },
 ];
 
-export default async function ServicesPage() {
-  const dbServices = await prisma.service.findMany({
-    orderBy: { order: 'asc' }
-  }).catch(() => [])
-  
-  const services = dbServices && dbServices.length > 0 ? dbServices : DEFAULT_SERVICES
+async function main() {
+  console.log('Seeding mock services into database...');
 
-  return <ServicesClient initialData={services} />
+  for (const service of mockServices) {
+    const existing = await prisma.service.findFirst({
+      where: { name: service.name },
+    });
+
+    if (existing) {
+      console.log(`Updating existing service: ${service.name}`);
+      await prisma.service.update({
+        where: { id: existing.id },
+        data: service,
+      });
+    } else {
+      console.log(`Creating new service: ${service.name}`);
+      await prisma.service.create({
+        data: service,
+      });
+    }
+  }
+
+  console.log('Successfully seeded all 4 mock services!');
 }
+
+main()
+  .catch((e) => {
+    console.error('Error seeding services:', e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
