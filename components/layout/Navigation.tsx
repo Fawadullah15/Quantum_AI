@@ -227,7 +227,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
                 flexShrink: 0,
               }}
             >
-              <QuantumLogo width={28} height={28} />
+              <QuantumLogo width={48} height={48} />
               <span className="nav-wordmark-text" style={{
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 700,
@@ -421,7 +421,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
               {/* Top bar */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
                 <Link href="/" onClick={() => setMobileOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', textDecoration: 'none' }}>
-                  <QuantumLogo width={30} height={30} />
+                  <QuantumLogo width={48} height={48} />
                   <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '1rem', letterSpacing: '0.12em', color: '#F8FAFF', textTransform: 'uppercase' }}>
                     QUANTUM AI
                   </span>
