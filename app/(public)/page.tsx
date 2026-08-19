@@ -8,6 +8,7 @@ import { NovaButton, GalaxyButton, ButtonStyles } from '@/components/ui/Buttons'
 
 const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr: false });
 const GlobalMapSection = dynamic(() => import('@/components/sections/GlobalMapSection'), { ssr: false });
+import TestimonialsSection from '@/components/sections/TestimonialsSection';
 
 export default function HomePage() {
   const { setScrollProgress } = useGlobalStore();
@@ -949,6 +950,11 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ═══════════════════════════════════════════════════════════
+            TESTIMONIALS SECTION (Directly connected to Admin / DB)
+        ═══════════════════════════════════════════════════════════ */}
+        <TestimonialsSection />
 
         {/* ═══════════════════════════════════════════════════════════
             CONTACT SECTION
