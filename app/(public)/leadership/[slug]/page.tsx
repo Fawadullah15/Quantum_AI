@@ -30,8 +30,8 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
           .prof-back { margin-bottom: 1.5rem; }
           .prof-short-bio { font-size: 1rem; line-height: 1.6; }
         }
-        .prof-photo { width: 100%; aspect-ratio: 3/4; max-height: 400px; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #0A1628, #07152F); border: 1px solid rgba(30,58,138,0.4); display: flex; align-items: flex-start; justify-content: center; margin-bottom: 1.25rem; }
-        .prof-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+        .prof-photo { width: 100%; aspect-ratio: 4/3; max-height: 400px; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #0A1628, #07152F); border: 1px solid rgba(30,58,138,0.4); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+        .prof-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
         .prof-pid { font-family: var(--font-mono, monospace); font-size: 0.65rem; color: #64748B; letter-spacing: 0.15em; margin-bottom: 1rem; }
         .prof-social { display: flex; flex-direction: column; gap: 0.5rem; }
         .prof-social-link { display: inline-flex; align-items: center; gap: 0.5rem; color: #64748B; text-decoration: none; font-size: 0.85rem; transition: color 0.2s; padding: 0.5rem 0.75rem; border: 1px solid rgba(30,58,138,0.3); border-radius: 6px; }

@@ -901,19 +901,18 @@ export default function HomePage() {
                   {/* Photo Container */}
                   <div style={{
                     width: '100%',
-                    aspectRatio: '3/4',
-                    maxHeight: 280,
+                    aspectRatio: '4/3',
                     backgroundColor: '#030712',
                     overflow: 'hidden',
                     display: 'flex',
-                    alignItems: 'flex-start',
+                    alignItems: 'center',
                     justifyContent: 'center',
                   }}>
                     {person.photo ? (
                       <img
                         src={person.photo}
                         alt={person.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top center' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
                       />
                     ) : (
                       <div style={{ color: '#64748B', fontSize: '2rem' }}>👤</div>
