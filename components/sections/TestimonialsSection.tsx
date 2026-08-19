@@ -23,6 +23,20 @@ export default function TestimonialsSection({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
+  // Review Modal State
+  const [showModal, setShowModal] = useState(false);
+  const [reviewForm, setReviewForm] = useState({
+    name: '',
+    company: '',
+    role: '',
+    rating: 5,
+    content: '',
+    photo: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+
   useEffect(() => {
     // Fetch latest published testimonials from live API
     fetch('/api/testimonials')
@@ -37,17 +51,12 @@ export default function TestimonialsSection({
 
   // Auto-advance carousel if more than 1 item and not hovered
   useEffect(() => {
-    if (testimonials.length <= 1 || isPaused) return;
+    if (testimonials.length <= 1 || isPaused || showModal) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
     }, 6000);
     return () => clearInterval(interval);
-  }, [testimonials.length, isPaused]);
-
-  // Don't render anything if there are no published testimonials (no fake data)
-  if (!testimonials || testimonials.length === 0) {
-    return null;
-  }
+  }, [testimonials.length, isPaused, showModal]);
 
   const handlePrev = () => {
     setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
@@ -55,6 +64,31 @@ export default function TestimonialsSection({
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const handleReviewSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitError('');
+    try {
+      setIsSubmitting(true);
+      const res = await fetch('/api/testimonials/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reviewForm),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'Failed to submit review');
+      }
+
+      setSubmitSuccess(true);
+      setReviewForm({ name: '', company: '', role: '', rating: 5, content: '', photo: '' });
+    } catch (err: any) {
+      setSubmitError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -107,7 +141,7 @@ export default function TestimonialsSection({
                 margin: 0,
               }}
             >
-              Partner perspectives.
+              What Our Clients Say
             </h2>
             <p
               style={{
@@ -120,77 +154,150 @@ export default function TestimonialsSection({
                 fontWeight: 300,
               }}
             >
-              Direct feedback from technical leaders and operational teams building with Quantum AI.
+              Feedback from people we have worked with.
             </p>
           </div>
 
-          {/* Carousel Navigation Buttons (if more than 1 item) */}
-          {testimonials.length > 1 && (
-            <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-              <button
-                onClick={handlePrev}
-                aria-label="Previous testimonial"
-                data-trail="link"
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(6, 21, 43, 0.8)',
-                  border: '1px solid rgba(22, 119, 255, 0.3)',
-                  color: '#F8FAFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  fontSize: '1.1rem',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#38BDF8';
-                  e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.2)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.3)';
-                  e.currentTarget.style.backgroundColor = 'rgba(6, 21, 43, 0.8)';
-                }}
-              >
-                ←
-              </button>
-              <button
-                onClick={handleNext}
-                aria-label="Next testimonial"
-                data-trail="link"
-                style={{
-                  width: '44px',
-                  height: '44px',
-                  borderRadius: '50%',
-                  backgroundColor: 'rgba(6, 21, 43, 0.8)',
-                  border: '1px solid rgba(22, 119, 255, 0.3)',
-                  color: '#F8FAFF',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                  fontSize: '1.1rem',
-                  transition: 'all 0.2s ease',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#38BDF8';
-                  e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.2)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.3)';
-                  e.currentTarget.style.backgroundColor = 'rgba(6, 21, 43, 0.8)';
-                }}
-              >
-                →
-              </button>
-            </div>
-          )}
+          {/* Action Row: Leave Review & Nav Buttons */}
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => {
+                setShowModal(true);
+                setSubmitSuccess(false);
+                setSubmitError('');
+              }}
+              data-trail="link"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.65rem 1.15rem',
+                borderRadius: '8px',
+                backgroundColor: 'rgba(22, 119, 255, 0.12)',
+                border: '1px solid rgba(22, 119, 255, 0.35)',
+                color: '#38BDF8',
+                fontSize: '0.85rem',
+                fontFamily: 'var(--font-mono, monospace)',
+                letterSpacing: '0.08em',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.25)';
+                e.currentTarget.style.borderColor = '#38BDF8';
+                e.currentTarget.style.boxShadow = '0 0 16px rgba(56, 189, 248, 0.3)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.12)';
+                e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.35)';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <span>+</span> Share Your Feedback
+            </button>
+
+            {/* Carousel Navigation Buttons (if more than 1 item) */}
+            {testimonials.length > 1 && (
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button
+                  onClick={handlePrev}
+                  aria-label="Previous testimonial"
+                  data-trail="link"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(6, 21, 43, 0.8)',
+                    border: '1px solid rgba(22, 119, 255, 0.3)',
+                    color: '#F8FAFF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = '#38BDF8';
+                    e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.3)';
+                    e.currentTarget.style.backgroundColor = 'rgba(6, 21, 43, 0.8)';
+                  }}
+                >
+                  ←
+                </button>
+                <button
+                  onClick={handleNext}
+                  aria-label="Next testimonial"
+                  data-trail="link"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    backgroundColor: 'rgba(6, 21, 43, 0.8)',
+                    border: '1px solid rgba(22, 119, 255, 0.3)',
+                    color: '#F8FAFF',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: '1rem',
+                    transition: 'all 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = '#38BDF8';
+                    e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.2)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.3)';
+                    e.currentTarget.style.backgroundColor = 'rgba(6, 21, 43, 0.8)';
+                  }}
+                >
+                  →
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Display Cards */}
-        {testimonials.length <= 3 ? (
+        {testimonials.length === 0 ? (
+          <div
+            style={{
+              padding: '3rem 2rem',
+              borderRadius: 14,
+              border: '1px dashed rgba(22, 119, 255, 0.2)',
+              backgroundColor: 'rgba(6, 21, 43, 0.4)',
+              textAlign: 'center',
+            }}
+          >
+            <p style={{ color: '#94A3B8', fontSize: '1.05rem', margin: '0 0 1.25rem 0', fontWeight: 300 }}>
+              Have you worked with Quantum AI? Be the first to share your experience.
+            </p>
+            <button
+              onClick={() => setShowModal(true)}
+              data-trail="link"
+              style={{
+                padding: '0.65rem 1.5rem',
+                borderRadius: '8px',
+                backgroundColor: '#1677FF',
+                color: '#FFFFFF',
+                border: 'none',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                fontFamily: 'var(--font-mono, monospace)',
+                cursor: 'pointer',
+                letterSpacing: '0.08em',
+              }}
+            >
+              + SUBMIT A CLIENT REVIEW
+            </button>
+          </div>
+        ) : testimonials.length <= 3 ? (
           /* Grid View for 1-3 testimonials */
           <div
             style={{
@@ -250,6 +357,306 @@ export default function TestimonialsSection({
           </div>
         )}
       </div>
+
+      {/* Review Submission Modal */}
+      {showModal && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 10000,
+            backgroundColor: 'rgba(2, 6, 23, 0.85)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.25rem',
+          }}
+          onClick={() => setShowModal(false)}
+        >
+          <div
+            style={{
+              backgroundColor: '#071224',
+              border: '1px solid rgba(56, 189, 248, 0.35)',
+              borderRadius: 16,
+              padding: 'clamp(1.5rem, 4vw, 2.5rem)',
+              maxWidth: 580,
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 30px rgba(22, 119, 255, 0.2)',
+              position: 'relative',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowModal(false)}
+              aria-label="Close modal"
+              style={{
+                position: 'absolute',
+                top: '1.25rem',
+                right: '1.25rem',
+                background: 'transparent',
+                border: 'none',
+                color: '#94A3B8',
+                fontSize: '1.5rem',
+                cursor: 'pointer',
+                padding: '0.25rem',
+                lineHeight: 1,
+              }}
+            >
+              ✕
+            </button>
+
+            {submitSuccess ? (
+              <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+                <div style={{ fontSize: '2.5rem', color: '#38BDF8', marginBottom: '1rem' }}>✓</div>
+                <h3 style={{ fontSize: '1.5rem', color: '#F8FAFF', marginBottom: '0.75rem', fontWeight: 700 }}>
+                  Feedback Submitted
+                </h3>
+                <p style={{ color: '#94A3B8', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.75rem' }}>
+                  Thank you for your review! It has been directly sent to our administration team for verification and will appear on the site once approved.
+                </p>
+                <button
+                  onClick={() => setShowModal(false)}
+                  style={{
+                    padding: '0.65rem 1.75rem',
+                    backgroundColor: '#1677FF',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    borderRadius: 8,
+                    fontWeight: 600,
+                    fontFamily: 'var(--font-mono, monospace)',
+                    letterSpacing: '0.08em',
+                    cursor: 'pointer',
+                  }}
+                >
+                  CLOSE
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div style={{ marginBottom: '1.5rem' }}>
+                  <span
+                    style={{
+                      fontFamily: 'var(--font-mono, monospace)',
+                      fontSize: '0.65rem',
+                      color: '#1677FF',
+                      letterSpacing: '0.2em',
+                      textTransform: 'uppercase',
+                      display: 'block',
+                      marginBottom: '0.35rem',
+                    }}
+                  >
+                    PARTNER FEEDBACK
+                  </span>
+                  <h3 style={{ fontSize: '1.5rem', color: '#F8FAFF', fontWeight: 700, margin: 0 }}>
+                    Share Your Experience
+                  </h3>
+                  <p style={{ color: '#94A3B8', fontSize: '0.88rem', marginTop: '0.35rem', marginBottom: 0 }}>
+                    Your testimonial will be reviewed by our team and published on the website.
+                  </p>
+                </div>
+
+                {submitError && (
+                  <div
+                    style={{
+                      padding: '0.75rem 1rem',
+                      borderRadius: 8,
+                      backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                      border: '1px solid rgba(239, 68, 68, 0.3)',
+                      color: '#F87171',
+                      fontSize: '0.85rem',
+                      marginBottom: '1.25rem',
+                    }}
+                  >
+                    {submitError}
+                  </div>
+                )}
+
+                <form onSubmit={handleReviewSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
+                  {/* Rating Selector */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.4rem' }}>
+                      RATING *
+                    </label>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setReviewForm({ ...reviewForm, rating: star })}
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            fontSize: '1.6rem',
+                            color: star <= reviewForm.rating ? '#38BDF8' : '#334155',
+                            cursor: 'pointer',
+                            padding: 0,
+                            transition: 'transform 0.15s ease',
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.2)'; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Name & Company */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
+                        YOUR NAME *
+                      </label>
+                      <input
+                        required
+                        type="text"
+                        value={reviewForm.name}
+                        onChange={(e) => setReviewForm({ ...reviewForm, name: e.target.value })}
+                        placeholder="e.g. Sarah Jenkins"
+                        style={{
+                          width: '100%',
+                          padding: '0.65rem 0.85rem',
+                          backgroundColor: '#040B17',
+                          border: '1px solid rgba(30, 58, 138, 0.4)',
+                          borderRadius: 8,
+                          color: '#F8FAFF',
+                          fontSize: '0.9rem',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
+                        COMPANY / ORG
+                      </label>
+                      <input
+                        type="text"
+                        value={reviewForm.company}
+                        onChange={(e) => setReviewForm({ ...reviewForm, company: e.target.value })}
+                        placeholder="e.g. Nexus Tech"
+                        style={{
+                          width: '100%',
+                          padding: '0.65rem 0.85rem',
+                          backgroundColor: '#040B17',
+                          border: '1px solid rgba(30, 58, 138, 0.4)',
+                          borderRadius: 8,
+                          color: '#F8FAFF',
+                          fontSize: '0.9rem',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Role & Photo */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
+                        ROLE / TITLE
+                      </label>
+                      <input
+                        type="text"
+                        value={reviewForm.role}
+                        onChange={(e) => setReviewForm({ ...reviewForm, role: e.target.value })}
+                        placeholder="e.g. Chief Product Officer"
+                        style={{
+                          width: '100%',
+                          padding: '0.65rem 0.85rem',
+                          backgroundColor: '#040B17',
+                          border: '1px solid rgba(30, 58, 138, 0.4)',
+                          borderRadius: 8,
+                          color: '#F8FAFF',
+                          fontSize: '0.9rem',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
+                        AVATAR PHOTO URL
+                      </label>
+                      <input
+                        type="text"
+                        value={reviewForm.photo}
+                        onChange={(e) => setReviewForm({ ...reviewForm, photo: e.target.value })}
+                        placeholder="https://..."
+                        style={{
+                          width: '100%',
+                          padding: '0.65rem 0.85rem',
+                          backgroundColor: '#040B17',
+                          border: '1px solid rgba(30, 58, 138, 0.4)',
+                          borderRadius: 8,
+                          color: '#F8FAFF',
+                          fontSize: '0.9rem',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Testimonial Content */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
+                      YOUR REVIEW / TESTIMONIAL *
+                    </label>
+                    <textarea
+                      required
+                      rows={4}
+                      value={reviewForm.content}
+                      onChange={(e) => setReviewForm({ ...reviewForm, content: e.target.value })}
+                      placeholder="Share your experience working with Quantum AI, the systems built, and the outcomes delivered..."
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem 0.85rem',
+                        backgroundColor: '#040B17',
+                        border: '1px solid rgba(30, 58, 138, 0.4)',
+                        borderRadius: 8,
+                        color: '#F8FAFF',
+                        fontSize: '0.9rem',
+                        outline: 'none',
+                        resize: 'vertical',
+                        lineHeight: 1.5,
+                        boxSizing: 'border-box',
+                      }}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    style={{
+                      marginTop: '0.5rem',
+                      padding: '0.85rem',
+                      backgroundColor: '#1677FF',
+                      color: '#FFFFFF',
+                      border: 'none',
+                      borderRadius: 8,
+                      fontSize: '0.85rem',
+                      fontWeight: 700,
+                      fontFamily: 'var(--font-mono, monospace)',
+                      letterSpacing: '0.12em',
+                      textTransform: 'uppercase',
+                      cursor: 'pointer',
+                      transition: 'background-color 0.2s',
+                    }}
+                  >
+                    {isSubmitting ? 'SUBMITTING REVIEW...' : 'SUBMIT REVIEW FOR APPROVAL'}
+                  </button>
+                </form>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

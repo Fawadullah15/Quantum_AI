@@ -157,7 +157,7 @@ export default function ContactPage() {
             <div>
               <div className="eyebrow" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>Direct Contact</div>
               <a
-                href="mailto:hello@quantumai.dev"
+                href="mailto:fawadimraj@gmail.com"
                 style={{
                   fontSize: '1.5rem',
                   color: 'var(--color-text-primary, #F8FAFC)',

@@ -948,6 +948,13 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
+
+            {/* Team Button */}
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '3.5rem' }}>
+              <NovaButton href="/leadership">
+                MEET THE FULL TEAM →
+              </NovaButton>
+            </div>
           </div>
         </section>
 
@@ -994,7 +1001,7 @@ export default function HomePage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.1)', paddingTop: '1.5rem' }}>
                   <div>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.2em', display: 'block', marginBottom: '0.25rem', textTransform: 'uppercase' }}>EMAIL INQUIRIES</span>
-                    <a href="mailto:hello@quantumai.dev" style={{ fontSize: '1.15rem', color: '#F8FAFF', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500 }} onMouseEnter={(e) => e.currentTarget.style.color = '#1677FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#F8FAFF'}>
+                    <a href="mailto:fawadimraj@gmail.com" style={{ fontSize: '1.15rem', color: '#F8FAFF', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500 }} onMouseEnter={(e) => e.currentTarget.style.color = '#1677FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#F8FAFF'}>
                       hello@quantumai.dev
                     </a>
                   </div>

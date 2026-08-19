@@ -148,7 +148,7 @@ export default function Footer({
             © {new Date().getFullYear()} {companyName}. All rights reserved.
           </span>
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-            <a href={`mailto:${email}`} style={{ 
+            <a href="mailto:fawadimraj@gmail.com" style={{ 
               fontFamily: 'var(--font-mono)', 
               fontSize: '0.7rem', 
               color: '#334155', 
