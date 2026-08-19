@@ -90,9 +90,9 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
               style={{ position: 'relative', zIndex: 2 }}
             >
               <QuantumLogo
-                width={72}
-                height={72}
-                style={{ filter: 'drop-shadow(0 0 18px rgba(22,119,255,0.5))' }}
+                width={100}
+                height={100}
+                style={{ filter: 'drop-shadow(0 0 28px rgba(56,189,248,0.7))' }}
               />
             </motion.div>
 

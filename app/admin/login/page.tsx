@@ -2,7 +2,9 @@
 
 import { useState } from "react"
 import { signIn } from "next-auth/react"
+import { useRouter } from 'next/navigation'
 import styles from "./page.module.css"
+import { QuantumLogo } from '@/components/ui/QuantumLogo'
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("")
@@ -40,8 +42,8 @@ export default function AdminLogin() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        <div className={styles.coreVisual}>
-          <div className={styles.glowingDot}></div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+          <QuantumLogo width={64} height={64} style={{ filter: 'drop-shadow(0 0 20px rgba(56, 189, 248, 0.6))' }} />
         </div>
         <h1 className={styles.title}>ADMIN PANEL</h1>
         

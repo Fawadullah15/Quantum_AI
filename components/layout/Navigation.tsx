@@ -203,13 +203,13 @@ export default function Navigation({ companyName }: { companyName?: string }) {
               position: 'relative',
               margin: '1.5px',
               borderRadius: 999,
-              height: scrolled ? 52 : 60,
+              height: scrolled ? 58 : 66,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '0 1.25rem',
+              padding: '0 1.25rem 0 0.85rem',
               transition: 'height 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s',
-              backgroundColor: scrolled ? 'rgba(10, 15, 45, 0.92)' : 'rgba(10, 15, 45, 0.55)',
+              backgroundColor: scrolled ? 'rgba(10, 15, 45, 0.94)' : 'rgba(10, 15, 45, 0.65)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
               zIndex: 1,
@@ -222,16 +222,16 @@ export default function Navigation({ companyName }: { companyName?: string }) {
               style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.625rem',
+                gap: '0.65rem',
                 textDecoration: 'none',
                 flexShrink: 0,
               }}
             >
-              <QuantumLogo width={48} height={48} />
+              <QuantumLogo width={52} height={52} style={{ filter: 'drop-shadow(0 0 12px rgba(56, 189, 248, 0.5))' }} />
               <span className="nav-wordmark-text" style={{
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 700,
-                fontSize: '0.9rem',
+                fontSize: '0.92rem',
                 letterSpacing: '0.12em',
                 color: '#F8FAFF',
                 textTransform: 'uppercase',
@@ -420,8 +420,8 @@ export default function Navigation({ companyName }: { companyName?: string }) {
             >
               {/* Top bar */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-                <Link href="/" onClick={() => setMobileOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', textDecoration: 'none' }}>
-                  <QuantumLogo width={48} height={48} />
+                <Link href="/" onClick={() => setMobileOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+                  <QuantumLogo width={54} height={54} style={{ filter: 'drop-shadow(0 0 14px rgba(56, 189, 248, 0.5))' }} />
                   <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '1rem', letterSpacing: '0.12em', color: '#F8FAFF', textTransform: 'uppercase' }}>
                     QUANTUM AI
                   </span>

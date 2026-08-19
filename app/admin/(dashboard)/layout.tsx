@@ -2,9 +2,9 @@ import { getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { authOptions } from '@/lib/auth'
-import styles from './layout.module.css'
 import '../admin-tailwind.css'
 import { AdminShell } from './AdminShell'
+import { QuantumLogo } from '@/components/ui/QuantumLogo'
 
 const navSections = [
   {
@@ -56,8 +56,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', width: '100%' }}>
       {/* Sidebar Header */}
       <div style={{ padding: '1.25rem 1rem 1rem', borderBottom: '1px solid rgba(31, 41, 55, 0.8)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Link href="/admin" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.95rem', fontWeight: 700, color: '#F8FAFC', textDecoration: 'none', letterSpacing: '0.05em' }}>
-          <span style={{ color: '#38BDF8', fontSize: '1rem' }}>◈</span>
+        <Link href="/admin" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontSize: '0.95rem', fontWeight: 700, color: '#F8FAFC', textDecoration: 'none', letterSpacing: '0.05em' }}>
+          <QuantumLogo width={26} height={26} style={{ filter: 'drop-shadow(0 0 8px rgba(56, 189, 248, 0.5))' }} />
           QUANTUM ADMIN
         </Link>
         <Link
