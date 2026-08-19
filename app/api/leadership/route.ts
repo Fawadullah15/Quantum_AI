@@ -1,7 +1,8 @@
-﻿import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { revalidatePath } from 'next/cache';
 
 export async function GET() {
   try {
@@ -22,14 +23,30 @@ export async function POST(request: Request) {
     const data = await request.json();
     const { name, position, department, shortBio, fullBio, photo, email, linkedin, website, location, displayOrder, isActive, slug } = data;
 
-    // Generate publicId: QA-001 format
-    const count = await prisma.leadership.count();
-    const publicId = `QA-${String(count + 1).padStart(3, '0')}`;
+    if (!name || !shortBio) {
+      return NextResponse.json({ error: 'Name and shortBio are required' }, { status: 400 });
+    }
+
+    // Find the highest numeric suffix in existing publicIds to prevent duplicate key collision
+    const allMembers = await prisma.leadership.findMany({
+      select: { publicId: true },
+    });
+    let maxId = 0;
+    for (const m of allMembers) {
+      const match = m.publicId?.match(/QA-(\d+)/i);
+      if (match) {
+        const num = parseInt(match[1], 10);
+        if (num > maxId) maxId = num;
+      }
+    }
+    const publicId = `QA-${String(maxId + 1).padStart(3, '0')}`;
+
+    const memberSlug = slug || name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
     const member = await prisma.leadership.create({
       data: {
         publicId,
-        slug: slug || name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+        slug: memberSlug,
         name,
         position,
         department: department || null,
@@ -40,10 +57,16 @@ export async function POST(request: Request) {
         linkedin: linkedin || null,
         website: website || null,
         location: location || null,
-        displayOrder: displayOrder ?? count,
-        isActive: isActive ?? true,
+        displayOrder: displayOrder !== undefined ? parseInt(displayOrder, 10) : maxId,
+        isActive: isActive !== undefined ? Boolean(isActive) : true,
       },
     });
+
+    revalidatePath('/');
+    revalidatePath('/leadership');
+    revalidatePath('/team');
+    revalidatePath(`/leadership/${memberSlug}`);
+    revalidatePath('/admin/leadership');
 
     return NextResponse.json(member, { status: 201 });
   } catch (error: any) {

@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Industries & Sectors — Quantum AI',
+  description: 'Applied intelligent software systems across healthcare, finance, logistics, education, manufacturing, and enterprise sectors.',
+};
+
 export default function IndustriesPage() {
   const industries = [
     "HEALTHCARE", "FINANCE", "LOGISTICS", "EDUCATION",

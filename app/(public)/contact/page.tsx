@@ -5,10 +5,10 @@ import React, { useState } from 'react';
 const inputStyle: React.CSSProperties = {
   background: 'transparent',
   border: 'none',
-  borderBottom: '1px solid var(--color-border-2)',
-  color: 'var(--color-text-primary)',
+  borderBottom: '1px solid var(--color-border-2, rgba(255,255,255,0.15))',
+  color: 'var(--color-text-primary, #F8FAFC)',
   padding: '1rem 0',
-  fontFamily: 'var(--font-sans)',
+  fontFamily: 'var(--font-sans, inherit)',
   fontSize: '1.1rem',
   letterSpacing: '0',
   outline: 'none',
@@ -34,15 +34,15 @@ function Field({
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
       <label
         style={{
-          fontFamily: 'var(--font-mono)',
+          fontFamily: 'var(--font-mono, monospace)',
           fontSize: '0.65rem',
           letterSpacing: '0.25em',
-          color: focused ? 'var(--color-text-secondary)' : 'var(--color-text-tertiary)',
+          color: focused ? 'var(--color-text-secondary, #94A3B8)' : 'var(--color-text-tertiary, #64748B)',
           textTransform: 'uppercase',
           transition: 'color 0.2s',
         }}
       >
-        {label}
+        {label} {required && '*'}
       </label>
       <input
         name={name}
@@ -51,7 +51,7 @@ function Field({
         placeholder={placeholder}
         style={{
           ...inputStyle,
-          borderBottomColor: focused ? 'var(--color-text-secondary)' : 'var(--color-border-2)',
+          borderBottomColor: focused ? 'var(--color-text-secondary, #94A3B8)' : 'var(--color-border-2, rgba(255,255,255,0.15))',
         }}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
@@ -61,12 +61,14 @@ function Field({
 }
 
 export default function ContactPage() {
-  const [status, setStatus] = useState<'idle' | 'submitting' | 'success'>('idle');
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const [textFocused, setTextFocused] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setStatus('submitting');
+    setErrorMessage('');
     const form = e.currentTarget;
     const data = {
       name:        (form.elements.namedItem('name') as HTMLInputElement).value,
@@ -81,19 +83,25 @@ export default function ContactPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
       });
-      if (res.ok) setStatus('success');
-      else setStatus('idle');
+      if (res.ok) {
+        setStatus('success');
+      } else {
+        const errorData = await res.json().catch(() => ({}));
+        setErrorMessage(errorData.error || 'Failed to submit message. Please try again or email us directly.');
+        setStatus('error');
+      }
     } catch {
-      setStatus('idle');
+      setErrorMessage('Network error occurred. Please check your connection and try again.');
+      setStatus('error');
     }
   };
 
   return (
     <div
       style={{
-        paddingTop: 'calc(var(--nav-height) * 2)',
-        paddingBottom: 'var(--space-48)',
-        paddingInline: 'var(--container-px)',
+        paddingTop: 'calc(var(--nav-height, 80px) * 2)',
+        paddingBottom: 'var(--space-48, 6rem)',
+        paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))',
         minHeight: '100vh',
       }}
     >
@@ -104,9 +112,9 @@ export default function ContactPage() {
           }
         }
       `}</style>
-      <div style={{ maxWidth: 'var(--max-width)', margin: '0 auto' }}>
+      <div style={{ maxWidth: 'var(--max-width, 1200px)', margin: '0 auto' }}>
         {/* Statement headline */}
-        <div style={{ position: 'relative', marginBottom: 'var(--space-32)' }}>
+        <div style={{ position: 'relative', marginBottom: 'var(--space-32, 4rem)' }}>
           {/* Subtle Indigo Glow */}
           <div style={{
             position: 'absolute',
@@ -126,9 +134,9 @@ export default function ContactPage() {
               fontWeight: 700,
               lineHeight: 0.9,
               letterSpacing: '-0.05em',
-              color: 'var(--color-text-primary)',
+              color: 'var(--color-text-primary, #F8FAFC)',
               textTransform: 'uppercase',
-              marginBottom: 'var(--space-12)',
+              marginBottom: 'var(--space-12, 1.5rem)',
             }}
           >
             LET'S BUILD<br />SOMETHING<br />USEFUL.
@@ -139,40 +147,41 @@ export default function ContactPage() {
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: 'var(--space-32)',
-            borderTop: '1px solid var(--color-border)',
-            paddingTop: 'var(--space-12)',
+            gap: 'var(--space-32, 4rem)',
+            borderTop: '1px solid var(--color-border, rgba(255,255,255,0.1))',
+            paddingTop: 'var(--space-12, 1.5rem)',
           }}
         >
           {/* Left: info */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-12)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-12, 2rem)' }}>
             <div>
-              <div className="eyebrow" style={{ marginBottom: '0.75rem' }}>Direct Contact</div>
+              <div className="eyebrow" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>Direct Contact</div>
               <a
                 href="mailto:hello@quantumai.dev"
                 style={{
                   fontSize: '1.5rem',
-                  color: 'var(--color-text-primary)',
-                  borderBottom: '1px solid var(--color-border)',
+                  color: 'var(--color-text-primary, #F8FAFC)',
+                  borderBottom: '1px solid var(--color-border, rgba(255,255,255,0.1))',
                   paddingBottom: '0.25rem',
                   transition: 'color 0.2s, border-color 0.2s',
                   display: 'inline-block',
+                  textDecoration: 'none',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--color-core)';
-                  e.currentTarget.style.borderColor = 'var(--color-core)';
+                  e.currentTarget.style.color = '#1677FF';
+                  e.currentTarget.style.borderColor = '#1677FF';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--color-text-primary)';
-                  e.currentTarget.style.borderColor = 'var(--color-border)';
+                  e.currentTarget.style.color = '#F8FAFC';
+                  e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
                 }}
               >
                 hello@quantumai.dev
               </a>
             </div>
             <div>
-              <div className="eyebrow" style={{ marginBottom: '0.75rem' }}>Response Time</div>
-              <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary)', margin: 0 }}>
+              <div className="eyebrow" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>Response Time</div>
+              <p style={{ fontSize: '1rem', color: 'var(--color-text-secondary, #94A3B8)', margin: 0, lineHeight: 1.6 }}>
                 We review all inquiries within 24 hours and respond with a structured proposal for your review.
               </p>
             </div>
@@ -183,20 +192,23 @@ export default function ContactPage() {
             {status === 'success' ? (
               <div
                 style={{
-                  padding: 'var(--space-16)',
-                  border: '1px solid var(--color-border)',
+                  padding: 'var(--space-16, 2rem)',
+                  border: '1px solid rgba(22, 119, 255, 0.3)',
+                  backgroundColor: 'rgba(6, 21, 43, 0.5)',
+                  borderRadius: 12,
                   textAlign: 'center',
                   display: 'flex',
                   flexDirection: 'column',
-                  gap: 'var(--space-6)',
+                  gap: '1rem',
                 }}
               >
                 <div
                   style={{
-                    fontFamily: 'var(--font-mono)',
+                    fontFamily: 'var(--font-mono, monospace)',
                     fontSize: '0.65rem',
                     letterSpacing: '0.25em',
-                    color: 'var(--color-core)',
+                    color: '#55D6FF',
+                    textTransform: 'uppercase',
                   }}
                 >
                   Message Received
@@ -207,40 +219,59 @@ export default function ContactPage() {
                     fontWeight: 700,
                     textTransform: 'uppercase',
                     letterSpacing: '-0.02em',
+                    color: '#F8FAFC',
+                    margin: 0,
                   }}
                 >
                   We'll Be In Touch.
                 </h3>
-                <p style={{ color: 'var(--color-text-secondary)' }}>
+                <p style={{ color: '#94A3B8', margin: 0, lineHeight: 1.6 }}>
                   Our engineering team will review your requirements and respond within 24 hours.
                 </p>
-                <button
-                  onClick={() => setStatus('idle')}
-                  style={{
-                    background: 'transparent',
-                    border: '1px solid var(--color-border-2)',
-                    color: 'var(--color-text-primary)',
-                    padding: '0.75rem 2rem',
-                    cursor: 'pointer',
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.7rem',
-                    letterSpacing: '0.2em',
-                    transition: 'border-color 0.2s',
-                    marginTop: 'var(--space-4)',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--color-text-secondary)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--color-border-2)')}
-                >
-                  SEND ANOTHER MESSAGE
-                </button>
+                <div>
+                  <button
+                    onClick={() => setStatus('idle')}
+                    style={{
+                      background: 'transparent',
+                      border: '1px solid rgba(22, 119, 255, 0.4)',
+                      color: '#F8FAFC',
+                      padding: '0.75rem 2rem',
+                      cursor: 'pointer',
+                      fontFamily: 'var(--font-mono, monospace)',
+                      fontSize: '0.7rem',
+                      letterSpacing: '0.2em',
+                      transition: 'border-color 0.2s, background 0.2s',
+                      marginTop: '0.5rem',
+                      borderRadius: 6,
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#1677FF')}
+                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.4)')}
+                  >
+                    SEND ANOTHER MESSAGE
+                  </button>
+                </div>
               </div>
             ) : (
               <form
                 onSubmit={handleSubmit}
-                style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}
+                style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}
               >
+                {status === 'error' && (
+                  <div style={{
+                    padding: '1rem',
+                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                    border: '1px solid #ef4444',
+                    borderRadius: 8,
+                    color: '#fca5a5',
+                    fontSize: '0.875rem',
+                    lineHeight: 1.5,
+                  }}>
+                    {errorMessage || 'Failed to submit message. Please try again or email hello@quantumai.dev directly.'}
+                  </div>
+                )}
+
                 <div
-                  style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-8)' }}
+                  style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}
                 >
                   <Field label="Name" name="name" required />
                   <Field label="Company" name="company" />
@@ -255,25 +286,25 @@ export default function ContactPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                   <label
                     style={{
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-mono, monospace)',
                       fontSize: '0.65rem',
                       letterSpacing: '0.25em',
-                      color: textFocused ? 'var(--color-text-secondary)' : 'var(--color-text-tertiary)',
+                      color: textFocused ? 'var(--color-text-secondary, #94A3B8)' : 'var(--color-text-tertiary, #64748B)',
                       textTransform: 'uppercase',
                       transition: 'color 0.2s',
                     }}
                   >
-                    Project Details
+                    Project Details *
                   </label>
                   <textarea
                     name="message"
                     required
-                    rows={6}
+                    rows={5}
                     onFocus={() => setTextFocused(true)}
                     onBlur={() => setTextFocused(false)}
                     style={{
                       ...inputStyle,
-                      borderBottom: `1px solid ${textFocused ? 'var(--color-text-secondary)' : 'var(--color-border-2)'}`,
+                      borderBottom: `1px solid ${textFocused ? 'var(--color-text-secondary, #94A3B8)' : 'var(--color-border-2, rgba(255,255,255,0.15))'}`,
                       resize: 'vertical',
                       lineHeight: 1.6,
                     }}
@@ -284,25 +315,26 @@ export default function ContactPage() {
                   type="submit"
                   disabled={status === 'submitting'}
                   style={{
-                    marginTop: 'var(--space-4)',
+                    marginTop: '0.5rem',
                     padding: '1.25rem',
-                    background: status === 'submitting' ? 'var(--color-border-2)' : 'var(--color-text-primary)',
-                    color: 'var(--color-void)',
+                    background: status === 'submitting' ? '#374151' : '#1677FF',
+                    color: '#FFFFFF',
                     border: 'none',
-                    fontFamily: 'var(--font-mono)',
+                    borderRadius: 6,
+                    fontFamily: 'var(--font-mono, monospace)',
                     fontSize: '0.75rem',
                     fontWeight: 700,
                     letterSpacing: '0.2em',
                     cursor: status === 'submitting' ? 'wait' : 'pointer',
-                    transition: 'background 0.2s',
+                    transition: 'background 0.2s, transform 0.1s',
                   }}
                   onMouseEnter={(e) => {
                     if (status !== 'submitting')
-                      e.currentTarget.style.background = 'var(--color-core)';
+                      e.currentTarget.style.background = '#20A8FF';
                   }}
                   onMouseLeave={(e) => {
                     if (status !== 'submitting')
-                      e.currentTarget.style.background = 'var(--color-text-primary)';
+                      e.currentTarget.style.background = '#1677FF';
                   }}
                 >
                   {status === 'submitting' ? 'SENDING...' : 'START A PROJECT →'}

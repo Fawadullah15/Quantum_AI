@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminForm from "@/components/admin/AdminForm"
+import { createProduct } from "../actions"
 
 export default function NewProductPage() {
   const router = useRouter()
@@ -13,8 +14,8 @@ export default function NewProductPage() {
     name: "",
     slug: "",
     description: "",
-    category: "",
-    status: "ACTIVE",
+    category: "AI Software",
+    status: "LIVE",
     heroImage: "",
     demoUrl: "",
     docsUrl: "",
@@ -30,10 +31,18 @@ export default function NewProductPage() {
     setLoading(true)
     setError("")
     
-    setTimeout(() => {
-      setLoading(false)
+    try {
+      await createProduct({
+        ...formData,
+        features: features.filter(f => f.title.trim())
+      })
       router.push('/admin/products')
-    }, 800)
+      router.refresh()
+    } catch (err: any) {
+      setError(err?.message || "Failed to create product")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -118,10 +127,10 @@ export default function NewProductPage() {
           <div>
             <label style={labelStyle}>Status</label>
             <select name="status" value={formData.status} onChange={handleChange} style={inputStyle}>
-              <option value="ACTIVE">Active</option>
+              <option value="LIVE">Live</option>
               <option value="BETA">Beta</option>
-              <option value="DEVELOPMENT">Development</option>
-              <option value="DEPRECATED">Deprecated</option>
+              <option value="IN_DEVELOPMENT">In Development</option>
+              <option value="PLANNED">Planned</option>
             </select>
           </div>
 

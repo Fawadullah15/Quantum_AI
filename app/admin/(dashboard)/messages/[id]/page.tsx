@@ -1,62 +1,58 @@
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import { revalidatePath } from "next/cache"
-// import prisma from "@/lib/db"
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth'
+import prisma from "@/lib/db"
+
+export const dynamic = 'force-dynamic'
 
 export default async function MessageDetail({ params }: { params: Promise<{ id: string }> }) {
-  // Mock data fetching
-  /*
-  const message = await prisma.contactSubmission.findUnique({
-    where: { id: (await params).id }
-  })
+  const { id } = await params;
   
-  if (!message) notFound()
-  */
-
-  const message = {
-    id: (await params).id,
-    name: 'John Doe',
-    email: 'john@example.com',
-    company: 'Acme Corp',
-    phone: '+1 (555) 123-4567',
-    projectType: 'AI Integration',
-    budget: '$10k - $50k',
-    message: 'We are looking to integrate a custom LLM into our existing customer support workflow. Need some guidance on the best approach and timeline.',
-    status: 'NEW',
-    notes: '',
-    createdAt: new Date()
+  const message = await prisma.contactSubmission.findUnique({
+    where: { id }
+  });
+  
+  if (!message) {
+    notFound();
   }
 
-  // Mock server actions
+  // Server actions
   async function updateStatus(formData: FormData) {
     "use server"
+    const session = await getServerSession(authOptions);
+    if (!session) throw new Error('Unauthorized');
+
     const status = formData.get('status') as string
-    /*
     await prisma.contactSubmission.update({
-      where: { id: (await params).id },
+      where: { id },
       data: { status }
     })
-    */
-    revalidatePath(`/admin/messages/${(await params).id}`)
+    revalidatePath(`/admin/messages/${id}`)
+    revalidatePath('/admin/messages')
+    revalidatePath('/admin')
   }
 
   async function updateNotes(formData: FormData) {
     "use server"
+    const session = await getServerSession(authOptions);
+    if (!session) throw new Error('Unauthorized');
+
     const notes = formData.get('notes') as string
-    /*
     await prisma.contactSubmission.update({
-      where: { id: (await params).id },
+      where: { id },
       data: { notes }
     })
-    */
-    revalidatePath(`/admin/messages/${(await params).id}`)
+    revalidatePath(`/admin/messages/${id}`)
+    revalidatePath('/admin/messages')
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
         <Link href="/admin/messages" style={{ color: '#9ca3af', textDecoration: 'none' }}>
-          ← Back
+          ← Back to Messages
         </Link>
         <h1 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#fff', margin: 0 }}>Message Details</h1>
       </div>
@@ -68,7 +64,7 @@ export default async function MessageDetail({ params }: { params: Promise<{ id: 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
               <div>
                 <div style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '4px' }}>Name</div>
-                <div style={{ color: '#fff' }}>{message.name}</div>
+                <div style={{ color: '#fff', fontWeight: 500 }}>{message.name}</div>
               </div>
               <div>
                 <div style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '4px' }}>Email</div>
@@ -84,6 +80,10 @@ export default async function MessageDetail({ params }: { params: Promise<{ id: 
                 <div style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '4px' }}>Phone</div>
                 <div style={{ color: '#fff' }}>{message.phone || '-'}</div>
               </div>
+              <div>
+                <div style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '4px' }}>Date Received</div>
+                <div style={{ color: '#9ca3af', fontSize: '0.875rem' }}>{new Date(message.createdAt).toLocaleString()}</div>
+              </div>
             </div>
           </div>
 
@@ -92,7 +92,7 @@ export default async function MessageDetail({ params }: { params: Promise<{ id: 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
               <div>
                 <div style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '4px' }}>Project Type</div>
-                <div style={{ color: '#fff' }}>{message.projectType}</div>
+                <div style={{ color: '#fff' }}>{message.projectType || '-'}</div>
               </div>
               <div>
                 <div style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '4px' }}>Budget</div>
@@ -101,7 +101,7 @@ export default async function MessageDetail({ params }: { params: Promise<{ id: 
             </div>
             <div>
               <div style={{ color: '#9ca3af', fontSize: '0.875rem', marginBottom: '8px' }}>Message</div>
-              <div style={{ color: '#fff', backgroundColor: '#111827', padding: '16px', borderRadius: '6px', whiteSpace: 'pre-wrap', lineHeight: 1.5 }}>
+              <div style={{ color: '#fff', backgroundColor: '#111827', padding: '16px', borderRadius: '6px', whiteSpace: 'pre-wrap', lineHeight: 1.6 }}>
                 {message.message}
               </div>
             </div>

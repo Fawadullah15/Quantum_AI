@@ -33,9 +33,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+    const allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+      'image/svg+xml',
+      'video/mp4',
+      'video/webm',
+      'application/pdf',
+    ];
     if (!allowedTypes.includes(file.type)) {
-      return NextResponse.json({ error: 'Invalid file type' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid file type. Supported formats: JPEG, PNG, WebP, GIF, SVG, MP4, WebM, PDF' }, { status: 400 });
     }
 
     if (file.size > 10 * 1024 * 1024) {

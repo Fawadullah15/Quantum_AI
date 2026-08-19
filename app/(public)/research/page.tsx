@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Applied Research & Intelligence Labs — Quantum AI',
+  description: 'Autonomous systems, multi-modal reasoning models, and generative operational workflows.',
+};
+
 export default function ResearchPage() {
   return (
     <div style={{ paddingTop: 'calc(var(--nav-height) * 2)', paddingBottom: 'var(--space-32)' }} className="container section">

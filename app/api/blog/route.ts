@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(request: Request) {
   try {
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
     const where: any = { published: true };
     if (category) where.category = category;
     if (tag) {
-      where.tags = { has: tag };
+      where.tags = { contains: tag };
     }
 
     const [posts, total] = await Promise.all([
@@ -50,8 +51,18 @@ export async function POST(request: Request) {
 
     const body = await request.json();
     const post = await prisma.blogPost.create({
-      data: body,
+      data: {
+        ...body,
+        publishedAt: body.published ? new Date() : null,
+      },
     });
+
+    revalidatePath('/blog');
+    revalidatePath(`/blog/${post.slug}`);
+    revalidatePath('/insights');
+    revalidatePath('/');
+    revalidatePath('/admin/blog');
+
     return NextResponse.json(post, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

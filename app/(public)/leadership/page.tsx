@@ -95,7 +95,7 @@ export default async function LeadershipPage() {
                 </div>
                 <div className="id-body">
                   <div className="id-name">{m.name}</div>
-                  <div className="id-pos">{m.position.replace("_", " ")}</div>
+                  <div className="id-pos">{m.position.replaceAll("_", " ")}</div>
                   <p className="id-bio">{m.shortBio}</p>
                 </div>
                 <div className="id-footer">

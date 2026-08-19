@@ -22,6 +22,7 @@ const navSections = [
       { href: '/admin/products', label: 'Products', icon: '📦' },
       { href: '/admin/technology', label: 'Technology Stack', icon: '💻' },
       { href: '/admin/blog', label: 'Blog Articles', icon: '📝' },
+      { href: '/admin/testimonials', label: 'Testimonials', icon: '⭐' },
     ],
   },
   {

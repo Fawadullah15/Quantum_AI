@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import AdminForm from "@/components/admin/AdminForm"
+import { createBlogPost } from "../actions"
 
 export default function NewBlogPostPage() {
   const router = useRouter()
@@ -15,7 +16,7 @@ export default function NewBlogPostPage() {
     excerpt: "",
     content: "",
     coverImage: "",
-    category: "",
+    category: "General",
     tags: "",
     author: "",
     published: false,
@@ -28,10 +29,27 @@ export default function NewBlogPostPage() {
     setLoading(true)
     setError("")
     
-    setTimeout(() => {
-      setLoading(false)
+    try {
+      await createBlogPost({
+        title: formData.title,
+        slug: formData.slug,
+        excerpt: formData.excerpt,
+        content: formData.content,
+        coverImage: formData.coverImage || null,
+        category: formData.category || 'General',
+        tags: formData.tags ? JSON.stringify(formData.tags.split(',').map(t => t.trim()).filter(Boolean)) : '[]',
+        author: formData.author || 'Admin',
+        published: formData.published,
+        metaTitle: formData.metaTitle || null,
+        metaDesc: formData.metaDescription || null,
+      })
       router.push('/admin/blog')
-    }, 800)
+      router.refresh()
+    } catch (err: any) {
+      setError(err?.message || "Failed to create blog post")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {

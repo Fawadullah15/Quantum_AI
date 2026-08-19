@@ -28,8 +28,21 @@ export default async function TechnologyDetailPage({ params }: Props) {
     notFound();
   }
 
-  const features = tech.features ? JSON.parse(tech.features) : [];
-  const useCases = tech.useCases ? JSON.parse(tech.useCases) : [];
+  let features: any[] = [];
+  try {
+    features = tech.features ? JSON.parse(tech.features) : [];
+    if (!Array.isArray(features)) features = [];
+  } catch {
+    features = [];
+  }
+
+  let useCases: any[] = [];
+  try {
+    useCases = tech.useCases ? JSON.parse(tech.useCases) : [];
+    if (!Array.isArray(useCases)) useCases = [];
+  } catch {
+    useCases = [];
+  }
 
   return (
     <div style={{ paddingTop: 'calc(var(--nav-height) * 2)', paddingBottom: '6rem' }}>

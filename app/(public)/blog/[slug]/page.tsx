@@ -64,15 +64,27 @@ export default async function BlogPostPage({ params }: Props) {
         dangerouslySetInnerHTML={{ __html: post.content }}
       />
 
-      {post.tags && (
-        <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--color-border)', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-          {(JSON.parse(post.tags) as string[]).map((tag: string) => (
-            <span key={tag} style={{ padding: '0.25rem 0.75rem', background: 'var(--color-surface)', border: '1px solid var(--color-border)', fontFamily: 'var(--font-space-mono)', fontSize: '0.75rem', color: 'var(--color-muted)' }}>
-              #{tag.trim()}
-            </span>
-          ))}
-        </div>
-      )}
+      {(() => {
+        let tags: string[] = [];
+        if (post.tags) {
+          try {
+            const parsed = JSON.parse(post.tags);
+            tags = Array.isArray(parsed) ? parsed : [String(parsed)];
+          } catch {
+            tags = post.tags.split(',').map(t => t.trim()).filter(Boolean);
+          }
+        }
+        if (tags.length === 0) return null;
+        return (
+          <div style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid var(--color-border)', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            {tags.map((tag: string) => (
+              <span key={tag} style={{ padding: '0.25rem 0.75rem', background: 'var(--color-surface)', border: '1px solid var(--color-border)', fontFamily: 'var(--font-space-mono, monospace)', fontSize: '0.75rem', color: 'var(--color-muted)' }}>
+                #{tag.trim()}
+              </span>
+            ))}
+          </div>
+        );
+      })()}
 
       <div style={{ marginTop: '6rem', textAlign: 'center' }}>
         <Link href="/blog" style={{ display: 'inline-block', padding: '1rem 2rem', border: '1px solid var(--color-border)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', fontSize: '0.875rem', color: 'inherit', textDecoration: 'none' }}>

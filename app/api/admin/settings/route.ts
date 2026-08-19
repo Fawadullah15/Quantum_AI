@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { revalidatePath } from 'next/cache';
 
 export async function GET() {
   try {
@@ -40,6 +41,9 @@ export async function PATCH(request: Request) {
 
     await Promise.all(updates);
     
+    revalidatePath('/', 'layout');
+    revalidatePath('/admin/settings');
+
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

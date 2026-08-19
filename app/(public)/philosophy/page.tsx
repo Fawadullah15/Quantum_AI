@@ -1,3 +1,8 @@
+export const metadata = {
+  title: 'Philosophy & Design Tenets — Quantum AI',
+  description: 'How we think: aesthetics as utility, architectural scale, and systemic intelligence.',
+};
+
 export default function PhilosophyPage() {
   return (
     <div style={{ paddingTop: 'calc(var(--nav-height) * 2)', paddingBottom: 'var(--space-32)' }} className="container section">

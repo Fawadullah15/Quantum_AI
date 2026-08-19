@@ -7,11 +7,11 @@ import { revalidatePath } from 'next/cache';
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const tech = await prisma.technology.findUnique({
+    const service = await prisma.service.findUnique({
       where: { id },
     });
-    if (!tech) return NextResponse.json({ error: 'Not Found' }, { status: 404 });
-    return NextResponse.json(tech);
+    if (!service) return NextResponse.json({ error: 'Service not found' }, { status: 404 });
+    return NextResponse.json(service);
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
@@ -25,28 +25,28 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const { id } = await params;
     const body = await request.json();
 
-    const data: any = { ...body };
-    if (body.description !== undefined && body.shortDescription === undefined) {
-      data.shortDescription = body.description;
-      delete data.description;
-    }
-    if (body.order !== undefined) data.order = parseInt(body.order, 10);
+    const data: any = {};
+    if (body.name !== undefined) data.name = body.name;
+    if (body.category !== undefined) data.category = body.category;
+    if (body.description !== undefined) data.description = body.description;
+    if (body.icon !== undefined) data.icon = body.icon || null;
+    if (body.order !== undefined) data.order = parseInt(body.order, 10) || 0;
     if (body.published !== undefined) data.published = Boolean(body.published);
 
-    const updated = await prisma.technology.update({
+    const updated = await prisma.service.update({
       where: { id },
       data,
     });
 
-    revalidatePath('/technology');
-    revalidatePath(`/technologies/${updated.slug}`);
+    revalidatePath('/services');
+    revalidatePath('/systems');
     revalidatePath('/');
-    revalidatePath('/admin/technology');
+    revalidatePath('/admin/services');
 
     return NextResponse.json(updated);
   } catch (error: any) {
     if (error?.code === 'P2025') {
-      return NextResponse.json({ error: 'Not Found' }, { status: 404 });
+      return NextResponse.json({ error: 'Service not found' }, { status: 404 });
     }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
@@ -58,18 +58,19 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { id } = await params;
-    await prisma.technology.delete({
+    await prisma.service.delete({
       where: { id },
     });
 
-    revalidatePath('/technology');
+    revalidatePath('/services');
+    revalidatePath('/systems');
     revalidatePath('/');
-    revalidatePath('/admin/technology');
+    revalidatePath('/admin/services');
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
     if (error?.code === 'P2025') {
-      return NextResponse.json({ error: 'Not Found' }, { status: 404 });
+      return NextResponse.json({ error: 'Service not found' }, { status: 404 });
     }
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
