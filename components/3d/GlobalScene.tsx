@@ -21,10 +21,6 @@ const OrbitalSystem = React.lazy(() => import('./scenes/OrbitalSystem').then(m =
 const SignalNetwork = React.lazy(() => import('./scenes/SignalNetwork').then(m => ({ default: m.SignalNetwork })));
 const LeadershipCore = React.lazy(() => import('./scenes/LeadershipCore').then(m => ({ default: m.LeadershipCore })));
 
-// Camera configuration for Home path
-const HOME_START_Z = 14.5;
-const HOME_END_Z = 22;
-
 export function GlobalScene() {
   const { scrollProgress, currentScene } = useGlobalStore();
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -42,27 +38,26 @@ export function GlobalScene() {
     const cam = state.camera as THREE.PerspectiveCamera;
     
     // Parallax
-    const targetX = mouseRef.current.x * 1.5; // subtle parallax
-    const targetY = mouseRef.current.y * 1.0;
+    const targetX = mouseRef.current.x * 1.8;
+    const targetY = mouseRef.current.y * 1.2;
 
     if ((currentScene as string) === 'room' || (currentScene as string) === 'earth') {
-      // Home scroll logic: move camera back and slightly down as user scrolls,
-      // which pushes the Earth up and makes it smaller to make room for content.
-      const targetZ = HOME_START_Z + (HOME_END_Z - HOME_START_Z) * scrollProgress;
-      const camYOffset = -scrollProgress * 8; // Move camera down by up to 8 units
+      // 3D forward/backward depth sweep as user scrolls:
+      // In the hero range (0 -> 0.25), forward zoom pulse occurs, then smoothly recedes into background
+      const depthPulse = Math.sin(Math.min(1, scrollProgress * 3.5) * Math.PI) * 2.8;
+      const targetZ = 12.8 - depthPulse + (scrollProgress * 9.5);
+      const camYOffset = -scrollProgress * 10.0;
       
-      // Offset camera slightly left so Earth appears on the right
       const isMobile = window.innerWidth < 768;
-      const camXOffset = isMobile ? 0 : -3.8; 
+      const camXOffset = isMobile ? 0 : -3.6 + (scrollProgress * 1.5); 
       
-      cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX + camXOffset, 0.05);
-      cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY + camYOffset, 0.05);
-      cam.position.z = THREE.MathUtils.lerp(cam.position.z, targetZ, 0.08);
+      cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX + camXOffset, 0.06);
+      cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY + camYOffset, 0.06);
+      cam.position.z = THREE.MathUtils.lerp(cam.position.z, targetZ, 0.06);
       
-      // Look slightly to the right of the camera's X position to keep Earth centered in the right half
-      cam.lookAt((cam.position.x - camXOffset) * 0.2, cam.position.y * 0.2, 0);
+      // Keep dynamic focal track
+      cam.lookAt((cam.position.x - camXOffset) * 0.25, (cam.position.y - camYOffset * 0.5) * 0.2, 0);
     } else {
-      // Other scenes: fixed camera looking at origin with slight parallax
       const targetZ = 15;
       cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX, 0.05);
       cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY, 0.05);
@@ -73,16 +68,16 @@ export function GlobalScene() {
 
   return (
     <>
-      <fog attach="fog" args={['#020817', 8, 80]} />
-      <ambientLight intensity={0.05} color="#F8FAFF" />
+      <fog attach="fog" args={['#020817', 6, 80]} />
+      <ambientLight intensity={0.12} color="#F8FAFF" />
 
       <Suspense fallback={null}>
-        {/* Home globe */}
+        {/* Home 3D Premium Globe */}
         {((currentScene as string) === 'room' || (currentScene as string) === 'earth') && <PremiumGlobe />}
 
         <GlobalParticles />
 
-        {/* Dynamic Scenes */}
+        {/* Dynamic Sub-Page Scenes */}
         {currentScene === 'technology' && <EarthNode />}
         {currentScene === 'systems' && <NeuralNetwork />}
         {currentScene === 'products' && <SoftwareSpace />}
@@ -95,9 +90,7 @@ export function GlobalScene() {
         {currentScene === 'careers' && <OrbitalSystem />}
         {currentScene === 'contact' && <SignalNetwork />}
         {currentScene === 'leadership' && <LeadershipCore />}
-        
       </Suspense>
-
     </>
   );
 }
