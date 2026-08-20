@@ -496,15 +496,106 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             TECHNOLOGY SECTION
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.3)' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <section className="tech-stack-section" style={{ pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.3)' }}>
+          <style>{`
+            .tech-stack-section {
+              padding: clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem);
+              box-sizing: border-box;
+              width: 100%;
+            }
+            .tech-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 1.5rem;
+              width: 100%;
+              box-sizing: border-box;
+            }
+            .tech-card {
+              background-color: rgba(6, 21, 43, 0.6);
+              border: 1px solid rgba(22, 119, 255, 0.12);
+              border-radius: 12px;
+              padding: 2rem;
+              display: flex;
+              flex-direction: column;
+              gap: 1.25rem;
+              transition: border-color 0.25s, box-shadow 0.25s;
+              box-sizing: border-box;
+              width: 100%;
+            }
+            .tech-card:hover {
+              border-color: rgba(22, 119, 255, 0.35);
+              box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            }
+            .tech-card-title {
+              font-size: 1.25rem;
+              font-weight: 600;
+              color: #F8FAFF;
+              letter-spacing: -0.01em;
+              text-transform: none;
+              margin: 0;
+            }
+            .tech-card-desc {
+              color: #94A3B8;
+              font-size: 0.925rem;
+              line-height: 1.55;
+              margin: 0;
+              font-weight: 300;
+            }
+            .tech-tags-container {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 0.5rem;
+              margin-top: auto;
+              padding-top: 1rem;
+            }
+            .tech-tag-pill {
+              font-size: 0.75rem;
+              font-family: var(--font-mono);
+              padding: 0.35rem 0.75rem;
+              background-color: rgba(22, 119, 255, 0.08);
+              border: 1px solid rgba(22, 119, 255, 0.15);
+              border-radius: 4px;
+              color: #55D6FF;
+              white-space: nowrap;
+            }
+
+            @media (max-width: 767px) {
+              .tech-stack-section {
+                padding: clamp(3.5rem, 8vh, 5rem) clamp(1rem, 4vw, 2rem) !important;
+              }
+              .tech-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+              }
+              .tech-card {
+                padding: clamp(1.2rem, 3.5vw, 1.5rem) !important;
+                gap: 0.85rem !important;
+              }
+              .tech-card-title {
+                font-size: 1.15rem !important;
+              }
+              .tech-card-desc {
+                font-size: 0.85rem !important;
+                line-height: 1.5 !important;
+              }
+              .tech-tags-container {
+                gap: 0.4rem !important;
+                padding-top: 0.65rem !important;
+              }
+              .tech-tag-pill {
+                font-size: 0.72rem !important;
+                padding: 0.25rem 0.6rem !important;
+              }
+            }
+          `}</style>
+          <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
               fontSize: '0.75rem',
               letterSpacing: '0.3em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '1.5rem',
+              marginBottom: '1rem',
               maxWidth: 'none',
               fontWeight: 600
             }}>
@@ -514,86 +605,35 @@ export default function HomePage() {
               fontSize: 'clamp(2.25rem, 6vw, 4rem)',
               fontWeight: 700,
               color: '#F8FAFF',
-              marginBottom: '1rem',
+              marginBottom: '0.75rem',
               letterSpacing: '-0.03em',
               textTransform: 'uppercase'
             }}>
               Our tech stack.
             </h2>
             <p style={{
-              fontSize: '1.15rem',
-              color: '#64748B',
-              lineHeight: 1.7,
-              marginBottom: 'clamp(3rem, 6vh, 5rem)',
+              fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
+              color: '#94A3B8',
+              lineHeight: 1.65,
+              marginBottom: 'clamp(2rem, 5vh, 4rem)',
               maxWidth: 560,
               fontWeight: 300
             }}>
               We construct systems using production-proven languages and platforms capable of scaling seamlessly.
             </p>
 
-            <div
-              className="tech-grid"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '1.5rem'
-              }}
-            >
+            <div className="tech-grid">
               {techGroups.map((group, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    backgroundColor: 'rgba(6, 21, 43, 0.6)',
-                    border: '1px solid rgba(22, 119, 255, 0.12)',
-                    borderRadius: 12,
-                    padding: '2rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.25rem',
-                    transition: 'border-color 0.25s, box-shadow 0.25s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.35)';
-                    e.currentTarget.style.boxShadow = '0 8px 30px rgba(0,0,0,0.4)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.12)';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                >
-                  <h3 style={{
-                    fontSize: '1.25rem',
-                    fontWeight: 600,
-                    color: '#F8FAFF',
-                    letterSpacing: '-0.01em',
-                    textTransform: 'none'
-                  }}>
+                <div key={idx} className="tech-card">
+                  <h3 className="tech-card-title">
                     {group.title}
                   </h3>
-                  <p style={{ color: '#94A3B8', fontSize: '0.925rem', lineHeight: 1.5, margin: 0, fontWeight: 300 }}>
+                  <p className="tech-card-desc">
                     {group.desc}
                   </p>
-                  <div style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '0.5rem',
-                    marginTop: 'auto',
-                    paddingTop: '1rem'
-                  }}>
+                  <div className="tech-tags-container">
                     {group.tags.map((t: string) => (
-                      <span
-                        key={t}
-                        style={{
-                          fontSize: '0.75rem',
-                          fontFamily: 'var(--font-mono)',
-                          padding: '0.35rem 0.75rem',
-                          backgroundColor: 'rgba(22, 119, 255, 0.08)',
-                          border: '1px solid rgba(22, 119, 255, 0.15)',
-                          borderRadius: 4,
-                          color: '#55D6FF',
-                          whiteSpace: 'nowrap'
-                        }}
-                      >
+                      <span key={t} className="tech-tag-pill">
                         {t}
                       </span>
                     ))}
