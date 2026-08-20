@@ -329,6 +329,7 @@ export default function HomePage() {
               height: 'clamp(220px, 35vw, 340px)',
               width: 'clamp(280px, 92vw, 860px)',
               marginBottom: '2rem',
+              filter: 'drop-shadow(0 4px 24px rgba(2, 8, 23, 0.95))',
             }}>
               <ParticleText
                 text={`WE BUILD\nINTELLIGENT\nSOFTWARES`}

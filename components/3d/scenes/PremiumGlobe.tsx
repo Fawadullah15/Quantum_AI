@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import countriesData from '@/lib/data/countries.js';
 import geoBordersData from '@/lib/data/geo-borders.json';
 
-const EARTH_RADIUS = 4.5;
+const EARTH_RADIUS = 4.4;
 
 // ── Major Global Hubs ────────────────────────────────────────────────────────
 const HUBS = [
@@ -88,7 +88,6 @@ export function PremiumGlobe() {
 
   const mousePos = useRef({ x: 0, y: 0 });
   const scrollRef = useRef({ current: 0, target: 0, velocity: 0, lastY: 0 });
-  const dragRef = useRef({ isDragging: false, prevX: 0, prevY: 0, dragRotX: 0, dragRotY: 0 });
 
   // 1. Instant Synchronous Precomputed Geo-Borders Buffer (10,312 segments)
   const geoBuffers = useMemo(() => {
@@ -103,35 +102,14 @@ export function PremiumGlobe() {
   const maskTexture = useMemo(() => createInstantMaskTexture(), []);
 
   useEffect(() => {
+    // Initial longitude orientation: populated continents face forward
     if (spinGroupRef.current) {
-      spinGroupRef.current.rotation.y = 1.35; // Start with luminous continents facing viewer
+      spinGroupRef.current.rotation.y = 1.35;
     }
 
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mousePos.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
-
-      if (dragRef.current.isDragging) {
-        const deltaX = e.clientX - dragRef.current.prevX;
-        const deltaY = e.clientY - dragRef.current.prevY;
-        dragRef.current.dragRotX += deltaX * 0.005;
-        dragRef.current.dragRotY = Math.max(-0.4, Math.min(0.4, dragRef.current.dragRotY + deltaY * 0.003));
-        dragRef.current.prevX = e.clientX;
-        dragRef.current.prevY = e.clientY;
-      }
-    };
-
-    const handleMouseDown = (e: MouseEvent) => {
-      // Only drag on hero area
-      if (window.scrollY < window.innerHeight * 1.2) {
-        dragRef.current.isDragging = true;
-        dragRef.current.prevX = e.clientX;
-        dragRef.current.prevY = e.clientY;
-      }
-    };
-
-    const handleMouseUp = () => {
-      dragRef.current.isDragging = false;
     };
 
     const handleScroll = () => {
@@ -145,8 +123,6 @@ export function PremiumGlobe() {
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('mousedown', handleMouseDown, { passive: true });
-    window.addEventListener('mouseup', handleMouseUp, { passive: true });
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
@@ -157,29 +133,27 @@ export function PremiumGlobe() {
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
       window.removeEventListener('scroll', handleScroll);
       media.removeEventListener('change', listener);
     };
   }, []);
 
-  // 3. Dot Matrix Landmass Shader Uniforms
+  // 3. High-Contrast Dot-Matrix Landmass Shader Uniforms
   const fillUniforms = useMemo(
     () => ({
       uMask: { value: maskTexture },
       uDotColor: { value: new THREE.Color('#FFFFFF') },
-      uDotDensity: { value: 120.0 },
-      uDotSize: { value: 0.42 },
+      uDotDensity: { value: 115.0 },
+      uDotSize: { value: 0.40 },
       uGlowColor: { value: new THREE.Color('#0066FF') },
       uGlowIntensity: { value: 3.2 },
       uOceanColor: { value: new THREE.Color('#020817') },
-      uOceanAlpha: { value: 0.96 },
+      uOceanAlpha: { value: 0.95 },
     }),
     [maskTexture]
   );
 
-  // 4. Luminous Traveling Cyan Border Pulses Uniforms
+  // 4. Vibrant Traveling Cyan Border Pulses Uniforms
   const lineUniforms = useMemo(
     () => ({
       uTime: { value: 0 },
@@ -189,56 +163,51 @@ export function PremiumGlobe() {
   );
 
   useFrame((state, delta) => {
-    // Smooth scroll interpolation
+    // Smooth scroll interpolation (Antigravity spring physics)
     scrollRef.current.current += (scrollRef.current.target - scrollRef.current.current) * 0.07;
     const progress = scrollRef.current.current;
 
     // Pulse traveling border lines
     if (!reducedMotion) {
-      lineUniforms.uTime.value += delta * 0.65;
+      lineUniforms.uTime.value += delta * 0.7;
     }
 
-    // ── 3D Recede on Scroll (Zoom out on scroll down, Zoom in on scroll up) ──
+    // ── 3D Antigravity Scroll Dynamics (Recede on scroll down, zoom in on scroll up) ──
     if (rootGroupRef.current) {
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
-      // When at hero (progress=0): Earth sits prominent in backdrop (z=0, scale=1.05)
-      // As user scrolls down (progress increases): Earth smoothly recedes into deep space (z=-6.5, scale=0.7)
-      // As user scrolls up: Earth zooms forward back to (z=0, scale=1.05)
-      const targetZ = -progress * 5.5;
-      const targetY = -progress * 4.0 + mousePos.current.y * 0.35 + dragRef.current.dragRotY;
-      const targetX = isMobile ? 0 : 3.6 - Math.min(1, progress * 0.6) * 1.5 + mousePos.current.x * 0.45;
+      // In Hero: Earth sits large and majestic (scale=1.0, z=0)
+      // As user scrolls down: Earth recedes smoothly into deep space (z drops to -6.5, scale to 0.72)
+      const targetZ = -Math.min(1.5, progress) * 4.8;
+      const targetY = -progress * 3.8 + mousePos.current.y * 0.35;
+      const targetX = isMobile ? 0 : 3.6 - Math.min(1, progress * 0.6) * 1.4 + mousePos.current.x * 0.45;
+      const targetScale = Math.max(0.68, 1.0 - progress * 0.24);
 
-      const targetScale = 1.08 - Math.min(0.42, progress * 0.32);
+      rootGroupRef.current.position.x = THREE.MathUtils.lerp(rootGroupRef.current.position.x, targetX, 0.07);
+      rootGroupRef.current.position.y = THREE.MathUtils.lerp(rootGroupRef.current.position.y, targetY, 0.07);
+      rootGroupRef.current.position.z = THREE.MathUtils.lerp(rootGroupRef.current.position.z, targetZ, 0.07);
 
-      rootGroupRef.current.position.x = THREE.MathUtils.lerp(rootGroupRef.current.position.x, targetX, 0.08);
-      rootGroupRef.current.position.y = THREE.MathUtils.lerp(rootGroupRef.current.position.y, targetY, 0.08);
-      rootGroupRef.current.position.z = THREE.MathUtils.lerp(rootGroupRef.current.position.z, targetZ, 0.08);
-
-      const s = THREE.MathUtils.lerp(rootGroupRef.current.scale.x, Math.max(0.62, targetScale), 0.08);
+      const s = THREE.MathUtils.lerp(rootGroupRef.current.scale.x, targetScale, 0.07);
       rootGroupRef.current.scale.set(s, s, s);
 
-      // Dynamic tilt on scroll
+      // Dynamic 3D tilt
       rootGroupRef.current.rotation.x = THREE.MathUtils.lerp(
         rootGroupRef.current.rotation.x,
-        progress * 0.35 + mousePos.current.y * 0.12,
+        progress * 0.4 + mousePos.current.y * 0.15,
         0.06
       );
       rootGroupRef.current.rotation.y = THREE.MathUtils.lerp(
         rootGroupRef.current.rotation.y,
-        mousePos.current.x * 0.2,
+        mousePos.current.x * 0.25,
         0.06
       );
     }
 
-    // ── Continuous Planetary Spin with Drag & Scroll Velocity Boost ──
+    // ── Continuous Planetary Spin with Scroll Velocity Boost ──
     if (spinGroupRef.current && !reducedMotion) {
-      const scrollBoost = scrollRef.current.velocity * 0.7;
-      const dragDelta = dragRef.current.dragRotX * 0.1;
-      dragRef.current.dragRotX *= 0.9; // decay drag inertia
-
-      spinGroupRef.current.rotation.y += delta * 0.05 + scrollBoost + dragDelta;
-      scrollRef.current.velocity *= 0.92; // decay scroll velocity
+      const scrollBoost = scrollRef.current.velocity * 0.9;
+      spinGroupRef.current.rotation.y += delta * 0.052 + scrollBoost;
+      scrollRef.current.velocity *= 0.92; // decay
     }
   });
 
@@ -248,7 +217,7 @@ export function PremiumGlobe() {
       <group ref={tiltGroupRef} rotation={[0, 0, 23.5 * (Math.PI / 180)]}>
         {/* Continuous Spin Group */}
         <group ref={spinGroupRef}>
-          {/* ── Base Dot-Matrix Landmass Sphere ── */}
+          {/* ── Base Dot-Matrix Landmass Sphere (depthWrite: false to prevent border clipping) ── */}
           <mesh renderOrder={1}>
             <sphereGeometry args={[EARTH_RADIUS * 0.985, 64, 64]} />
             <shaderMaterial
@@ -332,7 +301,7 @@ export function PremiumGlobe() {
             />
           </mesh>
 
-          {/* ── High-Precision Animated Country Borders ── */}
+          {/* ── High-Precision Animated Country Borders (100% Unclipped, Luminous) ── */}
           <lineSegments renderOrder={2}>
             <bufferGeometry>
               <bufferAttribute
@@ -373,7 +342,7 @@ export function PremiumGlobe() {
                 void main() {
                   float phase = fract(vDistance - uTime * 0.6 + vOffset);
                   float pulse = pow(phase, 4.0);
-                  float alpha = 0.55 + pulse * 0.45;
+                  float alpha = 0.55 + pulse * 0.45; // Guaranteed bright visibility from all angles
                   gl_FragColor = vec4(uColor, alpha);
                 }
               `}
