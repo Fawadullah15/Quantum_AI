@@ -1014,19 +1014,25 @@ export default function HomePage() {
               </div>
 
               {/* Form */}
-              <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.4)', border: '1px solid rgba(22, 119, 255, 0.1)', borderRadius: 16, padding: 'clamp(1.5rem, 4vw, 3rem)' }}>
+              <div style={{
+                backgroundColor: '#040E24',
+                border: '1px solid rgba(56, 189, 248, 0.3)',
+                borderRadius: 16,
+                padding: 'clamp(1.75rem, 4vw, 3rem)',
+                boxShadow: '0 20px 60px -10px rgba(0, 0, 0, 0.85), 0 0 30px -5px rgba(22, 119, 255, 0.2)'
+              }}>
                 {submitStatus === 'success' ? (
                   <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-                    <div style={{ color: '#55D6FF', fontSize: '2.5rem', marginBottom: '1rem' }}>✓</div>
-                    <h3 style={{ fontSize: '1.5rem', color: '#F8FAFF', marginBottom: '0.5rem', textTransform: 'none' }}>Project Inquiry Sent</h3>
+                    <div style={{ color: '#34D399', fontSize: '2.5rem', marginBottom: '1rem' }}>✓</div>
+                    <h3 style={{ fontSize: '1.5rem', color: '#F8FAFC', marginBottom: '0.5rem', textTransform: 'none' }}>Project Inquiry Sent</h3>
                     <p style={{ color: '#94A3B8', fontSize: '0.95rem', marginBottom: '2rem', fontWeight: 300 }}>Thank you for reaching out. An engineer will review your inquiry and connect with you shortly.</p>
                     <NovaButton onClick={() => setSubmitStatus('idle')}>SEND ANOTHER INQUIRY</NovaButton>
                   </div>
                 ) : (
-                  <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+                  <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase' }}>NAME *</label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>NAME <span style={{ color: '#38BDF8' }}>*</span></label>
                       <input
                         type="text"
                         name="name"
@@ -1034,24 +1040,24 @@ export default function HomePage() {
                         onChange={handleFormChange}
                         placeholder="Your full name"
                         style={{
-                          background: 'transparent',
-                          border: 'none',
-                          borderBottom: `1.5px solid ${formErrors.name ? '#EF4444' : 'rgba(22, 119, 255, 0.2)'}`,
-                          color: '#F8FAFF',
-                          padding: '0.625rem 0',
+                          backgroundColor: '#081735',
+                          border: `1px solid ${formErrors.name ? '#EF4444' : 'rgba(56, 189, 248, 0.2)'}`,
+                          borderRadius: 8,
+                          color: '#F8FAFC',
+                          padding: '0.85rem 1rem',
                           outline: 'none',
-                          fontSize: '1rem',
+                          fontSize: '0.95rem',
                           width: '100%',
-                          transition: 'border-color 0.25s'
+                          transition: 'border-color 0.2s, box-shadow 0.2s'
                         }}
-                        onFocus={(e) => { e.currentTarget.style.borderBottomColor = '#1677FF'; }}
-                        onBlur={(e) => { e.currentTarget.style.borderBottomColor = formErrors.name ? '#EF4444' : 'rgba(22, 119, 255, 0.2)'; }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = '#38BDF8'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(56, 189, 248, 0.2)'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderColor = formErrors.name ? '#EF4444' : 'rgba(56, 189, 248, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
                       />
                       {formErrors.name && <span style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>{formErrors.name}</span>}
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase' }}>EMAIL *</label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>EMAIL <span style={{ color: '#38BDF8' }}>*</span></label>
                       <input
                         type="email"
                         name="email"
@@ -1059,24 +1065,24 @@ export default function HomePage() {
                         onChange={handleFormChange}
                         placeholder="name@company.com"
                         style={{
-                          background: 'transparent',
-                          border: 'none',
-                          borderBottom: `1.5px solid ${formErrors.email ? '#EF4444' : 'rgba(22, 119, 255, 0.2)'}`,
-                          color: '#F8FAFF',
-                          padding: '0.625rem 0',
+                          backgroundColor: '#081735',
+                          border: `1px solid ${formErrors.email ? '#EF4444' : 'rgba(56, 189, 248, 0.2)'}`,
+                          borderRadius: 8,
+                          color: '#F8FAFC',
+                          padding: '0.85rem 1rem',
                           outline: 'none',
-                          fontSize: '1rem',
+                          fontSize: '0.95rem',
                           width: '100%',
-                          transition: 'border-color 0.25s'
+                          transition: 'border-color 0.2s, box-shadow 0.2s'
                         }}
-                        onFocus={(e) => { e.currentTarget.style.borderBottomColor = '#1677FF'; }}
-                        onBlur={(e) => { e.currentTarget.style.borderBottomColor = formErrors.email ? '#EF4444' : 'rgba(22, 119, 255, 0.2)'; }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = '#38BDF8'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(56, 189, 248, 0.2)'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderColor = formErrors.email ? '#EF4444' : 'rgba(56, 189, 248, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
                       />
                       {formErrors.email && <span style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>{formErrors.email}</span>}
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase' }}>COMPANY</label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>COMPANY</label>
                       <input
                         type="text"
                         name="company"
@@ -1084,36 +1090,36 @@ export default function HomePage() {
                         onChange={handleFormChange}
                         placeholder="Company name (optional)"
                         style={{
-                          background: 'transparent',
-                          border: 'none',
-                          borderBottom: '1.5px solid rgba(22, 119, 255, 0.2)',
-                          color: '#F8FAFF',
-                          padding: '0.625rem 0',
+                          backgroundColor: '#081735',
+                          border: '1px solid rgba(56, 189, 248, 0.2)',
+                          borderRadius: 8,
+                          color: '#F8FAFC',
+                          padding: '0.85rem 1rem',
                           outline: 'none',
-                          fontSize: '1rem',
+                          fontSize: '0.95rem',
                           width: '100%',
-                          transition: 'border-color 0.25s'
+                          transition: 'border-color 0.2s, box-shadow 0.2s'
                         }}
-                        onFocus={(e) => { e.currentTarget.style.borderBottomColor = '#1677FF'; }}
-                        onBlur={(e) => { e.currentTarget.style.borderBottomColor = 'rgba(22, 119, 255, 0.2)'; }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = '#38BDF8'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(56, 189, 248, 0.2)'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
                       />
                     </div>
 
                     <div className="form-selects-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase' }}>PROJECT TYPE</label>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>PROJECT TYPE</label>
                         <select
                           name="projectType"
                           value={formState.projectType}
                           onChange={handleFormChange}
                           style={{
-                            background: '#06152B',
-                            border: '1px solid rgba(22, 119, 255, 0.2)',
-                            borderRadius: 6,
-                            color: '#F8FAFF',
-                            padding: '0.625rem',
+                            backgroundColor: '#081735',
+                            border: '1px solid rgba(56, 189, 248, 0.2)',
+                            borderRadius: 8,
+                            color: '#F8FAFC',
+                            padding: '0.85rem 1rem',
                             outline: 'none',
-                            fontSize: '0.9rem',
+                            fontSize: '0.95rem',
                             width: '100%',
                             cursor: 'pointer'
                           }}
@@ -1126,20 +1132,20 @@ export default function HomePage() {
                         </select>
                       </div>
 
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase' }}>BUDGET RANGE</label>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>BUDGET RANGE</label>
                         <select
                           name="budget"
                           value={formState.budget}
                           onChange={handleFormChange}
                           style={{
-                            background: '#06152B',
-                            border: '1px solid rgba(22, 119, 255, 0.2)',
-                            borderRadius: 6,
-                            color: '#F8FAFF',
-                            padding: '0.625rem',
+                            backgroundColor: '#081735',
+                            border: '1px solid rgba(56, 189, 248, 0.2)',
+                            borderRadius: 8,
+                            color: '#F8FAFC',
+                            padding: '0.85rem 1rem',
                             outline: 'none',
-                            fontSize: '0.9rem',
+                            fontSize: '0.95rem',
                             width: '100%',
                             cursor: 'pointer'
                           }}
@@ -1153,8 +1159,8 @@ export default function HomePage() {
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase' }}>MESSAGE *</label>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>MESSAGE <span style={{ color: '#38BDF8' }}>*</span></label>
                       <textarea
                         name="message"
                         value={formState.message}
