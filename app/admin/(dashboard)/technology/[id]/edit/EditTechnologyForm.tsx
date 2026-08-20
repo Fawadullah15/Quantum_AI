@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createTechnology } from '../actions';
+import { updateTechnology } from '../../actions';
 
-export default function NewTechnologyPage() {
+export default function EditTechnologyForm({ technology }: { technology: any }) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -24,8 +24,8 @@ export default function NewTechnologyPage() {
 
     const formData = new FormData(e.currentTarget);
     const name = formData.get('name') as string;
-    const slug = (formData.get('slug') as string) || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    const shortDescription = (formData.get('shortDescription') as string) || (formData.get('description') as string) || '';
+    const slug = formData.get('slug') as string;
+    const shortDescription = formData.get('shortDescription') as string;
     const category = formData.get('category') as string;
     const heroTitle = formData.get('heroTitle') as string;
     const heroDescription = formData.get('heroDescription') as string;
@@ -44,7 +44,7 @@ export default function NewTechnologyPage() {
     const published = formData.get('published') === 'on';
 
     try {
-      await createTechnology({
+      await updateTechnology(technology.id, {
         name,
         slug,
         shortDescription,
@@ -71,7 +71,7 @@ export default function NewTechnologyPage() {
         router.push('/admin/technology');
       }, 800);
     } catch (err: any) {
-      setError(err?.message || 'Error creating technology');
+      setError(err?.message || 'Failed to update technology');
     } finally {
       setIsSubmitting(false);
     }
@@ -79,14 +79,21 @@ export default function NewTechnologyPage() {
 
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem 0' }}>
-      <div style={{ marginBottom: '24px' }}>
+      <div style={{ marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Link href="/admin/technology" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.875rem' }}>
           ← Back to Technologies
+        </Link>
+        <Link
+          href={`/technologies/${technology.slug}`}
+          target="_blank"
+          style={{ color: '#38BDF8', fontSize: '0.875rem', textDecoration: 'none' }}
+        >
+          View Public Page ↗
         </Link>
       </div>
 
       <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#F8FAFC', marginBottom: '24px' }}>
-        Add New Technology
+        Edit Technology: {technology.name}
       </h1>
 
       {error && (
@@ -97,7 +104,7 @@ export default function NewTechnologyPage() {
 
       {success && (
         <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10B981', color: '#34D399', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px', fontSize: '0.875rem' }}>
-          Technology created successfully! Redirecting...
+          Technology updated successfully! Redirecting...
         </div>
       )}
 
@@ -110,27 +117,27 @@ export default function NewTechnologyPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
             <div>
               <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Name *</label>
-              <input required name="name" placeholder="e.g. PyTorch Deep Learning Engine" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+              <input required name="name" defaultValue={technology.name} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
             </div>
             <div>
-              <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Slug (Optional, auto-generated)</label>
-              <input name="slug" placeholder="e.g. pytorch" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+              <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Slug</label>
+              <input name="slug" defaultValue={technology.slug} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
             </div>
           </div>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Short Description *</label>
-            <textarea required name="shortDescription" rows={2} placeholder="Brief summary of what this technology powers" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <textarea required name="shortDescription" defaultValue={technology.shortDescription} rows={2} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
             <div>
               <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Category *</label>
-              <select name="category" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }}>
+              <select name="category" defaultValue={technology.category} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }}>
                 {categories.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
               <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Display Order</label>
-              <input type="number" name="order" defaultValue={0} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+              <input type="number" name="order" defaultValue={technology.order} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
             </div>
           </div>
         </div>
@@ -142,15 +149,15 @@ export default function NewTechnologyPage() {
           </h2>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Hero Title</label>
-            <input name="heroTitle" placeholder="e.g. Artificial Intelligence Systems" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <input name="heroTitle" defaultValue={technology.heroTitle || ''} placeholder="e.g. Artificial Intelligence Systems" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
           </div>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Hero Description</label>
-            <textarea name="heroDescription" rows={2} placeholder="Expanded subtitle for the hero banner" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <textarea name="heroDescription" defaultValue={technology.heroDescription || ''} rows={2} placeholder="Expanded subtitle for the hero banner" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
           </div>
           <div>
             <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Hero Image URL</label>
-            <input name="heroImage" placeholder="https://..." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <input name="heroImage" defaultValue={technology.heroImage || ''} placeholder="https://..." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
           </div>
         </div>
 
@@ -168,20 +175,20 @@ export default function NewTechnologyPage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
             <div>
               <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Title</label>
-              <input name="ctaTitle" placeholder="e.g. Ready to Architect Next-Gen AI?" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+              <input name="ctaTitle" defaultValue={technology.ctaTitle || ''} placeholder="e.g. Ready to Architect Next-Gen AI?" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
             </div>
             <div>
               <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Button Text</label>
-              <input name="ctaText" placeholder="e.g. Start a Project / Schedule Consultation" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+              <input name="ctaText" defaultValue={technology.ctaText || ''} placeholder="e.g. Start a Project / Schedule Consultation" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
             </div>
           </div>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Description</label>
-            <textarea name="ctaDescription" rows={2} placeholder="e.g. Connect with Quantum AI engineers to design and deploy custom intelligent software." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <textarea name="ctaDescription" defaultValue={technology.ctaDescription || ''} rows={2} placeholder="e.g. Connect with Quantum AI engineers to design and deploy custom intelligent software." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
           </div>
           <div>
             <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Button Link</label>
-            <input name="ctaLink" placeholder="e.g. /contact or https://calendly.com/..." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <input name="ctaLink" defaultValue={technology.ctaLink || ''} placeholder="e.g. /contact or https://calendly.com/..." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
           </div>
         </div>
 
@@ -192,21 +199,21 @@ export default function NewTechnologyPage() {
           </h2>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Page Content (HTML supported)</label>
-            <textarea name="content" rows={5} placeholder="<p>Detailed technical overview...</p>" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC', fontFamily: 'monospace' }} />
+            <textarea name="content" defaultValue={technology.content || ''} rows={5} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC', fontFamily: 'monospace' }} />
           </div>
           <div style={{ marginBottom: '16px' }}>
             <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Features (JSON array)</label>
-            <textarea name="features" defaultValue="[]" rows={3} placeholder='[{"title": "Feature 1", "description": "Description 1"}]' style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC', fontFamily: 'monospace' }} />
+            <textarea name="features" defaultValue={technology.features || '[]'} rows={3} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC', fontFamily: 'monospace' }} />
           </div>
           <div>
             <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Use Cases (JSON array)</label>
-            <textarea name="useCases" defaultValue="[]" rows={3} placeholder='[{"title": "Use Case 1", "description": "Description 1"}]' style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC', fontFamily: 'monospace' }} />
+            <textarea name="useCases" defaultValue={technology.useCases || '[]'} rows={3} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC', fontFamily: 'monospace' }} />
           </div>
         </div>
 
         {/* Publication Status */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', backgroundColor: '#0B132B', border: '1px solid #1E293B', borderRadius: '12px', padding: '16px 24px' }}>
-          <input type="checkbox" name="published" id="published" defaultChecked style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+          <input type="checkbox" name="published" id="published" defaultChecked={technology.published} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
           <label htmlFor="published" style={{ color: '#F8FAFC', fontSize: '0.9375rem', cursor: 'pointer' }}>
             Published (Visible on public website)
           </label>
@@ -222,7 +229,7 @@ export default function NewTechnologyPage() {
             disabled={isSubmitting}
             style={{ padding: '10px 24px', backgroundColor: '#1677FF', color: '#FFFFFF', border: 'none', borderRadius: '6px', fontSize: '0.875rem', fontWeight: 600, cursor: isSubmitting ? 'not-allowed' : 'pointer', opacity: isSubmitting ? 0.7 : 1 }}
           >
-            {isSubmitting ? 'Creating...' : 'Create Technology'}
+            {isSubmitting ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
       </form>

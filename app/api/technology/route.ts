@@ -4,6 +4,12 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
+function cleanString(val: any): string | null {
+  if (val === undefined || val === null) return null;
+  const s = String(val).trim();
+  return s.length > 0 ? s : null;
+}
+
 export async function GET() {
   try {
     const tech = await prisma.technology.findMany({
@@ -22,27 +28,32 @@ export async function POST(request: Request) {
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await request.json();
-    const slug = body.slug || body.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const name = String(body.name || '').trim();
+    if (!name) {
+      return NextResponse.json({ error: 'Name is required' }, { status: 400 });
+    }
+
+    const slug = cleanString(body.slug) || name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
     const tech = await prisma.technology.create({
       data: {
-        name: body.name,
+        name,
         slug,
-        shortDescription: body.shortDescription || body.description || '',
-        category: body.category || 'AI/ML',
-        heroTitle: body.heroTitle || null,
-        heroDescription: body.heroDescription || null,
-        heroImage: body.heroImage || null,
-        content: body.content || null,
+        shortDescription: cleanString(body.shortDescription) || cleanString(body.description) || '',
+        category: cleanString(body.category) || 'AI/ML',
+        heroTitle: cleanString(body.heroTitle),
+        heroDescription: cleanString(body.heroDescription),
+        heroImage: cleanString(body.heroImage),
+        content: cleanString(body.content),
         features: typeof body.features === 'string' ? body.features : JSON.stringify(body.features || []),
         useCases: typeof body.useCases === 'string' ? body.useCases : JSON.stringify(body.useCases || []),
-        ctaTitle: body.ctaTitle || null,
-        ctaDescription: body.ctaDescription || null,
-        ctaText: body.ctaText || null,
-        ctaLink: body.ctaLink || null,
-        usage: body.usage || null,
-        projects: body.projects || null,
-        icon: body.icon || null,
+        ctaTitle: cleanString(body.ctaTitle),
+        ctaDescription: cleanString(body.ctaDescription),
+        ctaText: cleanString(body.ctaText),
+        ctaLink: cleanString(body.ctaLink),
+        usage: cleanString(body.usage),
+        projects: cleanString(body.projects),
+        icon: cleanString(body.icon),
         order: parseInt(body.order, 10) || 0,
         published: body.published === 'true' || body.published === true || body.published === 'on' || body.published === undefined,
       },
