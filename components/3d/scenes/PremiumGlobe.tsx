@@ -208,10 +208,10 @@ export function PremiumGlobe() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
-      const heroHeight = window.innerHeight || 800;
-      scrollRef.current.target = scrollY / heroHeight;
+      const scrollRange = Math.max(window.innerHeight * 1.2, 600);
+      scrollRef.current.target = Math.min(Math.max(scrollY / scrollRange, 0), 1);
       const diff = scrollY - scrollRef.current.lastY;
-      scrollRef.current.velocity = diff * 0.003;
+      scrollRef.current.velocity = diff * 0.0025;
       scrollRef.current.lastY = scrollY;
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -229,39 +229,38 @@ export function PremiumGlobe() {
 
   useFrame((state, delta) => {
     // Spring physics for smooth scroll responsiveness
-    scrollRef.current.current += (scrollRef.current.target - scrollRef.current.current) * 0.08;
+    scrollRef.current.current += (scrollRef.current.target - scrollRef.current.current) * 0.06;
     const progress = scrollRef.current.current;
 
     if (groupRef.current) {
       if (!reducedMotion) {
         const boost = scrollRef.current.velocity * 0.85;
-        groupRef.current.rotation.y += delta * 0.04 + boost;
-        scrollRef.current.velocity *= 0.92;
+        groupRef.current.rotation.y += delta * 0.05 + boost;
+        scrollRef.current.velocity *= 0.90;
       }
 
-      // ── Near/Far 3D Depth + Natural Hero Scroll Exit ──
-      // Top of Hero (progress = 0):
-      // Earth is near, large, and right in the Hero background (z = 0, y = 0, scale = 1.05)
-      // As user scrolls down (progress > 0):
-      // 1. Z recedes deeply into the cosmos (z = -progress * 12.0) -> Moves far away!
-      // 2. Y scrolls upward naturally with the Hero section (y = +progress * 9.0)
-      // 3. Scale eases down gracefully (scale = max(0.35, 1.05 - progress * 0.45))
-      // 4. Once user reaches About / Solutions / Contact, Earth has receded far away and exited above,
-      //    leaving the rest of the website clean, dark, and unobstructed!
-      // When scrolling back up: Earth zooms forward from deep space and descends back into the Hero!
-      const targetZ = -progress * 12.0;
-      const targetY = progress * 9.0;
-      const targetScale = Math.max(0.35, 1.05 - progress * 0.45);
+      // ── Smooth Near / Far 3D Scroll Depth (Matching Technologies Experience) ──
+      // Top of Page (progress = 0):
+      // Earth is near, large, front and center (z = 0, y = -0.5, scale = 1.0)
+      // As user scrolls down (progress -> 1):
+      // 1. Z recedes deeply into the background (targetZ = -progress * 11.0) -> Goes far away!
+      // 2. Scale eases down smoothly (targetScale = 1.0 - progress * 0.35)
+      // 3. Y stays centered in the viewport with subtle settling (targetY = -0.5 - progress * 0.6)
+      // When user scrolls up (progress -> 0):
+      // Earth smoothly zooms forward from deep space and returns close to the screen!
+      const targetZ = -progress * 11.0;
+      const targetY = -0.5 - progress * 0.6;
+      const targetScale = Math.max(0.55, 1.0 - progress * 0.35);
 
-      groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, 0.08);
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.08);
+      groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, 0.06);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.06);
 
-      const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.08);
+      const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.06);
       groupRef.current.scale.set(s, s, s);
 
       // Subtle dynamic tilt with time and scroll
       groupRef.current.rotation.x =
-        Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + progress * 0.25;
+        Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + progress * 0.15;
     }
   });
 

@@ -14,7 +14,7 @@ function RouteController({ children }: { children: React.ReactNode }) {
     if (pathname === '/')                       setCurrentScene('room');
     else if (pathname.startsWith('/products'))  setCurrentScene('products');
     else if (pathname.startsWith('/work'))      setCurrentScene('work');
-    else if (pathname.startsWith('/technology'))setCurrentScene('technology');
+    else if (pathname.startsWith('/technology') || pathname.startsWith('/technologies')) setCurrentScene('technology');
     else if (pathname.startsWith('/systems'))   setCurrentScene('systems');
     else if (pathname.startsWith('/about'))     setCurrentScene('about');
     else if (pathname.startsWith('/leadership'))setCurrentScene('leadership');
