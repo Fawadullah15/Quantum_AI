@@ -3,7 +3,7 @@ import path from 'path';
 import countriesData from '../lib/data/countries.js';
 
 const EARTH_RADIUS = 4.4;
-const LINK_RADIUS = EARTH_RADIUS * 0.994;
+const LINK_RADIUS = EARTH_RADIUS * 1.003; // Float slightly above sphere to guarantee 100% visibility
 
 function latLongToVector3(lat, lon, r) {
   const phi = (90.0 - lat) * (Math.PI / 180.0);
@@ -48,7 +48,7 @@ for (const feature of features) {
       const prev = simplified[simplified.length - 1];
       const curr = ring[i];
       const d = Math.abs(curr[0] - prev[0]) + Math.abs(curr[1] - prev[1]);
-      if (d > 0.1 || i === ring.length - 1) {
+      if (d > 0.08 || i === ring.length - 1) {
         simplified.push(curr);
       }
     }
@@ -94,4 +94,4 @@ fs.writeFileSync(
   'utf-8'
 );
 
-console.log(`Precomputed ${positions.length / 6} line segments to lib/data/geo-borders.json`);
+console.log(`Precomputed ${positions.length / 6} line segments at LINK_RADIUS=${LINK_RADIUS}`);

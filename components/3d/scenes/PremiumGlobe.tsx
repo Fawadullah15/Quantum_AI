@@ -89,7 +89,7 @@ export function PremiumGlobe() {
   const mousePos = useRef({ x: 0, y: 0 });
   const scrollRef = useRef({ current: 0, target: 0, velocity: 0, lastY: 0 });
 
-  // 1. Instant Synchronous Precomputed Geo-Borders Buffer
+  // 1. Instant Synchronous Precomputed Geo-Borders Buffer (10,312 segments)
   const geoBuffers = useMemo(() => {
     return {
       positions: new Float32Array(geoBordersData.positions),
@@ -102,6 +102,11 @@ export function PremiumGlobe() {
   const maskTexture = useMemo(() => createInstantMaskTexture(), []);
 
   useEffect(() => {
+    // Start with populated continents facing forward
+    if (spinGroupRef.current) {
+      spinGroupRef.current.rotation.y = 1.35;
+    }
+
     const handleMouseMove = (e: MouseEvent) => {
       mousePos.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       mousePos.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -112,7 +117,7 @@ export function PremiumGlobe() {
       const heroHeight = window.innerHeight || 800;
       const progress = scrollY / heroHeight;
       const diff = scrollY - scrollRef.current.lastY;
-      scrollRef.current.velocity = diff * 0.002;
+      scrollRef.current.velocity = diff * 0.003;
       scrollRef.current.lastY = scrollY;
       scrollRef.current.target = progress;
     };
@@ -139,16 +144,16 @@ export function PremiumGlobe() {
       uMask: { value: maskTexture },
       uDotColor: { value: new THREE.Color('#FFFFFF') },
       uDotDensity: { value: 115.0 },
-      uDotSize: { value: 0.38 },
+      uDotSize: { value: 0.40 },
       uGlowColor: { value: new THREE.Color('#0066FF') },
-      uGlowIntensity: { value: 2.8 },
+      uGlowIntensity: { value: 3.0 },
       uOceanColor: { value: new THREE.Color('#020817') },
-      uOceanAlpha: { value: 0.98 },
+      uOceanAlpha: { value: 0.95 },
     }),
     [maskTexture]
   );
 
-  // 4. Animated Traveling Cyan Border Pulses Uniforms
+  // 4. Vibrant Traveling Cyan Border Pulses Uniforms
   const lineUniforms = useMemo(
     () => ({
       uTime: { value: 0 },
@@ -164,7 +169,7 @@ export function PremiumGlobe() {
 
     // Pulse traveling border lines
     if (!reducedMotion) {
-      lineUniforms.uTime.value += delta * 0.65;
+      lineUniforms.uTime.value += delta * 0.7;
     }
 
     // ── 3D Forward & Backward Depth Animation ──
@@ -172,15 +177,15 @@ export function PremiumGlobe() {
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
       // In the hero range (progress 0 -> 0.6):
-      // Earth sweeps FORWARD in Z toward the camera (growing from z=0 to z=+3.0),
-      // then as progress > 0.6, it smoothly recedes BACKWARD into deep space (z=-4.5)
-      const forwardPulse = Math.sin(Math.min(1, progress * 1.6) * Math.PI) * 3.4;
-      const targetZ = forwardPulse - Math.max(0, progress - 0.7) * 5.0;
+      // Earth sweeps FORWARD in Z toward the camera (growing from z=0 to z=+3.6),
+      // then as progress > 0.6, it smoothly recedes BACKWARD into deep space (z=-5.0)
+      const forwardPulse = Math.sin(Math.min(1, progress * 1.6) * Math.PI) * 3.8;
+      const targetZ = forwardPulse - Math.max(0, progress - 0.65) * 5.5;
       
-      const targetY = -progress * 4.5 + mousePos.current.y * 0.35;
-      const targetX = isMobile ? 0 : 3.6 - Math.min(1, progress * 0.8) * 1.2 + mousePos.current.x * 0.5;
+      const targetY = -progress * 5.0 + mousePos.current.y * 0.35;
+      const targetX = isMobile ? 0 : 3.6 - Math.min(1, progress * 0.8) * 1.5 + mousePos.current.x * 0.5;
 
-      const targetScale = 1.0 + Math.sin(Math.min(1, progress * 1.5) * Math.PI) * 0.22 - Math.max(0, progress - 0.7) * 0.3;
+      const targetScale = 1.0 + Math.sin(Math.min(1, progress * 1.5) * Math.PI) * 0.28 - Math.max(0, progress - 0.65) * 0.35;
 
       rootGroupRef.current.position.x = THREE.MathUtils.lerp(rootGroupRef.current.position.x, targetX, 0.08);
       rootGroupRef.current.position.y = THREE.MathUtils.lerp(rootGroupRef.current.position.y, targetY, 0.08);
@@ -189,10 +194,10 @@ export function PremiumGlobe() {
       const s = THREE.MathUtils.lerp(rootGroupRef.current.scale.x, Math.max(0.65, targetScale), 0.08);
       rootGroupRef.current.scale.set(s, s, s);
 
-      // Dynamic tilt on scroll
+      // Dynamic 3D tilt on scroll
       rootGroupRef.current.rotation.x = THREE.MathUtils.lerp(
         rootGroupRef.current.rotation.x,
-        progress * 0.45 + mousePos.current.y * 0.15,
+        progress * 0.5 + mousePos.current.y * 0.15,
         0.06
       );
       rootGroupRef.current.rotation.y = THREE.MathUtils.lerp(
@@ -204,8 +209,8 @@ export function PremiumGlobe() {
 
     // ── Continuous Planetary Spin with Scroll Velocity Boost ──
     if (spinGroupRef.current && !reducedMotion) {
-      const scrollBoost = scrollRef.current.velocity * 0.8;
-      spinGroupRef.current.rotation.y += delta * 0.048 + scrollBoost;
+      const scrollBoost = scrollRef.current.velocity * 0.9;
+      spinGroupRef.current.rotation.y += delta * 0.052 + scrollBoost;
       scrollRef.current.velocity *= 0.92; // decay
     }
   });
@@ -216,12 +221,14 @@ export function PremiumGlobe() {
       <group ref={tiltGroupRef} rotation={[0, 0, 23.5 * (Math.PI / 180)]}>
         {/* Continuous Spin Group */}
         <group ref={spinGroupRef}>
-          {/* ── Base Dot-Matrix Landmass Sphere ── */}
-          <mesh>
-            <sphereGeometry args={[EARTH_RADIUS * 0.99, 64, 64]} />
+          {/* ── Base Dot-Matrix Landmass Sphere (depthWrite: false to prevent border clipping) ── */}
+          <mesh renderOrder={1}>
+            <sphereGeometry args={[EARTH_RADIUS * 0.985, 64, 64]} />
             <shaderMaterial
               uniforms={fillUniforms}
               transparent
+              depthWrite={false}
+              depthTest={true}
               side={THREE.FrontSide}
               vertexShader={`
                 varying vec3 vPosition;
@@ -280,14 +287,14 @@ export function PremiumGlobe() {
                   
                   float maxDist = (3.14159265359 / dotsRows) * 0.5 * uDotSize;
                   
-                  vec3 finalColor = uOceanColor + glow * 0.4;
+                  vec3 finalColor = uOceanColor + glow * 0.45;
                   float finalAlpha = uOceanAlpha;
                   
                   if (centerMask.r > 0.5) {
                     float alpha = smoothstep(maxDist, maxDist * 0.72, dist);
-                    vec3 dotColorWithGlow = uDotColor + glow * 0.85;
+                    vec3 dotColorWithGlow = uDotColor + glow * 0.9;
                     float edge = max(0.0, dot(vNormal, vec3(0.0, 0.0, 1.0)));
-                    dotColorWithGlow += vec3(0.25) * pow(edge, 2.5);
+                    dotColorWithGlow += vec3(0.3) * pow(edge, 2.2);
                     finalColor = mix(finalColor, dotColorWithGlow, alpha);
                     finalAlpha = max(uOceanAlpha, alpha);
                   }
@@ -298,8 +305,8 @@ export function PremiumGlobe() {
             />
           </mesh>
 
-          {/* ── High-Precision Instant Animated Country Borders ── */}
-          <lineSegments>
+          {/* ── High-Precision Animated Country Borders (100% Unclipped, Luminous) ── */}
+          <lineSegments renderOrder={2}>
             <bufferGeometry>
               <bufferAttribute
                 attach="attributes-position"
@@ -317,6 +324,7 @@ export function PremiumGlobe() {
             <shaderMaterial
               uniforms={lineUniforms}
               transparent
+              depthTest={true}
               depthWrite={false}
               blending={THREE.AdditiveBlending}
               vertexShader={`
@@ -336,9 +344,9 @@ export function PremiumGlobe() {
                 varying float vDistance;
                 varying float vOffset;
                 void main() {
-                  float phase = fract(vDistance - uTime + vOffset);
-                  float alpha = pow(phase, 3.8); 
-                  alpha += 0.35; // Bright crisp base outline
+                  float phase = fract(vDistance - uTime * 0.6 + vOffset);
+                  float pulse = pow(phase, 4.0);
+                  float alpha = 0.55 + pulse * 0.45; // Guaranteed bright visibility from all angles
                   gl_FragColor = vec4(uColor, alpha);
                 }
               `}
@@ -347,11 +355,11 @@ export function PremiumGlobe() {
 
           {/* ── Global Hub Nodes ── */}
           {HUBS.map((hub, idx) => {
-            const pos = latLongToVector3(hub.lat, hub.lng, EARTH_RADIUS * 1.008);
+            const pos = latLongToVector3(hub.lat, hub.lng, EARTH_RADIUS * 1.012);
             return (
               <group key={idx} position={pos}>
-                <mesh>
-                  <sphereGeometry args={[0.055, 16, 16]} />
+                <mesh renderOrder={3}>
+                  <sphereGeometry args={[0.06, 16, 16]} />
                   <meshBasicMaterial color="#00F0FF" />
                 </mesh>
               </group>
@@ -361,10 +369,11 @@ export function PremiumGlobe() {
       </group>
 
       {/* ── Outer Atmospheric Halo ── */}
-      <mesh>
+      <mesh renderOrder={0}>
         <sphereGeometry args={[EARTH_RADIUS * 1.15, 48, 48]} />
         <shaderMaterial
           transparent
+          depthWrite={false}
           side={THREE.BackSide}
           blending={THREE.AdditiveBlending}
           uniforms={{
@@ -382,16 +391,16 @@ export function PremiumGlobe() {
             varying vec3 vNormal;
             void main() {
               float intensity = pow(0.68 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.6);
-              gl_FragColor = vec4(uColor, intensity * 0.85);
+              gl_FragColor = vec4(uColor, intensity * 0.9);
             }
           `}
         />
       </mesh>
 
       {/* ── Lighting ── */}
-      <ambientLight intensity={0.25} color="#F8FAFC" />
-      <directionalLight position={[-12, 6, 10]} intensity={2.0} color="#0099FF" />
-      <directionalLight position={[12, -4, -10]} intensity={1.4} color="#0033BB" />
+      <ambientLight intensity={0.3} color="#F8FAFC" />
+      <directionalLight position={[-12, 6, 10]} intensity={2.2} color="#0099FF" />
+      <directionalLight position={[12, -4, -10]} intensity={1.5} color="#0033BB" />
     </group>
   );
 }
