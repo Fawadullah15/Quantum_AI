@@ -736,16 +736,21 @@ export default function HomePage() {
                 display: none !important;
               }
               .home-work-title {
-                font-size: clamp(0.85rem, 3.2vw, 1.05rem);
-                line-height: 1.25;
+                font-size: clamp(0.72rem, 2.7vw, 0.84rem) !important;
+                line-height: 1.25 !important;
+                letter-spacing: -0.01em !important;
+                font-weight: 700 !important;
                 display: -webkit-box;
-                -webkit-line-clamp: 2;
+                -webkit-line-clamp: 3;
                 -webkit-box-orient: vertical;
                 overflow: hidden;
+                word-break: normal;
+                overflow-wrap: break-word;
+                hyphens: auto;
               }
               .home-work-desc {
-                font-size: 0.72rem;
-                line-height: 1.4;
+                font-size: 0.6875rem !important;
+                line-height: 1.35 !important;
                 display: -webkit-box;
                 -webkit-line-clamp: 2;
                 -webkit-box-orient: vertical;

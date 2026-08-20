@@ -36,6 +36,45 @@ export default function TestimonialsSection({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [fileError, setFileError] = useState('');
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileError('');
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate type
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    if (!validTypes.includes(file.type.toLowerCase())) {
+      setFileError('Please upload a valid PNG or JPG image.');
+      return;
+    }
+
+    // Validate size (max 2MB)
+    const maxSizeBytes = 2 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      setFileError('Image size exceeds 2MB limit. Please choose a smaller photo.');
+      return;
+    }
+
+    // Read file as Data URL
+    const reader = new FileReader();
+    reader.onload = (uploadEvent) => {
+      const result = uploadEvent.target?.result as string;
+      if (result) {
+        setReviewForm((prev) => ({ ...prev, photo: result }));
+      }
+    };
+    reader.onerror = () => {
+      setFileError('Failed to read image file. Please try again.');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemovePhoto = () => {
+    setReviewForm((prev) => ({ ...prev, photo: '' }));
+    setFileError('');
+  };
 
   useEffect(() => {
     // Fetch latest published testimonials from live API
@@ -556,7 +595,7 @@ export default function TestimonialsSection({
                   </div>
 
                   {/* Role & Photo */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
                     <div>
                       <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
                         ROLE / TITLE
@@ -581,25 +620,74 @@ export default function TestimonialsSection({
                     </div>
                     <div>
                       <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
-                        AVATAR PHOTO URL
+                        PHOTO (PNG / JPG, MAX 2MB)
                       </label>
-                      <input
-                        type="text"
-                        value={reviewForm.photo}
-                        onChange={(e) => setReviewForm({ ...reviewForm, photo: e.target.value })}
-                        placeholder="https://..."
-                        style={{
-                          width: '100%',
-                          padding: '0.65rem 0.85rem',
-                          backgroundColor: '#040B17',
-                          border: '1px solid rgba(30, 58, 138, 0.4)',
-                          borderRadius: 8,
-                          color: '#F8FAFF',
-                          fontSize: '0.9rem',
-                          outline: 'none',
-                          boxSizing: 'border-box',
-                        }}
-                      />
+                      {reviewForm.photo ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.4rem 0.65rem', backgroundColor: '#040B17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 8, boxSizing: 'border-box' }}>
+                          <img
+                            src={reviewForm.photo}
+                            alt="Preview"
+                            style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #38BDF8', flexShrink: 0 }}
+                          />
+                          <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'var(--font-mono, monospace)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+                            Photo selected
+                          </span>
+                          <button
+                            type="button"
+                            onClick={handleRemovePhoto}
+                            style={{
+                              backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                              border: '1px solid rgba(239, 68, 68, 0.4)',
+                              color: '#F87171',
+                              borderRadius: 4,
+                              padding: '0.2rem 0.5rem',
+                              fontSize: '0.68rem',
+                              cursor: 'pointer',
+                              fontFamily: 'var(--font-mono, monospace)'
+                            }}
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ) : (
+                        <div>
+                          <input
+                            type="file"
+                            id="testimonial-photo-input"
+                            accept="image/png, image/jpeg, image/jpg, image/webp"
+                            onChange={handlePhotoUpload}
+                            style={{ display: 'none' }}
+                          />
+                          <label
+                            htmlFor="testimonial-photo-input"
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '0.45rem',
+                              width: '100%',
+                              padding: '0.65rem 0.85rem',
+                              backgroundColor: '#040B17',
+                              border: '1px dashed rgba(56, 189, 248, 0.4)',
+                              borderRadius: 8,
+                              color: '#38BDF8',
+                              fontSize: '0.78rem',
+                              fontFamily: 'var(--font-mono, monospace)',
+                              cursor: 'pointer',
+                              boxSizing: 'border-box',
+                              transition: 'border-color 0.2s',
+                              textAlign: 'center'
+                            }}
+                          >
+                            <span>📷</span> Upload Photo (PNG / JPG)
+                          </label>
+                        </div>
+                      )}
+                      {fileError && (
+                        <p style={{ color: '#EF4444', fontSize: '0.7rem', marginTop: '0.35rem', margin: 0, fontFamily: 'var(--font-mono, monospace)' }}>
+                          {fileError}
+                        </p>
+                      )}
                     </div>
                   </div>
 
