@@ -77,6 +77,15 @@ export default function HomePage() {
       technologies: 'Python, LangChain, RAG, Vector Search, Embeddings, LLMs, FastAPI, PostgreSQL',
       results: 'Provides semantic search over knowledge sources and creates a foundation for retrieval-augmented AI applications.',
       slug: 'vector-search-knowledge-base',
+    },
+    {
+      id: '4',
+      title: 'AI-Powered Customer Support Assistant',
+      industry: 'Artificial Intelligence / Customer Support',
+      problem: 'An AI customer support system designed to handle common customer questions, provide contextual answers, and assist support teams with faster information retrieval.',
+      technologies: 'Python, FastAPI, LangChain, LLMs, RAG, APIs',
+      results: 'Creates an AI-assisted support workflow that can provide faster access to business information and reduce repetitive support work.',
+      slug: 'ai-powered-customer-support-assistant',
     }
   ]);
 
@@ -126,7 +135,7 @@ export default function HomePage() {
       .then(res => res.ok ? res.json() : [])
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
-          setCaseStudies(data.filter((s: any) => s.published !== false));
+          setCaseStudies(data.filter((s: any) => s.published !== false).slice(0, 4));
         }
       })
       .catch(() => {});
@@ -784,7 +793,7 @@ export default function HomePage() {
             </div>
 
             <div className="home-work-container">
-              {caseStudies.map((item, i) => {
+              {caseStudies.slice(0, 4).map((item, i) => {
                 const techList = item.technologies ? (typeof item.technologies === 'string' ? item.technologies.split(',').map((t: string) => t.trim()) : item.technologies) : (item.tech || []);
                 const slug = item.slug || 'school-operations-manager';
 
