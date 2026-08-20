@@ -203,17 +203,22 @@ function ConnectionArc({
 export function PremiumGlobe() {
   const groupRef = useRef<THREE.Group>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const scrollTargetRef = useRef(0);
+  const scrollCurrentRef = useRef(0);
   const scrollVelocityRef = useRef(0);
   const lastScrollYRef = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY || 0;
+      const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+      const heroHeight = window.innerHeight || 800;
+      scrollTargetRef.current = scrollY / heroHeight;
       const diff = scrollY - lastScrollYRef.current;
-      scrollVelocityRef.current = diff * 0.0025;
+      scrollVelocityRef.current = diff * 0.003;
       lastScrollYRef.current = scrollY;
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(media.matches);
@@ -226,14 +231,38 @@ export function PremiumGlobe() {
   }, []);
 
   useFrame((state, delta) => {
-    if (groupRef.current && !reducedMotion) {
-      const boost = scrollVelocityRef.current * 0.85;
-      groupRef.current.rotation.y += delta * 0.04 + boost;
-      scrollVelocityRef.current *= 0.92;
+    // Smooth scroll interpolation
+    scrollCurrentRef.current = THREE.MathUtils.lerp(
+      scrollCurrentRef.current,
+      scrollTargetRef.current,
+      0.08
+    );
+    const p = scrollCurrentRef.current;
 
-      // Slight tilt oscillation for life
+    if (groupRef.current) {
+      if (!reducedMotion) {
+        const boost = scrollVelocityRef.current * 0.9;
+        groupRef.current.rotation.y += delta * 0.04 + boost;
+        scrollVelocityRef.current *= 0.92;
+      }
+
+      // ── Far & Near Dynamic 3D Scroll Effect ──
+      // Top of page (p = 0): Earth is near, large, and right beside headline (z = 0, scale = 1.05)
+      // Scrolling down (p > 0): Earth recedes far into deep space (z reaches -15.0, scale drops to 0.48)
+      // Scrolling up (p -> 0): Earth smoothly zooms back near the screen!
+      const targetZ = -Math.min(2.5, p) * 7.5;
+      const targetY = -p * 2.8;
+      const targetScale = Math.max(0.48, 1.05 - p * 0.25);
+
+      groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, 0.08);
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.08);
+
+      const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.08);
+      groupRef.current.scale.set(s, s, s);
+
+      // Dynamic tilt based on scroll and time
       groupRef.current.rotation.x =
-        Math.sin(state.clock.elapsedTime * 0.15) * 0.04;
+        Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + p * 0.2;
     }
   });
 
@@ -307,8 +336,11 @@ export function PremiumGlobe() {
 
       {/* ── Lighting ── */}
       <ambientLight intensity={0.15} color="#F8FAFC" />
+      {/* Blue primary light */}
       <directionalLight position={[-12, 6, 10]} intensity={1.5} color="#2563EB" />
+      {/* Deep indigo secondary light */}
       <directionalLight position={[12, -4, -10]} intensity={1.2} color="#3730A3" />
+      {/* Very subtle violet rim light */}
       <directionalLight position={[0, 10, -15]} intensity={0.6} color="#7C3AED" />
     </group>
   );
