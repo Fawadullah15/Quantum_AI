@@ -81,8 +81,13 @@ function createInstantMaskTexture(): THREE.CanvasTexture | null {
 }
 
 export function PremiumGlobe() {
+  const rootGroupRef = useRef<THREE.Group>(null);
+  const tiltGroupRef = useRef<THREE.Group>(null);
   const spinGroupRef = useRef<THREE.Group>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+
+  const mousePos = useRef({ x: 0, y: 0 });
+  const scrollRef = useRef({ current: 0, target: 0, velocity: 0, lastY: 0 });
 
   // 1. Instant Synchronous Precomputed Geo-Borders Buffer
   const geoBuffers = useMemo(() => {
@@ -97,11 +102,35 @@ export function PremiumGlobe() {
   const maskTexture = useMemo(() => createInstantMaskTexture(), []);
 
   useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      mousePos.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mousePos.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    const handleScroll = () => {
+      const scrollY = window.scrollY || 0;
+      const heroHeight = window.innerHeight || 800;
+      const progress = scrollY / heroHeight;
+      const diff = scrollY - scrollRef.current.lastY;
+      scrollRef.current.velocity = diff * 0.002;
+      scrollRef.current.lastY = scrollY;
+      scrollRef.current.target = progress;
+    };
+
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(media.matches);
     const listener = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     media.addEventListener('change', listener);
-    return () => media.removeEventListener('change', listener);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+      media.removeEventListener('change', listener);
+    };
   }, []);
 
   // 3. Dot Matrix Landmass Shader Uniforms
@@ -112,7 +141,7 @@ export function PremiumGlobe() {
       uDotDensity: { value: 115.0 },
       uDotSize: { value: 0.38 },
       uGlowColor: { value: new THREE.Color('#0066FF') },
-      uGlowIntensity: { value: 2.6 },
+      uGlowIntensity: { value: 2.8 },
       uOceanColor: { value: new THREE.Color('#020817') },
       uOceanAlpha: { value: 0.98 },
     }),
@@ -129,18 +158,62 @@ export function PremiumGlobe() {
   );
 
   useFrame((state, delta) => {
-    if (spinGroupRef.current && !reducedMotion) {
-      spinGroupRef.current.rotation.y += delta * 0.048;
-    }
+    // Smooth scroll interpolation
+    scrollRef.current.current += (scrollRef.current.target - scrollRef.current.current) * 0.08;
+    const progress = scrollRef.current.current;
+
+    // Pulse traveling border lines
     if (!reducedMotion) {
-      lineUniforms.uTime.value += delta * 0.55;
+      lineUniforms.uTime.value += delta * 0.65;
+    }
+
+    // ── 3D Forward & Backward Depth Animation ──
+    if (rootGroupRef.current) {
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+      // In the hero range (progress 0 -> 0.6):
+      // Earth sweeps FORWARD in Z toward the camera (growing from z=0 to z=+3.0),
+      // then as progress > 0.6, it smoothly recedes BACKWARD into deep space (z=-4.5)
+      const forwardPulse = Math.sin(Math.min(1, progress * 1.6) * Math.PI) * 3.4;
+      const targetZ = forwardPulse - Math.max(0, progress - 0.7) * 5.0;
+      
+      const targetY = -progress * 4.5 + mousePos.current.y * 0.35;
+      const targetX = isMobile ? 0 : 3.6 - Math.min(1, progress * 0.8) * 1.2 + mousePos.current.x * 0.5;
+
+      const targetScale = 1.0 + Math.sin(Math.min(1, progress * 1.5) * Math.PI) * 0.22 - Math.max(0, progress - 0.7) * 0.3;
+
+      rootGroupRef.current.position.x = THREE.MathUtils.lerp(rootGroupRef.current.position.x, targetX, 0.08);
+      rootGroupRef.current.position.y = THREE.MathUtils.lerp(rootGroupRef.current.position.y, targetY, 0.08);
+      rootGroupRef.current.position.z = THREE.MathUtils.lerp(rootGroupRef.current.position.z, targetZ, 0.08);
+
+      const s = THREE.MathUtils.lerp(rootGroupRef.current.scale.x, Math.max(0.65, targetScale), 0.08);
+      rootGroupRef.current.scale.set(s, s, s);
+
+      // Dynamic tilt on scroll
+      rootGroupRef.current.rotation.x = THREE.MathUtils.lerp(
+        rootGroupRef.current.rotation.x,
+        progress * 0.45 + mousePos.current.y * 0.15,
+        0.06
+      );
+      rootGroupRef.current.rotation.y = THREE.MathUtils.lerp(
+        rootGroupRef.current.rotation.y,
+        mousePos.current.x * 0.25,
+        0.06
+      );
+    }
+
+    // ── Continuous Planetary Spin with Scroll Velocity Boost ──
+    if (spinGroupRef.current && !reducedMotion) {
+      const scrollBoost = scrollRef.current.velocity * 0.8;
+      spinGroupRef.current.rotation.y += delta * 0.048 + scrollBoost;
+      scrollRef.current.velocity *= 0.92; // decay
     }
   });
 
   return (
-    <group>
-      {/* 23.5° Earth Axial Tilt */}
-      <group rotation={[0, 0, 23.5 * (Math.PI / 180)]}>
+    <group ref={rootGroupRef}>
+      {/* 23.5° Earth Axial Tilt Group */}
+      <group ref={tiltGroupRef} rotation={[0, 0, 23.5 * (Math.PI / 180)]}>
         {/* Continuous Spin Group */}
         <group ref={spinGroupRef}>
           {/* ── Base Dot-Matrix Landmass Sphere ── */}
@@ -212,9 +285,9 @@ export function PremiumGlobe() {
                   
                   if (centerMask.r > 0.5) {
                     float alpha = smoothstep(maxDist, maxDist * 0.72, dist);
-                    vec3 dotColorWithGlow = uDotColor + glow * 0.8;
+                    vec3 dotColorWithGlow = uDotColor + glow * 0.85;
                     float edge = max(0.0, dot(vNormal, vec3(0.0, 0.0, 1.0)));
-                    dotColorWithGlow += vec3(0.2) * pow(edge, 2.5);
+                    dotColorWithGlow += vec3(0.25) * pow(edge, 2.5);
                     finalColor = mix(finalColor, dotColorWithGlow, alpha);
                     finalAlpha = max(uOceanAlpha, alpha);
                   }
@@ -265,7 +338,7 @@ export function PremiumGlobe() {
                 void main() {
                   float phase = fract(vDistance - uTime + vOffset);
                   float alpha = pow(phase, 3.8); 
-                  alpha += 0.32; // Base outline brightness
+                  alpha += 0.35; // Bright crisp base outline
                   gl_FragColor = vec4(uColor, alpha);
                 }
               `}
@@ -309,16 +382,16 @@ export function PremiumGlobe() {
             varying vec3 vNormal;
             void main() {
               float intensity = pow(0.68 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.6);
-              gl_FragColor = vec4(uColor, intensity * 0.75);
+              gl_FragColor = vec4(uColor, intensity * 0.85);
             }
           `}
         />
       </mesh>
 
       {/* ── Lighting ── */}
-      <ambientLight intensity={0.2} color="#F8FAFC" />
-      <directionalLight position={[-12, 6, 10]} intensity={1.8} color="#0099FF" />
-      <directionalLight position={[12, -4, -10]} intensity={1.2} color="#0033BB" />
+      <ambientLight intensity={0.25} color="#F8FAFC" />
+      <directionalLight position={[-12, 6, 10]} intensity={2.0} color="#0099FF" />
+      <directionalLight position={[12, -4, -10]} intensity={1.4} color="#0033BB" />
     </group>
   );
 }

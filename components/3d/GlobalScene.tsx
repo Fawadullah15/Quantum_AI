@@ -22,7 +22,7 @@ const SignalNetwork = React.lazy(() => import('./scenes/SignalNetwork').then(m =
 const LeadershipCore = React.lazy(() => import('./scenes/LeadershipCore').then(m => ({ default: m.LeadershipCore })));
 
 export function GlobalScene() {
-  const { scrollProgress, currentScene } = useGlobalStore();
+  const { currentScene } = useGlobalStore();
   const mouseRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -37,26 +37,16 @@ export function GlobalScene() {
   useFrame((state) => {
     const cam = state.camera as THREE.PerspectiveCamera;
     
-    // Parallax
-    const targetX = mouseRef.current.x * 1.8;
-    const targetY = mouseRef.current.y * 1.2;
+    // Smooth camera parallax
+    const targetX = mouseRef.current.x * 1.2;
+    const targetY = mouseRef.current.y * 0.8;
 
     if ((currentScene as string) === 'room' || (currentScene as string) === 'earth') {
-      // 3D forward/backward depth sweep as user scrolls:
-      // In the hero range (0 -> 0.25), forward zoom pulse occurs, then smoothly recedes into background
-      const depthPulse = Math.sin(Math.min(1, scrollProgress * 3.5) * Math.PI) * 2.8;
-      const targetZ = 12.8 - depthPulse + (scrollProgress * 9.5);
-      const camYOffset = -scrollProgress * 10.0;
-      
-      const isMobile = window.innerWidth < 768;
-      const camXOffset = isMobile ? 0 : -3.6 + (scrollProgress * 1.5); 
-      
-      cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX + camXOffset, 0.06);
-      cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY + camYOffset, 0.06);
-      cam.position.z = THREE.MathUtils.lerp(cam.position.z, targetZ, 0.06);
-      
-      // Keep dynamic focal track
-      cam.lookAt((cam.position.x - camXOffset) * 0.25, (cam.position.y - camYOffset * 0.5) * 0.2, 0);
+      const targetZ = 14.5;
+      cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX, 0.05);
+      cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY, 0.05);
+      cam.position.z = THREE.MathUtils.lerp(cam.position.z, targetZ, 0.05);
+      cam.lookAt(0, 0, 0);
     } else {
       const targetZ = 15;
       cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX, 0.05);
@@ -68,8 +58,8 @@ export function GlobalScene() {
 
   return (
     <>
-      <fog attach="fog" args={['#020817', 6, 80]} />
-      <ambientLight intensity={0.12} color="#F8FAFF" />
+      <fog attach="fog" args={['#020817', 8, 80]} />
+      <ambientLight intensity={0.15} color="#F8FAFF" />
 
       <Suspense fallback={null}>
         {/* Home 3D Premium Globe */}
