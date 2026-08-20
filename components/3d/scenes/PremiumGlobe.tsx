@@ -239,16 +239,19 @@ export function PremiumGlobe() {
         scrollRef.current.velocity *= 0.92;
       }
 
-      // ── Near & Far 3D Scroll Dynamics ──
+      // ── Near/Far 3D Depth + Natural Hero Scroll Exit ──
       // Top of Hero (progress = 0):
-      // Earth sits proudly on the right (x=0, y=0, z=0, scale=1.0)
-      // As user scrolls down:
-      // Earth recedes smoothly into deep space (z goes from 0 down to -7.5, scale to 0.65)
-      // As user scrolls up:
-      // Earth zooms smoothly back toward the viewer (z returns to 0, scale to 1.0)
-      const targetZ = -Math.min(2.0, progress) * 5.5;
-      const targetY = -progress * 1.8;
-      const targetScale = Math.max(0.60, 1.0 - progress * 0.22);
+      // Earth is near, large, and right in the Hero background (z = 0, y = 0, scale = 1.05)
+      // As user scrolls down (progress > 0):
+      // 1. Z recedes deeply into the cosmos (z = -progress * 12.0) -> Moves far away!
+      // 2. Y scrolls upward naturally with the Hero section (y = +progress * 9.0)
+      // 3. Scale eases down gracefully (scale = max(0.35, 1.05 - progress * 0.45))
+      // 4. Once user reaches About / Solutions / Contact, Earth has receded far away and exited above,
+      //    leaving the rest of the website clean, dark, and unobstructed!
+      // When scrolling back up: Earth zooms forward from deep space and descends back into the Hero!
+      const targetZ = -progress * 12.0;
+      const targetY = progress * 9.0;
+      const targetScale = Math.max(0.35, 1.05 - progress * 0.45);
 
       groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, 0.08);
       groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.08);
@@ -258,7 +261,7 @@ export function PremiumGlobe() {
 
       // Subtle dynamic tilt with time and scroll
       groupRef.current.rotation.x =
-        Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + progress * 0.15;
+        Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + progress * 0.25;
     }
   });
 
