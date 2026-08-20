@@ -84,12 +84,13 @@ export function PremiumGlobe() {
   const rootGroupRef = useRef<THREE.Group>(null);
   const tiltGroupRef = useRef<THREE.Group>(null);
   const spinGroupRef = useRef<THREE.Group>(null);
+  const hubRingsRef = useRef<THREE.Group>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
 
   const mousePos = useRef({ x: 0, y: 0 });
   const scrollRef = useRef({ current: 0, target: 0, velocity: 0, lastY: 0 });
 
-  // 1. Instant Synchronous Precomputed Geo-Borders Buffer (10,312 segments at R=5.6)
+  // 1. Precomputed Geo-Borders Buffer (10,312 segments at R=5.6)
   const geoBuffers = useMemo(() => {
     return {
       positions: new Float32Array(geoBordersData.positions),
@@ -98,7 +99,7 @@ export function PremiumGlobe() {
     };
   }, []);
 
-  // 2. Instant Synchronous Canvas Texture Mask
+  // 2. Synchronous Canvas Texture Mask
   const maskTexture = useMemo(() => createInstantMaskTexture(), []);
 
   useEffect(() => {
@@ -138,17 +139,18 @@ export function PremiumGlobe() {
     };
   }, []);
 
-  // 3. High-Contrast Dot-Matrix Landmass Shader Uniforms
+  // 3. Rich Surface & Landmass Shader Uniforms
   const fillUniforms = useMemo(
     () => ({
       uMask: { value: maskTexture },
       uDotColor: { value: new THREE.Color('#FFFFFF') },
-      uDotDensity: { value: 120.0 },
-      uDotSize: { value: 0.40 },
-      uGlowColor: { value: new THREE.Color('#0055FF') },
-      uGlowIntensity: { value: 2.2 },
-      uOceanColor: { value: new THREE.Color('#020617') },
-      uOceanAlpha: { value: 0.95 },
+      uDotDensity: { value: 125.0 },
+      uDotSize: { value: 0.42 },
+      uGlowColor: { value: new THREE.Color('#0066FF') },
+      uGlowIntensity: { value: 2.4 },
+      uOceanColor: { value: new THREE.Color('#020713') },
+      uLandBaseColor: { value: new THREE.Color('#081B38') },
+      uOceanAlpha: { value: 0.96 },
     }),
     [maskTexture]
   );
@@ -167,7 +169,7 @@ export function PremiumGlobe() {
     scrollRef.current.current += (scrollRef.current.target - scrollRef.current.current) * 0.07;
     const progress = scrollRef.current.current;
 
-    // Pulse traveling border lines
+    // Pulse traveling border lines and hub waves
     if (!reducedMotion) {
       lineUniforms.uTime.value += delta * 0.65;
     }
@@ -217,7 +219,7 @@ export function PremiumGlobe() {
       <group ref={tiltGroupRef} rotation={[0, 0, 23.5 * (Math.PI / 180)]}>
         {/* Continuous Spin Group */}
         <group ref={spinGroupRef}>
-          {/* ── Base Dot-Matrix Landmass Sphere (depthWrite: false to prevent border clipping) ── */}
+          {/* ── Substantial Landmass & Dot-Matrix Sphere (depthWrite: false to prevent border clipping) ── */}
           <mesh renderOrder={1}>
             <sphereGeometry args={[EARTH_RADIUS * 0.985, 64, 64]} />
             <shaderMaterial
@@ -243,6 +245,7 @@ export function PremiumGlobe() {
                 uniform vec3 uGlowColor;
                 uniform float uGlowIntensity;
                 uniform vec3 uOceanColor;
+                uniform vec3 uLandBaseColor;
                 uniform float uOceanAlpha;
                 
                 varying vec3 vPosition;
@@ -260,6 +263,13 @@ export function PremiumGlobe() {
                   // Natural exponential Fresnel inner glow
                   float fresnel = pow(1.0 - max(dot(vNormal, vec3(0.0, 0.0, 1.0)), 0.0), 3.0);
                   vec3 glow = uGlowColor * fresnel * uGlowIntensity;
+
+                  // 3D Directional Lighting term
+                  vec3 lightDir = normalize(vec3(-0.7, 0.5, 0.8));
+                  float diff = max(dot(vNormal, lightDir), 0.0);
+
+                  // Continuous Land Silhouette Coverage
+                  float directMask = texture2D(uMask, vec2(u, v)).r;
 
                   float dotsRows = uDotDensity;
                   float vRow = floor(v * dotsRows) + 0.5;
@@ -283,16 +293,23 @@ export function PremiumGlobe() {
                   
                   float maxDist = (3.14159265359 / dotsRows) * 0.5 * uDotSize;
                   
-                  vec3 finalColor = uOceanColor + glow * 0.35;
+                  // Base ocean with dimensional lighting
+                  vec3 oceanFinal = uOceanColor + vec3(0.01, 0.04, 0.12) * diff + glow * 0.35;
+                  
+                  // Substantial landmass base fill (never empty black!)
+                  vec3 landTerrain = uLandBaseColor + vec3(0.02, 0.08, 0.2) * diff + glow * 0.6;
+                  
+                  vec3 finalColor = mix(oceanFinal, landTerrain, directMask * 0.85);
                   float finalAlpha = uOceanAlpha;
                   
+                  // Luminous matrix dots & city nodes on land
                   if (centerMask.r > 0.5) {
-                    float alpha = smoothstep(maxDist, maxDist * 0.72, dist);
-                    vec3 dotColorWithGlow = uDotColor + glow * 0.75;
+                    float dotAlpha = smoothstep(maxDist, maxDist * 0.68, dist);
+                    vec3 dotColorWithGlow = uDotColor + glow * 0.85;
                     float edge = max(0.0, dot(vNormal, vec3(0.0, 0.0, 1.0)));
-                    dotColorWithGlow += vec3(0.25) * pow(edge, 2.2);
-                    finalColor = mix(finalColor, dotColorWithGlow, alpha);
-                    finalAlpha = max(uOceanAlpha, alpha);
+                    dotColorWithGlow += vec3(0.3) * pow(edge, 2.2);
+                    finalColor = mix(finalColor, dotColorWithGlow, dotAlpha);
+                    finalAlpha = max(uOceanAlpha, dotAlpha);
                   }
 
                   gl_FragColor = vec4(finalColor, finalAlpha);
