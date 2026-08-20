@@ -5,7 +5,6 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGlobalStore } from '@/components/layout/GlobalStore';
 import { GlobalParticles } from './particles/GlobalParticles';
-import { PremiumGlobe } from './scenes/PremiumGlobe';
 
 // Lazy load the other heavy scenes
 const EarthNode = React.lazy(() => import('./scenes/EarthNode').then(m => ({ default: m.EarthNode })));
@@ -62,9 +61,6 @@ export function GlobalScene() {
       <ambientLight intensity={0.15} color="#F8FAFF" />
 
       <Suspense fallback={null}>
-        {/* Home 3D Premium Globe */}
-        {((currentScene as string) === 'room' || (currentScene as string) === 'earth') && <PremiumGlobe />}
-
         <GlobalParticles />
 
         {/* Dynamic Sub-Page Scenes */}

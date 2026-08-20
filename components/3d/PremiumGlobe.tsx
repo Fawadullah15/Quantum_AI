@@ -2,7 +2,8 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import * as THREE from 'three';
-import rawCountriesData from '@/lib/data/countries.js';
+import countriesData from '@/lib/data/countries.js';
+import geoBordersData from '@/lib/data/geo-borders.json';
 
 export interface GlobeLocation {
   lat: number;
@@ -46,164 +47,70 @@ const DEFAULT_LOCATIONS: GlobeLocation[] = [
   { lat: -33.8688, lng: 151.2093, label: 'OCEANIA', subLabel: 'Sydney · Edge Node', color: '#00F0FF', size: 0.16 },
 ];
 
-let globalGeoCachePromise: Promise<{
-  positions: number[];
-  distances: number[];
-  offsets: number[];
-  canvas: HTMLCanvasElement | null;
-}> | null = null;
+function createMaskTexture(): THREE.CanvasTexture | null {
+  if (typeof document === 'undefined') return null;
 
-function getGeoData() {
-  if (globalGeoCachePromise) return globalGeoCachePromise;
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 512;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
 
-  globalGeoCachePromise = new Promise((resolve) => {
-    try {
-      let geoData: any = rawCountriesData;
-      if (geoData && typeof geoData === 'object' && 'default' in geoData) {
-        geoData = (geoData as any).default;
-      }
-      if (typeof geoData === 'string') {
-        try {
-          geoData = JSON.parse(geoData);
-        } catch {
-          geoData = { type: 'FeatureCollection', features: [] };
-        }
-      }
-      if (!geoData || !geoData.features || !Array.isArray(geoData.features)) {
-        geoData = { type: 'FeatureCollection', features: [] };
-      }
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#FFFFFF';
 
-      const positions: number[] = [];
-      const distances: number[] = [];
-      const offsets: number[] = [];
-
-      // 1024x512 high-performance canvas mask
-      const canvas = typeof document !== 'undefined' ? document.createElement('canvas') : null;
-      let ctx: CanvasRenderingContext2D | null = null;
-      if (canvas) {
-        canvas.width = 1024;
-        canvas.height = 512;
-        ctx = canvas.getContext('2d');
-        if (ctx) {
-          ctx.fillStyle = '#000000';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = '#FFFFFF';
-        }
-      }
-
-      const RADIUS = 10;
-      const LINK_RADIUS = RADIUS * 0.9902;
-
-      const latLongToVector3 = (lat: number, lon: number, r: number) => {
-        const phi = (90 - lat) * (Math.PI / 180);
-        const theta = (lon + 180) * (Math.PI / 180);
-        return new THREE.Vector3(
-          -(r * Math.sin(phi) * Math.cos(theta)),
-          r * Math.cos(phi),
-          r * Math.sin(phi) * Math.sin(theta)
-        );
-      };
-
-      const process3DRing = (ring: number[][]) => {
-        if (!ring || ring.length < 2) return;
-        const ringOffset = Math.random();
-        let totalLen = 0;
-
-        // Simplify redundant micro-segments
-        const simplifiedRing = [ring[0]];
-        for (let i = 1; i < ring.length; i++) {
-          const prev = simplifiedRing[simplifiedRing.length - 1];
-          const curr = ring[i];
-          const dist = Math.abs(curr[0] - prev[0]) + Math.abs(curr[1] - prev[1]);
-          if (dist > 0.1 || i === ring.length - 1) {
-            simplifiedRing.push(curr);
-          }
-        }
-
-        for (let i = 0; i < simplifiedRing.length - 1; i++) {
-          const p1 = latLongToVector3(simplifiedRing[i][1], simplifiedRing[i][0], LINK_RADIUS);
-          const p2 = latLongToVector3(simplifiedRing[i + 1][1], simplifiedRing[i + 1][0], LINK_RADIUS);
-          totalLen += p1.distanceTo(p2);
-        }
-
-        let currentDist = 0;
-        for (let i = 0; i < simplifiedRing.length - 1; i++) {
-          const p1 = latLongToVector3(simplifiedRing[i][1], simplifiedRing[i][0], LINK_RADIUS);
-          const p2 = latLongToVector3(simplifiedRing[i + 1][1], simplifiedRing[i + 1][0], LINK_RADIUS);
-          const segLen = p1.distanceTo(p2);
-
-          positions.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
-          distances.push(currentDist / Math.max(totalLen, 0.001), (currentDist + segLen) / Math.max(totalLen, 0.001));
-          offsets.push(ringOffset, ringOffset);
-          currentDist += segLen;
-        }
-      };
-
-      const addPolygonToCtxPath = (polygon: number[][][]) => {
-        if (!ctx || !canvas) return;
-        polygon.forEach((ring) => {
-          ring.forEach((coord, i) => {
-            const x = ((coord[0] + 180) / 360) * canvas.width;
-            const y = ((90 - coord[1]) / 180) * canvas.height;
-            if (i === 0) ctx!.moveTo(x, y);
-            else ctx!.lineTo(x, y);
-          });
-          ctx!.closePath();
-        });
-      };
-
-      const features = geoData.features || [];
-      features.forEach((feature: any) => {
-        if (!feature || !feature.geometry) return;
-        const type = feature.geometry.type;
-        if (type === 'Polygon') {
-          const coords = feature.geometry.coordinates;
-          coords.forEach(process3DRing);
-          if (ctx) {
-            ctx.beginPath();
-            addPolygonToCtxPath(coords);
-            ctx.fill('evenodd');
-          }
-        } else if (type === 'MultiPolygon') {
-          const coords = feature.geometry.coordinates;
-          coords.forEach((poly: any) => {
-            poly.forEach(process3DRing);
-            if (ctx) {
-              ctx.beginPath();
-              addPolygonToCtxPath(poly);
-              ctx.fill('evenodd');
-            }
-          });
-        }
+  const addPolygonToCtxPath = (polygon: number[][][]) => {
+    polygon.forEach((ring) => {
+      ring.forEach((coord, i) => {
+        const x = ((coord[0] + 180) / 360) * canvas.width;
+        const y = ((90 - coord[1]) / 180) * canvas.height;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
       });
+      ctx.closePath();
+    });
+  };
 
-      resolve({ positions, distances, offsets, canvas });
-    } catch (err) {
-      console.error('Error generating globe GeoJSON data:', err);
-      resolve({ positions: [], distances: [], offsets: [], canvas: null });
+  const features = (countriesData as any).features || [];
+  features.forEach((feature: any) => {
+    if (!feature || !feature.geometry) return;
+    const type = feature.geometry.type;
+    if (type === 'Polygon') {
+      ctx.beginPath();
+      addPolygonToCtxPath(feature.geometry.coordinates);
+      ctx.fill('evenodd');
+    } else if (type === 'MultiPolygon') {
+      ctx.beginPath();
+      feature.geometry.coordinates.forEach((poly: any) => addPolygonToCtxPath(poly));
+      ctx.fill('evenodd');
     }
   });
 
-  return globalGeoCachePromise;
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.minFilter = THREE.LinearFilter;
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.needsUpdate = true;
+  return texture;
 }
 
 export default function PremiumGlobe({
   globeRadius = 1,
-  oceanColor = '#050b14',
+  oceanColor = '#020617',
   oceanAlpha = 0.95,
-  dotColor = '#E2E8F0',
+  dotColor = '#FFFFFF',
   dotDensity = 115,
-  dotSize = 0.38,
+  dotSize = 0.40,
   lineColor = '#00F0FF',
   lineThickness = 1.5,
   glowColor = '#0055FF',
-  glowIntensity = 2.2,
+  glowIntensity = 2.4,
   atmosphereColor = 'rgba(0, 85, 255, 0.18)',
   autoRotateSpeed = 0.55,
   enableDrag = true,
   scrollProgress = 0,
   locations = DEFAULT_LOCATIONS,
-  onSelectLocation,
   className,
   style,
 }: PremiumGlobeProps) {
@@ -244,8 +151,6 @@ export default function PremiumGlobe({
     locations,
   };
 
-  const [activeLocation, setActiveLocation] = useState<GlobeLocation | null>(null);
-
   useEffect(() => {
     let isMounted = true;
     const container = mountRef.current;
@@ -254,7 +159,6 @@ export default function PremiumGlobe({
     let width = container.clientWidth || 600;
     let height = container.clientHeight || 600;
 
-    // Detect reduced motion preference
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -271,15 +175,18 @@ export default function PremiumGlobe({
     camera.position.z = 27;
 
     // 2. Hierarchy Setup
-    const globeGroup = new THREE.Group(); // Handles Pitch / Scroll Tilt
+    const globeGroup = new THREE.Group();
     scene.add(globeGroup);
 
-    const tiltGroup = new THREE.Group(); // Earth's 23.5° axial tilt
+    const tiltGroup = new THREE.Group();
     tiltGroup.rotation.z = 23.5 * (Math.PI / 180);
     globeGroup.add(tiltGroup);
 
-    const spinGroup = new THREE.Group(); // Handles Continuous Yaw & Drag
+    const spinGroup = new THREE.Group();
     tiltGroup.add(spinGroup);
+
+    // Start with populated continents facing forward
+    spinGroup.rotation.y = 1.35;
 
     const RADIUS = 10;
     const markersGroup = new THREE.Group();
@@ -296,6 +203,7 @@ export default function PremiumGlobe({
     };
 
     // 3. Dot Matrix Shader Material (Land dots + Ocean + Fresnel Glow)
+    const maskTexture = createMaskTexture();
     const fillUniforms = {
       uDotColor: { value: new THREE.Color(dotColor) },
       uDotDensity: { value: dotDensity },
@@ -304,12 +212,14 @@ export default function PremiumGlobe({
       uGlowIntensity: { value: glowIntensity },
       uOceanColor: { value: new THREE.Color(oceanColor) },
       uOceanAlpha: { value: oceanAlpha },
-      uMask: { value: null as THREE.Texture | null },
+      uMask: { value: maskTexture },
     };
 
     const fillMaterial = new THREE.ShaderMaterial({
       uniforms: fillUniforms,
       transparent: true,
+      depthWrite: false,
+      depthTest: true,
       side: THREE.FrontSide,
       vertexShader: `
         varying vec3 vPosition;
@@ -342,11 +252,11 @@ export default function PremiumGlobe({
           float u = theta / 6.28318530718;
           float v = 1.0 - (phi / 3.14159265359);
           
-          // Subtle edge Fresnel inner glow
           float fresnel = pow(1.0 - max(dot(vNormal, vec3(0.0, 0.0, 1.0)), 0.0), 3.0);
           vec3 glow = uGlowColor * fresnel * uGlowIntensity;
 
-          // Spherical grid calculation
+          float directMask = texture2D(uMask, vec2(u, v)).r;
+
           float dotsRows = uDotDensity;
           float vRow = floor(v * dotsRows) + 0.5;
           float vCenter = vRow / dotsRows;
@@ -357,7 +267,6 @@ export default function PremiumGlobe({
           float uCol = floor(u * dotsCols) + 0.5;
           float uCenter = uCol / dotsCols;
           
-          // Sample mask at center of cell
           vec4 centerMask = texture2D(uMask, vec2(uCenter, vCenter));
           
           float dPhi = (v - vCenter) * 3.14159265359;
@@ -371,15 +280,16 @@ export default function PremiumGlobe({
           float maxDist = (3.14159265359 / dotsRows) * 0.5 * uDotSize;
           
           vec3 finalColor = uOceanColor + glow * 0.35;
+          // Subtle landmass terrain background
+          finalColor = mix(finalColor, vec3(0.04, 0.12, 0.28) + glow * 0.5, directMask * 0.85);
           float finalAlpha = uOceanAlpha;
           
           if (centerMask.r > 0.5) {
-            // Land dot with soft antialiased edge
-            float alpha = smoothstep(maxDist, maxDist * 0.75, dist);
-            vec3 dotColorWithGlow = uDotColor + glow;
+            float alpha = smoothstep(maxDist, maxDist * 0.70, dist);
+            vec3 dotColorWithGlow = uDotColor + glow * 0.85;
             
             float edge = max(0.0, dot(vNormal, vec3(0.0, 0.0, 1.0)));
-            dotColorWithGlow += vec3(0.15) * pow(edge, 3.0);
+            dotColorWithGlow += vec3(0.2) * pow(edge, 2.5);
             
             finalColor = mix(finalColor, dotColorWithGlow, alpha);
             finalAlpha = max(uOceanAlpha, alpha);
@@ -390,11 +300,12 @@ export default function PremiumGlobe({
       `,
     });
 
-    const sphereGeo = new THREE.SphereGeometry(RADIUS * 0.99, 64, 64);
+    const sphereGeo = new THREE.SphereGeometry(RADIUS * 0.985, 64, 64);
     const globeBase = new THREE.Mesh(sphereGeo, fillMaterial);
+    globeBase.renderOrder = 1;
     spinGroup.add(globeBase);
 
-    // 4. Country Borders Material & Geometry
+    // 4. Country Borders Material & Geometry (Instant Precomputed Buffers)
     const lineUniforms = {
       uTime: { value: 0 },
       uColor: { value: new THREE.Color(lineColor) },
@@ -403,8 +314,8 @@ export default function PremiumGlobe({
     const lineMaterial = new THREE.ShaderMaterial({
       uniforms: lineUniforms,
       transparent: true,
+      depthTest: true,
       depthWrite: false,
-      linewidth: lineThickness,
       blending: THREE.AdditiveBlending,
       vertexShader: `
         varying float vDistance;
@@ -423,22 +334,35 @@ export default function PremiumGlobe({
         varying float vDistance;
         varying float vOffset;
         void main() {
-          float phase = fract(vDistance - uTime + vOffset);
-          float alpha = pow(phase, 4.5); 
-          alpha += 0.22; // Base outline visibility
+          float phase = fract(vDistance - uTime * 0.6 + vOffset);
+          float alpha = pow(phase, 4.0); 
+          alpha += 0.45; // Base outline visibility
           gl_FragColor = vec4(uColor, alpha);
         }
       `,
     });
 
+    // Scale positions to RADIUS 10
+    const scaleFactor = RADIUS / 5.6;
+    const scaledPositions = new Float32Array(geoBordersData.positions.length);
+    for (let i = 0; i < geoBordersData.positions.length; i++) {
+      scaledPositions[i] = geoBordersData.positions[i] * scaleFactor;
+    }
+
     const linesGeo = new THREE.BufferGeometry();
+    linesGeo.setAttribute('position', new THREE.Float32BufferAttribute(scaledPositions, 3));
+    linesGeo.setAttribute('aDistance', new THREE.Float32BufferAttribute(geoBordersData.distances, 1));
+    linesGeo.setAttribute('aOffset', new THREE.Float32BufferAttribute(geoBordersData.offsets, 1));
+
     const linesMesh = new THREE.LineSegments(linesGeo, lineMaterial);
+    linesMesh.renderOrder = 2;
     spinGroup.add(linesMesh);
 
     // 5. Atmospheric Outer Halo Mesh
-    const haloGeo = new THREE.SphereGeometry(RADIUS * 1.15, 48, 48);
+    const haloGeo = new THREE.SphereGeometry(RADIUS * 1.12, 48, 48);
     const haloMaterial = new THREE.ShaderMaterial({
       transparent: true,
+      depthWrite: false,
       side: THREE.BackSide,
       blending: THREE.AdditiveBlending,
       uniforms: {
@@ -455,46 +379,27 @@ export default function PremiumGlobe({
         uniform vec3 uColor;
         varying vec3 vNormal;
         void main() {
-          float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.8);
+          float intensity = pow(0.72 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.2);
           gl_FragColor = vec4(uColor, intensity * 0.65);
         }
       `,
     });
     const haloMesh = new THREE.Mesh(haloGeo, haloMaterial);
+    haloMesh.renderOrder = 0;
     globeGroup.add(haloMesh);
 
-    // 6. Asynchronously Load Geo Data
-    getGeoData()
-      .then((cache) => {
-        if (!isMounted) return;
-        if (cache.positions.length > 0) {
-          linesGeo.setAttribute('position', new THREE.Float32BufferAttribute(cache.positions, 3));
-          linesGeo.setAttribute('aDistance', new THREE.Float32BufferAttribute(cache.distances, 1));
-          linesGeo.setAttribute('aOffset', new THREE.Float32BufferAttribute(cache.offsets, 1));
-        }
-        if (cache.canvas) {
-          const maskTexture = new THREE.CanvasTexture(cache.canvas);
-          maskTexture.minFilter = THREE.LinearFilter;
-          maskTexture.wrapS = THREE.RepeatWrapping;
-          maskTexture.wrapT = THREE.ClampToEdgeWrapping;
-          maskTexture.needsUpdate = true;
-          fillUniforms.uMask.value = maskTexture;
-        }
-      })
-      .catch(console.error);
-
-    // 7. Location Markers
+    // 6. Location Markers
     const markerMeshes: { mesh: THREE.Mesh; loc: GlobeLocation }[] = [];
     const markerGeo = new THREE.SphereGeometry(0.18, 16, 16);
     const markerRingGeo = new THREE.RingGeometry(0.24, 0.32, 24);
 
     locations.forEach((loc) => {
-      const pos = localLatLongToVector3(loc.lat, loc.lng, RADIUS * 1.008);
+      const pos = localLatLongToVector3(loc.lat, loc.lng, RADIUS * 1.01);
       const markerMat = new THREE.MeshBasicMaterial({ color: loc.color || '#00F0FF' });
       const mesh = new THREE.Mesh(markerGeo, markerMat);
       mesh.position.copy(pos);
+      mesh.renderOrder = 3;
 
-      // Pulse ring facing outward
       const ringMat = new THREE.MeshBasicMaterial({
         color: loc.color || '#00F0FF',
         transparent: true,
@@ -510,13 +415,14 @@ export default function PremiumGlobe({
       markerMeshes.push({ mesh, loc });
     });
 
-    // 8. Interaction Physics State (Inertia & Smooth Spring)
-    let targetRotation = { x: 0, y: 0 };
-    let currentRotation = { x: 0, y: 0 };
+    // 7. Interaction Physics State (Inertia & Smooth Spring)
+    let targetRotation = { x: 1.35, y: 0 };
+    let currentRotation = { x: 1.35, y: 0 };
     let mouseParallax = { x: 0, y: 0 };
     let targetMouseParallax = { x: 0, y: 0 };
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
+    let scrollProgressInternal = 0;
 
     const onPointerDown = (e: PointerEvent) => {
       if (!propsRef.current.enableDrag) return;
@@ -554,12 +460,20 @@ export default function PremiumGlobe({
       } catch {}
     };
 
+    const handleWindowScroll = () => {
+      const scrollY = window.scrollY || 0;
+      const heroHeight = window.innerHeight || 800;
+      scrollProgressInternal = Math.min(2, scrollY / heroHeight);
+    };
+
     container.addEventListener('pointerdown', onPointerDown);
     container.addEventListener('pointermove', onPointerMove, { passive: true });
     container.addEventListener('pointerup', onPointerUp);
     container.addEventListener('pointercancel', onPointerUp);
+    window.addEventListener('scroll', handleWindowScroll, { passive: true });
+    handleWindowScroll();
 
-    // 9. Observers for Resize & Intersection
+    // 8. Observers for Resize & Intersection
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         const nw = entry.contentRect.width;
@@ -581,7 +495,7 @@ export default function PremiumGlobe({
     });
     interObserver.observe(container);
 
-    // 10. High-Performance Render Loop
+    // 9. High-Performance Render Loop
     let animationId: number;
     let time = 0;
 
@@ -592,12 +506,13 @@ export default function PremiumGlobe({
       const activeProps = propsRef.current;
       time += 0.016;
 
-      // Scroll response
-      const scrollOffset = activeProps.scrollProgress || 0;
-      const scrollPitch = Math.sin(scrollOffset * Math.PI) * 0.2;
-      const scrollScale = 1 + Math.sin(scrollOffset * Math.PI) * 0.12;
+      // Dynamic 3D scroll depth (recedes on scroll down, zooms in on scroll up)
+      const scrollPitch = scrollProgressInternal * 0.35;
+      const scrollScale = Math.max(0.65, 1 - scrollProgressInternal * 0.25);
+      const scrollTranslateZ = -scrollProgressInternal * 6.0;
 
       globeGroup.scale.setScalar((activeProps.globeRadius || 1) * scrollScale);
+      globeGroup.position.z = THREE.MathUtils.lerp(globeGroup.position.z, scrollTranslateZ, 0.07);
 
       // Auto rotation & mouse inertia
       if (!prefersReducedMotion && !isDragging) {
@@ -616,7 +531,7 @@ export default function PremiumGlobe({
 
       // Pulse traveling outlines
       if (!prefersReducedMotion) {
-        lineUniforms.uTime.value += 0.006;
+        lineUniforms.uTime.value += 0.008;
       }
 
       // Marker ring pulsation
@@ -634,7 +549,7 @@ export default function PremiumGlobe({
 
     renderLoop();
 
-    // 11. Cleanup
+    // 10. Cleanup
     return () => {
       isMounted = false;
       cancelAnimationFrame(animationId);
@@ -644,6 +559,7 @@ export default function PremiumGlobe({
       container.removeEventListener('pointermove', onPointerMove);
       container.removeEventListener('pointerup', onPointerUp);
       container.removeEventListener('pointercancel', onPointerUp);
+      window.removeEventListener('scroll', handleWindowScroll);
 
       markerMeshes.forEach((item) => {
         item.mesh.geometry.dispose();
@@ -656,7 +572,7 @@ export default function PremiumGlobe({
       lineMaterial.dispose();
       fillMaterial.dispose();
       haloMaterial.dispose();
-      if (fillUniforms.uMask.value) fillUniforms.uMask.value.dispose();
+      if (maskTexture) maskTexture.dispose();
 
       renderer.forceContextLoss();
       renderer.dispose();
