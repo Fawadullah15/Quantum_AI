@@ -203,18 +203,35 @@ function ConnectionArc({
 export function PremiumGlobe() {
   const groupRef = useRef<THREE.Group>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const scrollVelocityRef = useRef(0);
+  const lastScrollYRef = useRef(0);
 
   useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY || 0;
+      const diff = scrollY - lastScrollYRef.current;
+      scrollVelocityRef.current = diff * 0.0025;
+      lastScrollYRef.current = scrollY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(media.matches);
     const listener = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     media.addEventListener('change', listener);
-    return () => media.removeEventListener('change', listener);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      media.removeEventListener('change', listener);
+    };
   }, []);
 
   useFrame((state, delta) => {
     if (groupRef.current && !reducedMotion) {
-      groupRef.current.rotation.y += delta * 0.04;
+      const boost = scrollVelocityRef.current * 0.85;
+      groupRef.current.rotation.y += delta * 0.04 + boost;
+      scrollVelocityRef.current *= 0.92;
+
+      // Slight tilt oscillation for life
       groupRef.current.rotation.x =
         Math.sin(state.clock.elapsedTime * 0.15) * 0.04;
     }
