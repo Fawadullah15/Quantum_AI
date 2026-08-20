@@ -8,25 +8,11 @@ export default function CareersPartnershipsPage() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [referenceId, setReferenceId] = useState('');
-  const [positions, setPositions] = useState<any[]>([]);
 
   // Form states
   const [partnershipType, setPartnershipType] = useState('Technology Partnership');
   const [experienceLevel, setExperienceLevel] = useState('Mid Level');
   const [workType, setWorkType] = useState('Full Time');
-  const [selectedPosition, setSelectedPosition] = useState('');
-
-  useEffect(() => {
-    fetch('/api/careers-partnerships/positions')
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setPositions(data);
-          setSelectedPosition(data[0].title);
-        }
-      })
-      .catch(() => {});
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -536,22 +522,13 @@ export default function CareersPartnershipsPage() {
                         <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Position Applying For <span style={{ color: '#38BDF8' }}>*</span>
                         </label>
-                        {positions.length > 0 ? (
-                          <select
-                            name="position"
-                            value={selectedPosition}
-                            onChange={(e) => setSelectedPosition(e.target.value)}
-                            style={inputBoxStyle}
-                          >
-                            {positions.map((p) => (
-                              <option key={p.id || p.title} value={p.title}>
-                                {p.title} ({p.department})
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <input required name="position" defaultValue="AI / Machine Learning Engineer" style={inputBoxStyle} />
-                        )}
+                        <input
+                          required
+                          type="text"
+                          name="position"
+                          placeholder="e.g. AI Engineer, Full-Stack Developer, Researcher, Intern..."
+                          style={inputBoxStyle}
+                        />
                       </div>
                       <div>
                         <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>

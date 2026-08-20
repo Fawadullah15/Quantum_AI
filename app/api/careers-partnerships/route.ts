@@ -14,17 +14,25 @@ import {
 export const dynamic = 'force-dynamic';
 
 async function saveFile(file: File, prefix: string): Promise<string> {
-  const allowedTypes = [
+  const allowedExtensions = ['.pdf', '.doc', '.docx', '.png', '.jpg', '.jpeg', '.webp', '.zip', '.txt'];
+  const ext = '.' + (file.name.split('.').pop() || '').toLowerCase();
+
+  const allowedMimeTypes = [
     'application/pdf',
     'application/msword',
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
     'image/jpeg',
     'image/png',
+    'image/webp',
     'application/zip',
+    'application/x-zip-compressed',
+    'application/octet-stream',
+    'text/plain',
   ];
 
-  if (!allowedTypes.includes(file.type)) {
-    throw new Error('Invalid file type. Supported formats: PDF, DOC, DOCX, PNG, JPG, ZIP');
+  const isTypeValid = allowedMimeTypes.includes((file.type || '').toLowerCase()) || allowedExtensions.includes(ext);
+  if (!isTypeValid) {
+    throw new Error('Supported file formats: PDF, DOC, DOCX, PNG, JPG, ZIP');
   }
 
   if (file.size > 15 * 1024 * 1024) {
@@ -44,20 +52,27 @@ async function saveFile(file: File, prefix: string): Promise<string> {
       });
       return blob.url;
     } catch (err) {
-      console.warn('[Upload] Blob upload failed, falling back to local:', err);
+      console.warn('[Upload] Blob upload failed, falling back:', err);
     }
   }
 
-  // Fallback to local disk
-  const uploadDir = join(process.cwd(), 'public', 'uploads', 'submissions');
-  if (!existsSync(uploadDir)) {
-    await mkdir(uploadDir, { recursive: true });
+  // Try local disk fallback, with graceful Base64 fallback if filesystem is read-only (e.g. Vercel)
+  try {
+    const uploadDir = join(process.cwd(), 'public', 'uploads', 'submissions');
+    if (!existsSync(uploadDir)) {
+      await mkdir(uploadDir, { recursive: true });
+    }
+    const filePath = join(uploadDir, fileName);
+    const bytes = await file.arrayBuffer();
+    await writeFile(filePath, Buffer.from(bytes));
+    return `/uploads/submissions/${fileName}`;
+  } catch (fsErr) {
+    console.warn('[Upload] Local fs write failed (serverless read-only), using base64 data fallback:', fsErr);
+    const bytes = await file.arrayBuffer();
+    const base64 = Buffer.from(bytes).toString('base64');
+    const mime = file.type || 'application/pdf';
+    return `data:${mime};name=${encodeURIComponent(file.name)};base64,${base64}`;
   }
-
-  const filePath = join(uploadDir, fileName);
-  const bytes = await file.arrayBuffer();
-  await writeFile(filePath, Buffer.from(bytes));
-  return `/uploads/submissions/${fileName}`;
 }
 
 export async function POST(request: Request) {
