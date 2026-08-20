@@ -607,9 +607,112 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             WORK / CASE STUDIES
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto' }}>
+        <section style={{ padding: 'clamp(4rem, 10vh, 10rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
+          <style>{`
+            .home-work-container {
+              display: flex;
+              flex-direction: column;
+              gap: 2.5rem;
+              width: 100%;
+            }
+            .home-work-card {
+              background-color: rgba(6, 21, 43, 0.5);
+              border: 1px solid rgba(22, 119, 255, 0.15);
+              border-radius: 16px;
+              padding: clamp(1.75rem, 4vw, 3rem);
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              gap: 1.5rem;
+              transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+              box-sizing: border-box;
+              height: 100%;
+            }
+            .home-work-card:hover {
+              border-color: rgba(56, 189, 248, 0.4);
+              transform: translateY(-2px);
+              box-shadow: 0 12px 30px -10px rgba(22, 119, 255, 0.2);
+            }
+            .home-work-title {
+              font-size: clamp(1.5rem, 3vw, 2.25rem);
+              font-weight: 700;
+              color: #F8FAFF;
+              line-height: 1.15;
+              letter-spacing: -0.02em;
+              text-transform: none;
+              margin: 0;
+              transition: color 0.2s;
+            }
+            .home-work-title:hover {
+              color: #38BDF8;
+            }
+            .home-work-desc {
+              color: #94A3B8;
+              font-size: 1.05rem;
+              line-height: 1.6;
+              max-width: 800px;
+              font-weight: 300;
+              margin: 0;
+            }
+            .home-work-desktop-subgrid {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+              gap: 1.5rem;
+              margin-top: 0.5rem;
+              border-top: 1px solid rgba(22, 119, 255, 0.08);
+              padding-top: 1.25rem;
+            }
+
+            /* ─── Mobile 2-Column Responsive Layout ─── */
+            @media (max-width: 767px) {
+              .home-work-container {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: clamp(0.5rem, 2.5vw, 0.85rem);
+              }
+              .home-work-card {
+                padding: clamp(0.75rem, 3vw, 1.1rem);
+                gap: 0.65rem;
+                border-radius: 10px;
+              }
+              .home-work-badge {
+                font-size: 0.625rem !important;
+                padding: 0.15rem 0.4rem !important;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+              .home-work-year {
+                display: none !important;
+              }
+              .home-work-title {
+                font-size: clamp(0.85rem, 3.2vw, 1.05rem);
+                line-height: 1.25;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+              }
+              .home-work-desc {
+                font-size: 0.72rem;
+                line-height: 1.4;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+              }
+              .home-work-desktop-subgrid {
+                display: none !important;
+              }
+              .home-work-action-link {
+                font-size: 0.6875rem !important;
+                padding-top: 0.25rem !important;
+              }
+            }
+          `}</style>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'clamp(3rem, 6vh, 5rem)', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'clamp(2rem, 5vh, 4rem)', gap: '1rem', flexWrap: 'wrap' }}>
               <div>
                 <p style={{
                   fontFamily: 'var(--font-mono)',
@@ -617,98 +720,73 @@ export default function HomePage() {
                   letterSpacing: '0.3em',
                   textTransform: 'uppercase',
                   color: '#1677FF',
-                  marginBottom: '1rem',
+                  marginBottom: '0.75rem',
                   maxWidth: 'none',
                   fontWeight: 600
                 }}>
                   CASE STUDIES
                 </p>
                 <h2 style={{
-                  fontSize: 'clamp(2.25rem, 6vw, 4rem)',
+                  fontSize: 'clamp(2rem, 5.5vw, 3.75rem)',
                   fontWeight: 700,
                   lineHeight: 1.1,
                   letterSpacing: '-0.03em',
                   color: '#F8FAFF',
-                  textTransform: 'uppercase'
+                  textTransform: 'uppercase',
+                  margin: 0
                 }}>
                   Selected deployments.
                 </h2>
               </div>
-              <Link href="/work" style={{ color: '#1677FF', textDecoration: 'none', fontSize: '0.9rem', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+              <Link href="/work" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
                 View all case studies <span>→</span>
               </Link>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+            <div className="home-work-container">
               {caseStudies.map((item, i) => {
                 const techList = item.technologies ? (typeof item.technologies === 'string' ? item.technologies.split(',').map((t: string) => t.trim()) : item.technologies) : (item.tech || []);
-                const slug = item.slug || 'smart-school-fee-management-system';
+                const slug = item.slug || 'school-operations-manager';
 
                 return (
-                  <div
-                    key={item.id || i}
-                    style={{
-                      backgroundColor: 'rgba(6, 21, 43, 0.5)',
-                      border: '1px solid rgba(22, 119, 255, 0.15)',
-                      borderRadius: 16,
-                      padding: 'clamp(1.75rem, 4vw, 3rem)',
-                      display: 'grid',
-                      gridTemplateColumns: '1fr',
-                      gap: '1.5rem',
-                      transition: 'border-color 0.3s, transform 0.3s',
-                    }}
-                    className="case-study-panel"
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.35)';
-                      e.currentTarget.style.transform = 'translateY(-2px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.15)';
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}
-                  >
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-                        <span style={{
-                          fontFamily: 'var(--font-mono)',
-                          fontSize: '0.75rem',
-                          letterSpacing: '0.2em',
-                          color: '#1677FF',
-                          textTransform: 'uppercase',
-                          fontWeight: 600
-                        }}>
-                          {item.industry || item.category || 'BUSINESS SOFTWARE'}
+                  <div key={item.id || i} className="home-work-card">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.35rem' }}>
+                        <span
+                          className="home-work-badge"
+                          style={{
+                            fontFamily: 'var(--font-mono)',
+                            fontSize: '0.7rem',
+                            letterSpacing: '0.15em',
+                            color: '#38BDF8',
+                            backgroundColor: 'rgba(22, 119, 255, 0.12)',
+                            border: '1px solid rgba(56, 189, 248, 0.25)',
+                            padding: '0.2rem 0.55rem',
+                            borderRadius: 4,
+                            textTransform: 'uppercase',
+                            fontWeight: 600
+                          }}
+                        >
+                          {item.industry ? item.industry.split('/')[0].trim() : (item.category || 'AI SYSTEMS')}
                         </span>
                         {item.year && (
-                          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#64748B' }}>
+                          <span className="home-work-year" style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#64748B' }}>
                             {item.year}
                           </span>
                         )}
                       </div>
                       
                       <Link href={`/work/${slug}`} style={{ textDecoration: 'none' }}>
-                        <h3 style={{
-                          fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
-                          fontWeight: 700,
-                          color: '#F8FAFF',
-                          lineHeight: 1.15,
-                          letterSpacing: '-0.02em',
-                          textTransform: 'none',
-                          margin: 0,
-                          transition: 'color 0.2s',
-                        }}
-                        onMouseEnter={(e) => { e.currentTarget.style.color = '#38BDF8'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.color = '#F8FAFF'; }}
-                        >
+                        <h3 className="home-work-title">
                           {item.title || item.name}
                         </h3>
                       </Link>
                       
-                      <p style={{ color: '#94A3B8', fontSize: '1.05rem', lineHeight: 1.6, maxWidth: 800, fontWeight: 300, margin: 0 }}>
+                      <p className="home-work-desc">
                         {item.problem || item.desc || item.solution}
                       </p>
 
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem', marginTop: '0.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.08)', paddingTop: '1.25rem' }}>
+                      <div className="home-work-desktop-subgrid">
                         {techList.length > 0 && (
                           <div>
                             <h4 style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.1em', marginBottom: '0.5rem', textTransform: 'uppercase' }}>TECHNOLOGY</h4>
@@ -728,22 +806,20 @@ export default function HomePage() {
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '0.5rem' }}>
+                    <div className="home-work-action-link" style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '0.5rem' }}>
                       <Link
                         href={`/work/${slug}`}
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '0.5rem',
-                          color: '#1677FF',
+                          gap: '0.4rem',
+                          color: '#38BDF8',
                           textDecoration: 'none',
-                          fontSize: '0.85rem',
+                          fontSize: '0.8rem',
                           fontFamily: 'var(--font-mono)',
                           letterSpacing: '0.1em',
                           fontWeight: 600
                         }}
-                        onMouseEnter={(e) => { e.currentTarget.style.color = '#55D6FF'; }}
-                        onMouseLeave={(e) => { e.currentTarget.style.color = '#1677FF'; }}
                       >
                         VIEW CASE STUDY <span>→</span>
                       </Link>
