@@ -246,51 +246,56 @@ export default function CareersPartnershipsPage() {
           </div>
         ) : (
           <div>
-            {/* ─── Two Clear Selectable Options ─── */}
+            {/* ─── Two Parallel Selectable Option Cards (Side-by-side on all screens) ─── */}
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: '1.5rem',
-                marginBottom: '3rem',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: 'clamp(0.5rem, 2vw, 1.25rem)',
+                marginBottom: '2rem',
               }}
             >
               {/* Option A: Business Partnership */}
               <div
                 onClick={() => setActiveTab('PARTNERSHIP')}
                 style={{
-                  padding: '2rem',
-                  backgroundColor: activeTab === 'PARTNERSHIP' ? '#081735' : '#040E24',
-                  border: activeTab === 'PARTNERSHIP' ? '2px solid #38BDF8' : '1px solid rgba(56, 189, 248, 0.2)',
-                  borderRadius: '16px',
+                  padding: 'clamp(0.85rem, 2.5vw, 1.5rem)',
+                  backgroundColor: activeTab === 'PARTNERSHIP' ? '#051026' : '#020714',
+                  border: activeTab === 'PARTNERSHIP' ? '2px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '14px',
                   cursor: 'pointer',
-                  boxShadow: activeTab === 'PARTNERSHIP' ? '0 12px 36px -6px rgba(22, 119, 255, 0.35)' : 'none',
+                  boxShadow: activeTab === 'PARTNERSHIP' ? '0 8px 30px -4px rgba(22, 119, 255, 0.4), inset 0 0 20px rgba(56, 189, 248, 0.06)' : 'none',
                   transition: 'all 0.2s ease',
-                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', letterSpacing: '0.15em', fontWeight: 600 }}>
-                    OPTION 01 // ENTERPRISE
-                  </span>
-                  <span
-                    style={{
-                      width: '18px',
-                      height: '18px',
-                      borderRadius: '50%',
-                      border: '2px solid #38BDF8',
-                      backgroundColor: activeTab === 'PARTNERSHIP' ? '#38BDF8' : 'transparent',
-                    }}
-                  />
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 'clamp(0.6rem, 1.2vw, 0.72rem)', color: activeTab === 'PARTNERSHIP' ? '#38BDF8' : '#64748B', letterSpacing: '0.12em', fontWeight: 600, textTransform: 'uppercase' }}>
+                      01 // ENTERPRISE
+                    </span>
+                    <span
+                      style={{
+                        width: '14px',
+                        height: '14px',
+                        borderRadius: '50%',
+                        border: '2px solid #38BDF8',
+                        backgroundColor: activeTab === 'PARTNERSHIP' ? '#38BDF8' : 'transparent',
+                        boxShadow: activeTab === 'PARTNERSHIP' ? '0 0 8px #38BDF8' : 'none',
+                      }}
+                    />
+                  </div>
+                  <h2 style={{ fontSize: 'clamp(0.95rem, 2.2vw, 1.35rem)', fontWeight: 700, color: activeTab === 'PARTNERSHIP' ? '#F8FAFC' : '#CBD5E1', margin: '0 0 0.35rem 0', textTransform: 'uppercase', lineHeight: 1.15 }}>
+                    Business Partnership
+                  </h2>
+                  <p style={{ color: '#94A3B8', fontSize: 'clamp(0.72rem, 1.4vw, 0.875rem)', lineHeight: 1.5, margin: '0 0 0.85rem 0' }}>
+                    For companies, organizations, and investors seeking technical collaboration.
+                  </p>
                 </div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.5rem 0', textTransform: 'uppercase' }}>
-                  Business Partnership
-                </h2>
-                <p style={{ color: '#94A3B8', fontSize: '0.9375rem', lineHeight: 1.6, margin: '0 0 1.25rem 0', minHeight: '44px' }}>
-                  For companies, organizations, investors, agencies, and enterprise clients seeking technical collaboration.
-                </p>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#38BDF8', fontWeight: 600, fontSize: '0.875rem', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
-                  Partner With Us →
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: activeTab === 'PARTNERSHIP' ? '#38BDF8' : '#64748B', fontWeight: 600, fontSize: 'clamp(0.68rem, 1.2vw, 0.8rem)', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+                  {activeTab === 'PARTNERSHIP' ? '● SELECTED' : 'SELECT THIS →'}
                 </div>
               </div>
 
@@ -298,38 +303,43 @@ export default function CareersPartnershipsPage() {
               <div
                 onClick={() => setActiveTab('CAREER')}
                 style={{
-                  padding: '2rem',
-                  backgroundColor: activeTab === 'CAREER' ? '#081735' : '#040E24',
-                  border: activeTab === 'CAREER' ? '2px solid #38BDF8' : '1px solid rgba(56, 189, 248, 0.2)',
-                  borderRadius: '16px',
+                  padding: 'clamp(0.85rem, 2.5vw, 1.5rem)',
+                  backgroundColor: activeTab === 'CAREER' ? '#051026' : '#020714',
+                  border: activeTab === 'CAREER' ? '2px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.08)',
+                  borderRadius: '14px',
                   cursor: 'pointer',
-                  boxShadow: activeTab === 'CAREER' ? '0 12px 36px -6px rgba(22, 119, 255, 0.35)' : 'none',
+                  boxShadow: activeTab === 'CAREER' ? '0 8px 30px -4px rgba(22, 119, 255, 0.4), inset 0 0 20px rgba(56, 189, 248, 0.06)' : 'none',
                   transition: 'all 0.2s ease',
-                  position: 'relative',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', letterSpacing: '0.15em', fontWeight: 600 }}>
-                    OPTION 02 // CAREERS
-                  </span>
-                  <span
-                    style={{
-                      width: '18px',
-                      height: '18px',
-                      borderRadius: '50%',
-                      border: '2px solid #38BDF8',
-                      backgroundColor: activeTab === 'CAREER' ? '#38BDF8' : 'transparent',
-                    }}
-                  />
+                <div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                    <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 'clamp(0.6rem, 1.2vw, 0.72rem)', color: activeTab === 'CAREER' ? '#38BDF8' : '#64748B', letterSpacing: '0.12em', fontWeight: 600, textTransform: 'uppercase' }}>
+                      02 // CAREERS
+                    </span>
+                    <span
+                      style={{
+                        width: '14px',
+                        height: '14px',
+                        borderRadius: '50%',
+                        border: '2px solid #38BDF8',
+                        backgroundColor: activeTab === 'CAREER' ? '#38BDF8' : 'transparent',
+                        boxShadow: activeTab === 'CAREER' ? '0 0 8px #38BDF8' : 'none',
+                      }}
+                    />
+                  </div>
+                  <h2 style={{ fontSize: 'clamp(0.95rem, 2.2vw, 1.35rem)', fontWeight: 700, color: activeTab === 'CAREER' ? '#F8FAFC' : '#CBD5E1', margin: '0 0 0.35rem 0', textTransform: 'uppercase', lineHeight: 1.15 }}>
+                    Join Quantum AI
+                  </h2>
+                  <p style={{ color: '#94A3B8', fontSize: 'clamp(0.72rem, 1.4vw, 0.875rem)', lineHeight: 1.5, margin: '0 0 0.85rem 0' }}>
+                    For engineers, researchers, and interns seeking full-time or freelance roles.
+                  </p>
                 </div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.5rem 0', textTransform: 'uppercase' }}>
-                  Join Quantum AI
-                </h2>
-                <p style={{ color: '#94A3B8', fontSize: '0.9375rem', lineHeight: 1.6, margin: '0 0 1.25rem 0', minHeight: '44px' }}>
-                  For talented engineers, researchers, interns, and freelancers seeking full-time, contract, or future opportunities.
-                </p>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#38BDF8', fontWeight: 600, fontSize: '0.875rem', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
-                  Join Our Team →
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: activeTab === 'CAREER' ? '#38BDF8' : '#64748B', fontWeight: 600, fontSize: 'clamp(0.68rem, 1.2vw, 0.8rem)', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+                  {activeTab === 'CAREER' ? '● SELECTED' : 'SELECT THIS →'}
                 </div>
               </div>
             </div>
@@ -337,11 +347,11 @@ export default function CareersPartnershipsPage() {
             {/* ─── Form Container (100% Opaque & High-Visibility) ─── */}
             <div
               style={{
-                backgroundColor: '#040E24',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
+                backgroundColor: '#030A1A',
+                border: '1px solid rgba(56, 189, 248, 0.25)',
                 borderRadius: '16px',
-                padding: 'clamp(1.75rem, 4vw, 3rem)',
-                boxShadow: '0 20px 60px -10px rgba(0, 0, 0, 0.85), 0 0 30px -5px rgba(22, 119, 255, 0.2)',
+                padding: 'clamp(1.25rem, 3.5vw, 2.5rem)',
+                boxShadow: '0 20px 60px -10px rgba(0, 0, 0, 0.9), 0 0 30px -5px rgba(22, 119, 255, 0.15)',
               }}
             >
               {errorMessage && (
