@@ -203,19 +203,16 @@ function ConnectionArc({
 export function PremiumGlobe() {
   const groupRef = useRef<THREE.Group>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const scrollTargetRef = useRef(0);
-  const scrollCurrentRef = useRef(0);
-  const scrollVelocityRef = useRef(0);
-  const lastScrollYRef = useRef(0);
+  const scrollRef = useRef({ current: 0, target: 0, velocity: 0, lastY: 0 });
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
       const heroHeight = window.innerHeight || 800;
-      scrollTargetRef.current = scrollY / heroHeight;
-      const diff = scrollY - lastScrollYRef.current;
-      scrollVelocityRef.current = diff * 0.003;
-      lastScrollYRef.current = scrollY;
+      scrollRef.current.target = scrollY / heroHeight;
+      const diff = scrollY - scrollRef.current.lastY;
+      scrollRef.current.velocity = diff * 0.003;
+      scrollRef.current.lastY = scrollY;
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
@@ -231,28 +228,27 @@ export function PremiumGlobe() {
   }, []);
 
   useFrame((state, delta) => {
-    // Smooth scroll interpolation
-    scrollCurrentRef.current = THREE.MathUtils.lerp(
-      scrollCurrentRef.current,
-      scrollTargetRef.current,
-      0.08
-    );
-    const p = scrollCurrentRef.current;
+    // Spring physics for smooth scroll responsiveness
+    scrollRef.current.current += (scrollRef.current.target - scrollRef.current.current) * 0.08;
+    const progress = scrollRef.current.current;
 
     if (groupRef.current) {
       if (!reducedMotion) {
-        const boost = scrollVelocityRef.current * 0.9;
+        const boost = scrollRef.current.velocity * 0.85;
         groupRef.current.rotation.y += delta * 0.04 + boost;
-        scrollVelocityRef.current *= 0.92;
+        scrollRef.current.velocity *= 0.92;
       }
 
-      // ── Far & Near Dynamic 3D Scroll Effect ──
-      // Top of page (p = 0): Earth is near, large, and right beside headline (z = 0, scale = 1.05)
-      // Scrolling down (p > 0): Earth recedes far into deep space (z reaches -15.0, scale drops to 0.48)
-      // Scrolling up (p -> 0): Earth smoothly zooms back near the screen!
-      const targetZ = -Math.min(2.5, p) * 7.5;
-      const targetY = -p * 2.8;
-      const targetScale = Math.max(0.48, 1.05 - p * 0.25);
+      // ── Near & Far 3D Scroll Dynamics ──
+      // Top of Hero (progress = 0):
+      // Earth sits proudly on the right (x=0, y=0, z=0, scale=1.0)
+      // As user scrolls down:
+      // Earth recedes smoothly into deep space (z goes from 0 down to -7.5, scale to 0.65)
+      // As user scrolls up:
+      // Earth zooms smoothly back toward the viewer (z returns to 0, scale to 1.0)
+      const targetZ = -Math.min(2.0, progress) * 5.5;
+      const targetY = -progress * 1.8;
+      const targetScale = Math.max(0.60, 1.0 - progress * 0.22);
 
       groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, 0.08);
       groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.08);
@@ -260,9 +256,9 @@ export function PremiumGlobe() {
       const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.08);
       groupRef.current.scale.set(s, s, s);
 
-      // Dynamic tilt based on scroll and time
+      // Subtle dynamic tilt with time and scroll
       groupRef.current.rotation.x =
-        Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + p * 0.2;
+        Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + progress * 0.15;
     }
   });
 
