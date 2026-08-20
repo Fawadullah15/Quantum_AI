@@ -205,6 +205,8 @@ export function PremiumGlobe() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const scrollRef = useRef({ current: 0, target: 0, velocity: 0, lastY: 0 });
 
+  const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
@@ -217,12 +219,19 @@ export function PremiumGlobe() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current.targetX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(media.matches);
     const listener = (e: MediaQueryListEvent) => setReducedMotion(e.matches);
     media.addEventListener('change', listener);
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
       media.removeEventListener('change', listener);
     };
   }, []);
@@ -232,6 +241,10 @@ export function PremiumGlobe() {
     scrollRef.current.current += (scrollRef.current.target - scrollRef.current.current) * 0.06;
     const progress = scrollRef.current.current;
 
+    // Smooth mouse interpolation
+    mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.05;
+    mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.05;
+
     if (groupRef.current) {
       if (!reducedMotion) {
         const boost = scrollRef.current.velocity * 0.85;
@@ -239,7 +252,7 @@ export function PremiumGlobe() {
         scrollRef.current.velocity *= 0.90;
       }
 
-      // ── Smooth Near / Far 3D Scroll Depth (Matching Technologies Experience) ──
+      // ── Smooth Near / Far 3D Scroll Depth ──
       // Top of Page (progress = 0):
       // Earth is near, large, front and center (z = 0, y = -0.5, scale = 1.0)
       // As user scrolls down (progress -> 1):
@@ -258,9 +271,13 @@ export function PremiumGlobe() {
       const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.06);
       groupRef.current.scale.set(s, s, s);
 
-      // Subtle dynamic tilt with time and scroll
-      groupRef.current.rotation.x =
-        Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + progress * 0.15;
+      // Dynamic interactive tilt with time, scroll, and mouse interaction
+      const mouseRotX = -mouseRef.current.y * 0.2;
+      const mouseRotZ = mouseRef.current.x * 0.15;
+      const targetRotX = Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + progress * 0.15 + mouseRotX;
+
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotX, 0.06);
+      groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, mouseRotZ, 0.06);
     }
   });
 
