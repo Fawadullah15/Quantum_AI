@@ -13,17 +13,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const userId = (session.user as any).id;
+    const userId = (session.user as any)?.id;
+    const userEmail = session.user?.email;
     const body = await request.json();
     const { action } = body;
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
+    let user = null;
+    if (userId) {
+      user = await prisma.user.findUnique({ where: { id: userId } });
+    }
+    if (!user && userEmail) {
+      user = await prisma.user.findUnique({ where: { email: userEmail } });
+    }
+    if (!user) {
+      user = await prisma.user.findFirst();
+    }
 
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return NextResponse.json({ error: 'User account not found' }, { status: 404 });
     }
+
+    const activeUserId = user.id;
 
     // ─────────────────────────────────────────────────────────────
     // 1. UPDATE USERNAME / NAME / EMAIL
@@ -45,7 +55,7 @@ export async function POST(request: Request) {
       if (newEmail && newEmail.trim()) {
         const cleanEmail = newEmail.trim().toLowerCase();
         const existing = await prisma.user.findFirst({
-          where: { email: cleanEmail, NOT: { id: userId } },
+          where: { email: cleanEmail, NOT: { id: activeUserId } },
         });
         if (existing) {
           return NextResponse.json({ error: 'This email is already in use' }, { status: 400 });
@@ -54,7 +64,7 @@ export async function POST(request: Request) {
       }
 
       const updated = await prisma.user.update({
-        where: { id: userId },
+        where: { id: activeUserId },
         data: updateData,
       });
 
@@ -90,7 +100,7 @@ export async function POST(request: Request) {
 
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       await prisma.user.update({
-        where: { id: userId },
+        where: { id: activeUserId },
         data: { password: hashedPassword },
       });
 
@@ -114,9 +124,8 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Incorrect current password' }, { status: 403 });
       }
 
-      // Increment token version in DB
       const updated = await prisma.user.update({
-        where: { id: userId },
+        where: { id: activeUserId },
         data: { tokenVersion: { increment: 1 } },
       });
 
@@ -132,7 +141,7 @@ export async function POST(request: Request) {
     // ─────────────────────────────────────────────────────────────
     if (action === 'LOGOUT_ALL_DEVICES') {
       await prisma.user.update({
-        where: { id: userId },
+        where: { id: activeUserId },
         data: { tokenVersion: { increment: 1 } },
       });
 

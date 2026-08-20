@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useSession, signOut } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-export default function AccountSettingsClient({ user }: { user: any }) {
-  const { data: session, update: updateSession } = useSession();
+export default function AccountSettingsClient({ user }: { user: { id: string; name: string; email: string; role: string; tokenVersion: number } }) {
+  const router = useRouter();
 
   // Profile update form state
   const [name, setName] = useState(user.name);
@@ -45,14 +46,7 @@ export default function AccountSettingsClient({ user }: { user: any }) {
       if (res.ok && data.success) {
         setProfileMsg({ type: 'success', text: 'Username / Profile updated successfully.' });
         setProfilePassword('');
-        await updateSession({
-          ...session,
-          user: {
-            ...session?.user,
-            name: data.user.name,
-            email: data.user.email,
-          },
-        });
+        router.refresh();
       } else {
         setProfileMsg({ type: 'error', text: data.error || 'Failed to update profile.' });
       }
@@ -113,16 +107,9 @@ export default function AccountSettingsClient({ user }: { user: any }) {
       if (res.ok && data.success) {
         setSessionMsg({
           type: 'success',
-          text: '✓ All other active sessions have been terminated. Only this browser session remains authenticated.',
+          text: '✓ All other active sessions have been terminated. Other logged-in devices will be prompted to log in again.',
         });
         setSessionPassword('');
-        await updateSession({
-          ...session,
-          user: {
-            ...session?.user,
-            tokenVersion: data.newTokenVersion,
-          },
-        });
       } else {
         setSessionMsg({ type: 'error', text: data.error || 'Failed to revoke other sessions.' });
       }
@@ -212,12 +199,12 @@ export default function AccountSettingsClient({ user }: { user: any }) {
 
             <div>
               <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.8125rem', marginBottom: '6px' }}>
-                Current Password (required for authorization) *
+                Current Password (required to save changes) *
               </label>
               <input
                 required
                 type="password"
-                placeholder="Enter current password to save changes"
+                placeholder="Enter current password to authorize changes"
                 value={profilePassword}
                 onChange={(e) => setProfilePassword(e.target.value)}
                 style={inputStyle}
