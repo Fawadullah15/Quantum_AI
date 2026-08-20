@@ -7,8 +7,7 @@ import dynamic from 'next/dynamic';
 import { NovaButton, GalaxyButton, ButtonStyles } from '@/components/ui/Buttons';
 
 const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr: false });
-const GlobalMapSection = dynamic(() => import('@/components/sections/GlobalMapSection'), { ssr: false });
-const PremiumGlobe = dynamic(() => import('@/components/3d/PremiumGlobe'), { ssr: false });
+const GlobalEarthSection = dynamic(() => import('@/components/sections/GlobalEarthSection'), { ssr: false });
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
 
 export default function HomePage() {
@@ -306,47 +305,10 @@ export default function HomePage() {
             alignItems: 'center',
             padding: 'clamp(7rem, 12vh, 10rem) clamp(1.25rem, 6vw, 6rem) clamp(4rem, 8vh, 6rem)',
             position: 'relative',
-            overflow: 'hidden',
           }}
         >
           {/* Semantic H1 for SEO & accessibility — visually hidden */}
           <h1 className="sr-only">We Build Intelligent Software — Quantum AI</h1>
-
-          {/* 3D Earth in Hero Background */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              pointerEvents: 'auto',
-              zIndex: 1,
-              overflow: 'hidden',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-            }}
-          >
-            <div
-              style={{
-                width: 'clamp(380px, 60vw, 860px)',
-                height: 'clamp(380px, 60vw, 860px)',
-                position: 'relative',
-                right: 'clamp(-60px, 2vw, 40px)',
-              }}
-            >
-              <PremiumGlobe
-                globeRadius={1.12}
-                dotDensity={115}
-                dotSize={0.4}
-                dotColor="#FFFFFF"
-                lineColor="#00F0FF"
-                glowColor="#0055FF"
-                glowIntensity={2.5}
-                oceanColor="#020617"
-                enableDrag={true}
-                autoRotateSpeed={0.5}
-              />
-            </div>
-          </div>
 
           <div style={{ maxWidth: 860, pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
             {/* Small Eyebrow */}
@@ -785,10 +747,10 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            INTERACTIVE WORLD MAP
+            INTERACTIVE 3D GLOBAL EARTH
         ═══════════════════════════════════════════════════════════ */}
         <div style={{ pointerEvents: 'auto' }}>
-          <GlobalMapSection />
+          <GlobalEarthSection />
         </div>
 
         {/* ═══════════════════════════════════════════════════════════
