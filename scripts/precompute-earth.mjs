@@ -2,8 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import countriesData from '../lib/data/countries.js';
 
-const EARTH_RADIUS = 4.4;
-const LINK_RADIUS = EARTH_RADIUS * 1.003; // Float slightly above sphere to guarantee 100% visibility
+const EARTH_RADIUS = 5.6;
+const LINK_RADIUS = EARTH_RADIUS * 1.003; // Float slightly above sphere (5.6168) to guarantee 100% unclipped visibility
 
 function latLongToVector3(lat, lon, r) {
   const phi = (90.0 - lat) * (Math.PI / 180.0);

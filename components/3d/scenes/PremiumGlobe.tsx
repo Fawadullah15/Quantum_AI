@@ -6,7 +6,7 @@ import * as THREE from 'three';
 import countriesData from '@/lib/data/countries.js';
 import geoBordersData from '@/lib/data/geo-borders.json';
 
-const EARTH_RADIUS = 4.4;
+const EARTH_RADIUS = 5.6;
 
 // ── Major Global Hubs ────────────────────────────────────────────────────────
 const HUBS = [
@@ -89,7 +89,7 @@ export function PremiumGlobe() {
   const mousePos = useRef({ x: 0, y: 0 });
   const scrollRef = useRef({ current: 0, target: 0, velocity: 0, lastY: 0 });
 
-  // 1. Instant Synchronous Precomputed Geo-Borders Buffer (10,312 segments)
+  // 1. Instant Synchronous Precomputed Geo-Borders Buffer (10,312 segments at R=5.6)
   const geoBuffers = useMemo(() => {
     return {
       positions: new Float32Array(geoBordersData.positions),
@@ -143,11 +143,11 @@ export function PremiumGlobe() {
     () => ({
       uMask: { value: maskTexture },
       uDotColor: { value: new THREE.Color('#FFFFFF') },
-      uDotDensity: { value: 115.0 },
+      uDotDensity: { value: 120.0 },
       uDotSize: { value: 0.40 },
-      uGlowColor: { value: new THREE.Color('#0066FF') },
-      uGlowIntensity: { value: 3.2 },
-      uOceanColor: { value: new THREE.Color('#020817') },
+      uGlowColor: { value: new THREE.Color('#0055FF') },
+      uGlowIntensity: { value: 2.2 },
+      uOceanColor: { value: new THREE.Color('#020617') },
       uOceanAlpha: { value: 0.95 },
     }),
     [maskTexture]
@@ -169,19 +169,19 @@ export function PremiumGlobe() {
 
     // Pulse traveling border lines
     if (!reducedMotion) {
-      lineUniforms.uTime.value += delta * 0.7;
+      lineUniforms.uTime.value += delta * 0.65;
     }
 
     // ── 3D Antigravity Scroll Dynamics (Recede on scroll down, zoom in on scroll up) ──
     if (rootGroupRef.current) {
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
-      // In Hero: Earth sits large and majestic (scale=1.0, z=0)
-      // As user scrolls down: Earth recedes smoothly into deep space (z drops to -6.5, scale to 0.72)
-      const targetZ = -Math.min(1.5, progress) * 4.8;
+      // In Hero: Massive Earth sits majestically in the right background (scale=1.0, z=0)
+      // As user scrolls down: Earth recedes smoothly into deep space (z drops to -6.5, scale to 0.70)
+      const targetZ = -Math.min(1.6, progress) * 5.2;
       const targetY = -progress * 3.8 + mousePos.current.y * 0.35;
-      const targetX = isMobile ? 0 : 3.6 - Math.min(1, progress * 0.6) * 1.4 + mousePos.current.x * 0.45;
-      const targetScale = Math.max(0.68, 1.0 - progress * 0.24);
+      const targetX = isMobile ? 0 : 3.8 - Math.min(1, progress * 0.6) * 1.5 + mousePos.current.x * 0.45;
+      const targetScale = Math.max(0.68, 1.0 - progress * 0.25);
 
       rootGroupRef.current.position.x = THREE.MathUtils.lerp(rootGroupRef.current.position.x, targetX, 0.07);
       rootGroupRef.current.position.y = THREE.MathUtils.lerp(rootGroupRef.current.position.y, targetY, 0.07);
@@ -206,7 +206,7 @@ export function PremiumGlobe() {
     // ── Continuous Planetary Spin with Scroll Velocity Boost ──
     if (spinGroupRef.current && !reducedMotion) {
       const scrollBoost = scrollRef.current.velocity * 0.9;
-      spinGroupRef.current.rotation.y += delta * 0.052 + scrollBoost;
+      spinGroupRef.current.rotation.y += delta * 0.048 + scrollBoost;
       scrollRef.current.velocity *= 0.92; // decay
     }
   });
@@ -257,8 +257,8 @@ export function PremiumGlobe() {
                   float u = theta / 6.28318530718;
                   float v = 1.0 - (phi / 3.14159265359);
                   
-                  // Fresnel edge inner glow
-                  float fresnel = pow(1.0 - max(dot(vNormal, vec3(0.0, 0.0, 1.0)), 0.0), 2.8);
+                  // Natural exponential Fresnel inner glow
+                  float fresnel = pow(1.0 - max(dot(vNormal, vec3(0.0, 0.0, 1.0)), 0.0), 3.0);
                   vec3 glow = uGlowColor * fresnel * uGlowIntensity;
 
                   float dotsRows = uDotDensity;
@@ -283,14 +283,14 @@ export function PremiumGlobe() {
                   
                   float maxDist = (3.14159265359 / dotsRows) * 0.5 * uDotSize;
                   
-                  vec3 finalColor = uOceanColor + glow * 0.45;
+                  vec3 finalColor = uOceanColor + glow * 0.35;
                   float finalAlpha = uOceanAlpha;
                   
                   if (centerMask.r > 0.5) {
                     float alpha = smoothstep(maxDist, maxDist * 0.72, dist);
-                    vec3 dotColorWithGlow = uDotColor + glow * 0.9;
+                    vec3 dotColorWithGlow = uDotColor + glow * 0.75;
                     float edge = max(0.0, dot(vNormal, vec3(0.0, 0.0, 1.0)));
-                    dotColorWithGlow += vec3(0.3) * pow(edge, 2.2);
+                    dotColorWithGlow += vec3(0.25) * pow(edge, 2.2);
                     finalColor = mix(finalColor, dotColorWithGlow, alpha);
                     finalAlpha = max(uOceanAlpha, alpha);
                   }
@@ -355,7 +355,7 @@ export function PremiumGlobe() {
             return (
               <group key={idx} position={pos}>
                 <mesh renderOrder={3}>
-                  <sphereGeometry args={[0.06, 16, 16]} />
+                  <sphereGeometry args={[0.065, 16, 16]} />
                   <meshBasicMaterial color="#00F0FF" />
                 </mesh>
               </group>
@@ -364,9 +364,9 @@ export function PremiumGlobe() {
         </group>
       </group>
 
-      {/* ── Outer Atmospheric Halo ── */}
+      {/* ── Soft Natural Atmospheric Halo (No thick artificial ring) ── */}
       <mesh renderOrder={0}>
-        <sphereGeometry args={[EARTH_RADIUS * 1.15, 48, 48]} />
+        <sphereGeometry args={[EARTH_RADIUS * 1.12, 48, 48]} />
         <shaderMaterial
           transparent
           depthWrite={false}
@@ -386,17 +386,18 @@ export function PremiumGlobe() {
             uniform vec3 uColor;
             varying vec3 vNormal;
             void main() {
-              float intensity = pow(0.68 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.6);
-              gl_FragColor = vec4(uColor, intensity * 0.9);
+              // Natural, subtle exponential atmospheric falloff
+              float intensity = pow(0.72 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.2);
+              gl_FragColor = vec4(uColor, intensity * 0.65);
             }
           `}
         />
       </mesh>
 
-      {/* ── Lighting ── */}
-      <ambientLight intensity={0.3} color="#F8FAFC" />
+      {/* ── Layered Cinematic Lighting ── */}
+      <ambientLight intensity={0.25} color="#F8FAFC" />
       <directionalLight position={[-12, 6, 10]} intensity={2.2} color="#0099FF" />
-      <directionalLight position={[12, -4, -10]} intensity={1.5} color="#0033BB" />
+      <directionalLight position={[12, -4, -10]} intensity={1.2} color="#0033AA" />
     </group>
   );
 }
