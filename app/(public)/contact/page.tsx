@@ -241,7 +241,7 @@ export default function ContactPage() {
                 DIRECT CONTACT
               </div>
               <a
-                href="mailto:fawadimraj@gmail.com"
+                href="mailto:hello@quantumai.dev"
                 style={{
                   fontSize: 'clamp(1.05rem, 2.2vw, 1.45rem)',
                   fontWeight: 600,
@@ -262,7 +262,7 @@ export default function ContactPage() {
                   e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
                 }}
               >
-                fawadimraj@gmail.com
+                hello@quantumai.dev
               </a>
             </div>
 

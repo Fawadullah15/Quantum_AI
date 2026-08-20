@@ -15,7 +15,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           <Footer
             companyName="QUANTUM AI"
             tagline="Intelligent software for a connected world."
-            email="fawadimraj@gmail.com"
+            email="hello@quantumai.dev"
           />
         </ClientLayout>
       </div>
