@@ -2,13 +2,37 @@
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
-const POSITIONS = ["CEO","CTO","CHAIRMAN","COO","CFO","DIRECTOR","LEAD_ENGINEER","RESEARCHER","ADVISOR","OTHER"];
+const PREDEFINED_ROLES = [
+  { value: "CEO", label: "CEO" },
+  { value: "CTO", label: "CTO" },
+  { value: "CHAIRMAN", label: "Chairman" },
+  { value: "EXECUTIVE_CHAIRMAN", label: "Executive Chairman" },
+  { value: "COO", label: "COO" },
+  { value: "CFO", label: "CFO" },
+  { value: "DIRECTOR", label: "Director" },
+  { value: "LEAD_ENGINEER", label: "Lead Engineer" },
+  { value: "RESEARCHER", label: "Researcher" },
+  { value: "ADVISOR", label: "Advisor" },
+  { value: "OTHER", label: "Other" },
+];
 
 type Member = {
-  id: string; publicId: string; name: string; position: string;
-  department: string | null; shortBio: string; fullBio: string | null; photo: string | null;
-  email: string | null; linkedin: string | null; website: string | null;
-  location: string | null; displayOrder: number; isActive: boolean;
+  id: string;
+  publicId: string;
+  name: string;
+  position: string;
+  roleType?: string;
+  customRole?: string | null;
+  department: string | null;
+  shortBio: string;
+  fullBio: string | null;
+  photo: string | null;
+  email: string | null;
+  linkedin: string | null;
+  website: string | null;
+  location: string | null;
+  displayOrder: number;
+  isActive: boolean;
 };
 
 export default function EditLeadershipForm({ member }: { member: Member }) {
@@ -19,11 +43,29 @@ export default function EditLeadershipForm({ member }: { member: Member }) {
   const [photoUrl, setPhotoUrl] = useState(member.photo || "");
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Determine initial role selection
+  const isExistingCustom =
+    member.roleType === "CUSTOM" ||
+    Boolean(member.customRole) ||
+    !PREDEFINED_ROLES.some((r) => r.value === member.position);
+
+  const [selectedRole, setSelectedRole] = useState(isExistingCustom ? "CUSTOM" : member.position);
+  const [customRoleName, setCustomRoleName] = useState(
+    isExistingCustom ? (member.customRole || member.position || "") : ""
+  );
+
   const [form, setForm] = useState({
-    name: member.name, position: member.position, department: member.department || "",
-    shortBio: member.shortBio, fullBio: member.fullBio || "", email: member.email || "",
-    linkedin: member.linkedin || "", website: member.website || "", location: member.location || "",
-    displayOrder: member.displayOrder, isActive: member.isActive,
+    name: member.name,
+    department: member.department || "",
+    shortBio: member.shortBio,
+    fullBio: member.fullBio || "",
+    email: member.email || "",
+    linkedin: member.linkedin || "",
+    website: member.website || "",
+    location: member.location || "",
+    displayOrder: member.displayOrder,
+    isActive: member.isActive,
   });
 
   const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,18 +80,41 @@ export default function EditLeadershipForm({ member }: { member: Member }) {
       const data = await res.json();
       if (data.url) setPhotoUrl(data.url);
       else setError("Photo upload failed");
-    } catch { setError("Photo upload failed"); }
-    finally { setUploading(false); }
+    } catch {
+      setError("Photo upload failed");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true); setError("");
+    if (!form.name || !form.shortBio) {
+      setError("Name and short bio are required");
+      return;
+    }
+    if (selectedRole === "CUSTOM" && !customRoleName.trim()) {
+      setError("Please enter the Custom Role Name");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    const isCustom = selectedRole === "CUSTOM";
+    const payload = {
+      ...form,
+      position: isCustom ? customRoleName.trim() : selectedRole,
+      roleType: isCustom ? "CUSTOM" : "PREDEFINED",
+      customRole: isCustom ? customRoleName.trim() : null,
+      photo: photoUrl || null,
+    };
+
     try {
       const res = await fetch("/api/leadership/" + member.id, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, photo: photoUrl || null }),
+        body: JSON.stringify(payload),
       });
       if (res.ok) {
         router.push("/admin/leadership");
@@ -65,8 +130,24 @@ export default function EditLeadershipForm({ member }: { member: Member }) {
     }
   };
 
-  const inp: React.CSSProperties = { width: "100%", background: "#111827", border: "1px solid #374151", borderRadius: "6px", padding: "0.625rem 0.875rem", color: "#F8FAFC", fontSize: "0.9rem", boxSizing: "border-box" };
-  const lbl: React.CSSProperties = { display: "block", fontSize: "0.78rem", color: "#9CA3AF", marginBottom: "0.375rem", textTransform: "uppercase", letterSpacing: "0.06em" };
+  const inp: React.CSSProperties = {
+    width: "100%",
+    background: "#111827",
+    border: "1px solid #374151",
+    borderRadius: "6px",
+    padding: "0.625rem 0.875rem",
+    color: "#F8FAFC",
+    fontSize: "0.9rem",
+    boxSizing: "border-box",
+  };
+  const lbl: React.CSSProperties = {
+    display: "block",
+    fontSize: "0.78rem",
+    color: "#9CA3AF",
+    marginBottom: "0.375rem",
+    textTransform: "uppercase",
+    letterSpacing: "0.06em",
+  };
   const grp: React.CSSProperties = { marginBottom: "1.25rem" };
 
   return (
@@ -75,7 +156,11 @@ export default function EditLeadershipForm({ member }: { member: Member }) {
         <h1 style={{ fontSize: "1.5rem", fontWeight: 700, margin: 0 }}>Edit: {member.name}</h1>
         <p style={{ color: "#6B7280", fontSize: "0.875rem", marginTop: "0.25rem" }}>{member.publicId}</p>
       </div>
-      {error && <div style={{ background: "#7F1D1D", color: "#FCA5A5", padding: "0.75rem 1rem", borderRadius: "6px", marginBottom: "1.5rem" }}>{error}</div>}
+      {error && (
+        <div style={{ background: "#7F1D1D", color: "#FCA5A5", padding: "0.75rem 1rem", borderRadius: "6px", marginBottom: "1.5rem" }}>
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <div style={grp}>
           <label style={lbl}>Profile Photo</label>
@@ -85,31 +170,113 @@ export default function EditLeadershipForm({ member }: { member: Member }) {
             </div>
             <div>
               <input ref={fileRef} type="file" accept="image/*" onChange={handlePhotoUpload} style={{ display: "none" }} />
-              <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} style={{ background: "#374151", color: "#D1D5DB", border: "none", padding: "0.5rem 1rem", borderRadius: "6px", cursor: "pointer", marginBottom: "0.5rem", display: "block" }}>{uploading ? "Uploading..." : "Change Photo"}</button>
-              {photoPreview && <button type="button" onClick={() => { setPhotoPreview(null); setPhotoUrl(""); }} style={{ background: "transparent", color: "#9CA3AF", border: "none", cursor: "pointer", fontSize: "0.8rem" }}>Remove photo</button>}
+              <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} style={{ background: "#374151", color: "#D1D5DB", border: "none", padding: "0.5rem 1rem", borderRadius: "6px", cursor: "pointer", marginBottom: "0.5rem", display: "block" }}>
+                {uploading ? "Uploading..." : "Change Photo"}
+              </button>
+              {photoPreview && (
+                <button type="button" onClick={() => { setPhotoPreview(null); setPhotoUrl(""); }} style={{ background: "transparent", color: "#9CA3AF", border: "none", cursor: "pointer", fontSize: "0.8rem" }}>
+                  Remove photo
+                </button>
+              )}
             </div>
           </div>
         </div>
+
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
-          <div style={grp}><label style={lbl}>Full Name *</label><input style={inp} value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required /></div>
-          <div style={grp}><label style={lbl}>Position *</label><select style={inp} value={form.position} onChange={e => setForm(f => ({ ...f, position: e.target.value }))}>{POSITIONS.map(p => <option key={p} value={p}>{p.replace("_", " ")}</option>)}</select></div>
-          <div style={grp}><label style={lbl}>Department</label><input style={inp} value={form.department} onChange={e => setForm(f => ({ ...f, department: e.target.value }))} /></div>
-          <div style={grp}><label style={lbl}>Location</label><input style={inp} value={form.location} onChange={e => setForm(f => ({ ...f, location: e.target.value }))} /></div>
+          <div style={grp}>
+            <label style={lbl}>Full Name *</label>
+            <input style={inp} value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} required />
+          </div>
+
+          <div style={grp}>
+            <label style={lbl}>Position / Role *</label>
+            <select
+              style={inp}
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+            >
+              {PREDEFINED_ROLES.map((r) => (
+                <option key={r.value} value={r.value}>
+                  {r.label}
+                </option>
+              ))}
+              <option value="CUSTOM">+ Custom Role</option>
+            </select>
+          </div>
         </div>
-        <div style={grp}><label style={lbl}>Short Bio *</label><textarea style={{ ...inp, minHeight: 80, resize: "vertical" }} value={form.shortBio} onChange={e => setForm(f => ({ ...f, shortBio: e.target.value }))} required /></div>
-        <div style={grp}><label style={lbl}>Full Biography</label><textarea style={{ ...inp, minHeight: 140, resize: "vertical" }} value={form.fullBio} onChange={e => setForm(f => ({ ...f, fullBio: e.target.value }))} /></div>
+
+        {/* Custom Role Field (revealed dynamically) */}
+        {selectedRole === "CUSTOM" && (
+          <div style={{ ...grp, backgroundColor: "#0F172A", padding: "16px", borderRadius: "8px", border: "1px solid #1677FF" }}>
+            <label style={{ ...lbl, color: "#38BDF8" }}>
+              Custom Role Name * (e.g. Director of Strategic Partnerships / Chief AI Officer)
+            </label>
+            <input
+              style={{ ...inp, border: "1px solid #38BDF8" }}
+              placeholder="Enter custom role title..."
+              value={customRoleName}
+              onChange={(e) => setCustomRoleName(e.target.value)}
+              required={selectedRole === "CUSTOM"}
+            />
+          </div>
+        )}
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+          <div style={grp}>
+            <label style={lbl}>Department</label>
+            <input style={inp} value={form.department} onChange={(e) => setForm((f) => ({ ...f, department: e.target.value }))} />
+          </div>
+          <div style={grp}>
+            <label style={lbl}>Location</label>
+            <input style={inp} value={form.location} onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))} />
+          </div>
+        </div>
+
+        <div style={grp}>
+          <label style={lbl}>Short Bio *</label>
+          <textarea style={{ ...inp, minHeight: 80, resize: "vertical" }} value={form.shortBio} onChange={(e) => setForm((f) => ({ ...f, shortBio: e.target.value }))} required />
+        </div>
+        <div style={grp}>
+          <label style={lbl}>Full Biography</label>
+          <textarea style={{ ...inp, minHeight: 140, resize: "vertical" }} value={form.fullBio} onChange={(e) => setForm((f) => ({ ...f, fullBio: e.target.value }))} />
+        </div>
+
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1.25rem" }}>
-          <div style={grp}><label style={lbl}>Email</label><input style={inp} type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} /></div>
-          <div style={grp}><label style={lbl}>LinkedIn</label><input style={inp} value={form.linkedin} onChange={e => setForm(f => ({ ...f, linkedin: e.target.value }))} /></div>
-          <div style={grp}><label style={lbl}>Website</label><input style={inp} value={form.website} onChange={e => setForm(f => ({ ...f, website: e.target.value }))} /></div>
+          <div style={grp}>
+            <label style={lbl}>Email</label>
+            <input style={inp} type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} />
+          </div>
+          <div style={grp}>
+            <label style={lbl}>LinkedIn</label>
+            <input style={inp} value={form.linkedin} onChange={(e) => setForm((f) => ({ ...f, linkedin: e.target.value }))} />
+          </div>
+          <div style={grp}>
+            <label style={lbl}>Website</label>
+            <input style={inp} value={form.website} onChange={(e) => setForm((f) => ({ ...f, website: e.target.value }))} />
+          </div>
         </div>
+
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
-          <div style={grp}><label style={lbl}>Display Order</label><input style={inp} type="number" min={0} value={form.displayOrder} onChange={e => setForm(f => ({ ...f, displayOrder: parseInt(e.target.value) || 0 }))} /></div>
-          <div style={grp}><label style={lbl}>Status</label><select style={inp} value={form.isActive ? "active" : "inactive"} onChange={e => setForm(f => ({ ...f, isActive: e.target.value === "active" }))}><option value="active">Active</option><option value="inactive">Inactive</option></select></div>
+          <div style={grp}>
+            <label style={lbl}>Display Order</label>
+            <input style={inp} type="number" min={0} value={form.displayOrder} onChange={(e) => setForm((f) => ({ ...f, displayOrder: parseInt(e.target.value) || 0 }))} />
+          </div>
+          <div style={grp}>
+            <label style={lbl}>Status</label>
+            <select style={inp} value={form.isActive ? "active" : "inactive"} onChange={(e) => setForm((f) => ({ ...f, isActive: e.target.value === "active" }))}>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
         </div>
+
         <div style={{ display: "flex", gap: "1rem", marginTop: "1rem" }}>
-          <button type="submit" disabled={loading} style={{ background: "#2563EB", color: "#fff", border: "none", padding: "0.75rem 2rem", borderRadius: "6px", cursor: "pointer", fontWeight: 600 }}>{loading ? "Saving..." : "Save Changes"}</button>
-          <button type="button" onClick={() => router.push("/admin/leadership")} style={{ background: "#374151", color: "#D1D5DB", border: "none", padding: "0.75rem 1.5rem", borderRadius: "6px", cursor: "pointer" }}>Cancel</button>
+          <button type="submit" disabled={loading} style={{ background: "#1677FF", color: "#fff", border: "none", padding: "0.75rem 2rem", borderRadius: "6px", cursor: "pointer", fontWeight: 600 }}>
+            {loading ? "Saving..." : "Save Changes"}
+          </button>
+          <button type="button" onClick={() => router.push("/admin/leadership")} style={{ background: "#374151", color: "#D1D5DB", border: "none", padding: "0.75rem 1.5rem", borderRadius: "6px", cursor: "pointer" }}>
+            Cancel
+          </button>
         </div>
       </form>
     </div>

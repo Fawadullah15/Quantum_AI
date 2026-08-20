@@ -37,7 +37,21 @@ export async function PATCH(
 
     const data: any = {};
     if (body.name !== undefined) data.name = body.name;
-    if (body.position !== undefined) data.position = body.position;
+
+    // Handle Custom Role vs Predefined Role
+    if (body.roleType !== undefined || body.position !== undefined || body.customRole !== undefined) {
+      const isCustom = body.roleType === 'CUSTOM' || body.position === 'CUSTOM' || Boolean(body.customRole);
+      if (isCustom) {
+        data.roleType = 'CUSTOM';
+        data.customRole = body.customRole?.trim() || body.position;
+        data.position = body.customRole?.trim() || 'Custom Role';
+      } else {
+        data.roleType = 'PREDEFINED';
+        data.position = body.position;
+        data.customRole = null;
+      }
+    }
+
     if (body.department !== undefined) data.department = body.department || null;
     if (body.shortBio !== undefined) data.shortBio = body.shortBio;
     if (body.fullBio !== undefined) data.fullBio = body.fullBio || null;
@@ -57,15 +71,15 @@ export async function PATCH(
     revalidatePath('/');
     revalidatePath('/leadership');
     revalidatePath('/team');
+    revalidatePath('/admin/leadership');
     if (updated.slug) {
       revalidatePath(`/leadership/${updated.slug}`);
     }
-    revalidatePath('/admin/leadership');
 
     return NextResponse.json(updated);
   } catch (error: any) {
     console.error('Error updating leadership member:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json({ error: error?.message || 'Internal Server Error' }, { status: 500 });
   }
 }
 
@@ -90,7 +104,8 @@ export async function DELETE(
     revalidatePath('/admin/leadership');
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Error deleting leadership member:', error);
+    return NextResponse.json({ error: error?.message || 'Internal Server Error' }, { status: 500 });
   }
 }

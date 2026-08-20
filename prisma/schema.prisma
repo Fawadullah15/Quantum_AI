@@ -16,6 +16,7 @@ model User {
   name         String
   password     String
   role         String        @default("EDITOR") // SUPER_ADMIN | ADMIN | EDITOR
+  tokenVersion Int           @default(1)
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   activityLogs ActivityLog[]
@@ -74,6 +75,8 @@ model Leadership {
   name         String
   // Position: CEO | CTO | CHAIRMAN | COO | CFO | DIRECTOR | LEAD_ENGINEER | RESEARCHER | ADVISOR | OTHER
   position     String
+  roleType     String   @default("PREDEFINED") // PREDEFINED | CUSTOM
+  customRole   String?
   department   String?
   shortBio     String
   fullBio      String?
@@ -252,3 +255,80 @@ model ActivityLog {
   details   String?
   createdAt DateTime @default(now())
 }
+
+// ─────────────────────────────────────────────────────────────
+// CAREERS & BUSINESS PARTNERSHIPS
+// ─────────────────────────────────────────────────────────────
+
+model CareerApplication {
+  id                String           @id @default(cuid())
+  referenceId       String           @unique // e.g. "QA-CAR-1001"
+  fullName          String
+  email             String
+  phone             String?
+  currentLocation   String?
+  linkedinUrl       String?
+  githubUrl         String?
+  portfolioUrl      String?
+  position          String
+  experienceLevel   String           // Student | Entry Level | Junior | Mid Level | Senior | Lead
+  skills            String
+  introduction      String
+  whyQuantumAI      String?
+  resumeUrl         String           // Secure file path/blob
+  additionalDocsUrl String?
+  workType          String           // Full Time | Part Time | Internship | Freelance | Contract | Remote
+  status            String           @default("NEW") // NEW | REVIEWING | SHORTLISTED | CONTACTED | INTERVIEW | ACCEPTED | REJECTED | CLOSED
+  assignedTo        String?
+  notes             SubmissionNote[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+}
+
+model PartnershipRequest {
+  id                     String           @id @default(cuid())
+  referenceId            String           @unique // e.g. "QA-PTR-2001"
+  fullName               String
+  company                String?
+  email                  String
+  phone                  String?
+  website                String?
+  country                String?
+  partnershipType        String           // Technology Partnership | Business Partnership | Strategic Partnership | Marketing Partnership | Investment | Outsourcing | Other
+  subject                String
+  message                String
+  budgetRange            String?
+  preferredContactMethod String?          // Email | Phone | WhatsApp | Video Call
+  attachmentUrl          String?
+  status                 String           @default("NEW") // NEW | REVIEWING | SHORTLISTED | CONTACTED | INTERVIEW | ACCEPTED | REJECTED | CLOSED
+  assignedTo             String?
+  notes                  SubmissionNote[]
+  createdAt              DateTime         @default(now())
+  updatedAt              DateTime         @updatedAt
+}
+
+model CareerPosition {
+  id          String   @id @default(cuid())
+  title       String   @unique
+  department  String   @default("AI Engineering") // AI Engineering | Software | Infrastructure | Product | Operations
+  location    String   @default("Remote / Hybrid")
+  workType    String   @default("Full Time")
+  description String?
+  isActive    Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SubmissionNote {
+  id                   String              @id @default(cuid())
+  careerApplicationId  String?
+  careerApplication    CareerApplication?  @relation(fields: [careerApplicationId], references: [id], onDelete: Cascade)
+  partnershipRequestId String?
+  partnershipRequest   PartnershipRequest? @relation(fields: [partnershipRequestId], references: [id], onDelete: Cascade)
+  authorName           String
+  authorEmail          String
+  content              String
+  createdAt            DateTime            @default(now())
+}
+

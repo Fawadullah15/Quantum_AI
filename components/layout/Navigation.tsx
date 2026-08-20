@@ -314,7 +314,40 @@ export default function Navigation({ companyName }: { companyName?: string }) {
             </nav>
 
             {/* CTA */}
-            <div className="nav-cta-area" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
+            <div className="nav-cta-area" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexShrink: 0 }}>
+              <Link
+                href="/careers-partnerships"
+                className="nav-cta-btn nav-careers-btn"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '0.5rem 1.1rem',
+                  fontSize: '0.75rem',
+                  fontFamily: 'var(--font-mono)',
+                  fontWeight: 600,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  color: '#F8FAFF',
+                  textDecoration: 'none',
+                  borderRadius: 999,
+                  border: '1px solid rgba(56, 189, 248, 0.4)',
+                  backgroundColor: 'rgba(56, 189, 248, 0.08)',
+                  transition: 'background-color 0.2s, border-color 0.2s',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.22)';
+                  e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.8)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+                }}
+              >
+                Careers & Partnerships
+              </Link>
+
               <Link
                 href="/contact"
                 className="nav-cta-btn"
@@ -518,7 +551,29 @@ export default function Navigation({ companyName }: { companyName?: string }) {
               </nav>
 
               {/* Bottom CTA */}
-              <div style={{ marginTop: '2.5rem' }}>
+              <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <Link
+                  href="/careers-partnerships"
+                  onClick={() => setMobileOpen(false)}
+                  style={{
+                    display: 'block',
+                    textAlign: 'center',
+                    padding: '0.875rem',
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    border: '1px solid rgba(56, 189, 248, 0.35)',
+                    color: '#38BDF8',
+                    borderRadius: 12,
+                    textDecoration: 'none',
+                    fontWeight: 600,
+                    fontSize: '0.9rem',
+                    fontFamily: 'var(--font-mono)',
+                    letterSpacing: '0.08em',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  Careers & Partnerships
+                </Link>
+
                 <Link
                   href="/contact"
                   onClick={() => setMobileOpen(false)}

@@ -12,6 +12,7 @@ const navSections = [
     links: [
       { href: '/admin', label: 'Dashboard', icon: '📊' },
       { href: '/admin/messages', label: 'Contact Messages', icon: '💬' },
+      { href: '/admin/careers-partnerships', label: 'Careers & Partnerships', icon: '🤝' },
     ],
   },
   {
@@ -32,10 +33,11 @@ const navSections = [
     ],
   },
   {
-    label: 'SITE',
+    label: 'SITE & SECURITY',
     links: [
       { href: '/admin/media', label: 'Media Library', icon: '🖼️' },
       { href: '/admin/settings', label: 'Website Settings', icon: '⚙️' },
+      { href: '/admin/settings/account', label: 'Account Security', icon: '🔒' },
     ],
   },
 ]

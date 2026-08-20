@@ -20,22 +20,53 @@ export const authOptions: NextAuthOptions = {
         if (!user) return null
         const valid = await bcrypt.compare(credentials.password, user.password)
         if (!valid) return null
-        return { id: user.id, email: user.email, name: user.name, role: user.role }
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          tokenVersion: user.tokenVersion,
+        }
       },
     }),
   ],
   callbacks: {
-    jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id
         token.role = (user as any).role
+        token.tokenVersion = (user as any).tokenVersion
       }
+
+      if (trigger === 'update' && session) {
+        if (session.user?.name) token.name = session.user.name
+        if (session.user?.email) token.email = session.user.email
+        if (session.user?.tokenVersion !== undefined) token.tokenVersion = session.user.tokenVersion
+      }
+
+      // Check if user session has been revoked
+      if (token.id && token.tokenVersion !== undefined) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { tokenVersion: true },
+          })
+          if (!dbUser || dbUser.tokenVersion !== token.tokenVersion) {
+            // Revoked session
+            return {} as any
+          }
+        } catch {
+          // If DB is temporarily unreachable, fallback to token
+        }
+      }
+
       return token
     },
     session({ session, token }) {
-      if (token && session.user) {
+      if (token && token.id && session.user) {
         (session.user as any).id = token.id
         ;(session.user as any).role = token.role
+        ;(session.user as any).tokenVersion = token.tokenVersion
       }
       return session
     },

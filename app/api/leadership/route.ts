@@ -21,13 +21,35 @@ export async function POST(request: Request) {
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const data = await request.json();
-    const { name, position, department, shortBio, fullBio, photo, email, linkedin, website, location, displayOrder, isActive, slug } = data;
+    const {
+      name,
+      position,
+      roleType,
+      customRole,
+      department,
+      shortBio,
+      fullBio,
+      photo,
+      email,
+      linkedin,
+      website,
+      location,
+      displayOrder,
+      isActive,
+      slug,
+    } = data;
 
     if (!name || !shortBio) {
       return NextResponse.json({ error: 'Name and shortBio are required' }, { status: 400 });
     }
 
-    // Find the highest numeric suffix in existing publicIds to prevent duplicate key collision
+    // Determine final role values
+    const isCustom = roleType === 'CUSTOM' || position === 'CUSTOM' || Boolean(customRole);
+    const finalRoleType = isCustom ? 'CUSTOM' : 'PREDEFINED';
+    const finalCustomRole = isCustom ? (customRole?.trim() || position) : null;
+    const finalPosition = isCustom ? (customRole?.trim() || 'Custom Role') : position;
+
+    // Find the highest numeric suffix in existing publicIds
     const allMembers = await prisma.leadership.findMany({
       select: { publicId: true },
     });
@@ -40,7 +62,6 @@ export async function POST(request: Request) {
       }
     }
     const publicId = `QA-${String(maxId + 1).padStart(3, '0')}`;
-
     const memberSlug = slug || name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
 
     const member = await prisma.leadership.create({
@@ -48,7 +69,9 @@ export async function POST(request: Request) {
         publicId,
         slug: memberSlug,
         name,
-        position,
+        position: finalPosition,
+        roleType: finalRoleType,
+        customRole: finalCustomRole,
         department: department || null,
         shortBio,
         fullBio: fullBio || null,
@@ -65,12 +88,11 @@ export async function POST(request: Request) {
     revalidatePath('/');
     revalidatePath('/leadership');
     revalidatePath('/team');
-    revalidatePath(`/leadership/${memberSlug}`);
     revalidatePath('/admin/leadership');
 
     return NextResponse.json(member, { status: 201 });
   } catch (error: any) {
-    console.error('Leadership POST error:', error);
-    return NextResponse.json({ error: error.message || 'Internal Server Error' }, { status: 500 });
+    console.error('Error creating leadership member:', error);
+    return NextResponse.json({ error: error?.message || 'Internal Server Error' }, { status: 500 });
   }
 }

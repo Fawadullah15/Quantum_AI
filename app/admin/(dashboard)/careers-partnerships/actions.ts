@@ -1,0 +1,95 @@
+'use server';
+
+import prisma from '@/lib/db';
+import { revalidatePath } from 'next/cache';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
+
+export async function updateSubmissionStatus(type: 'PARTNERSHIP' | 'CAREER', id: string, status: string) {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error('Unauthorized');
+
+  if (type === 'PARTNERSHIP') {
+    await prisma.partnershipRequest.update({
+      where: { id },
+      data: { status },
+    });
+  } else {
+    await prisma.careerApplication.update({
+      where: { id },
+      data: { status },
+    });
+  }
+
+  revalidatePath('/admin/careers-partnerships');
+  revalidatePath(`/admin/careers-partnerships/${type.toLowerCase()}/${id}`);
+  return { success: true };
+}
+
+export async function assignSubmission(type: 'PARTNERSHIP' | 'CAREER', id: string, assignedTo: string) {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error('Unauthorized');
+
+  if (type === 'PARTNERSHIP') {
+    await prisma.partnershipRequest.update({
+      where: { id },
+      data: { assignedTo },
+    });
+  } else {
+    await prisma.careerApplication.update({
+      where: { id },
+      data: { assignedTo },
+    });
+  }
+
+  revalidatePath('/admin/careers-partnerships');
+  revalidatePath(`/admin/careers-partnerships/${type.toLowerCase()}/${id}`);
+  return { success: true };
+}
+
+export async function addSubmissionNote(type: 'PARTNERSHIP' | 'CAREER', id: string, content: string) {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error('Unauthorized');
+
+  const authorName = session.user?.name || 'Administrator';
+  const authorEmail = session.user?.email || 'admin@quantumai.dev';
+
+  if (!content.trim()) throw new Error('Note content cannot be empty');
+
+  if (type === 'PARTNERSHIP') {
+    await prisma.submissionNote.create({
+      data: {
+        partnershipRequestId: id,
+        authorName,
+        authorEmail,
+        content: content.trim(),
+      },
+    });
+  } else {
+    await prisma.submissionNote.create({
+      data: {
+        careerApplicationId: id,
+        authorName,
+        authorEmail,
+        content: content.trim(),
+      },
+    });
+  }
+
+  revalidatePath(`/admin/careers-partnerships/${type.toLowerCase()}/${id}`);
+  return { success: true };
+}
+
+export async function deleteSubmission(type: 'PARTNERSHIP' | 'CAREER', id: string) {
+  const session = await getServerSession(authOptions);
+  if (!session) throw new Error('Unauthorized');
+
+  if (type === 'PARTNERSHIP') {
+    await prisma.partnershipRequest.delete({ where: { id } });
+  } else {
+    await prisma.careerApplication.delete({ where: { id } });
+  }
+
+  revalidatePath('/admin/careers-partnerships');
+  return { success: true };
+}
