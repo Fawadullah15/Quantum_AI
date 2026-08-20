@@ -31,21 +31,21 @@ export function GlobalSceneWrapper() {
   }
 
   return (
-    <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}>
+    <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'auto' }}>
       <Canvas
-        camera={{ position: [0, 0, 10], fov: 50, near: 0.1, far: 500 }}
+        camera={{ position: [0, 0, 24], fov: 20, near: 0.1, far: 500 }}
         gl={{
           antialias: true,
-          alpha: false,
+          alpha: true,
           powerPreference: 'high-performance',
           toneMapping: 3, /* ACESFilmicToneMapping */
-          toneMappingExposure: 1.1,
+          toneMappingExposure: 1.15,
         }}
-        dpr={[1, 1.5]}
+        dpr={[1, 2]}
         shadows={false}
         style={{ width: '100%', height: '100%' }}
       >
-        {/* Deep midnight blue background */}
+        {/* Deep space cosmos background */}
         <color attach="background" args={['#020817']} />
 
         <Suspense fallback={null}>
