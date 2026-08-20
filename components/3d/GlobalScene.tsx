@@ -42,10 +42,12 @@ export function GlobalScene() {
     const targetY = mouseRef.current.y * 0.8;
 
     if ((currentScene as string) === 'room' || (currentScene as string) === 'earth') {
-      const targetZ = 14.5;
-      cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX, 0.05);
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+      const camXOffset = isMobile ? 0 : -3.8;
+      
+      cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX + camXOffset, 0.05);
       cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY, 0.05);
-      cam.position.z = THREE.MathUtils.lerp(cam.position.z, targetZ, 0.05);
+      cam.position.z = THREE.MathUtils.lerp(cam.position.z, 14.5, 0.05);
       
       cam.lookAt(0, 0, 0);
     } else {
