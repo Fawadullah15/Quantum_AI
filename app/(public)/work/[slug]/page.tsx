@@ -42,11 +42,15 @@ export default async function CaseStudyPage({ params }: Props) {
   return (
     <div style={{ paddingTop: '8rem', paddingBottom: '6rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '64rem', margin: '0 auto' }}>
       <header style={{ marginBottom: '3rem' }}>
-        <div style={{ display: 'flex', gap: '1rem', fontFamily: 'var(--font-space-mono)', fontSize: '0.875rem', color: 'var(--color-primary)', marginBottom: '1.5rem' }}>
-          <span>{study.client}</span>
-          <span>/</span>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8125rem', color: '#38BDF8', marginBottom: '1.25rem', letterSpacing: '0.05em' }}>
+          {study.client ? (
+            <>
+              <span>{study.client}</span>
+              <span style={{ opacity: 0.4 }}>/</span>
+            </>
+          ) : null}
           <span>{study.industry}</span>
-          <span>/</span>
+          <span style={{ opacity: 0.4 }}>/</span>
           <span>{study.year}</span>
         </div>
         <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.025em', lineHeight: 1.1 }}>{study.title}</h1>

@@ -53,21 +53,30 @@ export default function HomePage() {
   const [caseStudies, setCaseStudies] = useState<any[]>([
     {
       id: '1',
-      title: 'Smart School Fee Management System',
-      industry: 'Education',
-      problem: 'A unified platform managing students, fee structures, parent communication, attendance, and multi-channel billing systems.',
-      technologies: 'Next.js, React, FastAPI, PostgreSQL, Docker',
-      results: 'Consolidated school administrative workflows into one platform, reducing processing delays by 50%.',
-      slug: 'smart-school-fee-management-system',
+      title: 'School Operations Manager',
+      industry: 'Education / School Management',
+      problem: 'A centralized school management platform designed to bring academic, administrative, student, staff, attendance, communication, and operational workflows into one digital system.',
+      technologies: 'Next.js, React, TypeScript, Tailwind CSS, Node.js, Prisma, PostgreSQL',
+      results: 'Provides a centralized digital foundation for managing school operations and reducing reliance on disconnected manual workflows.',
+      slug: 'school-operations-manager',
     },
     {
       id: '2',
-      title: 'Sales Pipeline Automation Engine',
-      industry: 'Enterprise Automation',
-      problem: 'Real-time sync pipeline linking CRM workflows, invoice state tracking, and external communication triggers.',
-      technologies: 'Python, FastAPI, Redis, Webhooks, Slack APIs',
-      results: 'Increased pipeline processing throughput and removed data duplication with zero staff overhead.',
+      title: 'Sales Pipeline Automation System',
+      industry: 'Sales / Business Automation',
+      problem: 'A sales workflow system designed to organize leads, opportunities, follow-ups, and customer interactions in one centralized platform.',
+      technologies: 'Next.js, React, TypeScript, Node.js, FastAPI, PostgreSQL, REST APIs',
+      results: 'Creates a centralized sales workflow that gives teams clearer visibility into leads, opportunities, and follow-up activities.',
       slug: 'sales-pipeline-automation-system',
+    },
+    {
+      id: '3',
+      title: 'Vector Search Knowledge Base',
+      industry: 'Artificial Intelligence / Knowledge Management',
+      problem: 'An AI-powered knowledge retrieval system designed to make large collections of information easier to search and use with vector-based semantic retrieval.',
+      technologies: 'Python, LangChain, RAG, Vector Search, Embeddings, LLMs, FastAPI, PostgreSQL',
+      results: 'Provides semantic search over knowledge sources and creates a foundation for retrieval-augmented AI applications.',
+      slug: 'vector-search-knowledge-base',
     }
   ]);
 

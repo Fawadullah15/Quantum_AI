@@ -91,9 +91,11 @@ export default async function WorkPage() {
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.25rem', fontWeight: 700, color: '#38BDF8' }}>
                         {String(index + 1).padStart(2, '0')}
                       </span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#64748B', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                        {study.client || 'Client Project'}
-                      </span>
+                      {study.client && (
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#64748B', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                          {study.client}
+                        </span>
+                      )}
                     </div>
                     <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#1677FF', backgroundColor: 'rgba(22, 119, 255, 0.1)', padding: '0.2rem 0.6rem', borderRadius: 4, textTransform: 'uppercase' }}>
