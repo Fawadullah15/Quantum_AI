@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { GlobalProvider, useGlobalStore } from './GlobalStore';
 import { GlobalSceneWrapper } from '../3d/GlobalSceneWrapper';
 import { usePathname } from 'next/navigation';
+import WelcomeIntro from './WelcomeIntro';
 
 function RouteController({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -36,7 +37,7 @@ function RouteController({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <>
+    <WelcomeIntro>
       <div style={{ position: 'fixed', inset: 0, zIndex: 0 }}>
         <GlobalSceneWrapper />
       </div>
@@ -53,7 +54,7 @@ function RouteController({ children }: { children: React.ReactNode }) {
           {children}
         </div>
       </div>
-    </>
+    </WelcomeIntro>
   );
 }
 

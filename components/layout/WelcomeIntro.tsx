@@ -1,49 +1,30 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { QuantumLogo } from '../ui/QuantumLogo';
 
-const SESSION_KEY = 'qai_intro_seen';
-
-/**
- * WelcomeIntro — plays once per browser session.
- * Wrap the public layout root with this.
- * sessionStorage is read client-side only to prevent hydration mismatches.
- */
 export default function WelcomeIntro({ children }: { children: React.ReactNode }) {
   const [phase, setPhase] = useState<'intro' | 'done'>('intro');
   const [mounted, setMounted] = useState(false);
-  const [skipIntro, setSkipIntro] = useState(false);
 
   useEffect(() => {
     setMounted(true);
 
-    // Check reduced motion preference
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // Check sessionStorage
-    let hasSeen = false;
-    try {
-      hasSeen = !!sessionStorage.getItem(SESSION_KEY);
-      if (!hasSeen) sessionStorage.setItem(SESSION_KEY, '1');
-    } catch {
-      // sessionStorage unavailable — skip intro
-      hasSeen = true;
-    }
-
-    if (hasSeen || prefersReduced) {
-      setSkipIntro(true);
+    if (prefersReduced) {
       setPhase('done');
       return;
     }
 
-    // Auto-complete intro sequence at 2.3s
-    const t = setTimeout(() => setPhase('done'), 2300);
+    // Auto-complete intro sequence after 2.2s
+    const t = setTimeout(() => {
+      setPhase('done');
+    }, 2200);
+
     return () => clearTimeout(t);
   }, []);
 
-  // Before mount, render nothing special (avoids hydration mismatch)
   if (!mounted) {
     return <>{children}</>;
   }
@@ -51,16 +32,16 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
   return (
     <>
       <AnimatePresence mode="wait">
-        {phase === 'intro' && !skipIntro && (
+        {phase === 'intro' && (
           <motion.div
-            key="intro"
+            key="welcome-intro"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
             style={{
               position: 'fixed',
               inset: 0,
-              zIndex: 9998,
+              zIndex: 99999,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
@@ -69,103 +50,117 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
               pointerEvents: 'all',
             }}
           >
-            {/* Atmospheric glow */}
-            <div style={{
-              position: 'absolute',
-              width: 600,
-              height: 600,
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(22,119,255,0.10) 0%, transparent 70%)',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              pointerEvents: 'none',
-            }} />
+            {/* Ambient Radial Blue Glow */}
+            <div
+              style={{
+                position: 'absolute',
+                width: 600,
+                height: 600,
+                borderRadius: '50%',
+                background: 'radial-gradient(circle, rgba(22,119,255,0.16) 0%, transparent 70%)',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                pointerEvents: 'none',
+              }}
+            />
 
-            {/* Q Logo — 0.3s to 0.7s */}
+            {/* Glowing 3D Quantum Logo */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              style={{ position: 'relative', zIndex: 2 }}
+              initial={{ opacity: 0, scale: 0.8, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              style={{ position: 'relative', zIndex: 2, marginBottom: '1.75rem' }}
             >
               <QuantumLogo
                 width={100}
                 height={100}
-                style={{ filter: 'drop-shadow(0 0 28px rgba(56,189,248,0.7))' }}
+                style={{ filter: 'drop-shadow(0 0 32px rgba(56,189,248,0.8))' }}
               />
             </motion.div>
 
-            {/* WELCOME — appears 0.8s, fades 1.1s */}
+            {/* Welcoming Message Subtitle */}
             <motion.div
               initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: [0, 1, 1, 0], y: [8, 0, 0, -6] }}
-              transition={{
-                times: [0, 0.18, 0.65, 1],
-                delay: 0.8,
-                duration: 0.55,
-                ease: 'easeInOut',
-              }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.45 }}
               style={{
-                position: 'absolute',
-                marginTop: '7rem',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.75rem',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '0.78rem',
                 letterSpacing: '0.35em',
                 textTransform: 'uppercase',
-                color: '#64748B',
+                color: '#38BDF8',
+                marginBottom: '0.75rem',
                 zIndex: 2,
               }}
             >
-              WELCOME
+              WELCOME TO
             </motion.div>
 
-            {/* QUANTUM AI — appears 1.25s */}
+            {/* QUANTUM AI Title */}
             <motion.div
-              initial={{ opacity: 0, y: 10, filter: 'blur(6px)' }}
+              initial={{ opacity: 0, y: 12, filter: 'blur(6px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ delay: 1.25, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ delay: 0.9, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               style={{
-                position: 'absolute',
-                marginTop: '7rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
+                gap: '0.6rem',
                 zIndex: 2,
               }}
             >
-              <span style={{
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 700,
-                fontSize: '1.1rem',
-                letterSpacing: '0.25em',
-                textTransform: 'uppercase',
-                color: '#F8FAFF',
-              }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-sans, sans-serif)',
+                  fontWeight: 700,
+                  fontSize: '1.35rem',
+                  letterSpacing: '0.25em',
+                  textTransform: 'uppercase',
+                  color: '#F8FAFF',
+                }}
+              >
                 QUANTUM
               </span>
-              <span style={{
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 900,
-                fontSize: '1.1rem',
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                background: 'linear-gradient(to right, #20A8FF, #55D6FF)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-sans, sans-serif)',
+                  fontWeight: 900,
+                  fontSize: '1.35rem',
+                  letterSpacing: '0.15em',
+                  textTransform: 'uppercase',
+                  background: 'linear-gradient(to right, #20A8FF, #55D6FF)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
                 AI
               </span>
+            </motion.div>
+
+            {/* Sub-tagline */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              transition={{ delay: 1.3, duration: 0.4 }}
+              style={{
+                marginTop: '1.25rem',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '0.72rem',
+                letterSpacing: '0.2em',
+                color: '#94A3B8',
+                zIndex: 2,
+              }}
+            >
+              INITIALIZING INTELLIGENT SYSTEMS...
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Children always rendered beneath, fade in when intro is done */}
+      {/* Main website content underneath */}
       <motion.div
-        animate={{ opacity: phase === 'done' || skipIntro ? 1 : 0 }}
-        transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
-        style={{ willChange: 'opacity' }}
+        animate={{ opacity: phase === 'done' ? 1 : 0.9 }}
+        transition={{ duration: 0.45 }}
       >
         {children}
       </motion.div>
