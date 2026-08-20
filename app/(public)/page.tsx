@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic';
 import { NovaButton, GalaxyButton, ButtonStyles } from '@/components/ui/Buttons';
 
 const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr: false });
-const GlobalEarthSection = dynamic(() => import('@/components/sections/GlobalEarthSection'), { ssr: false });
+const GlobalMapSection = dynamic(() => import('@/components/sections/GlobalMapSection'), { ssr: false });
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
 
 export default function HomePage() {
@@ -747,10 +747,10 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            INTERACTIVE 3D GLOBAL EARTH
+            INTERACTIVE WORLD MAP
         ═══════════════════════════════════════════════════════════ */}
         <div style={{ pointerEvents: 'auto' }}>
-          <GlobalEarthSection />
+          <GlobalMapSection />
         </div>
 
         {/* ═══════════════════════════════════════════════════════════
