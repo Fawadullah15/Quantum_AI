@@ -1,4 +1,4 @@
-﻿import React from 'react'
+import React from 'react'
 import Navigation from '@/components/layout/Navigation'
 import Footer from '@/components/layout/Footer'
 import CustomCursor from '@/components/layout/CustomCursor'
@@ -15,7 +15,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           <Footer
             companyName="QUANTUM AI"
             tagline="Intelligent software for a connected world."
-            email="hello@quantumai.dev"
+            email="fawadimraj@gmail.com"
           />
         </ClientLayout>
       </div>

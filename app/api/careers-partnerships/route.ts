@@ -69,7 +69,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid submission type' }, { status: 400 });
     }
 
-    const companyEmail = process.env.ADMIN_EMAIL || process.env.COMPANY_EMAIL || 'hello@quantumai.dev';
+    const companyEmail = process.env.ADMIN_EMAIL || process.env.COMPANY_EMAIL || 'fawadimraj@gmail.com';
 
     // ─────────────────────────────────────────────────────────────
     // 1. BUSINESS PARTNERSHIP REQUEST

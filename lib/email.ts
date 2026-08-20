@@ -7,6 +7,8 @@ interface EmailPayload {
   text?: string;
 }
 
+export const ADMIN_NOTIFICATION_EMAIL = process.env.COMPANY_NOTIFICATION_EMAIL || 'fawadimraj@gmail.com';
+
 export async function sendEmail({ to, subject, html, text }: EmailPayload): Promise<boolean> {
   const fromEmail = process.env.EMAIL_FROM || 'notifications@quantumai.dev';
   
@@ -52,6 +54,38 @@ export async function sendEmail({ to, subject, html, text }: EmailPayload): Prom
   return true;
 }
 
+export function getContactAdminEmailHtml(data: {
+  name: string;
+  email: string;
+  company?: string | null;
+  projectType?: string | null;
+  message: string;
+}) {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head><meta charset="utf-8"/></head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #030712; color: #F8FAFC; padding: 24px;">
+        <div style="max-width: 600px; margin: 0 auto; background: #07152F; border: 1px solid #1E3A8A; border-radius: 12px; padding: 32px;">
+          <div style="font-family: monospace; font-size: 12px; color: #38BDF8; letter-spacing: 2px; margin-bottom: 8px;">QUANTUM AI // NEW TRANSMISSION</div>
+          <h1 style="font-size: 22px; color: #FFFFFF; margin: 0 0 20px 0;">New Project Inquiry Received</h1>
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
+            <tr><td style="padding: 8px 0; color: #94A3B8; width: 140px;">Sender Name:</td><td style="padding: 8px 0; color: #FFFFFF; font-weight: 600;">${data.name}</td></tr>
+            <tr><td style="padding: 8px 0; color: #94A3B8;">Email:</td><td style="padding: 8px 0; color: #38BDF8;"><a href="mailto:${data.email}" style="color: #38BDF8;">${data.email}</a></td></tr>
+            ${data.company ? `<tr><td style="padding: 8px 0; color: #94A3B8;">Company:</td><td style="padding: 8px 0; color: #FFFFFF;">${data.company}</td></tr>` : ''}
+            ${data.projectType ? `<tr><td style="padding: 8px 0; color: #94A3B8;">Project Type:</td><td style="padding: 8px 0; color: #34D399; font-weight: 600;">${data.projectType}</td></tr>` : ''}
+          </table>
+          <div style="background: #040E24; border: 1px solid #1E293B; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <div style="font-size: 12px; color: #94A3B8; margin-bottom: 8px; text-transform: uppercase;">Message Content:</div>
+            <div style="font-size: 14px; line-height: 1.6; color: #E2E8F0; white-space: pre-wrap;">${data.message}</div>
+          </div>
+          <a href="mailto:${data.email}" style="display: inline-block; padding: 10px 20px; background: #1677FF; color: #FFFFFF; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 14px;">Reply Directly to ${data.name}</a>
+        </div>
+      </body>
+    </html>
+  `;
+}
+
 export function getPartnershipAdminEmailHtml(data: {
   referenceId: string;
   fullName: string;
@@ -68,33 +102,41 @@ export function getPartnershipAdminEmailHtml(data: {
   createdAt: Date;
 }) {
   return `
-    <div style="font-family: Arial, sans-serif; background-color: #040e24; color: #f8fafc; padding: 32px; border-radius: 12px; border: 1px solid #1e293b;">
-      <div style="border-bottom: 1px solid #334155; padding-bottom: 16px; margin-bottom: 24px;">
-        <h1 style="color: #38bdf8; font-size: 22px; margin: 0;">New Partnership Request [${data.referenceId}]</h1>
-        <p style="color: #94a3b8; font-size: 14px; margin: 4px 0 0 0;">Received on ${data.createdAt.toUTCString()}</p>
-      </div>
+    <!DOCTYPE html>
+    <html>
+      <head><meta charset="utf-8"/></head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #030712; color: #F8FAFC; padding: 24px;">
+        <div style="max-width: 600px; margin: 0 auto; background: #07152F; border: 1px solid #1E3A8A; border-radius: 12px; padding: 32px;">
+          <div style="font-family: monospace; font-size: 12px; color: #38BDF8; letter-spacing: 2px; margin-bottom: 8px;">QUANTUM AI // PARTNERSHIP DISPATCH</div>
+          <h1 style="font-size: 22px; color: #FFFFFF; margin: 0 0 6px 0;">New Partnership Request: ${data.referenceId}</h1>
+          <p style="font-size: 14px; color: #94A3B8; margin: 0 0 24px 0;">Type: <strong style="color: #38BDF8;">${data.partnershipType}</strong></p>
+          
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
+            <tr><td style="padding: 8px 0; color: #94A3B8; width: 140px;">Contact Name:</td><td style="padding: 8px 0; color: #FFFFFF; font-weight: 600;">${data.fullName}</td></tr>
+            <tr><td style="padding: 8px 0; color: #94A3B8;">Email:</td><td style="padding: 8px 0; color: #38BDF8;"><a href="mailto:${data.email}" style="color: #38BDF8;">${data.email}</a></td></tr>
+            ${data.phone ? `<tr><td style="padding: 8px 0; color: #94A3B8;">Phone:</td><td style="padding: 8px 0; color: #FFFFFF;">${data.phone}</td></tr>` : ''}
+            ${data.company ? `<tr><td style="padding: 8px 0; color: #94A3B8;">Company:</td><td style="padding: 8px 0; color: #FFFFFF;">${data.company}</td></tr>` : ''}
+            ${data.website ? `<tr><td style="padding: 8px 0; color: #94A3B8;">Website:</td><td style="padding: 8px 0; color: #38BDF8;"><a href="${data.website}" style="color: #38BDF8;">${data.website}</a></td></tr>` : ''}
+            ${data.budgetRange ? `<tr><td style="padding: 8px 0; color: #94A3B8;">Budget Range:</td><td style="padding: 8px 0; color: #34D399;">${data.budgetRange}</td></tr>` : ''}
+          </table>
 
-      <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
-        <tr><td style="padding: 8px 0; color: #94a3b8; width: 160px;"><strong>Applicant Name:</strong></td><td style="color: #f8fafc;">${data.fullName}</td></tr>
-        <tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Email:</strong></td><td style="color: #38bdf8;"><a href="mailto:${data.email}" style="color: #38bdf8;">${data.email}</a></td></tr>
-        ${data.phone ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Phone / WhatsApp:</strong></td><td style="color: #f8fafc;">${data.phone}</td></tr>` : ''}
-        ${data.company ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Company:</strong></td><td style="color: #f8fafc;">${data.company}</td></tr>` : ''}
-        ${data.website ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Website:</strong></td><td style="color: #f8fafc;"><a href="${data.website}" target="_blank" style="color: #38bdf8;">${data.website}</a></td></tr>` : ''}
-        ${data.country ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Country:</strong></td><td style="color: #f8fafc;">${data.country}</td></tr>` : ''}
-        <tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Partnership Type:</strong></td><td style="color: #f8fafc;"><strong>${data.partnershipType}</strong></td></tr>
-        ${data.budgetRange ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Budget Range:</strong></td><td style="color: #f8fafc;">${data.budgetRange}</td></tr>` : ''}
-        ${data.attachmentUrl ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Attachment:</strong></td><td style="color: #38bdf8;"><a href="${data.attachmentUrl}" target="_blank" style="color: #38bdf8;">View / Download Document ↗</a></td></tr>` : ''}
-      </table>
+          <div style="background: #040E24; border: 1px solid #1E293B; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <div style="font-size: 12px; color: #94A3B8; margin-bottom: 8px; text-transform: uppercase;">Subject: ${data.subject}</div>
+            <div style="font-size: 14px; line-height: 1.6; color: #E2E8F0; white-space: pre-wrap;">${data.message}</div>
+          </div>
 
-      <div style="background-color: #081735; padding: 16px; border-radius: 8px; border: 1px solid #1e293b; margin-bottom: 24px;">
-        <h3 style="color: #94a3b8; font-size: 12px; text-transform: uppercase; margin: 0 0 8px 0; letter-spacing: 0.1em;">Subject: ${data.subject}</h3>
-        <p style="color: #f8fafc; font-size: 14px; line-height: 1.6; margin: 0; white-space: pre-wrap;">${data.message}</p>
-      </div>
+          ${data.attachmentUrl ? `
+            <div style="margin-bottom: 24px;">
+              <a href="${data.attachmentUrl}" style="display: inline-block; padding: 10px 18px; background: #1E293B; color: #38BDF8; border: 1px solid #38BDF8; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600;">Download / View Attached Document ↗</a>
+            </div>
+          ` : ''}
 
-      <div style="border-top: 1px solid #334155; padding-top: 16px; font-size: 12px; color: #64748b;">
-        Quantum AI Automated System • Manage this submission in the Admin Panel.
-      </div>
-    </div>
+          <div style="border-top: 1px solid #1E293B; padding-top: 16px; font-size: 12px; color: #64748B;">
+            Submission logged in Quantum AI Admin Console under reference <strong>${data.referenceId}</strong>.
+          </div>
+        </div>
+      </body>
+    </html>
   `;
 }
 
@@ -104,75 +146,87 @@ export function getCareerAdminEmailHtml(data: {
   email: string;
   phone?: string | null;
   currentLocation?: string | null;
-  linkedinUrl?: string | null;
-  githubUrl?: string | null;
-  portfolioUrl?: string | null;
   position: string;
   experienceLevel: string;
   skills: string;
   introduction: string;
   whyQuantumAI?: string | null;
-  resumeUrl: string;
+  linkedinUrl?: string | null;
+  githubUrl?: string | null;
+  portfolioUrl?: string | null;
+  resumeUrl?: string | null;
   additionalDocsUrl?: string | null;
   workType: string;
   createdAt: Date;
 }) {
   return `
-    <div style="font-family: Arial, sans-serif; background-color: #040e24; color: #f8fafc; padding: 32px; border-radius: 12px; border: 1px solid #1e293b;">
-      <div style="border-bottom: 1px solid #334155; padding-bottom: 16px; margin-bottom: 24px;">
-        <h1 style="color: #38bdf8; font-size: 22px; margin: 0;">New Career Application [${data.referenceId}]</h1>
-        <p style="color: #94a3b8; font-size: 14px; margin: 4px 0 0 0;">Position: <strong>${data.position}</strong> • ${data.workType} • ${data.createdAt.toUTCString()}</p>
-      </div>
+    <!DOCTYPE html>
+    <html>
+      <head><meta charset="utf-8"/></head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #030712; color: #F8FAFC; padding: 24px;">
+        <div style="max-width: 600px; margin: 0 auto; background: #07152F; border: 1px solid #1E3A8A; border-radius: 12px; padding: 32px;">
+          <div style="font-family: monospace; font-size: 12px; color: #38BDF8; letter-spacing: 2px; margin-bottom: 8px;">QUANTUM AI // TALENT APPLICATION</div>
+          <h1 style="font-size: 22px; color: #FFFFFF; margin: 0 0 6px 0;">New Career Application: ${data.referenceId}</h1>
+          <p style="font-size: 14px; color: #94A3B8; margin: 0 0 24px 0;">Role: <strong style="color: #38BDF8;">${data.position}</strong> (${data.workType})</p>
+          
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
+            <tr><td style="padding: 8px 0; color: #94A3B8; width: 140px;">Candidate:</td><td style="padding: 8px 0; color: #FFFFFF; font-weight: 600;">${data.fullName}</td></tr>
+            <tr><td style="padding: 8px 0; color: #94A3B8;">Email:</td><td style="padding: 8px 0; color: #38BDF8;"><a href="mailto:${data.email}" style="color: #38BDF8;">${data.email}</a></td></tr>
+            ${data.phone ? `<tr><td style="padding: 8px 0; color: #94A3B8;">Phone:</td><td style="padding: 8px 0; color: #FFFFFF;">${data.phone}</td></tr>` : ''}
+            ${data.currentLocation ? `<tr><td style="padding: 8px 0; color: #94A3B8;">Location:</td><td style="padding: 8px 0; color: #FFFFFF;">${data.currentLocation}</td></tr>` : ''}
+            <tr><td style="padding: 8px 0; color: #94A3B8;">Experience:</td><td style="padding: 8px 0; color: #FFFFFF;">${data.experienceLevel}</td></tr>
+            <tr><td style="padding: 8px 0; color: #94A3B8;">Key Skills:</td><td style="padding: 8px 0; color: #38BDF8;">${data.skills}</td></tr>
+          </table>
 
-      <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
-        <tr><td style="padding: 8px 0; color: #94a3b8; width: 160px;"><strong>Candidate Name:</strong></td><td style="color: #f8fafc;">${data.fullName}</td></tr>
-        <tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Email:</strong></td><td style="color: #38bdf8;"><a href="mailto:${data.email}" style="color: #38bdf8;">${data.email}</a></td></tr>
-        ${data.phone ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Phone:</strong></td><td style="color: #f8fafc;">${data.phone}</td></tr>` : ''}
-        ${data.currentLocation ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Location:</strong></td><td style="color: #f8fafc;">${data.currentLocation}</td></tr>` : ''}
-        <tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Experience Level:</strong></td><td style="color: #f8fafc;">${data.experienceLevel}</td></tr>
-        <tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Skills:</strong></td><td style="color: #f8fafc;">${data.skills}</td></tr>
-        ${data.linkedinUrl ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>LinkedIn:</strong></td><td style="color: #38bdf8;"><a href="${data.linkedinUrl}" target="_blank" style="color: #38bdf8;">${data.linkedinUrl}</a></td></tr>` : ''}
-        ${data.githubUrl ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>GitHub:</strong></td><td style="color: #38bdf8;"><a href="${data.githubUrl}" target="_blank" style="color: #38bdf8;">${data.githubUrl}</a></td></tr>` : ''}
-        ${data.portfolioUrl ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Portfolio:</strong></td><td style="color: #38bdf8;"><a href="${data.portfolioUrl}" target="_blank" style="color: #38bdf8;">${data.portfolioUrl}</a></td></tr>` : ''}
-        <tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Resume / CV:</strong></td><td style="color: #38bdf8;"><a href="${data.resumeUrl}" target="_blank" style="color: #38bdf8; font-weight: bold;">View Candidate CV ↗</a></td></tr>
-        ${data.additionalDocsUrl ? `<tr><td style="padding: 8px 0; color: #94a3b8;"><strong>Additional Docs:</strong></td><td style="color: #38bdf8;"><a href="${data.additionalDocsUrl}" target="_blank" style="color: #38bdf8;">View Additional Documents ↗</a></td></tr>` : ''}
-      </table>
+          <div style="background: #040E24; border: 1px solid #1E293B; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+            <div style="font-size: 12px; color: #94A3B8; margin-bottom: 8px; text-transform: uppercase;">Candidate Intro:</div>
+            <div style="font-size: 14px; line-height: 1.6; color: #E2E8F0; white-space: pre-wrap;">${data.introduction}</div>
+          </div>
 
-      <div style="background-color: #081735; padding: 16px; border-radius: 8px; border: 1px solid #1e293b; margin-bottom: 24px;">
-        <h3 style="color: #94a3b8; font-size: 12px; text-transform: uppercase; margin: 0 0 8px 0; letter-spacing: 0.1em;">Introduction & Background</h3>
-        <p style="color: #f8fafc; font-size: 14px; line-height: 1.6; margin: 0 0 16px 0; white-space: pre-wrap;">${data.introduction}</p>
-        ${data.whyQuantumAI ? `
-          <h3 style="color: #94a3b8; font-size: 12px; text-transform: uppercase; margin: 0 0 8px 0; letter-spacing: 0.1em;">Why Quantum AI</h3>
-          <p style="color: #f8fafc; font-size: 14px; line-height: 1.6; margin: 0; white-space: pre-wrap;">${data.whyQuantumAI}</p>
-        ` : ''}
-      </div>
+          ${data.resumeUrl ? `
+            <div style="margin-bottom: 24px;">
+              <a href="${data.resumeUrl}" style="display: inline-block; padding: 10px 18px; background: #1677FF; color: #FFFFFF; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: 600;">Download Candidate CV (PDF) ↗</a>
+            </div>
+          ` : ''}
 
-      <div style="border-top: 1px solid #334155; padding-top: 16px; font-size: 12px; color: #64748b;">
-        Quantum AI Automated System • Manage this application in the Admin Panel.
-      </div>
-    </div>
+          <div style="border-top: 1px solid #1E293B; padding-top: 16px; font-size: 12px; color: #64748B;">
+            Application logged in Quantum AI Admin Console under reference <strong>${data.referenceId}</strong>.
+          </div>
+        </div>
+      </body>
+    </html>
   `;
 }
 
-export function getApplicantConfirmationEmailHtml(name: string, referenceId: string, type: 'PARTNERSHIP' | 'CAREER') {
+export function getApplicantConfirmationEmailHtml(fullName: string, referenceId: string, type: 'PARTNERSHIP' | 'CAREER') {
+  const isPartnership = type === 'PARTNERSHIP';
   return `
-    <div style="font-family: Arial, sans-serif; background-color: #040e24; color: #f8fafc; padding: 32px; border-radius: 12px; border: 1px solid #1e293b; max-width: 600px; margin: 0 auto;">
-      <div style="border-bottom: 1px solid #334155; padding-bottom: 16px; margin-bottom: 24px;">
-        <h1 style="color: #38bdf8; font-size: 20px; margin: 0;">Submission Confirmation • Quantum AI</h1>
-      </div>
-      <p style="color: #f8fafc; font-size: 15px; line-height: 1.6;">Dear ${name},</p>
-      <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6;">
-        Thank you for reaching out to <strong>Quantum AI</strong>. We have successfully received your ${type === 'PARTNERSHIP' ? 'partnership proposal' : 'career application'} with reference ID:
-      </p>
-      <div style="background-color: #081735; padding: 12px 16px; border-radius: 8px; border: 1px solid #1677ff; text-align: center; margin: 20px 0; font-family: monospace; font-size: 18px; color: #38bdf8; font-weight: bold; letter-spacing: 0.1em;">
-        ${referenceId}
-      </div>
-      <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6;">
-        Our team reviews all incoming submissions carefully. If your ${type === 'PARTNERSHIP' ? 'proposal' : 'profile'} is a suitable match for our current initiatives, our leadership or engineering team will contact you directly.
-      </p>
-      <div style="border-top: 1px solid #334155; padding-top: 16px; margin-top: 24px; font-size: 12px; color: #64748b;">
-        Quantum AI • Intelligent Software & Neural Systems
-      </div>
-    </div>
+    <!DOCTYPE html>
+    <html>
+      <head><meta charset="utf-8"/></head>
+      <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #030712; color: #F8FAFC; padding: 24px;">
+        <div style="max-width: 600px; margin: 0 auto; background: #07152F; border: 1px solid #1E3A8A; border-radius: 12px; padding: 32px;">
+          <div style="font-family: monospace; font-size: 12px; color: #38BDF8; letter-spacing: 2px; margin-bottom: 8px;">QUANTUM AI</div>
+          <h1 style="font-size: 20px; color: #FFFFFF; margin: 0 0 16px 0;">Transmission Received</h1>
+          <p style="font-size: 15px; line-height: 1.7; color: #CBD5E1; margin: 0 0 20px 0;">
+            Hello ${fullName},<br/><br/>
+            Thank you for reaching out to Quantum AI. Your ${isPartnership ? 'partnership inquiry' : 'career application'} has been successfully registered with our system.
+          </p>
+
+          <div style="background: #040E24; border: 1px solid #1677FF; border-radius: 8px; padding: 16px; margin-bottom: 24px; text-align: center;">
+            <div style="font-size: 11px; color: #94A3B8; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px;">YOUR REFERENCE ID</div>
+            <div style="font-family: monospace; font-size: 20px; font-weight: 700; color: #38BDF8; letter-spacing: 1px;">${referenceId}</div>
+          </div>
+
+          <p style="font-size: 14px; line-height: 1.6; color: #94A3B8; margin: 0 0 24px 0;">
+            Our engineering leadership reviews incoming submissions continuously. If your inquiry aligns with our current roadmap, an engineer or partnership lead will reach out directly.
+          </p>
+
+          <div style="border-top: 1px solid #1E293B; padding-top: 16px; font-size: 12px; color: #64748B;">
+            © ${new Date().getFullYear()} Quantum AI. All rights reserved.
+          </div>
+        </div>
+      </body>
+    </html>
   `;
 }

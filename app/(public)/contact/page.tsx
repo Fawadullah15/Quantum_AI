@@ -17,7 +17,7 @@ function Field({
 }) {
   const [focused, setFocused] = useState(false);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', width: '100%' }}>
       <label
         style={{
           fontFamily: 'var(--font-mono, monospace)',
@@ -38,7 +38,7 @@ function Field({
         placeholder={placeholder}
         style={{
           backgroundColor: '#081735',
-          border: `1px solid ${focused ? '#38BDF8' : 'rgba(56, 189, 248, 0.2)'}`,
+          border: `1px solid ${focused ? '#38BDF8' : 'rgba(56, 189, 248, 0.25)'}`,
           borderRadius: '8px',
           color: '#F8FAFC',
           padding: '0.85rem 1rem',
@@ -46,6 +46,7 @@ function Field({
           fontSize: '0.95rem',
           outline: 'none',
           width: '100%',
+          boxSizing: 'border-box',
           boxShadow: focused ? '0 0 0 3px rgba(56, 189, 248, 0.2)' : 'none',
           transition: 'border-color 0.2s, box-shadow 0.2s',
         }}
@@ -93,43 +94,91 @@ export default function ContactPage() {
   };
 
   return (
-    <div
-      style={{
-        paddingTop: 'calc(var(--nav-height, 80px) * 1.8)',
-        paddingBottom: 'var(--space-48, 6rem)',
-        paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))',
-        minHeight: '100vh',
-      }}
-    >
+    <div className="contact-page-wrapper">
       <style>{`
-        @media (max-width: 768px) {
+        .contact-page-wrapper {
+          padding-top: calc(var(--nav-height, 80px) + 2.5rem);
+          padding-bottom: 6rem;
+          padding-inline: clamp(1rem, 4vw, 3rem);
+          min-height: 100vh;
+          box-sizing: border-box;
+        }
+        .contact-container {
+          max-width: 1100px;
+          margin: 0 auto;
+          width: 100%;
+          box-sizing: border-box;
+        }
+        .contact-top-grid {
+          display: grid;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: clamp(1.5rem, 3.5vw, 3rem);
+          align-items: center;
+          margin-bottom: clamp(2rem, 4vw, 3.5rem);
+          width: 100%;
+        }
+        .contact-form-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1.25rem;
+          width: 100%;
+        }
+        .contact-submit-btn {
+          padding: 0.95rem 2.5rem;
+          background: linear-gradient(135deg, #1677FF, #0050B3);
+          color: #FFFFFF;
+          border: none;
+          border-radius: 8px;
+          font-family: var(--font-mono, monospace);
+          font-size: 0.875rem;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          cursor: pointer;
+          box-shadow: 0 8px 24px -4px rgba(22, 119, 255, 0.5);
+          transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+        }
+        .contact-submit-btn:hover {
+          background: linear-gradient(135deg, #20A8FF, #1677FF);
+          box-shadow: 0 12px 28px -4px rgba(32, 168, 255, 0.6);
+        }
+        @media (max-width: 860px) {
+          .contact-top-grid {
+            grid-template-columns: 1fr;
+            gap: 1.75rem;
+            margin-bottom: 2rem;
+          }
+          .contact-form-grid {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+          }
+          .contact-submit-btn {
+            width: 100%;
+            text-align: center;
+          }
+          .contact-page-wrapper {
+            padding-top: calc(var(--nav-height, 80px) + 1.5rem);
+            padding-inline: 1rem;
+          }
           input, select, textarea {
             font-size: 16px !important;
           }
         }
       `}</style>
-      <div style={{ maxWidth: 'var(--max-width, 1200px)', margin: '0 auto' }}>
-        
-        {/* ─── Top Section: Side-by-Side (Headline on Left, Info Card on Right) ─── */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: 'clamp(1.5rem, 4vw, 3.5rem)',
-            alignItems: 'center',
-            marginBottom: 'clamp(2.5rem, 5vw, 4rem)',
-          }}
-        >
+      
+      <div className="contact-container">
+        {/* ─── Top Section: Side-by-Side on Desktop, Perfect Stack on Mobile ─── */}
+        <div className="contact-top-grid">
           {/* Left Column: Statement headline */}
           <div>
             <div
               style={{
                 fontFamily: 'var(--font-mono, monospace)',
                 fontSize: '0.75rem',
-                letterSpacing: '0.3em',
+                letterSpacing: '0.25em',
                 color: '#38BDF8',
                 textTransform: 'uppercase',
-                marginBottom: '1rem',
+                marginBottom: '0.85rem',
                 fontWeight: 600,
               }}
             >
@@ -137,13 +186,14 @@ export default function ContactPage() {
             </div>
             <h1
               style={{
-                fontSize: 'clamp(2.5rem, 6vw, 5rem)',
+                fontSize: 'clamp(2.4rem, 6.5vw, 4.75rem)',
                 fontWeight: 700,
                 lineHeight: 0.95,
                 letterSpacing: '-0.04em',
                 color: '#F8FAFC',
                 textTransform: 'uppercase',
                 margin: '0 0 1.25rem 0',
+                wordBreak: 'break-word',
               }}
             >
               LET'S BUILD<br />SOMETHING<br />USEFUL.
@@ -152,7 +202,7 @@ export default function ContactPage() {
               style={{
                 fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
                 color: '#94A3B8',
-                lineHeight: 1.7,
+                lineHeight: 1.65,
                 margin: 0,
                 maxWidth: '520px',
               }}
@@ -161,7 +211,7 @@ export default function ContactPage() {
             </p>
           </div>
 
-          {/* Right Column: Info Card (Side to the heading) */}
+          {/* Right Column: Info Card (Side to the heading on desktop, below on mobile) */}
           <div
             style={{
               display: 'flex',
@@ -170,35 +220,38 @@ export default function ContactPage() {
               backgroundColor: '#040E24',
               border: '1px solid rgba(56, 189, 248, 0.3)',
               borderRadius: '16px',
-              padding: 'clamp(1.5rem, 3.5vw, 2.25rem)',
+              padding: 'clamp(1.25rem, 3.5vw, 2.25rem)',
               boxShadow: '0 20px 50px -10px rgba(0, 0, 0, 0.85), 0 0 25px -5px rgba(22, 119, 255, 0.15)',
+              boxSizing: 'border-box',
+              width: '100%',
             }}
           >
             <div>
               <div
                 style={{
                   fontFamily: 'var(--font-mono, monospace)',
-                  fontSize: '0.7rem',
+                  fontSize: '0.6875rem',
                   color: '#38BDF8',
-                  letterSpacing: '0.2em',
+                  letterSpacing: '0.18em',
                   textTransform: 'uppercase',
-                  marginBottom: '0.5rem',
+                  marginBottom: '0.4rem',
                   fontWeight: 600,
                 }}
               >
                 DIRECT CONTACT
               </div>
               <a
-                href="mailto:hello@quantumai.dev"
+                href="mailto:fawadimraj@gmail.com"
                 style={{
-                  fontSize: 'clamp(1.15rem, 2.2vw, 1.5rem)',
+                  fontSize: 'clamp(1.05rem, 2.2vw, 1.45rem)',
                   fontWeight: 600,
                   color: '#F8FAFC',
                   borderBottom: '1px solid rgba(56, 189, 248, 0.4)',
-                  paddingBottom: '0.25rem',
+                  paddingBottom: '0.2rem',
                   transition: 'color 0.2s, border-color 0.2s',
                   display: 'inline-block',
                   textDecoration: 'none',
+                  wordBreak: 'break-all',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = '#38BDF8';
@@ -209,7 +262,7 @@ export default function ContactPage() {
                   e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
                 }}
               >
-                hello@quantumai.dev
+                fawadimraj@gmail.com
               </a>
             </div>
 
@@ -217,17 +270,17 @@ export default function ContactPage() {
               <div
                 style={{
                   fontFamily: 'var(--font-mono, monospace)',
-                  fontSize: '0.7rem',
+                  fontSize: '0.6875rem',
                   color: '#38BDF8',
-                  letterSpacing: '0.2em',
+                  letterSpacing: '0.18em',
                   textTransform: 'uppercase',
-                  marginBottom: '0.5rem',
+                  marginBottom: '0.4rem',
                   fontWeight: 600,
                 }}
               >
                 RESPONSE TIME
               </div>
-              <p style={{ fontSize: '0.925rem', color: '#94A3B8', margin: 0, lineHeight: 1.6, fontWeight: 300 }}>
+              <p style={{ fontSize: '0.9rem', color: '#94A3B8', margin: 0, lineHeight: 1.6, fontWeight: 300 }}>
                 We review all technical inquiries within 24 hours and respond with architectural scope and feasibility analysis.
               </p>
             </div>
@@ -236,9 +289,9 @@ export default function ContactPage() {
               <div
                 style={{
                   fontFamily: 'var(--font-mono, monospace)',
-                  fontSize: '0.7rem',
+                  fontSize: '0.6875rem',
                   color: '#38BDF8',
-                  letterSpacing: '0.2em',
+                  letterSpacing: '0.18em',
                   textTransform: 'uppercase',
                   marginBottom: '0.5rem',
                   fontWeight: 600,
@@ -246,18 +299,19 @@ export default function ContactPage() {
               >
                 ENGINEERING FOCUS
               </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
                 {['AI Systems', 'Machine Learning', 'Cloud Infra', 'Data Architecture'].map((tag) => (
                   <span
                     key={tag}
                     style={{
-                      padding: '0.3rem 0.7rem',
+                      padding: '0.3rem 0.65rem',
                       backgroundColor: '#081735',
                       border: '1px solid rgba(56, 189, 248, 0.2)',
                       borderRadius: '999px',
                       color: '#E2E8F0',
-                      fontSize: '0.75rem',
+                      fontSize: '0.72rem',
                       fontFamily: 'var(--font-mono, monospace)',
+                      whiteSpace: 'nowrap',
                     }}
                   >
                     {tag}
@@ -268,18 +322,20 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* ─── Bottom Section: Application / Project Form (100% Opaque & High-Visibility Card) ─── */}
+        {/* ─── Bottom Section: Application / Project Form (100% Opaque Card) ─── */}
         <div
           style={{
             backgroundColor: '#040E24',
             border: '1px solid rgba(56, 189, 248, 0.3)',
             borderRadius: '16px',
-            padding: 'clamp(1.75rem, 5vw, 3rem)',
+            padding: 'clamp(1.5rem, 4.5vw, 2.75rem)',
             boxShadow: '0 20px 60px -10px rgba(0, 0, 0, 0.85), 0 0 30px -5px rgba(22, 119, 255, 0.2)',
+            boxSizing: 'border-box',
+            width: '100%',
           }}
         >
           {status === 'success' ? (
-            <div style={{ padding: '3rem 2rem', textAlign: 'center' }}>
+            <div style={{ padding: '3rem 1.5rem', textAlign: 'center' }}>
               <div
                 style={{
                   width: '56px',
@@ -313,7 +369,7 @@ export default function ContactPage() {
                 style={{
                   fontSize: '1.75rem',
                   fontWeight: 700,
-                  color: 'var(--color-text-primary, #F8FAFC)',
+                  color: '#F8FAFC',
                   textTransform: 'uppercase',
                   letterSpacing: '-0.02em',
                   marginBottom: '1rem',
@@ -360,7 +416,7 @@ export default function ContactPage() {
                   letterSpacing: '0.15em',
                   color: '#38BDF8',
                   textTransform: 'uppercase',
-                  marginBottom: '0.5rem',
+                  marginBottom: '0.25rem',
                   fontWeight: 600,
                   display: 'flex',
                   alignItems: 'center',
@@ -386,26 +442,14 @@ export default function ContactPage() {
                 </div>
               )}
 
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                  gap: '1.5rem',
-                }}
-              >
+              <div className="contact-form-grid">
                 <Field label="YOUR NAME" name="name" required placeholder="Fawadullah" />
                 <Field label="WORK EMAIL" name="email" type="email" required placeholder="fawad@company.com" />
               </div>
 
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                  gap: '1.5rem',
-                }}
-              >
+              <div className="contact-form-grid">
                 <Field label="ORGANIZATION / COMPANY" name="company" placeholder="Organization name" />
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', width: '100%' }}>
                   <label
                     style={{
                       fontFamily: 'var(--font-mono, monospace)',
@@ -422,7 +466,7 @@ export default function ContactPage() {
                     name="projectType"
                     style={{
                       backgroundColor: '#081735',
-                      border: '1px solid rgba(56, 189, 248, 0.2)',
+                      border: '1px solid rgba(56, 189, 248, 0.25)',
                       borderRadius: '8px',
                       color: '#F8FAFC',
                       padding: '0.85rem 1rem',
@@ -430,6 +474,7 @@ export default function ContactPage() {
                       fontSize: '0.95rem',
                       outline: 'none',
                       width: '100%',
+                      boxSizing: 'border-box',
                     }}
                   >
                     <option value="" style={{ backgroundColor: '#040E24', color: '#64748B' }}>Select project type...</option>
@@ -443,7 +488,7 @@ export default function ContactPage() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', width: '100%' }}>
                 <label
                   style={{
                     fontFamily: 'var(--font-mono, monospace)',
@@ -464,7 +509,7 @@ export default function ContactPage() {
                   placeholder="Describe your technical objectives, timeline, scope, or current operational bottleneck..."
                   style={{
                     backgroundColor: '#081735',
-                    border: `1px solid ${textFocused ? '#38BDF8' : 'rgba(56, 189, 248, 0.2)'}`,
+                    border: `1px solid ${textFocused ? '#38BDF8' : 'rgba(56, 189, 248, 0.25)'}`,
                     borderRadius: '8px',
                     color: '#F8FAFC',
                     padding: '0.85rem 1rem',
@@ -472,6 +517,7 @@ export default function ContactPage() {
                     fontSize: '0.95rem',
                     outline: 'none',
                     width: '100%',
+                    boxSizing: 'border-box',
                     resize: 'vertical',
                     lineHeight: 1.6,
                     boxShadow: textFocused ? '0 0 0 3px rgba(56, 189, 248, 0.2)' : 'none',
@@ -486,33 +532,7 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={status === 'submitting'}
-                  style={{
-                    padding: '1rem 2.5rem',
-                    background: 'linear-gradient(135deg, #1677FF, #0050B3)',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    borderRadius: '8px',
-                    fontFamily: 'var(--font-mono, monospace)',
-                    fontSize: '0.875rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.15em',
-                    textTransform: 'uppercase',
-                    cursor: status === 'submitting' ? 'wait' : 'pointer',
-                    boxShadow: '0 8px 24px -4px rgba(22, 119, 255, 0.5)',
-                    transition: 'background 0.2s, transform 0.15s, box-shadow 0.2s',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (status !== 'submitting') {
-                      e.currentTarget.style.background = 'linear-gradient(135deg, #20A8FF, #1677FF)';
-                      e.currentTarget.style.boxShadow = '0 12px 28px -4px rgba(32, 168, 255, 0.6)';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (status !== 'submitting') {
-                      e.currentTarget.style.background = 'linear-gradient(135deg, #1677FF, #0050B3)';
-                      e.currentTarget.style.boxShadow = '0 8px 24px -4px rgba(22, 119, 255, 0.5)';
-                    }
-                  }}
+                  className="contact-submit-btn"
                 >
                   {status === 'submitting' ? 'TRANSMITTING...' : 'TRANSMIT INQUIRY →'}
                 </button>
