@@ -920,28 +920,41 @@ export default function HomePage() {
                 marginBottom: '1.75rem',
                 textTransform: 'uppercase'
               }}>
-                We do not build technology for the sake of technology. We build systems that solve real problems.
+                We turn complex problems into intelligent, useful systems.
               </h2>
               <p style={{ fontSize: '1.1rem', color: '#94A3B8', lineHeight: 1.7, marginBottom: '2.5rem', fontWeight: 300 }}>
-                We focus on understanding operational complexities before writing code, applying technical architectures built for utility and longevity.
+                We combine AI, software, and thoughtful engineering to build technology that solves real problems and creates lasting value.
               </p>
               <NovaButton href="/about">LEARN MORE ABOUT US</NovaButton>
             </div>
 
             {/* Right: principles */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+              <div style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: '0.7rem',
+                color: '#38BDF8',
+                letterSpacing: '0.25em',
+                textTransform: 'uppercase',
+                fontWeight: 600,
+                marginBottom: '0.5rem',
+                paddingBottom: '0.5rem',
+                borderBottom: '1px solid rgba(22, 119, 255, 0.15)'
+              }}>
+                THINK DEEPER
+              </div>
               {[
-                { title: 'Think Clearly', desc: 'Understand the problem before choosing the technology.' },
-                { title: 'Build with Purpose', desc: 'Every system should have a measurable reason to exist.' },
-                { title: 'Keep it Simple', desc: 'Complex technology should create simple experiences.' },
-                { title: 'Design for the Real World', desc: 'Software must work for real people, teams, and businesses.' },
+                { title: 'Understand First', desc: 'Study the problem before building the solution.' },
+                { title: 'Build Smarter', desc: 'Choose technology for value, not hype.' },
+                { title: 'Keep it Human', desc: 'Powerful systems should feel simple to use.' },
+                { title: 'Create What Matters', desc: 'Build technology with real purpose and value.' },
               ].map((item, i) => (
                 <div key={i} style={{
-                  padding: '1.75rem 0',
-                  borderTop: '1px solid rgba(22, 119, 255, 0.1)',
+                  padding: '1.5rem 0',
+                  borderTop: i === 0 ? 'none' : '1px solid rgba(22, 119, 255, 0.1)',
                   borderBottom: i === 3 ? '1px solid rgba(22, 119, 255, 0.1)' : 'none',
                 }}>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>0{i + 1}</div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>0{i + 1}</div>
                   <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#F8FAFF', marginBottom: '0.35rem', letterSpacing: '-0.01em', textTransform: 'none' }}>{item.title}</h3>
                   <p style={{ color: '#64748B', fontSize: '0.95rem', lineHeight: 1.5, maxWidth: 'none', fontWeight: 300, margin: 0 }}>{item.desc}</p>
                 </div>

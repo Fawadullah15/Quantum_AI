@@ -6,23 +6,23 @@ export const metadata = {
 const principles = [
   {
     num: "01",
-    title: ["Think", "Clearly."],
-    body: "We start with the problem before choosing the technology. By understanding the core issue, we avoid unnecessary complexity and build direct, effective solutions.",
+    title: ["Understand", "First."],
+    body: "Study the problem before building the solution. By understanding the core issue, we avoid unnecessary complexity and build direct, effective solutions.",
   },
   {
     num: "02",
-    title: ["Build", "With Purpose."],
-    body: "Every system should have a reason to exist. We don't add features for the sake of them. Each decision is intentional, each line of code is justified.",
+    title: ["Build", "Smarter."],
+    body: "Choose technology for value, not hype. Every decision is intentional, each line of code is justified.",
   },
   {
     num: "03",
-    title: ["Keep", "It Simple."],
-    body: "Complex technology should create simple experiences. The best software disappears — it just works, without friction, without confusion.",
+    title: ["Keep", "It Human."],
+    body: "Powerful systems should feel simple to use. Complex technology should create simple, frictionless experiences.",
   },
   {
     num: "04",
-    title: ["Design for", "the Real World."],
-    body: "Software must work for real people, teams, and businesses. We build systems that integrate naturally into how organizations operate today.",
+    title: ["Create", "What Matters."],
+    body: "Build technology with real purpose and value. We engineer systems that deliver measurable, lasting impact for real businesses.",
   },
 ];
 
