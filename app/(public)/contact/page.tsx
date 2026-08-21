@@ -241,7 +241,7 @@ export default function ContactPage() {
                 DIRECT CONTACT
               </div>
               <a
-                href="mailto:hello@quantumai.dev"
+                href="mailto:fawadimraj@gmail.com"
                 style={{
                   fontSize: 'clamp(1.05rem, 2.2vw, 1.45rem)',
                   fontWeight: 600,

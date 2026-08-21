@@ -51,7 +51,7 @@ export default function CareersPage() {
 
         <div style={{ marginTop: 'var(--space-16, 3rem)', color: 'var(--color-text-secondary, #94A3B8)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.9rem' }}>
           No suitable role? Write to us at{' '}
-          <a href="mailto:hello@quantumai.dev" style={{ color: '#1677FF', textDecoration: 'none' }}>hello@quantumai.dev</a>
+          <a href="mailto:fawadimraj@gmail.com" style={{ color: '#1677FF', textDecoration: 'none' }}>hello@quantumai.dev</a>
         </div>
       </div>
     </div>
