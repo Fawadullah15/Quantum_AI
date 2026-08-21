@@ -386,7 +386,82 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             BUSINESS PROBLEMS SECTION (What are you trying to improve?)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(4rem, 10vh, 8rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.5)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
+        <section style={{ padding: 'clamp(4rem, 10vh, 8rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.5)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
+          <style>{`
+            .problems-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 1.5rem;
+            }
+            .problem-card {
+              background-color: rgba(6, 21, 43, 0.7);
+              border: 1px solid rgba(22, 119, 255, 0.15);
+              border-radius: 14px;
+              padding: clamp(1.5rem, 3vw, 2rem);
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+              gap: 1rem;
+              transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+            }
+            .problem-card:hover {
+              border-color: rgba(56, 189, 248, 0.4);
+              transform: translateY(-2px);
+              box-shadow: 0 12px 30px -8px rgba(22, 119, 255, 0.25);
+            }
+            .problem-card-code {
+              font-family: var(--font-mono);
+              font-size: 0.6875rem;
+              color: #38BDF8;
+              letter-spacing: 0.15em;
+              font-weight: 600;
+              text-transform: uppercase;
+            }
+            .problem-card-title {
+              font-size: 1.25rem;
+              font-weight: 700;
+              color: #F8FAFF;
+              letter-spacing: -0.01em;
+              margin: 0;
+              text-transform: none;
+            }
+            .problem-card-desc {
+              color: #94A3B8;
+              font-size: 0.925rem;
+              line-height: 1.6;
+              margin: 0;
+              font-weight: 300;
+            }
+
+            @media (max-width: 767px) {
+              .problems-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: clamp(0.5rem, 2.5vw, 0.85rem) !important;
+              }
+              .problem-card {
+                padding: clamp(0.75rem, 3vw, 1.1rem) !important;
+                gap: 0.5rem !important;
+                border-radius: 10px !important;
+              }
+              .problem-card-code {
+                font-size: 0.58rem !important;
+                letter-spacing: 0.1em !important;
+              }
+              .problem-card-title {
+                font-size: clamp(0.75rem, 2.7vw, 0.88rem) !important;
+                line-height: 1.25 !important;
+                letter-spacing: -0.01em !important;
+              }
+              .problem-card-desc {
+                font-size: 0.6875rem !important;
+                line-height: 1.35 !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+              }
+            }
+          `}</style>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
@@ -421,11 +496,7 @@ export default function HomePage() {
               Modern organizations face operational bottlenecks and disconnected data. We engineer software systems to eliminate friction and scale productivity.
             </p>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '1.5rem',
-            }}>
+            <div className="problems-grid">
               {[
                 {
                   code: '01 // OPERATIONS',
@@ -448,37 +519,14 @@ export default function HomePage() {
                   desc: 'Turn difficult operational procedures and domain logic into clear, structured, and scalable digital systems.'
                 },
               ].map((item, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    backgroundColor: 'rgba(6, 21, 43, 0.7)',
-                    border: '1px solid rgba(22, 119, 255, 0.15)',
-                    borderRadius: 14,
-                    padding: 'clamp(1.5rem, 3vw, 2rem)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    gap: '1rem',
-                    transition: 'border-color 0.25s, box-shadow 0.25s, transform 0.25s',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
-                    e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 12px 30px -8px rgba(22, 119, 255, 0.25)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.15)';
-                    e.currentTarget.style.transform = 'none';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }}
-                >
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#38BDF8', letterSpacing: '0.15em', fontWeight: 600, textTransform: 'uppercase' }}>
+                <div key={idx} className="problem-card">
+                  <span className="problem-card-code">
                     {item.code}
                   </span>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#F8FAFF', letterSpacing: '-0.01em', margin: 0, textTransform: 'none' }}>
+                  <h3 className="problem-card-title">
                     {item.title}
                   </h3>
-                  <p style={{ color: '#94A3B8', fontSize: '0.925rem', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+                  <p className="problem-card-desc">
                     {item.desc}
                   </p>
                 </div>
@@ -841,7 +889,79 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             HOW WE WORK / DELIVERY PROCESS SECTION
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(5rem, 12vh, 9rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.35)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
+        <section style={{ padding: 'clamp(4rem, 10vh, 8rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.35)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
+          <style>{`
+            .process-grid {
+              display: grid;
+              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+              gap: 1.25rem;
+            }
+            .process-card {
+              background-color: rgba(6, 21, 43, 0.65);
+              border: 1px solid rgba(22, 119, 255, 0.15);
+              border-radius: 12px;
+              padding: 1.75rem 1.5rem;
+              display: flex;
+              flex-direction: column;
+              gap: 0.75rem;
+              transition: border-color 0.2s, transform 0.2s;
+            }
+            .process-card:hover {
+              border-color: rgba(56, 189, 248, 0.4);
+              transform: translateY(-2px);
+            }
+            .process-step-label {
+              font-family: var(--font-mono);
+              font-size: 0.75rem;
+              color: #1677FF;
+              letter-spacing: 0.15em;
+              font-weight: 700;
+            }
+            .process-card-title {
+              font-size: 1.15rem;
+              font-weight: 700;
+              color: #F8FAFF;
+              letter-spacing: 0.02em;
+              margin: 0;
+              text-transform: uppercase;
+            }
+            .process-card-desc {
+              color: #94A3B8;
+              font-size: 0.875rem;
+              line-height: 1.55;
+              margin: 0;
+              font-weight: 300;
+            }
+
+            @media (max-width: 767px) {
+              .process-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: clamp(0.5rem, 2.5vw, 0.85rem) !important;
+              }
+              .process-card {
+                padding: clamp(0.75rem, 3vw, 1.1rem) !important;
+                gap: 0.4rem !important;
+                border-radius: 10px !important;
+              }
+              .process-step-label {
+                font-size: 0.58rem !important;
+                letter-spacing: 0.1em !important;
+              }
+              .process-card-title {
+                font-size: clamp(0.75rem, 2.7vw, 0.88rem) !important;
+                line-height: 1.25 !important;
+                letter-spacing: 0.01em !important;
+              }
+              .process-card-desc {
+                font-size: 0.6875rem !important;
+                line-height: 1.35 !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+              }
+            }
+          `}</style>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
@@ -876,11 +996,7 @@ export default function HomePage() {
               We eliminate uncertainty from development through clear, iterative milestones from discovery to production launch.
             </p>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
-              gap: '1.25rem',
-            }}>
+            <div className="process-grid">
               {[
                 { step: '01', name: 'UNDERSTAND', desc: 'Study the business problem, operational context, and core requirements.' },
                 { step: '02', name: 'DEFINE', desc: 'Scope the technical architecture, data workflows, user roles, and success milestones.' },
@@ -888,28 +1004,14 @@ export default function HomePage() {
                 { step: '04', name: 'BUILD', desc: 'Develop, test, and refine the system using production-grade frameworks and rigorous validation.' },
                 { step: '05', name: 'DEPLOY', desc: 'Launch, monitor, document, and support the solution in secure cloud environments.' },
               ].map((item, i) => (
-                <div
-                  key={i}
-                  style={{
-                    backgroundColor: 'rgba(6, 21, 43, 0.65)',
-                    border: '1px solid rgba(22, 119, 255, 0.15)',
-                    borderRadius: 12,
-                    padding: '1.75rem 1.5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.75rem',
-                    transition: 'border-color 0.2s',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.15)'; }}
-                >
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#1677FF', letterSpacing: '0.15em', fontWeight: 700 }}>
+                <div key={i} className="process-card">
+                  <span className="process-step-label">
                     {item.step} // PHASE
                   </span>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#F8FAFF', letterSpacing: '0.02em', margin: 0, textTransform: 'uppercase' }}>
+                  <h3 className="process-card-title">
                     {item.name}
                   </h3>
-                  <p style={{ color: '#94A3B8', fontSize: '0.875rem', lineHeight: 1.55, margin: 0, fontWeight: 300 }}>
+                  <p className="process-card-desc">
                     {item.desc}
                   </p>
                 </div>
@@ -1298,7 +1400,81 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             TRUST & SECURITY SECTION
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(5rem, 12vh, 9rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.6)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
+        <section style={{ padding: 'clamp(4rem, 10vh, 8rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.6)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
+          <style>{`
+            .trust-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 1.5rem;
+            }
+            .trust-card {
+              background-color: rgba(6, 21, 43, 0.75);
+              border: 1px solid rgba(22, 119, 255, 0.15);
+              border-radius: 14px;
+              padding: clamp(1.5rem, 3vw, 2rem);
+              display: flex;
+              flex-direction: column;
+              gap: 0.85rem;
+              transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+            }
+            .trust-card:hover {
+              border-color: rgba(56, 189, 248, 0.4);
+              transform: translateY(-2px);
+              box-shadow: 0 12px 30px -8px rgba(22, 119, 255, 0.25);
+            }
+            .trust-card-code {
+              font-family: var(--font-mono);
+              font-size: 0.6875rem;
+              color: #38BDF8;
+              letter-spacing: 0.15em;
+              font-weight: 600;
+              text-transform: uppercase;
+            }
+            .trust-card-title {
+              font-size: 1.2rem;
+              font-weight: 700;
+              color: #F8FAFF;
+              margin: 0;
+              letter-spacing: -0.01em;
+              text-transform: none;
+            }
+            .trust-card-desc {
+              color: #94A3B8;
+              font-size: 0.9rem;
+              line-height: 1.6;
+              margin: 0;
+              font-weight: 300;
+            }
+
+            @media (max-width: 767px) {
+              .trust-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: clamp(0.5rem, 2.5vw, 0.85rem) !important;
+              }
+              .trust-card {
+                padding: clamp(0.75rem, 3vw, 1.1rem) !important;
+                gap: 0.5rem !important;
+                border-radius: 10px !important;
+              }
+              .trust-card-code {
+                font-size: 0.58rem !important;
+                letter-spacing: 0.1em !important;
+              }
+              .trust-card-title {
+                font-size: clamp(0.75rem, 2.7vw, 0.88rem) !important;
+                line-height: 1.25 !important;
+                letter-spacing: -0.01em !important;
+              }
+              .trust-card-desc {
+                font-size: 0.6875rem !important;
+                line-height: 1.35 !important;
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+              }
+            }
+          `}</style>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
@@ -1333,50 +1509,37 @@ export default function HomePage() {
               We prioritize data privacy, strict access control, and dependable cloud infrastructure across every software solution we deploy.
             </p>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-              gap: '1.5rem',
-            }}>
+            <div className="trust-grid">
               {[
                 {
-                  icon: '🔒',
+                  code: '01 // PRIVACY',
                   title: 'Data Privacy & Ownership',
                   desc: 'Your proprietary data, intellectual property, and client records remain completely yours, isolated in private cloud containers.'
                 },
                 {
-                  icon: '🛡️',
+                  code: '02 // ACCESS',
                   title: 'Role-Based Access Control',
                   desc: 'Granular user permission models, session authentication, and audit logs built into all internal platforms and APIs.'
                 },
                 {
-                  icon: '⚡',
+                  code: '03 // INFRASTRUCTURE',
                   title: 'Production Cloud Reliability',
                   desc: 'Modern containerized infrastructure with continuous health monitoring, automated backups, and high uptime resilience.'
                 },
                 {
-                  icon: '🔧',
+                  code: '04 // CONTINUITY',
                   title: 'Long-Term Support & Evolution',
                   desc: 'Clean, documented codebases and ongoing engineering maintenance so your systems stay performant as your business grows.'
                 },
               ].map((item, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    backgroundColor: 'rgba(6, 21, 43, 0.75)',
-                    border: '1px solid rgba(22, 119, 255, 0.15)',
-                    borderRadius: 14,
-                    padding: 'clamp(1.5rem, 3vw, 2rem)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.85rem',
-                  }}
-                >
-                  <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{item.icon}</div>
-                  <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#F8FAFF', margin: 0, letterSpacing: '-0.01em', textTransform: 'none' }}>
+                <div key={idx} className="trust-card">
+                  <span className="trust-card-code">
+                    {item.code}
+                  </span>
+                  <h3 className="trust-card-title">
                     {item.title}
                   </h3>
-                  <p style={{ color: '#94A3B8', fontSize: '0.9rem', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+                  <p className="trust-card-desc">
                     {item.desc}
                   </p>
                 </div>
