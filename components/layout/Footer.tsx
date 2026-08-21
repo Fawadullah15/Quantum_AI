@@ -144,27 +144,19 @@ export default function Footer({
           flexWrap: 'wrap',
           gap: '1rem',
         }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#334155', letterSpacing: '0.08em' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.08em' }}>
             © {new Date().getFullYear()} {companyName}. All rights reserved.
           </span>
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-            <a href="mailto:fawadimraj@gmail.com" style={{ 
+            <a href="mailto:hello@quantumai.dev" style={{ 
               fontFamily: 'var(--font-mono)', 
-              fontSize: '0.7rem', 
-              color: '#334155', 
+              fontSize: '0.75rem', 
+              color: '#38BDF8', 
               textDecoration: 'none', 
-              letterSpacing: '0.08em' 
+              letterSpacing: '0.05em' 
             }}>
               {email}
             </a>
-            <Link
-              href="/admin/login"
-              style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#1E3A5F', textDecoration: 'none', letterSpacing: '0.08em' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#334155')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = '#1E3A5F')}
-            >
-              ADMIN
-            </Link>
           </div>
         </div>
       </div>

@@ -350,7 +350,7 @@ export default function HomePage() {
               filter: 'drop-shadow(0 4px 24px rgba(2, 8, 23, 0.95))',
             }}>
               <ParticleText
-                text={`WE BUILD\nINTELLIGENT\nSOFTWARES`}
+                text={`WE BUILD\nINTELLIGENT\nSOFTWARE`}
                 fontSize={95}
                 particleDensity={3}
                 particleSize={1.4}
@@ -369,16 +369,120 @@ export default function HomePage() {
               color: '#94A3B8',
               lineHeight: 1.7,
               marginBottom: '3rem',
-              maxWidth: 560,
+              maxWidth: 580,
               fontWeight: 300,
             }}>
-              AI systems, software, automation, and digital products built to solve real business problems.
+              Quantum AI builds AI systems, custom business software, and automation for organizations that need better ways to operate.
             </p>
 
             {/* CTAs */}
             <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
               <NovaButton href="/contact">START A PROJECT</NovaButton>
               <GalaxyButton href="/work">EXPLORE OUR WORK</GalaxyButton>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════
+            BUSINESS PROBLEMS SECTION (What are you trying to improve?)
+        ═══════════════════════════════════════════════════════════ */}
+        <section style={{ padding: 'clamp(4rem, 10vh, 8rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.5)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+            <p style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.75rem',
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: '#1677FF',
+              marginBottom: '1rem',
+              fontWeight: 600
+            }}>
+              CHALLENGES WE SOLVE
+            </p>
+            <h2 style={{
+              fontSize: 'clamp(2.25rem, 5.5vw, 3.75rem)',
+              fontWeight: 700,
+              lineHeight: 1.1,
+              letterSpacing: '-0.03em',
+              color: '#F8FAFF',
+              marginBottom: '1rem',
+              textTransform: 'uppercase'
+            }}>
+              What are you trying to improve?
+            </h2>
+            <p style={{
+              fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
+              color: '#94A3B8',
+              lineHeight: 1.65,
+              marginBottom: 'clamp(2.5rem, 5vh, 4rem)',
+              maxWidth: 620,
+              fontWeight: 300
+            }}>
+              Modern organizations face operational bottlenecks and disconnected data. We engineer software systems to eliminate friction and scale productivity.
+            </p>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '1.5rem',
+            }}>
+              {[
+                {
+                  code: '01 // OPERATIONS',
+                  title: 'Manual Operations',
+                  desc: 'Replace repetitive, error-prone manual tasks with reliable software workflows and automated pipelines that run 24/7.'
+                },
+                {
+                  code: '02 // INTEGRATION',
+                  title: 'Disconnected Data',
+                  desc: 'Bring fragmented spreadsheets, legacy databases, and third-party tools into a single, cohesive source of truth.'
+                },
+                {
+                  code: '03 // SPEED',
+                  title: 'Slow Workflows',
+                  desc: 'Build intuitive internal tools that help teams execute faster, reduce administrative handoffs, and eliminate delays.'
+                },
+                {
+                  code: '04 // ARCHITECTURE',
+                  title: 'Complex Business Processes',
+                  desc: 'Turn difficult operational procedures and domain logic into clear, structured, and scalable digital systems.'
+                },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    backgroundColor: 'rgba(6, 21, 43, 0.7)',
+                    border: '1px solid rgba(22, 119, 255, 0.15)',
+                    borderRadius: 14,
+                    padding: 'clamp(1.5rem, 3vw, 2rem)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '1rem',
+                    transition: 'border-color 0.25s, box-shadow 0.25s, transform 0.25s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 12px 30px -8px rgba(22, 119, 255, 0.25)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.15)';
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
+                >
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#38BDF8', letterSpacing: '0.15em', fontWeight: 600, textTransform: 'uppercase' }}>
+                    {item.code}
+                  </span>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#F8FAFF', letterSpacing: '-0.01em', margin: 0, textTransform: 'none' }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ color: '#94A3B8', fontSize: '0.925rem', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -503,158 +607,7 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            TECHNOLOGY SECTION
-        ═══════════════════════════════════════════════════════════ */}
-        <section className="tech-stack-section" style={{ pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.3)' }}>
-          <style>{`
-            .tech-stack-section {
-              padding: clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem);
-              box-sizing: border-box;
-              width: 100%;
-            }
-            .tech-grid {
-              display: grid;
-              grid-template-columns: repeat(2, 1fr);
-              gap: 1.5rem;
-              width: 100%;
-              box-sizing: border-box;
-            }
-            .tech-card {
-              background-color: rgba(6, 21, 43, 0.6);
-              border: 1px solid rgba(22, 119, 255, 0.12);
-              border-radius: 12px;
-              padding: 2rem;
-              display: flex;
-              flex-direction: column;
-              gap: 1.25rem;
-              transition: border-color 0.25s, box-shadow 0.25s;
-              box-sizing: border-box;
-              width: 100%;
-            }
-            .tech-card:hover {
-              border-color: rgba(22, 119, 255, 0.35);
-              box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-            }
-            .tech-card-title {
-              font-size: 1.25rem;
-              font-weight: 600;
-              color: #F8FAFF;
-              letter-spacing: -0.01em;
-              text-transform: none;
-              margin: 0;
-            }
-            .tech-card-desc {
-              color: #94A3B8;
-              font-size: 0.925rem;
-              line-height: 1.55;
-              margin: 0;
-              font-weight: 300;
-            }
-            .tech-tags-container {
-              display: flex;
-              flex-wrap: wrap;
-              gap: 0.5rem;
-              margin-top: auto;
-              padding-top: 1rem;
-            }
-            .tech-tag-pill {
-              font-size: 0.75rem;
-              font-family: var(--font-mono);
-              padding: 0.35rem 0.75rem;
-              background-color: rgba(22, 119, 255, 0.08);
-              border: 1px solid rgba(22, 119, 255, 0.15);
-              border-radius: 4px;
-              color: #55D6FF;
-              white-space: nowrap;
-            }
-
-            @media (max-width: 767px) {
-              .tech-stack-section {
-                padding: clamp(3.5rem, 8vh, 5rem) clamp(1rem, 4vw, 2rem) !important;
-              }
-              .tech-grid {
-                grid-template-columns: 1fr !important;
-                gap: 1rem !important;
-              }
-              .tech-card {
-                padding: clamp(1.2rem, 3.5vw, 1.5rem) !important;
-                gap: 0.85rem !important;
-              }
-              .tech-card-title {
-                font-size: 1.15rem !important;
-              }
-              .tech-card-desc {
-                font-size: 0.85rem !important;
-                line-height: 1.5 !important;
-              }
-              .tech-tags-container {
-                gap: 0.4rem !important;
-                padding-top: 0.65rem !important;
-              }
-              .tech-tag-pill {
-                font-size: 0.72rem !important;
-                padding: 0.25rem 0.6rem !important;
-              }
-            }
-          `}</style>
-          <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
-            <p style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.3em',
-              textTransform: 'uppercase',
-              color: '#1677FF',
-              marginBottom: '1rem',
-              maxWidth: 'none',
-              fontWeight: 600
-            }}>
-              CAPABILITIES
-            </p>
-            <h2 style={{
-              fontSize: 'clamp(2.25rem, 6vw, 4rem)',
-              fontWeight: 700,
-              color: '#F8FAFF',
-              marginBottom: '0.75rem',
-              letterSpacing: '-0.03em',
-              textTransform: 'uppercase'
-            }}>
-              Our tech stack.
-            </h2>
-            <p style={{
-              fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
-              color: '#94A3B8',
-              lineHeight: 1.65,
-              marginBottom: 'clamp(2rem, 5vh, 4rem)',
-              maxWidth: 560,
-              fontWeight: 300
-            }}>
-              We construct systems using production-proven languages and platforms capable of scaling seamlessly.
-            </p>
-
-            <div className="tech-grid">
-              {techGroups.map((group, idx) => (
-                <div key={idx} className="tech-card">
-                  <h3 className="tech-card-title">
-                    {group.title}
-                  </h3>
-                  <p className="tech-card-desc">
-                    {group.desc}
-                  </p>
-                  <div className="tech-tags-container">
-                    {group.tags.map((t: string) => (
-                      <span key={t} className="tech-tag-pill">
-                        {t}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════════════════════
-            WORK / CASE STUDIES
+            WORK / CASE STUDIES (Top 4 Case Studies)
         ═══════════════════════════════════════════════════════════ */}
         <section style={{ padding: 'clamp(4rem, 10vh, 10rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
           <style>{`
@@ -886,14 +839,87 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            INTERACTIVE WORLD MAP
+            HOW WE WORK / DELIVERY PROCESS SECTION
         ═══════════════════════════════════════════════════════════ */}
-        <div style={{ pointerEvents: 'auto' }}>
-          <GlobalMapSection />
-        </div>
+        <section style={{ padding: 'clamp(5rem, 12vh, 9rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.35)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+            <p style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.75rem',
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: '#1677FF',
+              marginBottom: '1rem',
+              fontWeight: 600
+            }}>
+              HOW WE WORK
+            </p>
+            <h2 style={{
+              fontSize: 'clamp(2.25rem, 6vw, 4rem)',
+              fontWeight: 700,
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
+              color: '#F8FAFF',
+              marginBottom: '1rem',
+              textTransform: 'uppercase'
+            }}>
+              A Clear, Structured Process.
+            </h2>
+            <p style={{
+              fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
+              color: '#94A3B8',
+              lineHeight: 1.65,
+              marginBottom: 'clamp(2.5rem, 5vh, 4rem)',
+              maxWidth: 600,
+              fontWeight: 300
+            }}>
+              We eliminate uncertainty from development through clear, iterative milestones from discovery to production launch.
+            </p>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
+              gap: '1.25rem',
+            }}>
+              {[
+                { step: '01', name: 'UNDERSTAND', desc: 'Study the business problem, operational context, and core requirements.' },
+                { step: '02', name: 'DEFINE', desc: 'Scope the technical architecture, data workflows, user roles, and success milestones.' },
+                { step: '03', name: 'DESIGN', desc: 'Plan the product interface, system data models, and API interfaces for maximum clarity.' },
+                { step: '04', name: 'BUILD', desc: 'Develop, test, and refine the system using production-grade frameworks and rigorous validation.' },
+                { step: '05', name: 'DEPLOY', desc: 'Launch, monitor, document, and support the solution in secure cloud environments.' },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  style={{
+                    backgroundColor: 'rgba(6, 21, 43, 0.65)',
+                    border: '1px solid rgba(22, 119, 255, 0.15)',
+                    borderRadius: 12,
+                    padding: '1.75rem 1.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.75rem',
+                    transition: 'border-color 0.2s',
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.15)'; }}
+                >
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#1677FF', letterSpacing: '0.15em', fontWeight: 700 }}>
+                    {item.step} // PHASE
+                  </span>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#F8FAFF', letterSpacing: '0.02em', margin: 0, textTransform: 'uppercase' }}>
+                    {item.name}
+                  </h3>
+                  <p style={{ color: '#94A3B8', fontSize: '0.875rem', lineHeight: 1.55, margin: 0, fontWeight: 300 }}>
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            ABOUT SECTION
+            WHY QUANTUM AI / PRINCIPLES
         ═══════════════════════════════════════════════════════════ */}
         <section style={{ padding: 'clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'clamp(3rem, 6vw, 6rem)', alignItems: 'center' }}>
@@ -962,6 +988,164 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ═══════════════════════════════════════════════════════════
+            TECHNOLOGY SECTION (Capabilities Supporting the Business)
+        ═══════════════════════════════════════════════════════════ */}
+        <section className="tech-stack-section" style={{ pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.3)' }}>
+          <style>{`
+            .tech-stack-section {
+              padding: clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem);
+              box-sizing: border-box;
+              width: 100%;
+            }
+            .tech-grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+              gap: 1.5rem;
+              width: 100%;
+              box-sizing: border-box;
+            }
+            .tech-card {
+              background-color: rgba(6, 21, 43, 0.6);
+              border: 1px solid rgba(22, 119, 255, 0.12);
+              border-radius: 12px;
+              padding: 2rem;
+              display: flex;
+              flex-direction: column;
+              gap: 1.25rem;
+              transition: border-color 0.25s, box-shadow 0.25s;
+              box-sizing: border-box;
+              width: 100%;
+            }
+            .tech-card:hover {
+              border-color: rgba(22, 119, 255, 0.35);
+              box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            }
+            .tech-card-title {
+              font-size: 1.25rem;
+              font-weight: 600;
+              color: #F8FAFF;
+              letter-spacing: -0.01em;
+              text-transform: none;
+              margin: 0;
+            }
+            .tech-card-desc {
+              color: #94A3B8;
+              font-size: 0.925rem;
+              line-height: 1.55;
+              margin: 0;
+              font-weight: 300;
+            }
+            .tech-tags-container {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 0.5rem;
+              margin-top: auto;
+              padding-top: 1rem;
+            }
+            .tech-tag-pill {
+              font-size: 0.75rem;
+              font-family: var(--font-mono);
+              padding: 0.35rem 0.75rem;
+              background-color: rgba(22, 119, 255, 0.08);
+              border: 1px solid rgba(22, 119, 255, 0.15);
+              border-radius: 4px;
+              color: #55D6FF;
+              white-space: nowrap;
+            }
+
+            @media (max-width: 767px) {
+              .tech-stack-section {
+                padding: clamp(3.5rem, 8vh, 5rem) clamp(1rem, 4vw, 2rem) !important;
+              }
+              .tech-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+              }
+              .tech-card {
+                padding: clamp(1.2rem, 3.5vw, 1.5rem) !important;
+                gap: 0.85rem !important;
+              }
+              .tech-card-title {
+                font-size: 1.15rem !important;
+              }
+              .tech-card-desc {
+                font-size: 0.85rem !important;
+                line-height: 1.5 !important;
+              }
+              .tech-tags-container {
+                gap: 0.4rem !important;
+                padding-top: 0.65rem !important;
+              }
+              .tech-tag-pill {
+                font-size: 0.72rem !important;
+                padding: 0.25rem 0.6rem !important;
+              }
+            }
+          `}</style>
+          <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+            <p style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.75rem',
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: '#1677FF',
+              marginBottom: '1rem',
+              maxWidth: 'none',
+              fontWeight: 600
+            }}>
+              CAPABILITIES
+            </p>
+            <h2 style={{
+              fontSize: 'clamp(2.25rem, 6vw, 4rem)',
+              fontWeight: 700,
+              color: '#F8FAFF',
+              marginBottom: '0.75rem',
+              letterSpacing: '-0.03em',
+              textTransform: 'uppercase'
+            }}>
+              Our tech stack.
+            </h2>
+            <p style={{
+              fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
+              color: '#94A3B8',
+              lineHeight: 1.65,
+              marginBottom: 'clamp(2rem, 5vh, 4rem)',
+              maxWidth: 560,
+              fontWeight: 300
+            }}>
+              We construct systems using production-proven languages and platforms capable of scaling seamlessly.
+            </p>
+
+            <div className="tech-grid">
+              {techGroups.map((group, idx) => (
+                <div key={idx} className="tech-card">
+                  <h3 className="tech-card-title">
+                    {group.title}
+                  </h3>
+                  <p className="tech-card-desc">
+                    {group.desc}
+                  </p>
+                  <div className="tech-tags-container">
+                    {group.tags.map((t: string) => (
+                      <span key={t} className="tech-tag-pill">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════
+            INTERACTIVE WORLD MAP
+        ═══════════════════════════════════════════════════════════ */}
+        <div style={{ pointerEvents: 'auto' }}>
+          <GlobalMapSection />
+        </div>
 
         {/* ═══════════════════════════════════════════════════════════
             LEADERSHIP SECTION
@@ -1107,6 +1291,96 @@ export default function HomePage() {
               <NovaButton href="/leadership">
                 MEET THE FULL TEAM →
               </NovaButton>
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════
+            TRUST & SECURITY SECTION
+        ═══════════════════════════════════════════════════════════ */}
+        <section style={{ padding: 'clamp(5rem, 12vh, 9rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.6)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+            <p style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.75rem',
+              letterSpacing: '0.3em',
+              textTransform: 'uppercase',
+              color: '#1677FF',
+              marginBottom: '1rem',
+              fontWeight: 600
+            }}>
+              TRUST & SECURITY
+            </p>
+            <h2 style={{
+              fontSize: 'clamp(2.25rem, 5.5vw, 3.75rem)',
+              fontWeight: 700,
+              lineHeight: 1.1,
+              letterSpacing: '-0.03em',
+              color: '#F8FAFF',
+              marginBottom: '1rem',
+              textTransform: 'uppercase'
+            }}>
+              Engineered for Reliability and Security.
+            </h2>
+            <p style={{
+              fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
+              color: '#94A3B8',
+              lineHeight: 1.65,
+              marginBottom: 'clamp(2.5rem, 5vh, 4rem)',
+              maxWidth: 620,
+              fontWeight: 300
+            }}>
+              We prioritize data privacy, strict access control, and dependable cloud infrastructure across every software solution we deploy.
+            </p>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+              gap: '1.5rem',
+            }}>
+              {[
+                {
+                  icon: '🔒',
+                  title: 'Data Privacy & Ownership',
+                  desc: 'Your proprietary data, intellectual property, and client records remain completely yours, isolated in private cloud containers.'
+                },
+                {
+                  icon: '🛡️',
+                  title: 'Role-Based Access Control',
+                  desc: 'Granular user permission models, session authentication, and audit logs built into all internal platforms and APIs.'
+                },
+                {
+                  icon: '⚡',
+                  title: 'Production Cloud Reliability',
+                  desc: 'Modern containerized infrastructure with continuous health monitoring, automated backups, and high uptime resilience.'
+                },
+                {
+                  icon: '🔧',
+                  title: 'Long-Term Support & Evolution',
+                  desc: 'Clean, documented codebases and ongoing engineering maintenance so your systems stay performant as your business grows.'
+                },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    backgroundColor: 'rgba(6, 21, 43, 0.75)',
+                    border: '1px solid rgba(22, 119, 255, 0.15)',
+                    borderRadius: 14,
+                    padding: 'clamp(1.5rem, 3vw, 2rem)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '0.85rem',
+                  }}
+                >
+                  <div style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{item.icon}</div>
+                  <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#F8FAFF', margin: 0, letterSpacing: '-0.01em', textTransform: 'none' }}>
+                    {item.title}
+                  </h3>
+                  <p style={{ color: '#94A3B8', fontSize: '0.9rem', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
@@ -1349,6 +1623,10 @@ export default function HomePage() {
                     >
                       {isSubmitting ? 'SENDING...' : 'SEND PROJECT INQUIRY'}
                     </NovaButton>
+
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', lineHeight: 1.5, margin: '0.5rem 0 0 0', textAlign: 'center' }}>
+                      🔒 Your information is confidential and used solely to evaluate your project inquiry.
+                    </p>
 
                   </form>
                 )}

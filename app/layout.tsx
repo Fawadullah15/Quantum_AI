@@ -22,10 +22,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000'),
   title: {
     template: '%s | Quantum AI',
-    default: 'Quantum AI — Intelligent Softwares Company',
+    default: 'Quantum AI — AI Systems & Business Software',
   },
   description:
-    'Quantum AI builds AI systems, business software, and digital products for organizations that need technology to actually work.',
+    'Quantum AI builds AI systems, custom business software, and automation for organizations that need better ways to operate.',
   openGraph: {
     type: 'website',
     locale: 'en_US',
