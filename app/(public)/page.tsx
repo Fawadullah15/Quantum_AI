@@ -372,30 +372,38 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            BUSINESS PROBLEMS SECTION (What are you trying to improve?)
+            BUSINESS PROBLEMS SECTION (CHALLENGES WE SOLVE)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(4rem, 10vh, 8rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.5)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
+        <section style={{ padding: 'clamp(3.5rem, 8vh, 6rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.5)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
           <style>{`
-            .problems-grid {
-              display: grid;
-              grid-template-columns: repeat(2, 1fr);
-              gap: 1.5rem;
-            }
-            .problem-card {
-              background-color: rgba(6, 21, 43, 0.7);
-              border: 1px solid rgba(22, 119, 255, 0.15);
-              border-radius: 14px;
-              padding: clamp(1.5rem, 3vw, 2rem);
+            .problems-list-container {
               display: flex;
               flex-direction: column;
-              justify-content: space-between;
               gap: 1rem;
-              transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+              width: 100%;
             }
-            .problem-card:hover {
+            .problem-horizontal-card {
+              background-color: rgba(6, 21, 43, 0.7);
+              border: 1px solid rgba(22, 119, 255, 0.15);
+              border-radius: 12px;
+              padding: clamp(1.2rem, 2.5vw, 1.6rem) clamp(1.4rem, 3vw, 2.25rem);
+              display: grid;
+              grid-template-columns: 280px 1fr;
+              align-items: center;
+              gap: 2rem;
+              transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+              box-sizing: border-box;
+              width: 100%;
+            }
+            .problem-horizontal-card:hover {
               border-color: rgba(56, 189, 248, 0.4);
               transform: translateY(-2px);
-              box-shadow: 0 12px 30px -8px rgba(22, 119, 255, 0.25);
+              box-shadow: 0 10px 28px -6px rgba(22, 119, 255, 0.25);
+            }
+            .problem-card-left {
+              display: flex;
+              flex-direction: column;
+              gap: 0.35rem;
             }
             .problem-card-code {
               font-family: var(--font-mono);
@@ -406,47 +414,27 @@ export default function HomePage() {
               text-transform: uppercase;
             }
             .problem-card-title {
-              font-size: 1.25rem;
+              font-size: clamp(1.15rem, 2vw, 1.35rem);
               font-weight: 700;
               color: #F8FAFF;
               letter-spacing: -0.01em;
               margin: 0;
               text-transform: none;
+              line-height: 1.25;
             }
             .problem-card-desc {
               color: #94A3B8;
-              font-size: 0.925rem;
+              font-size: clamp(0.88rem, 1.5vw, 0.95rem);
               line-height: 1.6;
               margin: 0;
               font-weight: 300;
             }
 
-            @media (max-width: 767px) {
-              .problems-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-                gap: clamp(0.5rem, 2.5vw, 0.85rem) !important;
-              }
-              .problem-card {
-                padding: clamp(0.75rem, 3vw, 1.1rem) !important;
-                gap: 0.5rem !important;
-                border-radius: 10px !important;
-              }
-              .problem-card-code {
-                font-size: 0.58rem !important;
-                letter-spacing: 0.1em !important;
-              }
-              .problem-card-title {
-                font-size: clamp(0.75rem, 2.7vw, 0.88rem) !important;
-                line-height: 1.25 !important;
-                letter-spacing: -0.01em !important;
-              }
-              .problem-card-desc {
-                font-size: 0.6875rem !important;
-                line-height: 1.35 !important;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
+            @media (max-width: 860px) {
+              .problem-horizontal-card {
+                grid-template-columns: 1fr;
+                gap: 0.65rem;
+                padding: clamp(1rem, 3vw, 1.35rem);
               }
             }
           `}</style>
@@ -454,37 +442,37 @@ export default function HomePage() {
             <p style={{
               fontFamily: 'var(--font-mono)',
               fontSize: '0.75rem',
-              letterSpacing: '0.3em',
+              letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '1rem',
+              marginBottom: '0.75rem',
               fontWeight: 600
             }}>
               CHALLENGES WE SOLVE
             </p>
             <h2 style={{
-              fontSize: 'clamp(2.25rem, 5.5vw, 3.75rem)',
+              fontSize: 'clamp(1.75rem, 3.5vw, 2.65rem)',
               fontWeight: 700,
-              lineHeight: 1.1,
-              letterSpacing: '-0.03em',
+              lineHeight: 1.15,
+              letterSpacing: '-0.025em',
               color: '#F8FAFF',
-              marginBottom: '1rem',
+              marginBottom: '0.75rem',
               textTransform: 'uppercase'
             }}>
               What are you trying to improve?
             </h2>
             <p style={{
-              fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
+              fontSize: 'clamp(0.925rem, 1.5vw, 1.05rem)',
               color: '#94A3B8',
               lineHeight: 1.65,
-              marginBottom: 'clamp(2.5rem, 5vh, 4rem)',
-              maxWidth: 620,
+              marginBottom: 'clamp(2rem, 4vh, 3rem)',
+              maxWidth: 640,
               fontWeight: 300
             }}>
               Modern organizations face operational bottlenecks and disconnected data. We engineer software systems to eliminate friction and scale productivity.
             </p>
 
-            <div className="problems-grid">
+            <div className="problems-list-container">
               {[
                 {
                   code: '01 // OPERATIONS',
@@ -507,13 +495,15 @@ export default function HomePage() {
                   desc: 'Turn difficult operational procedures and domain logic into clear, structured, and scalable digital systems.'
                 },
               ].map((item, idx) => (
-                <div key={idx} className="problem-card">
-                  <span className="problem-card-code">
-                    {item.code}
-                  </span>
-                  <h3 className="problem-card-title">
-                    {item.title}
-                  </h3>
+                <div key={idx} className="problem-horizontal-card">
+                  <div className="problem-card-left">
+                    <span className="problem-card-code">
+                      {item.code}
+                    </span>
+                    <h3 className="problem-card-title">
+                      {item.title}
+                    </h3>
+                  </div>
                   <p className="problem-card-desc">
                     {item.desc}
                   </p>
