@@ -374,67 +374,88 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             BUSINESS PROBLEMS SECTION (CHALLENGES WE SOLVE)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(3.5rem, 8vh, 6rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.5)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
+        <section style={{ padding: 'clamp(3rem, 6vh, 4.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.5)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
           <style>{`
-            .problems-list-container {
-              display: flex;
-              flex-direction: column;
+            .problems-grid {
+              display: grid;
+              grid-template-columns: repeat(4, 1fr);
               gap: 1rem;
               width: 100%;
-            }
-            .problem-horizontal-card {
-              background-color: rgba(6, 21, 43, 0.7);
-              border: 1px solid rgba(22, 119, 255, 0.15);
-              border-radius: 12px;
-              padding: clamp(1.2rem, 2.5vw, 1.6rem) clamp(1.4rem, 3vw, 2.25rem);
-              display: grid;
-              grid-template-columns: 280px 1fr;
-              align-items: center;
-              gap: 2rem;
-              transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
               box-sizing: border-box;
-              width: 100%;
             }
-            .problem-horizontal-card:hover {
-              border-color: rgba(56, 189, 248, 0.4);
-              transform: translateY(-2px);
-              box-shadow: 0 10px 28px -6px rgba(22, 119, 255, 0.25);
-            }
-            .problem-card-left {
+            .problem-compact-card {
+              background-color: rgba(6, 21, 43, 0.65);
+              border: 1px solid rgba(22, 119, 255, 0.15);
+              border-radius: 10px;
+              padding: clamp(1rem, 2vw, 1.35rem);
               display: flex;
               flex-direction: column;
-              gap: 0.35rem;
+              gap: 0.65rem;
+              transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+              box-sizing: border-box;
             }
-            .problem-card-code {
+            .problem-compact-card:hover {
+              border-color: rgba(56, 189, 248, 0.4);
+              transform: translateY(-2px);
+              box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.25);
+            }
+            .problem-code-tag {
               font-family: var(--font-mono);
-              font-size: 0.6875rem;
+              font-size: 0.65rem;
               color: #38BDF8;
-              letter-spacing: 0.15em;
+              letter-spacing: 0.12em;
               font-weight: 600;
               text-transform: uppercase;
             }
-            .problem-card-title {
-              font-size: clamp(1.15rem, 2vw, 1.35rem);
-              font-weight: 700;
+            .problem-title {
+              font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              font-size: clamp(0.95rem, 1.25vw, 1.1rem);
+              font-weight: 600;
               color: #F8FAFF;
               letter-spacing: -0.01em;
-              margin: 0;
-              text-transform: none;
+              text-transform: none !important;
               line-height: 1.25;
+              margin: 0;
+              word-break: normal !important;
+              overflow-wrap: break-word;
+              hyphens: none !important;
             }
-            .problem-card-desc {
+            .problem-desc {
               color: #94A3B8;
-              font-size: clamp(0.88rem, 1.5vw, 0.95rem);
-              line-height: 1.6;
+              font-size: clamp(0.78rem, 1vw, 0.85rem);
+              line-height: 1.55;
               margin: 0;
               font-weight: 300;
             }
 
-            @media (max-width: 860px) {
-              .problem-horizontal-card {
-                grid-template-columns: 1fr;
-                gap: 0.65rem;
-                padding: clamp(1rem, 3vw, 1.35rem);
+            @media (max-width: 1024px) {
+              .problems-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+              }
+            }
+
+            @media (max-width: 640px) {
+              .problems-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+                gap: clamp(0.5rem, 2.5vw, 0.75rem) !important;
+              }
+              .problem-compact-card {
+                padding: clamp(0.75rem, 2.5vw, 1rem) !important;
+                gap: 0.45rem !important;
+                border-radius: 8px !important;
+              }
+              .problem-code-tag {
+                font-size: 0.58rem !important;
+                letter-spacing: 0.08em !important;
+              }
+              .problem-title {
+                font-size: clamp(0.8rem, 2.7vw, 0.92rem) !important;
+                line-height: 1.2 !important;
+              }
+              .problem-desc {
+                font-size: 0.7rem !important;
+                line-height: 1.35 !important;
               }
             }
           `}</style>
@@ -445,66 +466,64 @@ export default function HomePage() {
               letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '0.75rem',
+              marginBottom: '0.5rem',
               fontWeight: 600
             }}>
               CHALLENGES WE SOLVE
             </p>
             <h2 style={{
-              fontSize: 'clamp(1.75rem, 3.5vw, 2.65rem)',
+              fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
               fontWeight: 700,
               lineHeight: 1.15,
-              letterSpacing: '-0.025em',
+              letterSpacing: '-0.02em',
               color: '#F8FAFF',
-              marginBottom: '0.75rem',
-              textTransform: 'uppercase'
+              marginBottom: '0.65rem',
+              textTransform: 'none'
             }}>
               What are you trying to improve?
             </h2>
             <p style={{
-              fontSize: 'clamp(0.925rem, 1.5vw, 1.05rem)',
+              fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
               color: '#94A3B8',
-              lineHeight: 1.65,
-              marginBottom: 'clamp(2rem, 4vh, 3rem)',
-              maxWidth: 640,
+              lineHeight: 1.6,
+              marginBottom: 'clamp(1.75rem, 3.5vh, 2.5rem)',
+              maxWidth: 620,
               fontWeight: 300
             }}>
-              Modern organizations face operational bottlenecks and disconnected data. We engineer software systems to eliminate friction and scale productivity.
+              We engineer intelligent systems and automation to eliminate operational bottlenecks, reduce delays, and scale productivity.
             </p>
 
-            <div className="problems-list-container">
+            <div className="problems-grid">
               {[
                 {
                   code: '01 // OPERATIONS',
                   title: 'Manual Operations',
-                  desc: 'Replace repetitive, error-prone manual tasks with reliable software workflows and automated pipelines that run 24/7.'
+                  desc: 'Replace error-prone manual tasks with reliable automated software pipelines that run 24/7.'
                 },
                 {
                   code: '02 // INTEGRATION',
                   title: 'Disconnected Data',
-                  desc: 'Bring fragmented spreadsheets, legacy databases, and third-party tools into a single, cohesive source of truth.'
+                  desc: 'Unify scattered spreadsheets, tools, and databases into a single, cohesive source of truth.'
                 },
                 {
                   code: '03 // SPEED',
                   title: 'Slow Workflows',
-                  desc: 'Build intuitive internal tools that help teams execute faster, reduce administrative handoffs, and eliminate delays.'
+                  desc: 'Build intuitive internal software that cuts operational delays and eliminates handoff friction.'
                 },
                 {
                   code: '04 // ARCHITECTURE',
-                  title: 'Complex Business Processes',
-                  desc: 'Turn difficult operational procedures and domain logic into clear, structured, and scalable digital systems.'
+                  title: 'Complex Processes',
+                  desc: 'Transform intricate business rules and procedures into clear, structured digital systems.'
                 },
               ].map((item, idx) => (
-                <div key={idx} className="problem-horizontal-card">
-                  <div className="problem-card-left">
-                    <span className="problem-card-code">
-                      {item.code}
-                    </span>
-                    <h3 className="problem-card-title">
-                      {item.title}
-                    </h3>
-                  </div>
-                  <p className="problem-card-desc">
+                <div key={idx} className="problem-compact-card">
+                  <span className="problem-code-tag">
+                    {item.code}
+                  </span>
+                  <h3 className="problem-title">
+                    {item.title}
+                  </h3>
+                  <p className="problem-desc">
                     {item.desc}
                   </p>
                 </div>
