@@ -374,21 +374,21 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             BUSINESS PROBLEMS SECTION (CHALLENGES WE SOLVE)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(3rem, 6vh, 5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.5)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
+        <section style={{ padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.5)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
           <style>{`
             .problems-list-container {
               display: flex;
               flex-direction: column;
-              gap: 0.75rem;
+              gap: 0.65rem;
               width: 100%;
             }
             .problem-horizontal-card {
               background-color: rgba(6, 21, 43, 0.65);
               border: 1px solid rgba(22, 119, 255, 0.14);
               border-radius: 10px;
-              padding: 0.9rem clamp(1rem, 2.5vw, 1.75rem);
+              padding: 0.85rem clamp(1rem, 2.5vw, 1.75rem);
               display: grid;
-              grid-template-columns: minmax(220px, 270px) 1fr auto;
+              grid-template-columns: minmax(200px, 240px) 1fr auto;
               align-items: center;
               gap: 1.5rem;
               text-decoration: none;
@@ -423,11 +423,6 @@ export default function HomePage() {
               letter-spacing: -0.01em;
               margin: 0;
               text-transform: none;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              word-break: normal;
-              hyphens: none;
               line-height: 1.3;
             }
             .problem-card-desc {
@@ -462,7 +457,6 @@ export default function HomePage() {
                 padding: 0.85rem 1.1rem;
               }
               .problem-card-title {
-                white-space: normal;
                 font-size: 0.95rem;
               }
               .problem-card-desc {
@@ -478,28 +472,28 @@ export default function HomePage() {
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem',
+              fontSize: '0.72rem',
               letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '0.6rem',
+              marginBottom: '0.5rem',
               fontWeight: 600
             }}>
               CHALLENGES WE SOLVE
             </p>
             <h2 style={{
-              fontSize: 'clamp(1.6rem, 3.2vw, 2.4rem)',
+              fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
               fontWeight: 700,
               lineHeight: 1.15,
               letterSpacing: '-0.025em',
               color: '#F8FAFF',
-              marginBottom: '0.6rem',
+              marginBottom: '0.5rem',
               textTransform: 'uppercase'
             }}>
               What are you trying to improve?
             </h2>
             <p style={{
-              fontSize: 'clamp(0.88rem, 1.4vw, 1rem)',
+              fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
               color: '#94A3B8',
               lineHeight: 1.6,
               marginBottom: 'clamp(1.5rem, 3vh, 2.25rem)',
@@ -514,7 +508,7 @@ export default function HomePage() {
                 {
                   code: '01 // OPERATIONS',
                   title: 'Manual Operations',
-                  desc: 'Replace repetitive, error-prone manual tasks with reliable software workflows and automated pipelines.',
+                  desc: 'Replace repetitive, error-prone manual tasks with reliable software workflows and automated pipelines that run 24/7.',
                   link: '/services#automation',
                   action: 'Automate'
                 },
@@ -528,7 +522,7 @@ export default function HomePage() {
                 {
                   code: '03 // SPEED',
                   title: 'Slow Workflows',
-                  desc: 'Build intuitive internal tools and dashboards that accelerate execution and eliminate administrative delays.',
+                  desc: 'Build intuitive internal tools and dashboards that accelerate execution and eliminate delays.',
                   link: '/services#software',
                   action: 'Accelerate'
                 },
@@ -563,116 +557,168 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            SOLUTIONS SECTION
+            SOLUTIONS SECTION (Compact Horizontal Rows - 1 Card Per Row)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto' }}>
+        <section style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
+          <style>{`
+            .solutions-list-container {
+              display: flex;
+              flex-direction: column;
+              gap: 0.65rem;
+              width: 100%;
+            }
+            .solution-horizontal-card {
+              background-color: rgba(6, 21, 43, 0.65);
+              border: 1px solid rgba(22, 119, 255, 0.14);
+              border-radius: 10px;
+              padding: 0.85rem clamp(1rem, 2.5vw, 1.75rem);
+              display: grid;
+              grid-template-columns: minmax(180px, 220px) 1fr auto;
+              align-items: center;
+              gap: 1.5rem;
+              text-decoration: none;
+              transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s, background-color 0.2s;
+              box-sizing: border-box;
+              width: 100%;
+            }
+            .solution-horizontal-card:hover {
+              background-color: rgba(8, 28, 58, 0.8);
+              border-color: rgba(56, 189, 248, 0.4);
+              transform: translateY(-1px);
+              box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.25);
+            }
+            .solution-card-left {
+              display: flex;
+              align-items: center;
+              gap: 0.85rem;
+            }
+            .solution-card-num {
+              font-family: var(--font-mono);
+              font-size: 0.72rem;
+              color: #38BDF8;
+              font-weight: 600;
+            }
+            .solution-card-title {
+              font-size: 1.05rem;
+              font-weight: 600;
+              color: #F8FAFF;
+              letter-spacing: -0.01em;
+              margin: 0;
+              text-transform: none;
+              line-height: 1.3;
+            }
+            .solution-card-desc {
+              color: #94A3B8;
+              font-size: 0.875rem;
+              line-height: 1.5;
+              margin: 0;
+              font-weight: 300;
+            }
+            .solution-card-action {
+              display: inline-flex;
+              align-items: center;
+              gap: 0.35rem;
+              color: #1677FF;
+              font-family: var(--font-mono);
+              font-size: 0.72rem;
+              letter-spacing: 0.08em;
+              font-weight: 600;
+              text-transform: uppercase;
+              white-space: nowrap;
+              transition: color 0.2s, transform 0.2s;
+            }
+            .solution-horizontal-card:hover .solution-card-action {
+              color: #38BDF8;
+              transform: translateX(3px);
+            }
+
+            @media (max-width: 960px) {
+              .solution-horizontal-card {
+                grid-template-columns: 1fr;
+                gap: 0.45rem;
+                padding: 0.85rem 1.1rem;
+              }
+              .solution-card-title {
+                font-size: 0.95rem;
+              }
+              .solution-card-desc {
+                font-size: 0.8125rem;
+                line-height: 1.45;
+              }
+              .solution-card-action {
+                font-size: 0.6875rem;
+                padding-top: 0.2rem;
+              }
+            }
+          `}</style>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.3em',
+              fontSize: '0.72rem',
+              letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '1.5rem',
-              maxWidth: 'none',
+              marginBottom: '0.5rem',
               fontWeight: 600,
             }}>
               SOLUTIONS
             </p>
             <h2 style={{
-              fontSize: 'clamp(2.25rem, 6vw, 4rem)',
+              fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
               fontWeight: 700,
-              lineHeight: 1.05,
-              letterSpacing: '-0.03em',
+              lineHeight: 1.15,
+              letterSpacing: '-0.025em',
               color: '#F8FAFF',
-              marginBottom: '1rem',
+              marginBottom: '0.5rem',
               textTransform: 'uppercase',
             }}>
               Systems built to execute.
             </h2>
             <p style={{
-              fontSize: '1.15rem',
-              color: '#64748B',
-              lineHeight: 1.7,
-              marginBottom: 'clamp(3rem, 6vh, 5rem)',
-              maxWidth: 560,
+              fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
+              color: '#94A3B8',
+              lineHeight: 1.6,
+              marginBottom: 'clamp(1.5rem, 3vh, 2.25rem)',
+              maxWidth: 600,
               fontWeight: 300,
             }}>
               We construct custom software architectures designed to fit directly into your business model and operational workflow.
             </p>
 
-            <div
-              className="solutions-grid"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '1.5px',
-                background: 'rgba(22, 119, 255, 0.08)',
-                border: '1px solid rgba(22, 119, 255, 0.08)',
-                borderRadius: 16,
-                overflow: 'hidden',
-              }}
-            >
-              {services.map((item, i) => (
-                <Link
-                  key={item.id || i}
-                  href="/services"
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.25rem',
-                    padding: 'clamp(1.75rem, 4vw, 2.75rem)',
-                    backgroundColor: 'rgba(6, 21, 43, 0.7)',
-                    textDecoration: 'none',
-                    transition: 'background-color 0.25s',
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(10, 35, 71, 0.85)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(6, 21, 43, 0.7)'; }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: '#1677FF', fontWeight: 600 }}>
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <div style={{ color: '#55D6FF', opacity: 0.8 }}>
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <circle cx="12" cy="12" r="4" stroke="#1677FF" fill="rgba(22,119,255,0.1)" />
-                        <line x1="12" y1="2" x2="12" y2="8" stroke="#55D6FF" />
-                        <line x1="12" y1="16" x2="12" y2="22" stroke="#55D6FF" />
-                        <line x1="2" y1="12" x2="8" y2="12" stroke="#55D6FF" />
-                        <line x1="16" y1="12" x2="22" y2="12" stroke="#55D6FF" />
-                      </svg>
-                    </div>
+            <div className="solutions-list-container">
+              {[
+                {
+                  step: '01',
+                  name: 'AI Systems',
+                  desc: 'Custom AI systems for business workflows and intelligent decision making.',
+                  href: '/services#ai'
+                },
+                {
+                  step: '02',
+                  name: 'Business Software',
+                  desc: 'Web applications and internal systems designed around real business processes.',
+                  href: '/services#software'
+                },
+                {
+                  step: '03',
+                  name: 'Automation',
+                  desc: 'Automated workflows that reduce repetitive manual work.',
+                  href: '/services#automation'
+                },
+                {
+                  step: '04',
+                  name: 'Digital Products',
+                  desc: 'Customer facing software products, platforms, and intelligent tools.',
+                  href: '/services#products'
+                },
+              ].map((item, i) => (
+                <Link key={i} href={item.href} className="solution-horizontal-card">
+                  <div className="solution-card-left">
+                    <span className="solution-card-num">{item.step}</span>
+                    <h3 className="solution-card-title">{item.name}</h3>
                   </div>
-                  <h3 style={{
-                    fontSize: '1.4rem',
-                    fontWeight: 600,
-                    color: '#F8FAFF',
-                    letterSpacing: '-0.02em',
-                    lineHeight: 1.2,
-                    marginTop: '0.5rem'
-                  }}>
-                    {item.name || item.title}
-                  </h3>
-                  <p style={{
-                    fontSize: '0.95rem',
-                    color: '#94A3B8',
-                    lineHeight: 1.6,
-                    margin: 0,
-                    fontWeight: 300,
-                  }}>
-                    {item.description || item.desc}
-                  </p>
-                  <span style={{
-                    fontFamily: 'var(--font-mono)',
-                    fontSize: '0.75rem',
-                    color: '#1677FF',
-                    letterSpacing: '0.1em',
-                    marginTop: 'auto',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.25rem',
-                    fontWeight: 500
-                  }}>
+                  <p className="solution-card-desc">{item.desc}</p>
+                  <span className="solution-card-action">
                     DISCOVER SOLUTION →
                   </span>
                 </Link>
@@ -682,40 +728,39 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            WORK / CASE STUDIES (Top 4 Case Studies)
+            WORK / CASE STUDIES (Compact Project Rows)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(4rem, 10vh, 10rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
+        <section style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.25)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
           <style>{`
             .home-work-container {
               display: flex;
               flex-direction: column;
-              gap: 2.5rem;
+              gap: 0.75rem;
               width: 100%;
             }
             .home-work-card {
-              background-color: rgba(6, 21, 43, 0.5);
-              border: 1px solid rgba(22, 119, 255, 0.15);
-              border-radius: 16px;
-              padding: clamp(1.75rem, 4vw, 3rem);
+              background-color: rgba(6, 21, 43, 0.65);
+              border: 1px solid rgba(22, 119, 255, 0.14);
+              border-radius: 10px;
+              padding: 1.1rem clamp(1rem, 2.5vw, 1.75rem);
               display: flex;
               flex-direction: column;
-              justify-content: space-between;
-              gap: 1.5rem;
-              transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+              gap: 0.65rem;
+              transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s, background-color 0.2s;
               box-sizing: border-box;
-              height: 100%;
             }
             .home-work-card:hover {
+              background-color: rgba(8, 28, 58, 0.8);
               border-color: rgba(56, 189, 248, 0.4);
-              transform: translateY(-2px);
-              box-shadow: 0 12px 30px -10px rgba(22, 119, 255, 0.2);
+              transform: translateY(-1px);
+              box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.2);
             }
             .home-work-title {
-              font-size: clamp(1.5rem, 3vw, 2.25rem);
-              font-weight: 700;
+              font-size: clamp(1.1rem, 2vw, 1.3rem);
+              font-weight: 600;
               color: #F8FAFF;
-              line-height: 1.15;
-              letter-spacing: -0.02em;
+              line-height: 1.25;
+              letter-spacing: -0.015em;
               text-transform: none;
               margin: 0;
               transition: color 0.2s;
@@ -725,94 +770,66 @@ export default function HomePage() {
             }
             .home-work-desc {
               color: #94A3B8;
-              font-size: 1.05rem;
-              line-height: 1.6;
-              max-width: 800px;
+              font-size: 0.875rem;
+              line-height: 1.55;
               font-weight: 300;
               margin: 0;
             }
-            .home-work-desktop-subgrid {
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-              gap: 1.5rem;
-              margin-top: 0.5rem;
-              border-top: 1px solid rgba(22, 119, 255, 0.08);
-              padding-top: 1.25rem;
+            .home-work-meta-row {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              gap: 0.5rem;
+              flex-wrap: wrap;
+            }
+            .home-work-tech-pills {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 0.4rem;
+            }
+            .home-work-tech-tag {
+              font-size: 0.7rem;
+              color: #55D6FF;
+              background-color: rgba(22, 119, 255, 0.08);
+              border: 1px solid rgba(22, 119, 255, 0.15);
+              padding: 0.15rem 0.45rem;
+              border-radius: 4px;
+              font-family: var(--font-mono);
             }
 
-            /* ─── Mobile 2-Column Responsive Layout ─── */
             @media (max-width: 767px) {
-              .home-work-container {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: clamp(0.5rem, 2.5vw, 0.85rem);
-              }
               .home-work-card {
-                padding: clamp(0.75rem, 3vw, 1.1rem);
-                gap: 0.65rem;
-                border-radius: 10px;
-              }
-              .home-work-badge {
-                font-size: 0.625rem !important;
-                padding: 0.15rem 0.4rem !important;
-                max-width: 100%;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-              }
-              .home-work-year {
-                display: none !important;
+                padding: 0.9rem 1rem;
+                gap: 0.5rem;
               }
               .home-work-title {
-                font-size: clamp(0.72rem, 2.7vw, 0.84rem) !important;
-                line-height: 1.25 !important;
-                letter-spacing: -0.01em !important;
-                font-weight: 700 !important;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-                word-break: normal;
-                overflow-wrap: break-word;
-                hyphens: auto;
+                font-size: 0.95rem !important;
               }
               .home-work-desc {
-                font-size: 0.6875rem !important;
-                line-height: 1.35 !important;
-                display: -webkit-box;
-                -webkit-line-clamp: 2;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
-              }
-              .home-work-desktop-subgrid {
-                display: none !important;
-              }
-              .home-work-action-link {
-                font-size: 0.6875rem !important;
-                padding-top: 0.25rem !important;
+                font-size: 0.8125rem !important;
+                line-height: 1.45 !important;
               }
             }
           `}</style>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'clamp(2rem, 5vh, 4rem)', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 'clamp(1.5rem, 3vh, 2.25rem)', gap: '1rem', flexWrap: 'wrap' }}>
               <div>
                 <p style={{
                   fontFamily: 'var(--font-mono)',
-                  fontSize: '0.75rem',
-                  letterSpacing: '0.3em',
+                  fontSize: '0.72rem',
+                  letterSpacing: '0.25em',
                   textTransform: 'uppercase',
                   color: '#1677FF',
-                  marginBottom: '0.75rem',
-                  maxWidth: 'none',
+                  marginBottom: '0.5rem',
                   fontWeight: 600
                 }}>
                   CASE STUDIES
                 </p>
                 <h2 style={{
-                  fontSize: 'clamp(2rem, 5.5vw, 3.75rem)',
+                  fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
                   fontWeight: 700,
-                  lineHeight: 1.1,
-                  letterSpacing: '-0.03em',
+                  lineHeight: 1.15,
+                  letterSpacing: '-0.025em',
                   color: '#F8FAFF',
                   textTransform: 'uppercase',
                   margin: 0
@@ -820,7 +837,7 @@ export default function HomePage() {
                   Selected deployments.
                 </h2>
               </div>
-              <Link href="/work" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.875rem', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+              <Link href="/work" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '0.35rem', fontFamily: 'var(--font-mono)' }}>
                 View all case studies <span>→</span>
               </Link>
             </div>
@@ -832,75 +849,60 @@ export default function HomePage() {
 
                 return (
                   <div key={item.id || i} className="home-work-card">
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.35rem' }}>
-                        <span
-                          className="home-work-badge"
-                          style={{
-                            fontFamily: 'var(--font-mono)',
-                            fontSize: '0.7rem',
-                            letterSpacing: '0.15em',
-                            color: '#38BDF8',
-                            backgroundColor: 'rgba(22, 119, 255, 0.12)',
-                            border: '1px solid rgba(56, 189, 248, 0.25)',
-                            padding: '0.2rem 0.55rem',
-                            borderRadius: 4,
-                            textTransform: 'uppercase',
-                            fontWeight: 600
-                          }}
-                        >
-                          {item.industry ? item.industry.split('/')[0].trim() : (item.category || 'AI SYSTEMS')}
+                    <div className="home-work-meta-row">
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-mono)',
+                          fontSize: '0.65rem',
+                          letterSpacing: '0.15em',
+                          color: '#38BDF8',
+                          backgroundColor: 'rgba(22, 119, 255, 0.1)',
+                          border: '1px solid rgba(56, 189, 248, 0.2)',
+                          padding: '0.15rem 0.45rem',
+                          borderRadius: 4,
+                          textTransform: 'uppercase',
+                          fontWeight: 600
+                        }}
+                      >
+                        {item.industry ? item.industry.split('/')[0].trim() : (item.category || 'AI SYSTEMS')}
+                      </span>
+                      {item.year && (
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B' }}>
+                          {item.year}
                         </span>
-                        {item.year && (
-                          <span className="home-work-year" style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#64748B' }}>
-                            {item.year}
-                          </span>
-                        )}
-                      </div>
-                      
-                      <Link href={`/work/${slug}`} style={{ textDecoration: 'none' }}>
-                        <h3 className="home-work-title">
-                          {item.title || item.name}
-                        </h3>
-                      </Link>
-                      
-                      <p className="home-work-desc">
-                        {item.problem || item.desc || item.solution}
-                      </p>
-
-                      <div className="home-work-desktop-subgrid">
-                        {techList.length > 0 && (
-                          <div>
-                            <h4 style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.1em', marginBottom: '0.5rem', textTransform: 'uppercase' }}>TECHNOLOGY</h4>
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                              {techList.map((t: string) => (
-                                <span key={t} style={{ fontSize: '0.75rem', color: '#55D6FF', backgroundColor: 'rgba(22, 119, 255, 0.1)', padding: '0.25rem 0.5rem', borderRadius: 4, fontFamily: 'var(--font-mono)' }}>{t}</span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        {(item.results || item.purpose) && (
-                          <div>
-                            <h4 style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.1em', marginBottom: '0.5rem', textTransform: 'uppercase' }}>RESULT & PURPOSE</h4>
-                            <p style={{ color: '#94A3B8', fontSize: '0.9rem', lineHeight: 1.5, margin: 0, fontWeight: 300 }}>{item.results || item.purpose}</p>
-                          </div>
-                        )}
-                      </div>
+                      )}
                     </div>
+                    
+                    <Link href={`/work/${slug}`} style={{ textDecoration: 'none' }}>
+                      <h3 className="home-work-title">
+                        {item.title || item.name}
+                      </h3>
+                    </Link>
+                    
+                    <p className="home-work-desc">
+                      {item.problem || item.desc || item.solution}
+                    </p>
 
-                    <div className="home-work-action-link" style={{ display: 'flex', justifyContent: 'flex-start', marginTop: '0.5rem' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem', paddingTop: '0.35rem' }}>
+                      <div className="home-work-tech-pills">
+                        {techList.slice(0, 5).map((t: string) => (
+                          <span key={t} className="home-work-tech-tag">{t}</span>
+                        ))}
+                      </div>
+
                       <Link
                         href={`/work/${slug}`}
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
-                          gap: '0.4rem',
+                          gap: '0.35rem',
                           color: '#38BDF8',
                           textDecoration: 'none',
-                          fontSize: '0.8rem',
+                          fontSize: '0.75rem',
                           fontFamily: 'var(--font-mono)',
-                          letterSpacing: '0.1em',
-                          fontWeight: 600
+                          letterSpacing: '0.08em',
+                          fontWeight: 600,
+                          whiteSpace: 'nowrap'
                         }}
                       >
                         VIEW CASE STUDY <span>→</span>
@@ -914,116 +916,113 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            HOW WE WORK / DELIVERY PROCESS SECTION
+            HOW WE WORK / DELIVERY PROCESS SECTION (Compact Rows - No Broken Words)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(4rem, 10vh, 8rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.35)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
+        <section style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.35)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
           <style>{`
-            .process-grid {
-              display: grid;
-              grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-              gap: 1.25rem;
-            }
-            .process-card {
-              background-color: rgba(6, 21, 43, 0.65);
-              border: 1px solid rgba(22, 119, 255, 0.15);
-              border-radius: 12px;
-              padding: 1.75rem 1.5rem;
+            .process-list-container {
               display: flex;
               flex-direction: column;
-              gap: 0.75rem;
-              transition: border-color 0.2s, transform 0.2s;
+              gap: 0.65rem;
+              width: 100%;
             }
-            .process-card:hover {
+            .process-horizontal-card {
+              background-color: rgba(6, 21, 43, 0.65);
+              border: 1px solid rgba(22, 119, 255, 0.14);
+              border-radius: 10px;
+              padding: 0.85rem clamp(1rem, 2.5vw, 1.75rem);
+              display: grid;
+              grid-template-columns: minmax(180px, 220px) 1fr;
+              align-items: center;
+              gap: 1.5rem;
+              transition: border-color 0.2s, transform 0.2s, background-color 0.2s;
+              box-sizing: border-box;
+              width: 100%;
+            }
+            .process-horizontal-card:hover {
+              background-color: rgba(8, 28, 58, 0.8);
               border-color: rgba(56, 189, 248, 0.4);
-              transform: translateY(-2px);
+              transform: translateY(-1px);
+            }
+            .process-card-left {
+              display: flex;
+              align-items: center;
+              gap: 0.85rem;
             }
             .process-step-label {
               font-family: var(--font-mono);
-              font-size: 0.75rem;
+              font-size: 0.72rem;
               color: #1677FF;
-              letter-spacing: 0.15em;
-              font-weight: 700;
+              font-weight: 600;
+              letter-spacing: 0.1em;
             }
             .process-card-title {
-              font-size: 1.15rem;
-              font-weight: 700;
+              font-size: 1.05rem;
+              font-weight: 600;
               color: #F8FAFF;
               letter-spacing: 0.02em;
               margin: 0;
               text-transform: uppercase;
+              line-height: 1.3;
             }
             .process-card-desc {
               color: #94A3B8;
               font-size: 0.875rem;
-              line-height: 1.55;
+              line-height: 1.5;
               margin: 0;
               font-weight: 300;
             }
 
-            @media (max-width: 767px) {
-              .process-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-                gap: clamp(0.5rem, 2.5vw, 0.85rem) !important;
-              }
-              .process-card {
-                padding: clamp(0.75rem, 3vw, 1.1rem) !important;
-                gap: 0.4rem !important;
-                border-radius: 10px !important;
-              }
-              .process-step-label {
-                font-size: 0.58rem !important;
-                letter-spacing: 0.1em !important;
+            @media (max-width: 860px) {
+              .process-horizontal-card {
+                grid-template-columns: 1fr;
+                gap: 0.35rem;
+                padding: 0.85rem 1.1rem;
               }
               .process-card-title {
-                font-size: clamp(0.75rem, 2.7vw, 0.88rem) !important;
-                line-height: 1.25 !important;
-                letter-spacing: 0.01em !important;
+                font-size: 0.95rem;
               }
               .process-card-desc {
-                font-size: 0.6875rem !important;
-                line-height: 1.35 !important;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
+                font-size: 0.8125rem;
+                line-height: 1.45;
               }
             }
           `}</style>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.3em',
+              fontSize: '0.72rem',
+              letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '1rem',
+              marginBottom: '0.5rem',
               fontWeight: 600
             }}>
               HOW WE WORK
             </p>
             <h2 style={{
-              fontSize: 'clamp(2.25rem, 6vw, 4rem)',
+              fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
               fontWeight: 700,
-              lineHeight: 1.05,
-              letterSpacing: '-0.03em',
+              lineHeight: 1.15,
+              letterSpacing: '-0.025em',
               color: '#F8FAFF',
-              marginBottom: '1rem',
+              marginBottom: '0.5rem',
               textTransform: 'uppercase'
             }}>
               A Clear, Structured Process.
             </h2>
             <p style={{
-              fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
+              fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
               color: '#94A3B8',
-              lineHeight: 1.65,
-              marginBottom: 'clamp(2.5rem, 5vh, 4rem)',
+              lineHeight: 1.6,
+              marginBottom: 'clamp(1.5rem, 3vh, 2.25rem)',
               maxWidth: 600,
               fontWeight: 300
             }}>
               We eliminate uncertainty from development through clear, iterative milestones from discovery to production launch.
             </p>
 
-            <div className="process-grid">
+            <div className="process-list-container">
               {[
                 { step: '01', name: 'UNDERSTAND', desc: 'Study the business problem, operational context, and core requirements.' },
                 { step: '02', name: 'DEFINE', desc: 'Scope the technical architecture, data workflows, user roles, and success milestones.' },
@@ -1031,16 +1030,12 @@ export default function HomePage() {
                 { step: '04', name: 'BUILD', desc: 'Develop, test, and refine the system using production-grade frameworks and rigorous validation.' },
                 { step: '05', name: 'DEPLOY', desc: 'Launch, monitor, document, and support the solution in secure cloud environments.' },
               ].map((item, i) => (
-                <div key={i} className="process-card">
-                  <span className="process-step-label">
-                    {item.step} // PHASE
-                  </span>
-                  <h3 className="process-card-title">
-                    {item.name}
-                  </h3>
-                  <p className="process-card-desc">
-                    {item.desc}
-                  </p>
+                <div key={i} className="process-horizontal-card">
+                  <div className="process-card-left">
+                    <span className="process-step-label">{item.step}</span>
+                    <h3 className="process-card-title">{item.name}</h3>
+                  </div>
+                  <p className="process-card-desc">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -1050,34 +1045,33 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             WHY QUANTUM AI / PRINCIPLES
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'clamp(3rem, 6vw, 6rem)', alignItems: 'center' }}>
+        <section style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'clamp(2rem, 4vw, 4rem)', alignItems: 'center' }}>
             {/* Left text */}
             <div>
               <p style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.75rem',
-                letterSpacing: '0.3em',
+                fontSize: '0.72rem',
+                letterSpacing: '0.25em',
                 textTransform: 'uppercase',
                 color: '#1677FF',
-                marginBottom: '1.5rem',
-                maxWidth: 'none',
+                marginBottom: '0.5rem',
                 fontWeight: 600
               }}>
                 WHY QUANTUM AI.
               </p>
               <h2 style={{
-                fontSize: 'clamp(2rem, 4vw, 3rem)',
+                fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
                 fontWeight: 700,
-                lineHeight: 1.1,
-                letterSpacing: '-0.03em',
+                lineHeight: 1.15,
+                letterSpacing: '-0.025em',
                 color: '#F8FAFF',
-                marginBottom: '1.75rem',
+                marginBottom: '1rem',
                 textTransform: 'uppercase'
               }}>
                 We turn complex problems into intelligent, useful systems.
               </h2>
-              <p style={{ fontSize: '1.1rem', color: '#94A3B8', lineHeight: 1.7, marginBottom: '2.5rem', fontWeight: 300 }}>
+              <p style={{ fontSize: '0.95rem', color: '#94A3B8', lineHeight: 1.65, marginBottom: '1.75rem', fontWeight: 300 }}>
                 We combine AI, software, and thoughtful engineering to build technology that solves real problems and creates lasting value.
               </p>
               <NovaButton href="/about">LEARN MORE ABOUT US</NovaButton>
@@ -1087,13 +1081,13 @@ export default function HomePage() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
               <div style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.7rem',
+                fontSize: '0.68rem',
                 color: '#38BDF8',
-                letterSpacing: '0.25em',
+                letterSpacing: '0.2em',
                 textTransform: 'uppercase',
                 fontWeight: 600,
-                marginBottom: '0.5rem',
-                paddingBottom: '0.5rem',
+                marginBottom: '0.4rem',
+                paddingBottom: '0.4rem',
                 borderBottom: '1px solid rgba(22, 119, 255, 0.15)'
               }}>
                 THINK DEEPER
@@ -1105,13 +1099,13 @@ export default function HomePage() {
                 { title: 'Create What Matters', desc: 'Build technology with real purpose and value.' },
               ].map((item, i) => (
                 <div key={i} style={{
-                  padding: '1.5rem 0',
-                  borderTop: i === 0 ? 'none' : '1px solid rgba(22, 119, 255, 0.1)',
-                  borderBottom: i === 3 ? '1px solid rgba(22, 119, 255, 0.1)' : 'none',
+                  padding: '1rem 0',
+                  borderTop: i === 0 ? 'none' : '1px solid rgba(22, 119, 255, 0.08)',
+                  borderBottom: i === 3 ? '1px solid rgba(22, 119, 255, 0.08)' : 'none',
                 }}>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>0{i + 1}</div>
-                  <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#F8FAFF', marginBottom: '0.35rem', letterSpacing: '-0.01em', textTransform: 'none' }}>{item.title}</h3>
-                  <p style={{ color: '#64748B', fontSize: '0.95rem', lineHeight: 1.5, maxWidth: 'none', fontWeight: 300, margin: 0 }}>{item.desc}</p>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#1677FF', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.2rem', fontWeight: 600 }}>0{i + 1}</div>
+                  <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFF', marginBottom: '0.2rem', letterSpacing: '-0.01em', textTransform: 'none' }}>{item.title}</h3>
+                  <p style={{ color: '#64748B', fontSize: '0.875rem', lineHeight: 1.5, margin: 0, fontWeight: 300 }}>{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -1119,64 +1113,75 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            TECHNOLOGY SECTION (Capabilities Supporting the Business)
+            CAPABILITIES / TECH STACK SECTION (1 Card Per Row)
         ═══════════════════════════════════════════════════════════ */}
-        <section className="tech-stack-section" style={{ pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.3)' }}>
+        <section className="tech-stack-section" style={{ pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.3)', borderTop: '1px solid rgba(22, 119, 255, 0.08)', borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
           <style>{`
             .tech-stack-section {
-              padding: clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem);
+              padding: clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem);
               box-sizing: border-box;
               width: 100%;
             }
-            .tech-grid {
-              display: grid;
-              grid-template-columns: repeat(2, 1fr);
-              gap: 1.5rem;
-              width: 100%;
-              box-sizing: border-box;
-            }
-            .tech-card {
-              background-color: rgba(6, 21, 43, 0.6);
-              border: 1px solid rgba(22, 119, 255, 0.12);
-              border-radius: 12px;
-              padding: 2rem;
+            .tech-list-container {
               display: flex;
               flex-direction: column;
-              gap: 1.25rem;
-              transition: border-color 0.25s, box-shadow 0.25s;
+              gap: 0.65rem;
+              width: 100%;
+            }
+            .tech-horizontal-card {
+              background-color: rgba(6, 21, 43, 0.65);
+              border: 1px solid rgba(22, 119, 255, 0.14);
+              border-radius: 10px;
+              padding: 0.85rem clamp(1rem, 2.5vw, 1.75rem);
+              display: grid;
+              grid-template-columns: minmax(200px, 240px) 1fr auto;
+              align-items: center;
+              gap: 1.5rem;
+              transition: border-color 0.2s, box-shadow 0.2s;
               box-sizing: border-box;
               width: 100%;
             }
-            .tech-card:hover {
-              border-color: rgba(22, 119, 255, 0.35);
-              box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+            .tech-horizontal-card:hover {
+              border-color: rgba(56, 189, 248, 0.4);
+              box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.25);
+            }
+            .tech-card-left {
+              display: flex;
+              align-items: center;
+              gap: 0.85rem;
+            }
+            .tech-card-num {
+              font-family: var(--font-mono);
+              font-size: 0.72rem;
+              color: #38BDF8;
+              font-weight: 600;
             }
             .tech-card-title {
-              font-size: 1.25rem;
+              font-size: 1.05rem;
               font-weight: 600;
               color: #F8FAFF;
               letter-spacing: -0.01em;
-              text-transform: none;
+              text-transform: uppercase;
               margin: 0;
+              line-height: 1.3;
             }
             .tech-card-desc {
               color: #94A3B8;
-              font-size: 0.925rem;
-              line-height: 1.55;
+              font-size: 0.875rem;
+              line-height: 1.5;
               margin: 0;
               font-weight: 300;
             }
             .tech-tags-container {
               display: flex;
               flex-wrap: wrap;
-              gap: 0.5rem;
-              margin-top: auto;
-              padding-top: 1rem;
+              gap: 0.35rem;
+              justify-content: flex-end;
             }
             .tech-tag-pill {
-              font-size: 0.75rem;
+              font-size: 0.7rem;
               font-family: var(--font-mono);
-              padding: 0.35rem 0.75rem;
+              padding: 0.15rem 0.45rem;
               background-color: rgba(22, 119, 255, 0.08);
               border: 1px solid rgba(22, 119, 255, 0.15);
               border-radius: 4px;
@@ -1184,83 +1189,87 @@ export default function HomePage() {
               white-space: nowrap;
             }
 
-            @media (max-width: 767px) {
-              .tech-stack-section {
-                padding: clamp(3.5rem, 8vh, 5rem) clamp(1rem, 4vw, 2rem) !important;
-              }
-              .tech-grid {
-                grid-template-columns: 1fr !important;
-                gap: 1rem !important;
-              }
-              .tech-card {
-                padding: clamp(1.2rem, 3.5vw, 1.5rem) !important;
-                gap: 0.85rem !important;
-              }
-              .tech-card-title {
-                font-size: 1.15rem !important;
-              }
-              .tech-card-desc {
-                font-size: 0.85rem !important;
-                line-height: 1.5 !important;
+            @media (max-width: 960px) {
+              .tech-horizontal-card {
+                grid-template-columns: 1fr;
+                gap: 0.45rem;
+                padding: 0.85rem 1.1rem;
               }
               .tech-tags-container {
-                gap: 0.4rem !important;
-                padding-top: 0.65rem !important;
-              }
-              .tech-tag-pill {
-                font-size: 0.72rem !important;
-                padding: 0.25rem 0.6rem !important;
+                justify-content: flex-start;
+                padding-top: 0.25rem;
               }
             }
           `}</style>
           <div style={{ maxWidth: 1200, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.3em',
+              fontSize: '0.72rem',
+              letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '1rem',
-              maxWidth: 'none',
+              marginBottom: '0.5rem',
               fontWeight: 600
             }}>
               CAPABILITIES
             </p>
             <h2 style={{
-              fontSize: 'clamp(2.25rem, 6vw, 4rem)',
+              fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
               fontWeight: 700,
               color: '#F8FAFF',
-              marginBottom: '0.75rem',
-              letterSpacing: '-0.03em',
+              marginBottom: '0.5rem',
+              letterSpacing: '-0.025em',
               textTransform: 'uppercase'
             }}>
               Our tech stack.
             </h2>
             <p style={{
-              fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
+              fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
               color: '#94A3B8',
-              lineHeight: 1.65,
-              marginBottom: 'clamp(2rem, 5vh, 4rem)',
-              maxWidth: 560,
+              lineHeight: 1.6,
+              marginBottom: 'clamp(1.5rem, 3vh, 2.25rem)',
+              maxWidth: 600,
               fontWeight: 300
             }}>
               We construct systems using production-proven languages and platforms capable of scaling seamlessly.
             </p>
 
-            <div className="tech-grid">
-              {techGroups.map((group, idx) => (
-                <div key={idx} className="tech-card">
-                  <h3 className="tech-card-title">
-                    {group.title}
-                  </h3>
-                  <p className="tech-card-desc">
-                    {group.desc}
-                  </p>
+            <div className="tech-list-container">
+              {[
+                {
+                  num: '01',
+                  title: 'AI & MACHINE LEARNING',
+                  desc: 'Models, neural networks, retrieval platforms, and agentic workflows.',
+                  tags: ['Python', 'PyTorch', 'TensorFlow', 'LLMs', 'RAG', 'AI Agents']
+                },
+                {
+                  num: '02',
+                  title: 'APPLICATIONS',
+                  desc: 'Frontend applications and scalable backend APIs.',
+                  tags: ['Next.js', 'React', 'TypeScript', 'Node.js', 'FastAPI']
+                },
+                {
+                  num: '03',
+                  title: 'DATA SYSTEMS',
+                  desc: 'Transactional, document, cache, and vector data systems.',
+                  tags: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Vector DB']
+                },
+                {
+                  num: '04',
+                  title: 'INFRASTRUCTURE',
+                  desc: 'Cloud infrastructure, containers, security, and automation.',
+                  tags: ['Docker', 'AWS', 'Linux', 'REST APIs', 'DevOps']
+                },
+              ].map((group, idx) => (
+                <div key={idx} className="tech-horizontal-card">
+                  <div className="tech-card-left">
+                    <span className="tech-card-num">{group.num}</span>
+                    <h3 className="tech-card-title">{group.title}</h3>
+                  </div>
+                  <p className="tech-card-desc">{group.desc}</p>
                   <div className="tech-tags-container">
                     {group.tags.map((t: string) => (
-                      <span key={t} className="tech-tag-pill">
-                        {t}
-                      </span>
+                      <span key={t} className="tech-tag-pill">{t}</span>
                     ))}
                   </div>
                 </div>
@@ -1279,35 +1288,34 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             LEADERSHIP SECTION
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.2)' }}>
+        <section style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.2)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.3em',
+              fontSize: '0.72rem',
+              letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '1.5rem',
-              maxWidth: 'none',
+              marginBottom: '0.5rem',
               fontWeight: 600
             }}>
               LEADERSHIP
             </p>
             <h2 style={{
-              fontSize: 'clamp(2.25rem, 6vw, 4rem)',
+              fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
               fontWeight: 700,
               color: '#F8FAFF',
-              marginBottom: '1rem',
-              letterSpacing: '-0.03em',
+              marginBottom: '0.5rem',
+              letterSpacing: '-0.025em',
               textTransform: 'uppercase'
             }}>
               The people behind Quantum AI.
             </h2>
             <p style={{
-              fontSize: '1.15rem',
-              color: '#64748B',
-              lineHeight: 1.7,
-              marginBottom: 'clamp(3rem, 6vh, 5rem)',
+              fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
+              color: '#94A3B8',
+              lineHeight: 1.6,
+              marginBottom: 'clamp(1.5rem, 3vh, 2.25rem)',
               maxWidth: 560,
               fontWeight: 300
             }}>
@@ -1318,8 +1326,8 @@ export default function HomePage() {
               className="home-leadership-grid"
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '1.75rem',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '1.25rem',
                 maxWidth: 960,
                 margin: '0 auto',
               }}
@@ -1329,9 +1337,9 @@ export default function HomePage() {
                   key={person.id || person.slug}
                   href={`/leadership/${person.slug || 'fawadullah-imraj'}`}
                   style={{
-                    backgroundColor: 'rgba(6, 21, 43, 0.75)',
-                    border: '1px solid rgba(22, 119, 255, 0.2)',
-                    borderRadius: 12,
+                    backgroundColor: 'rgba(6, 21, 43, 0.7)',
+                    border: '1px solid rgba(22, 119, 255, 0.15)',
+                    borderRadius: 10,
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
@@ -1339,20 +1347,20 @@ export default function HomePage() {
                     transition: 'transform 0.2s, border-color 0.2s, box-shadow 0.2s',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.5)';
-                    e.currentTarget.style.transform = 'translateY(-4px)';
-                    e.currentTarget.style.boxShadow = '0 12px 30px rgba(0, 0, 0, 0.5)';
+                    e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 8px 24px -6px rgba(22, 119, 255, 0.25)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.2)';
+                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.15)';
                     e.currentTarget.style.transform = 'none';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
                 >
                   {/* Card Header Tag */}
                   <div style={{
-                    padding: '0.65rem 1rem',
-                    borderBottom: '1px solid rgba(22, 119, 255, 0.12)',
+                    padding: '0.5rem 0.85rem',
+                    borderBottom: '1px solid rgba(22, 119, 255, 0.1)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
@@ -1368,7 +1376,7 @@ export default function HomePage() {
                   {/* Photo Container */}
                   <div style={{
                     width: '100%',
-                    aspectRatio: '4/3',
+                    aspectRatio: '16/10',
                     backgroundColor: '#030712',
                     overflow: 'hidden',
                     display: 'flex',
@@ -1387,27 +1395,25 @@ export default function HomePage() {
                   </div>
 
                   {/* Body Content */}
-                  <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <div style={{ padding: '0.9rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                     <h3 style={{
-                      fontSize: 'clamp(0.875rem, 2.5vw, 1.15rem)',
+                      fontSize: '1.05rem',
                       fontWeight: 600,
                       color: '#F8FAFF',
-                      margin: '0 0 0.25rem 0',
+                      margin: '0 0 0.2rem 0',
                       letterSpacing: '-0.01em',
                       textTransform: 'none',
-                      wordBreak: 'break-word',
-                      overflowWrap: 'break-word',
                       lineHeight: 1.3,
                     }}>
                       {person.name}
                     </h3>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 'clamp(0.55rem, 1.6vw, 0.68rem)', color: '#55D6FF', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.5rem', lineHeight: 1.4, display: 'block' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#55D6FF', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.35rem', display: 'block' }}>
                       {person.position}
                     </span>
-                    <p style={{ color: '#94A3B8', fontSize: 'clamp(0.72rem, 1.8vw, 0.85rem)', lineHeight: 1.5, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    <p style={{ color: '#94A3B8', fontSize: '0.825rem', lineHeight: 1.45, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {person.shortBio}
                     </p>
-                    <span style={{ marginTop: 'auto', paddingTop: '0.75rem', color: '#1677FF', fontSize: 'clamp(0.6rem, 1.6vw, 0.72rem)', fontWeight: 600, fontFamily: 'var(--font-mono)', letterSpacing: '0.06em' }}>
+                    <span style={{ marginTop: 'auto', paddingTop: '0.65rem', color: '#38BDF8', fontSize: '0.72rem', fontWeight: 600, fontFamily: 'var(--font-mono)', letterSpacing: '0.06em' }}>
                       VIEW PROFILE →
                     </span>
                   </div>
@@ -1416,7 +1422,7 @@ export default function HomePage() {
             </div>
 
             {/* Team Button */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '3.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2.5rem' }}>
               <NovaButton href="/leadership">
                 MEET THE FULL TEAM →
               </NovaButton>
@@ -1425,118 +1431,113 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            TRUST & SECURITY SECTION
+            TRUST & SECURITY SECTION (1 Card Per Row)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(4rem, 10vh, 8rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.6)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
+        <section style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.6)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
           <style>{`
-            .trust-grid {
-              display: grid;
-              grid-template-columns: repeat(2, 1fr);
-              gap: 1.5rem;
-            }
-            .trust-card {
-              background-color: rgba(6, 21, 43, 0.75);
-              border: 1px solid rgba(22, 119, 255, 0.15);
-              border-radius: 14px;
-              padding: clamp(1.5rem, 3vw, 2rem);
+            .trust-list-container {
               display: flex;
               flex-direction: column;
-              gap: 0.85rem;
-              transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+              gap: 0.65rem;
+              width: 100%;
             }
-            .trust-card:hover {
+            .trust-horizontal-card {
+              background-color: rgba(6, 21, 43, 0.65);
+              border: 1px solid rgba(22, 119, 255, 0.14);
+              border-radius: 10px;
+              padding: 0.85rem clamp(1rem, 2.5vw, 1.75rem);
+              display: grid;
+              grid-template-columns: minmax(200px, 240px) 1fr;
+              align-items: center;
+              gap: 1.5rem;
+              transition: border-color 0.2s, box-shadow 0.2s;
+              box-sizing: border-box;
+              width: 100%;
+            }
+            .trust-horizontal-card:hover {
               border-color: rgba(56, 189, 248, 0.4);
-              transform: translateY(-2px);
-              box-shadow: 0 12px 30px -8px rgba(22, 119, 255, 0.25);
+              box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.25);
+            }
+            .trust-card-left {
+              display: flex;
+              flex-direction: column;
+              gap: 0.15rem;
             }
             .trust-card-code {
               font-family: var(--font-mono);
-              font-size: 0.6875rem;
+              font-size: 0.625rem;
               color: #38BDF8;
               letter-spacing: 0.15em;
               font-weight: 600;
               text-transform: uppercase;
             }
             .trust-card-title {
-              font-size: 1.2rem;
-              font-weight: 700;
+              font-size: 1.05rem;
+              font-weight: 600;
               color: #F8FAFF;
               margin: 0;
               letter-spacing: -0.01em;
               text-transform: none;
+              line-height: 1.3;
             }
             .trust-card-desc {
               color: #94A3B8;
-              font-size: 0.9rem;
-              line-height: 1.6;
+              font-size: 0.875rem;
+              line-height: 1.5;
               margin: 0;
               font-weight: 300;
             }
 
-            @media (max-width: 767px) {
-              .trust-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-                gap: clamp(0.5rem, 2.5vw, 0.85rem) !important;
-              }
-              .trust-card {
-                padding: clamp(0.75rem, 3vw, 1.1rem) !important;
-                gap: 0.5rem !important;
-                border-radius: 10px !important;
-              }
-              .trust-card-code {
-                font-size: 0.58rem !important;
-                letter-spacing: 0.1em !important;
+            @media (max-width: 860px) {
+              .trust-horizontal-card {
+                grid-template-columns: 1fr;
+                gap: 0.35rem;
+                padding: 0.85rem 1.1rem;
               }
               .trust-card-title {
-                font-size: clamp(0.75rem, 2.7vw, 0.88rem) !important;
-                line-height: 1.25 !important;
-                letter-spacing: -0.01em !important;
+                font-size: 0.95rem;
               }
               .trust-card-desc {
-                font-size: 0.6875rem !important;
-                line-height: 1.35 !important;
-                display: -webkit-box;
-                -webkit-line-clamp: 3;
-                -webkit-box-orient: vertical;
-                overflow: hidden;
+                font-size: 0.8125rem;
+                line-height: 1.45;
               }
             }
           `}</style>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.3em',
+              fontSize: '0.72rem',
+              letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '1rem',
+              marginBottom: '0.5rem',
               fontWeight: 600
             }}>
               TRUST & SECURITY
             </p>
             <h2 style={{
-              fontSize: 'clamp(2.25rem, 5.5vw, 3.75rem)',
+              fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
               fontWeight: 700,
-              lineHeight: 1.1,
-              letterSpacing: '-0.03em',
+              lineHeight: 1.15,
+              letterSpacing: '-0.025em',
               color: '#F8FAFF',
-              marginBottom: '1rem',
+              marginBottom: '0.5rem',
               textTransform: 'uppercase'
             }}>
               Engineered for Reliability and Security.
             </h2>
             <p style={{
-              fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
+              fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
               color: '#94A3B8',
-              lineHeight: 1.65,
-              marginBottom: 'clamp(2.5rem, 5vh, 4rem)',
+              lineHeight: 1.6,
+              marginBottom: 'clamp(1.5rem, 3vh, 2.25rem)',
               maxWidth: 620,
               fontWeight: 300
             }}>
               We prioritize data privacy, strict access control, and dependable cloud infrastructure across every software solution we deploy.
             </p>
 
-            <div className="trust-grid">
+            <div className="trust-list-container">
               {[
                 {
                   code: '01 // PRIVACY',
@@ -1559,13 +1560,15 @@ export default function HomePage() {
                   desc: 'Clean, documented codebases and ongoing engineering maintenance so your systems stay performant as your business grows.'
                 },
               ].map((item, idx) => (
-                <div key={idx} className="trust-card">
-                  <span className="trust-card-code">
-                    {item.code}
-                  </span>
-                  <h3 className="trust-card-title">
-                    {item.title}
-                  </h3>
+                <div key={idx} className="trust-horizontal-card">
+                  <div className="trust-card-left">
+                    <span className="trust-card-code">
+                      {item.code}
+                    </span>
+                    <h3 className="trust-card-title">
+                      {item.title}
+                    </h3>
+                  </div>
                   <p className="trust-card-desc">
                     {item.desc}
                   </p>
@@ -1583,48 +1586,47 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             CONTACT SECTION
         ═══════════════════════════════════════════════════════════ */}
-        <section id="contact-form" style={{ padding: 'clamp(6rem, 14vh, 12rem) clamp(1.25rem, 6vw, 6rem)', pointerEvents: 'auto' }}>
+        <section id="contact-form" style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.3em',
+              fontSize: '0.72rem',
+              letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '1.5rem',
-              maxWidth: 'none',
+              marginBottom: '0.5rem',
               fontWeight: 600
             }}>
               CONTACT
             </p>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'clamp(3rem, 6vw, 6rem)', alignItems: 'start' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'clamp(2rem, 4vw, 4rem)', alignItems: 'start' }}>
               <div>
                 <h2 style={{
-                  fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+                  fontSize: 'clamp(1.75rem, 3.2vw, 2.6rem)',
                   fontWeight: 700,
-                  lineHeight: 1.05,
-                  letterSpacing: '-0.04em',
+                  lineHeight: 1.1,
+                  letterSpacing: '-0.03em',
                   color: '#F8FAFF',
-                  marginBottom: '1.5rem',
+                  marginBottom: '0.75rem',
                   textTransform: 'uppercase'
                 }}>
                   Let's build something useful.
                 </h2>
-                <p style={{ fontSize: '1.1rem', color: '#94A3B8', lineHeight: 1.6, marginBottom: '2.5rem', fontWeight: 300 }}>
+                <p style={{ fontSize: '0.95rem', color: '#94A3B8', lineHeight: 1.6, marginBottom: '1.75rem', fontWeight: 300 }}>
                   Tell us what you are building, what problem you are solving, or what you want to improve.
                 </p>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.1)', paddingTop: '1.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderTop: '1px solid rgba(22, 119, 255, 0.1)', paddingTop: '1.25rem' }}>
                   <div>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.2em', display: 'block', marginBottom: '0.25rem', textTransform: 'uppercase' }}>EMAIL INQUIRIES</span>
-                    <a href="mailto:fawadimraj@gmail.com" style={{ fontSize: '1.15rem', color: '#F8FAFF', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500 }} onMouseEnter={(e) => e.currentTarget.style.color = '#1677FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#F8FAFF'}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>EMAIL INQUIRIES</span>
+                    <a href="mailto:fawadimraj@gmail.com" style={{ fontSize: '1rem', color: '#F8FAFF', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500 }} onMouseEnter={(e) => e.currentTarget.style.color = '#1677FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#F8FAFF'}>
                       hello@quantumai.dev
                     </a>
                   </div>
                   <div>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.2em', display: 'block', marginBottom: '0.25rem', textTransform: 'uppercase' }}>RESPONSE MATRIX</span>
-                    <p style={{ color: '#94A3B8', fontSize: '0.9rem', margin: 0, fontWeight: 300 }}>We review all incoming submissions and reply within 24 hours.</p>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>RESPONSE MATRIX</span>
+                    <p style={{ color: '#94A3B8', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>We review all incoming submissions and reply within 24 hours.</p>
                   </div>
                 </div>
               </div>
@@ -1632,10 +1634,10 @@ export default function HomePage() {
               {/* Form */}
               <div style={{
                 backgroundColor: '#040E24',
-                border: '1px solid rgba(56, 189, 248, 0.3)',
-                borderRadius: 16,
-                padding: 'clamp(1.75rem, 4vw, 3rem)',
-                boxShadow: '0 20px 60px -10px rgba(0, 0, 0, 0.85), 0 0 30px -5px rgba(22, 119, 255, 0.2)'
+                border: '1px solid rgba(56, 189, 248, 0.25)',
+                borderRadius: 12,
+                padding: 'clamp(1.5rem, 3vw, 2.25rem)',
+                boxShadow: '0 16px 40px -10px rgba(0, 0, 0, 0.85), 0 0 20px -5px rgba(22, 119, 255, 0.15)'
               }}>
                 {submitStatus === 'success' ? (
                   <div style={{ textAlign: 'center', padding: '2rem 0' }}>

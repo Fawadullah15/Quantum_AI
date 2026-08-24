@@ -64,12 +64,12 @@ export default async function TechnologyPage() {
   }, {} as Record<string, any[]>);
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 80px) * 2)', paddingBottom: 'var(--space-48, 6rem)', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container section">
+    <div style={{ paddingTop: 'calc(var(--nav-height, 80px) + 2rem)', paddingBottom: '5rem', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container section">
       <div style={{ maxWidth: 'var(--max-width, 1200px)', margin: '0 auto' }}>
-        <div style={{ marginBottom: 'var(--space-32, 4rem)' }}>
-          <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '1rem' }}>SYS.02 / ARCHITECTURE</div>
-          <h1 style={{ fontSize: 'clamp(3rem, 8vw, 8rem)', fontWeight: 700, lineHeight: 0.9, letterSpacing: '-0.05em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
-            CORE<br />TECHNOLOGY.
+        <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
+          <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.02 / ARCHITECTURE</div>
+          <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
+            CORE TECHNOLOGY.
           </h1>
         </div>
 

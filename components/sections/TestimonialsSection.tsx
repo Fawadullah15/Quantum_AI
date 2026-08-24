@@ -136,38 +136,36 @@ export default function TestimonialsSection({
 
   return (
     <section
+      id="testimonials-section"
       style={{
-        padding: 'clamp(5rem, 12vh, 10rem) clamp(1.25rem, 6vw, 6rem)',
+        padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)',
         pointerEvents: 'auto',
-        backgroundColor: 'rgba(6, 21, 43, 0.35)',
-        position: 'relative',
-        overflow: 'hidden',
+        backgroundColor: 'rgba(6, 21, 43, 0.25)',
+        borderTop: '1px solid rgba(22, 119, 255, 0.08)',
+        borderBottom: '1px solid rgba(22, 119, 255, 0.08)',
       }}
-      aria-label="Client Testimonials"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
     >
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        {/* Section Header */}
+        {/* Header Block */}
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'flex-end',
-            marginBottom: 'clamp(2.5rem, 5vh, 4rem)',
+            marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)',
             flexWrap: 'wrap',
-            gap: '1.5rem',
+            gap: '1.25rem',
           }}
         >
           <div>
             <p
               style={{
                 fontFamily: 'var(--font-mono, monospace)',
-                fontSize: '0.75rem',
-                letterSpacing: '0.3em',
+                fontSize: '0.72rem',
+                letterSpacing: '0.25em',
                 textTransform: 'uppercase',
                 color: '#1677FF',
-                marginBottom: '1rem',
+                marginBottom: '0.5rem',
                 fontWeight: 600,
               }}
             >
@@ -175,10 +173,10 @@ export default function TestimonialsSection({
             </p>
             <h2
               style={{
-                fontSize: 'clamp(2.25rem, 5vw, 3.75rem)',
+                fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
                 fontWeight: 700,
-                lineHeight: 1.1,
-                letterSpacing: '-0.03em',
+                lineHeight: 1.15,
+                letterSpacing: '-0.025em',
                 color: '#F8FAFF',
                 textTransform: 'uppercase',
                 margin: 0,
@@ -188,10 +186,10 @@ export default function TestimonialsSection({
             </h2>
             <p
               style={{
-                fontSize: '1.1rem',
+                fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
                 color: '#94A3B8',
                 lineHeight: 1.6,
-                marginTop: '0.75rem',
+                marginTop: '0.4rem',
                 marginBottom: 0,
                 maxWidth: 600,
                 fontWeight: 300,
@@ -760,23 +758,23 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
     <div
       style={{
         backgroundColor: 'rgba(6, 21, 43, 0.65)',
-        border: '1px solid rgba(22, 119, 255, 0.18)',
-        borderRadius: 14,
-        padding: 'clamp(1.5rem, 3vw, 2.25rem)',
+        border: '1px solid rgba(22, 119, 255, 0.15)',
+        borderRadius: 10,
+        padding: '1.1rem 1.4rem',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
         position: 'relative',
         overflow: 'hidden',
-        transition: 'transform 0.25s, border-color 0.25s, box-shadow 0.25s',
+        transition: 'transform 0.2s, border-color 0.2s, box-shadow 0.2s',
       }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.45)';
-        e.currentTarget.style.transform = 'translateY(-3px)';
-        e.currentTarget.style.boxShadow = '0 12px 35px rgba(0, 0, 0, 0.5)';
+        e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = '0 8px 24px -6px rgba(22, 119, 255, 0.25)';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.18)';
+        e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.15)';
         e.currentTarget.style.transform = 'none';
         e.currentTarget.style.boxShadow = 'none';
       }}
@@ -787,10 +785,10 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          marginBottom: '1.25rem',
+          marginBottom: '0.85rem',
         }}
       >
-        <div style={{ display: 'flex', gap: '0.2rem', color: '#38BDF8', fontSize: '0.9rem' }}>
+        <div style={{ display: 'flex', gap: '0.2rem', color: '#38BDF8', fontSize: '0.8rem' }}>
           {Array.from({ length: 5 }).map((_, i) => (
             <span key={i} style={{ opacity: i < rating ? 1 : 0.2 }}>
               ★
@@ -800,7 +798,7 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
         <span
           style={{
             fontFamily: 'var(--font-mono, monospace)',
-            fontSize: '0.62rem',
+            fontSize: '0.6rem',
             color: '#1677FF',
             letterSpacing: '0.15em',
             textTransform: 'uppercase',
@@ -815,10 +813,10 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
       <p
         style={{
           color: '#F1F5F9',
-          fontSize: '1.05rem',
-          lineHeight: 1.65,
+          fontSize: '0.9rem',
+          lineHeight: 1.55,
           fontWeight: 300,
-          marginBottom: '1.75rem',
+          marginBottom: '1rem',
           fontStyle: 'normal',
         }}
       >
@@ -830,9 +828,9 @@ function TestimonialCard({ item }: { item: TestimonialItem }) {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '0.85rem',
-          paddingTop: '1rem',
-          borderTop: '1px solid rgba(22, 119, 255, 0.1)',
+          gap: '0.75rem',
+          paddingTop: '0.75rem',
+          borderTop: '1px solid rgba(22, 119, 255, 0.08)',
         }}
       >
         {item.photo ? (

@@ -15,38 +15,39 @@ export default async function WorkPage() {
   }).catch(() => [])
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 80px) + 3.5rem)', paddingBottom: '6rem', paddingInline: 'clamp(1rem, 5vw, 4rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 80px) + 2rem)', paddingBottom: '5rem', paddingInline: 'clamp(1rem, 5vw, 4rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
       <style>{`
         .works-grid-container {
           display: flex;
           flex-direction: column;
-          gap: 2.5rem;
+          gap: 0.75rem;
           width: 100%;
         }
         .work-card {
-          background-color: rgba(6, 21, 43, 0.6);
-          border: 1px solid rgba(22, 119, 255, 0.15);
-          border-radius: 14px;
-          padding: clamp(1.75rem, 4vw, 3rem);
+          background-color: rgba(6, 21, 43, 0.65);
+          border: 1px solid rgba(22, 119, 255, 0.14);
+          border-radius: 10px;
+          padding: 1.1rem clamp(1rem, 2.5vw, 1.75rem);
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
-          transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+          gap: 0.65rem;
+          transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s, background-color 0.2s;
           box-sizing: border-box;
-          height: 100%;
         }
         .work-card:hover {
+          background-color: rgba(8, 28, 58, 0.8);
           border-color: rgba(56, 189, 248, 0.4);
-          transform: translateY(-2px);
-          box-shadow: 0 12px 30px -10px rgba(22, 119, 255, 0.2);
+          transform: translateY(-1px);
+          box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.2);
         }
         .work-title {
-          font-size: clamp(1.75rem, 4vw, 2.75rem);
-          font-weight: 700;
+          font-size: clamp(1.15rem, 2vw, 1.35rem);
+          font-weight: 600;
           color: #F8FAFC;
           margin: 0;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.015em;
           text-transform: none;
+          line-height: 1.25;
           transition: color 0.2s;
         }
         .work-title:hover {
@@ -54,94 +55,43 @@ export default async function WorkPage() {
         }
         .work-desc {
           color: #94A3B8;
-          font-size: 1.05rem;
-          line-height: 1.65;
-          max-width: 780px;
+          font-size: 0.875rem;
+          line-height: 1.55;
+          max-width: 800px;
           margin: 0;
+          font-weight: 300;
         }
         .work-tech-container {
           display: flex;
           flex-wrap: wrap;
-          gap: 0.5rem;
-          margin-top: 0.5rem;
-        }
-        .work-desktop-only {
-          display: block;
+          gap: 0.35rem;
         }
 
-        /* ─── Mobile 2-Column Responsive Layout ─── */
         @media (max-width: 767px) {
-          .works-grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: clamp(0.5rem, 2.5vw, 0.85rem);
-          }
           .work-card {
-            padding: clamp(0.75rem, 3vw, 1.1rem);
-            gap: 0.65rem;
-            border-radius: 10px;
-            justify-content: space-between;
-          }
-          .work-card-header {
-            border-bottom: none !important;
-            padding-bottom: 0 !important;
-            gap: 0.35rem !important;
-          }
-          .work-num {
-            font-size: 0.85rem !important;
-          }
-          .work-category-badge {
-            font-size: 0.625rem !important;
-            padding: 0.15rem 0.4rem !important;
-            max-width: 100%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            padding: 0.9rem 1rem;
+            gap: 0.5rem;
           }
           .work-title {
-            font-size: clamp(0.72rem, 2.7vw, 0.84rem) !important;
-            line-height: 1.25 !important;
-            letter-spacing: -0.01em !important;
-            font-weight: 700 !important;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            word-break: normal;
-            overflow-wrap: break-word;
-            hyphens: auto;
+            font-size: 0.95rem !important;
           }
           .work-desc {
-            font-size: 0.6875rem !important;
-            line-height: 1.35 !important;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
-          .work-tech-container {
-            display: none !important;
-          }
-          .work-desktop-only {
-            display: none !important;
-          }
-          .work-action-link {
-            font-size: 0.6875rem !important;
-            padding-top: 0.25rem !important;
+            font-size: 0.8125rem !important;
+            line-height: 1.45 !important;
           }
         }
       `}</style>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         
         {/* Header */}
-        <div style={{ marginBottom: 'clamp(2rem, 5vw, 4rem)' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', letterSpacing: '0.25em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '1rem', fontWeight: 600 }}>
+        <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
+          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
             [04 — OUR WORK]
           </div>
-          <h1 style={{ fontSize: 'clamp(2.5rem, 7.5vw, 6rem)', fontWeight: 700, lineHeight: 0.95, letterSpacing: '-0.045em', color: '#F8FAFC', textTransform: 'uppercase', marginBottom: '1.25rem' }}>
-            SELECTED<br />DEPLOYMENTS.
+          <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: '#F8FAFC', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
+            SELECTED DEPLOYMENTS.
           </h1>
-          <p style={{ fontSize: 'clamp(0.95rem, 1.5vw, 1.25rem)', color: '#94A3B8', maxWidth: 600, lineHeight: 1.65, margin: 0 }}>
+          <p style={{ fontSize: 'clamp(0.88rem, 1.3vw, 1rem)', color: '#94A3B8', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
             Production systems, automation engines, and enterprise AI software built for clients worldwide.
           </p>
         </div>
