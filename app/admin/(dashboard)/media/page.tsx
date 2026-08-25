@@ -1,19 +1,27 @@
-"use client";
+import MediaLibrary from '@/components/admin/MediaLibrary';
 
-import MediaLibrary from "@/components/admin/MediaLibrary";
+export const dynamic = 'force-dynamic';
+
+export const metadata = {
+  title: 'Media Library & Assets | Quantum Admin',
+};
 
 export default function MediaPage() {
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>Media Library</h1>
-        <p style={{ color: '#64748B', fontSize: '0.825rem', marginTop: '0.25rem' }}>
-          Upload and manage photos, branding assets, and project imagery for use across the website.
+    <div style={{ maxWidth: 1280, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ marginBottom: '1.5rem', borderBottom: '1px solid rgba(22, 119, 255, 0.12)', paddingBottom: '1.25rem' }}>
+        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.25rem', fontWeight: 600 }}>
+          ASSETS &amp; STORAGE
+        </div>
+        <h1 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.35rem 0' }}>
+          Media Library &amp; Asset Vault
+        </h1>
+        <p style={{ color: '#94A3B8', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
+          Upload, organize, inspect, and manage photography, brand logos, case study graphics, and client imagery used across the website.
         </p>
       </div>
-      <div style={{ backgroundColor: '#0B111E', border: '1px solid #1E293B', borderRadius: 10, padding: '1.5rem' }}>
-        <MediaLibrary />
-      </div>
+
+      <MediaLibrary />
     </div>
   );
 }
