@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 export interface TestimonialItem {
   id: string;
@@ -93,8 +94,8 @@ export default function TestimonialsSection({
   );
   const [isVisible, setIsVisible] = useState(false);
   const [isSlowMode, setIsSlowMode] = useState(false);
-  const [isPausedByUser, setIsPausedByUser] = useState(false);
   const [activeReadingItem, setActiveReadingItem] = useState<TestimonialItem | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   // Submit Testimonial Modal State
   const [showSubmitModal, setShowSubmitModal] = useState(false);
@@ -115,6 +116,7 @@ export default function TestimonialsSection({
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    setMounted(true);
     fetch('/api/testimonials')
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
@@ -323,8 +325,10 @@ export default function TestimonialsSection({
         /* ─── Header ─── */
         .test-header {
           text-align: center;
-          margin-bottom: clamp(2rem, 4vw, 3rem);
+          margin-bottom: clamp(2rem, 4vw, 3.25rem);
           padding: 0 clamp(1.25rem, 4vw, 3rem);
+          position: relative;
+          z-index: 2;
         }
         .test-tag {
           font-family: var(--font-mono, monospace);
@@ -348,7 +352,7 @@ export default function TestimonialsSection({
           font-size: clamp(0.88rem, 1.2vw, 1.05rem);
           color: #94A3B8;
           max-width: 620px;
-          margin: 0 auto 1.25rem auto;
+          margin: 0 auto 1.35rem auto;
           line-height: 1.6;
           font-weight: 300;
         }
@@ -358,46 +362,31 @@ export default function TestimonialsSection({
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 0.85rem;
-          flex-wrap: wrap;
+          gap: 1rem;
         }
         .test-submit-btn {
           background: #1677FF;
           color: #FFFFFF;
           border: none;
-          padding: 0.55rem 1.25rem;
+          padding: 0.65rem 1.45rem;
           border-radius: 6px;
-          font-size: 0.82rem;
+          font-size: 0.85rem;
           font-weight: 600;
           font-family: var(--font-mono, monospace);
           letter-spacing: 0.04em;
           cursor: pointer;
           transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-          box-shadow: 0 4px 14px rgba(22, 119, 255, 0.35);
+          box-shadow: 0 4px 16px rgba(22, 119, 255, 0.4);
           display: inline-flex;
           align-items: center;
-          gap: 0.4rem;
+          gap: 0.45rem;
+          position: relative;
+          z-index: 5;
         }
         .test-submit-btn:hover {
           background: #2563EB;
           transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(22, 119, 255, 0.5);
-        }
-
-        .test-pause-toggle-btn {
-          background: rgba(6, 21, 43, 0.8);
-          border: 1px solid rgba(22, 119, 255, 0.3);
-          color: #94A3B8;
-          padding: 0.55rem 1rem;
-          border-radius: 6px;
-          font-size: 0.78rem;
-          font-family: var(--font-mono, monospace);
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-        .test-pause-toggle-btn:hover {
-          color: #38BDF8;
-          border-color: #38BDF8;
+          box-shadow: 0 6px 22px rgba(22, 119, 255, 0.55);
         }
 
         /* ─── Edge Gradient Masking ─── */
@@ -410,6 +399,7 @@ export default function TestimonialsSection({
           -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
           mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
           padding: 0.75rem 0;
+          z-index: 1;
         }
 
         /* ─── 1 Single Continuous Horizontal Row ─── */
@@ -421,13 +411,9 @@ export default function TestimonialsSection({
           animation: singleTestScrollLeft 48s linear infinite;
         }
 
-        /* Slow down mode on hover / click */
+        /* Automatic Slow down on Hover / Press */
         .test-row.is-slow {
           animation-duration: 120s;
-        }
-
-        .test-row.is-paused {
-          animation-play-state: paused !important;
         }
 
         .test-row:hover {
@@ -604,12 +590,12 @@ export default function TestimonialsSection({
           left: 0;
           width: 100vw;
           height: 100vh;
-          background: rgba(2, 6, 23, 0.85);
-          backdrop-filter: blur(8px);
+          background: rgba(2, 6, 23, 0.88);
+          backdrop-filter: blur(10px);
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 9999;
+          z-index: 999999;
           padding: 1.5rem;
           box-sizing: border-box;
         }
@@ -621,10 +607,11 @@ export default function TestimonialsSection({
           max-width: 560px;
           width: 100%;
           position: relative;
-          box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(22, 119, 255, 0.2);
+          box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(22, 119, 255, 0.25);
           box-sizing: border-box;
           max-height: 90vh;
           overflow-y: auto;
+          color: #F8FAFC;
         }
         .test-modal-close {
           position: absolute;
@@ -687,34 +674,26 @@ export default function TestimonialsSection({
 
         <div className="test-header-actions">
           <button
+            type="button"
             onClick={() => setShowSubmitModal(true)}
             className="test-submit-btn"
           >
             <span>+</span> SHARE YOUR EXPERIENCE
-          </button>
-
-          <button
-            onClick={() => setIsPausedByUser(!isPausedByUser)}
-            className="test-pause-toggle-btn"
-          >
-            {isPausedByUser ? '▶ RESUME SLIDER' : '⏸ PAUSE / SLOW'}
           </button>
         </div>
       </div>
 
       {/* 1 Single Line Continuous Square Testimonial Marquee */}
       <div className="test-stage-wrapper">
-        <div
-          className={`test-row ${!isVisible ? 'is-paused' : ''} ${isPausedByUser ? 'is-paused' : ''} ${isSlowMode ? 'is-slow' : ''}`}
-        >
+        <div className={`test-row ${!isVisible ? 'is-paused' : ''} ${isSlowMode ? 'is-slow' : ''}`}>
           <div className="test-track">
             {rowItems.map((t, idx) => renderCard(t, `single-test-${idx}`))}
           </div>
         </div>
       </div>
 
-      {/* Full Testimonial Reader Modal (When user clicks a card to read it in full) */}
-      {activeReadingItem && (
+      {/* Full Testimonial Reader Modal (Portaled to body for zero clipping) */}
+      {mounted && activeReadingItem && createPortal(
         <div className="test-modal-backdrop" onClick={() => setActiveReadingItem(null)}>
           <div className="test-modal-card" onClick={(e) => e.stopPropagation()}>
             <button className="test-modal-close" onClick={() => setActiveReadingItem(null)}>
@@ -766,11 +745,12 @@ export default function TestimonialsSection({
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
-      {/* Submit Testimonial Modal (Direct to Admin Approval) */}
-      {showSubmitModal && (
+      {/* Submit Testimonial Modal (Portaled to body for zero clipping) */}
+      {mounted && showSubmitModal && createPortal(
         <div className="test-modal-backdrop" onClick={handleCloseSubmitModal}>
           <div className="test-modal-card" onClick={(e) => e.stopPropagation()}>
             <button className="test-modal-close" onClick={handleCloseSubmitModal}>
@@ -787,6 +767,7 @@ export default function TestimonialsSection({
                   Your testimonial has been successfully received and sent to our team for administrative review. It will appear on the live slider once approved.
                 </p>
                 <button
+                  type="button"
                   onClick={handleCloseSubmitModal}
                   style={{
                     backgroundColor: '#1677FF',
@@ -988,7 +969,8 @@ export default function TestimonialsSection({
               </div>
             )}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </section>
   );
