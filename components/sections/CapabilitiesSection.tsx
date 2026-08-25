@@ -104,8 +104,9 @@ export default function CapabilitiesSection() {
         .tech-card-title-group {
           display: flex;
           align-items: center;
-          gap: clamp(0.75rem, 2vw, 1.5rem);
+          gap: clamp(1rem, 2.5vw, 2rem);
           min-width: 0;
+          flex: 1;
         }
 
         .tech-card-num {
@@ -115,6 +116,9 @@ export default function CapabilitiesSection() {
           font-weight: 600;
           letter-spacing: 0.1em;
           flex-shrink: 0;
+          width: 45px;
+          min-width: 45px;
+          display: inline-block;
         }
 
         .tech-card-title {

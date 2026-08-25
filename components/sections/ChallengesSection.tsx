@@ -114,20 +114,23 @@ export default function ChallengesSection() {
 
         .challenge-card-title-group {
           display: flex;
-          align-items: baseline;
-          gap: clamp(0.75rem, 2vw, 1.5rem);
-          flex-wrap: wrap;
+          align-items: center;
+          gap: clamp(1rem, 2.5vw, 2rem);
           min-width: 0;
+          flex: 1;
         }
 
         .challenge-card-code {
           font-family: var(--font-mono, monospace);
-          font-size: 0.65rem;
+          font-size: 0.68rem;
           color: #38BDF8;
           letter-spacing: 0.15em;
           font-weight: 600;
           text-transform: uppercase;
           flex-shrink: 0;
+          width: 175px;
+          min-width: 175px;
+          display: inline-block;
         }
 
         .challenge-card-title {

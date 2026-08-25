@@ -99,8 +99,9 @@ export default function TrustSection() {
         .trust-card-title-group {
           display: flex;
           align-items: center;
-          gap: clamp(0.75rem, 2vw, 1.5rem);
+          gap: clamp(1rem, 2.5vw, 2rem);
           min-width: 0;
+          flex: 1;
         }
 
         .trust-card-code {
@@ -111,6 +112,9 @@ export default function TrustSection() {
           letter-spacing: 0.12em;
           text-transform: uppercase;
           flex-shrink: 0;
+          width: 185px;
+          min-width: 185px;
+          display: inline-block;
         }
 
         .trust-card-title {
