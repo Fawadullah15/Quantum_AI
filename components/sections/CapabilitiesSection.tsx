@@ -278,11 +278,11 @@ export default function CapabilitiesSection() {
         <p
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.72rem',
-            letterSpacing: '0.25em',
+            fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
+            letterSpacing: '0.22em',
             textTransform: 'uppercase',
             color: '#1677FF',
-            marginBottom: '0.4rem',
+            marginBottom: '0.45rem',
             fontWeight: 600,
           }}
         >
@@ -290,10 +290,11 @@ export default function CapabilitiesSection() {
         </p>
         <h2
           style={{
-            fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
+            fontSize: 'clamp(1.75rem, 3.2vw, 2.65rem)',
             fontWeight: 700,
+            lineHeight: 1.12,
             color: '#F8FAFF',
-            marginBottom: '0.4rem',
+            marginBottom: '0.5rem',
             letterSpacing: '-0.025em',
             textTransform: 'uppercase',
           }}
@@ -302,10 +303,10 @@ export default function CapabilitiesSection() {
         </h2>
         <p
           style={{
-            fontSize: 'clamp(0.82rem, 1.2vw, 0.95rem)',
+            fontSize: 'clamp(0.88rem, 1.15vw, 1.02rem)',
             color: '#94A3B8',
-            lineHeight: 1.55,
-            marginBottom: 'clamp(1rem, 2vh, 1.75rem)',
+            lineHeight: 1.6,
+            marginBottom: 'clamp(1.25rem, 2.5vh, 2rem)',
             maxWidth: 600,
             fontWeight: 300,
           }}

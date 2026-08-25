@@ -440,27 +440,28 @@ export default function HomePage() {
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.72rem',
-              letterSpacing: '0.25em',
+              fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
+              letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '0.4rem',
+              marginBottom: '0.45rem',
               fontWeight: 600
             }}>
               LEADERSHIP
             </p>
             <h2 style={{
-              fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
+              fontSize: 'clamp(1.75rem, 3.2vw, 2.65rem)',
               fontWeight: 700,
+              lineHeight: 1.12,
               color: '#F8FAFF',
-              marginBottom: '0.4rem',
+              marginBottom: '0.5rem',
               letterSpacing: '-0.025em',
               textTransform: 'uppercase'
             }}>
               The people behind Quantum AI.
             </h2>
             <p style={{
-              fontSize: 'clamp(0.85rem, 1.2vw, 0.95rem)',
+              fontSize: 'clamp(0.88rem, 1.15vw, 1.02rem)',
               color: '#94A3B8',
               lineHeight: 1.6,
               marginBottom: 'clamp(1.25rem, 2.5vh, 2rem)',
@@ -600,11 +601,11 @@ export default function HomePage() {
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
-              fontSize: '0.72rem',
-              letterSpacing: '0.25em',
+              fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
+              letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '0.4rem',
+              marginBottom: '0.45rem',
               fontWeight: 600
             }}>
               CONTACT
@@ -613,9 +614,9 @@ export default function HomePage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'clamp(2rem, 4vw, 4rem)', alignItems: 'start', width: '100%', boxSizing: 'border-box' }}>
               <div style={{ minWidth: 0, width: '100%', boxSizing: 'border-box' }}>
                 <h2 style={{
-                  fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
+                  fontSize: 'clamp(1.75rem, 3.2vw, 2.65rem)',
                   fontWeight: 700,
-                  lineHeight: 1.15,
+                  lineHeight: 1.12,
                   letterSpacing: '-0.025em',
                   color: '#F8FAFF',
                   marginBottom: '0.5rem',
@@ -625,7 +626,7 @@ export default function HomePage() {
                 }}>
                   Let's build something useful.
                 </h2>
-                <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.6, marginBottom: '1.25rem', fontWeight: 300, wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+                <p style={{ fontSize: 'clamp(0.88rem, 1.15vw, 1.02rem)', color: '#94A3B8', lineHeight: 1.6, marginBottom: '1.25rem', fontWeight: 300, wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                   Tell us what you are building, what problem you are solving, or what you want to improve.
                 </p>
                 

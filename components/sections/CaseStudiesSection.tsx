@@ -426,11 +426,11 @@ export default function CaseStudiesSection() {
             <p
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: '0.72rem',
-                letterSpacing: '0.25em',
+                fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
+                letterSpacing: '0.22em',
                 textTransform: 'uppercase',
                 color: '#1677FF',
-                marginBottom: '0.4rem',
+                marginBottom: '0.45rem',
                 fontWeight: 600,
               }}
             >
@@ -438,9 +438,9 @@ export default function CaseStudiesSection() {
             </p>
             <h2
               style={{
-                fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
+                fontSize: 'clamp(1.75rem, 3.2vw, 2.65rem)',
                 fontWeight: 700,
-                lineHeight: 1.15,
+                lineHeight: 1.12,
                 letterSpacing: '-0.025em',
                 color: '#F8FAFF',
                 textTransform: 'uppercase',
