@@ -14,8 +14,11 @@ export default async function BlogPage() {
   }).catch(() => []);
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2.5rem)', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '75rem', margin: '0 auto' }}>
-      <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', color: 'var(--color-text-primary, #F8FAFC)', marginBottom: '2.5rem' }}>INSIGHTS.</h1>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '75rem', margin: '0 auto' }}>
+      <div style={{ marginBottom: '2rem' }}>
+        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.09 / ARTICLES</div>
+        <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', color: 'var(--color-text-primary, #F8FAFC)', margin: 0 }}>INSIGHTS.</h1>
+      </div>
       
       {posts.length === 0 ? (
         <div style={{ padding: '4rem 0', textAlign: 'center', border: '1px solid var(--color-border, rgba(30,58,138,0.22))', color: 'var(--color-text-secondary, #94A3B8)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.875rem' }}>
