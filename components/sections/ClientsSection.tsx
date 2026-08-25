@@ -212,10 +212,10 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
                       opacity 0.3s ease,
                       background-color 0.3s ease;
           box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-          min-width: 220px;
-          max-width: 310px;
-          flex: 1 1 240px;
-          height: 180px;
+          min-width: 190px;
+          max-width: 260px;
+          flex: 1 1 210px;
+          height: 155px;
           box-sizing: border-box;
           opacity: 0;
           transform: translateY(30px) scale(0.92);
