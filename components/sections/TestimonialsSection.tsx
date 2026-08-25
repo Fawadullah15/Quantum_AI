@@ -678,7 +678,7 @@ export default function TestimonialsSection({
             onClick={() => setShowSubmitModal(true)}
             className="test-submit-btn"
           >
-            <span>+</span> SHARE YOUR EXPERIENCE
+            <span>+</span> SHARE YOUR TESTIMONAL
           </button>
         </div>
       </div>
@@ -788,7 +788,7 @@ export default function TestimonialsSection({
                   CLIENT REVIEW
                 </div>
                 <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.5rem 0' }}>
-                  Share Your Experience
+                  Share Your Testimonal
                 </h3>
                 <p style={{ color: '#94A3B8', fontSize: '0.82rem', margin: '0 0 1.25rem 0', lineHeight: 1.5 }}>
                   Submissions are reviewed by our team before appearing on the public website.
