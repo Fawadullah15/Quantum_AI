@@ -1,51 +1,32 @@
-import prisma from '@/lib/db'
-import ServicesClient from './client'
+import prisma from '@/lib/db';
+import ServicesClient from './client';
 
-const DEFAULT_SERVICES = [
-  {
-    id: 's-ai',
-    name: 'AI Systems',
-    category: 'AI',
-    description: 'Custom artificial intelligence systems, multi-agent workflows, retrieval-augmented generation (RAG), and neural architectures engineered for enterprise decision making.',
-    icon: 'Brain',
-    order: 1,
-    published: true,
-  },
-  {
-    id: 's-software',
-    name: 'Business Software',
-    category: 'SOFTWARE',
-    description: 'Scalable enterprise web applications, administrative dashboards, ERP systems, and internal operational platforms designed around real business processes.',
-    icon: 'LayoutDashboard',
-    order: 2,
-    published: true,
-  },
-  {
-    id: 's-automation',
-    name: 'Automation',
-    category: 'AUTOMATION',
-    description: 'End-to-end workflow automation, event-driven pipelines, API integrations, and synchronization bots that eliminate repetitive manual operational tasks.',
-    icon: 'Bot',
-    order: 3,
-    published: true,
-  },
-  {
-    id: 's-products',
-    name: 'Digital Products',
-    category: 'PRODUCT',
-    description: 'Consumer-facing SaaS platforms, intelligent mobile-responsive tools, and full-stack software products built for high user concurrency and scale.',
-    icon: 'Layers',
-    order: 4,
-    published: true,
-  },
-];
+export const dynamic = 'force-dynamic';
+
+export const metadata = {
+  title: 'Services Management | Quantum Admin',
+};
 
 export default async function ServicesPage() {
   const dbServices = await prisma.service.findMany({
-    orderBy: { order: 'asc' }
-  }).catch(() => [])
-  
-  const services = dbServices && dbServices.length > 0 ? dbServices : DEFAULT_SERVICES
+    orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
+  }).catch(() => []);
 
-  return <ServicesClient initialData={services} />
+  return (
+    <div style={{ maxWidth: 1280, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+      <div style={{ marginBottom: '1.5rem', borderBottom: '1px solid rgba(22, 119, 255, 0.12)', paddingBottom: '1.25rem' }}>
+        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.25rem', fontWeight: 600 }}>
+          CORE CAPABILITIES
+        </div>
+        <h1 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.35rem 0' }}>
+          Services &amp; Solutions
+        </h1>
+        <p style={{ color: '#94A3B8', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
+          Manage service offerings, capability narratives, categories, and ordering displayed across the public Services page and homepage.
+        </p>
+      </div>
+
+      <ServicesClient initialData={dbServices} />
+    </div>
+  );
 }
