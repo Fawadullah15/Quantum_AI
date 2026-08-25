@@ -33,11 +33,22 @@ export default async function CaseStudyPage({ params }: Props) {
     include: { metrics: true },
   }).catch(() => null);
   
-  if (!study) {
+  if (!study || !study.published) {
     notFound();
   }
 
-  const technologies = typeof study.technologies === 'string' ? study.technologies.split(',') : [];
+  const relatedStudies = await prisma.caseStudy.findMany({
+    where: {
+      published: true,
+      slug: { not: slug },
+    },
+    take: 3,
+    orderBy: { order: 'asc' },
+  }).catch(() => []);
+
+  const technologies = typeof study.technologies === 'string'
+    ? study.technologies.split(',').map((t) => t.trim()).filter(Boolean)
+    : [];
   const schemaJson = getCaseStudySchema(study);
 
   return (
@@ -80,9 +91,38 @@ export default async function CaseStudyPage({ params }: Props) {
           <span style={{ opacity: 0.4 }}>/</span>
           <span>YEAR: {study.year}</span>
         </div>
-        <h1 style={{ fontSize: 'clamp(1.85rem, 4.5vw, 3rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', lineHeight: 1.1, color: '#F8FAFC', margin: 0 }}>
+        <h1 style={{ fontSize: 'clamp(1.85rem, 4.5vw, 3rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', lineHeight: 1.1, color: '#F8FAFC', margin: '0 0 1.25rem 0' }}>
           {study.title}
         </h1>
+
+        {study.externalUrl && (
+          <div style={{ marginTop: '0.75rem' }}>
+            <a
+              href={study.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                padding: '0.5rem 1.15rem',
+                backgroundColor: 'rgba(22, 119, 255, 0.12)',
+                border: '1px solid rgba(56, 189, 248, 0.35)',
+                color: '#38BDF8',
+                borderRadius: '6px',
+                textDecoration: 'none',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                transition: 'background-color 0.2s, border-color 0.2s',
+              }}
+            >
+              VISIT LIVE PLATFORM ↗
+            </a>
+          </div>
+        )}
       </header>
 
       {study.heroImage && (
@@ -161,7 +201,7 @@ export default async function CaseStudyPage({ params }: Props) {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                 {technologies.map((tech: string) => (
                   <span key={tech} style={{ padding: '0.25rem 0.65rem', background: 'rgba(22, 119, 255, 0.12)', border: '1px solid rgba(56, 189, 248, 0.25)', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', borderRadius: '4px', color: '#F8FAFC' }}>
-                    {tech.trim()}
+                    {tech}
                   </span>
                 ))}
               </div>
@@ -185,6 +225,56 @@ export default async function CaseStudyPage({ params }: Props) {
           )}
         </div>
       </div>
+
+      {/* Related Case Studies */}
+      {relatedStudies.length > 0 && (
+        <section style={{ marginTop: '4rem', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.5rem' }}>
+          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
+            EXPLORE MORE
+          </div>
+          <h2 style={{ fontSize: 'clamp(1.35rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#F8FAFC', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
+            Related Case Studies
+          </h2>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+            {relatedStudies.map((item) => (
+              <Link
+                key={item.id}
+                href={`/work/${item.slug}`}
+                style={{
+                  backgroundColor: 'rgba(6, 21, 43, 0.65)',
+                  border: '1px solid rgba(22, 119, 255, 0.16)',
+                  borderRadius: '10px',
+                  padding: '1.15rem',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.5rem',
+                  transition: 'background-color 0.2s, border-color 0.2s, transform 0.2s',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>
+                    {item.industry ? item.industry.split('/')[0].trim() : 'Technology'}
+                  </span>
+                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#64748B' }}>
+                    {item.year}
+                  </span>
+                </div>
+                <h3 style={{ fontSize: '1.05rem', color: '#F8FAFC', fontWeight: 600, margin: '0.2rem 0', lineHeight: 1.3 }}>
+                  {item.title}
+                </h3>
+                <p style={{ color: '#94A3B8', fontSize: '0.8rem', lineHeight: 1.45, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  {item.problem || item.solution}
+                </p>
+                <span style={{ marginTop: 'auto', paddingTop: '0.5rem', color: '#38BDF8', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600, letterSpacing: '0.05em' }}>
+                  VIEW PROJECT →
+                </span>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* CTA Box */}
       <section style={{ textAlign: 'center', paddingTop: '3.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)', marginTop: '3.5rem' }}>

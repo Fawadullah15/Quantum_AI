@@ -29,9 +29,16 @@ export async function createProduct(data: {
 }) {
   await checkAuth();
 
-  const slug = data.slug
+  let slug = data.slug
     ? data.slug.toLowerCase().trim().replace(/[^a-z0-9-]+/g, '-').replace(/(^-|-$)/g, '')
     : data.name.toLowerCase().trim().replace(/[^a-z0-9-]+/g, '-').replace(/(^-|-$)/g, '');
+
+  if (!slug) slug = `product-${Date.now().toString(36)}`;
+
+  const existingSlug = await prisma.product.findUnique({ where: { slug } });
+  if (existingSlug) {
+    slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+  }
 
   const validFeatures = Array.isArray(data.features)
     ? data.features
@@ -46,7 +53,7 @@ export async function createProduct(data: {
   const product = await prisma.product.create({
     data: {
       name: data.name.trim(),
-      slug: slug || `product-${Date.now().toString(36)}`,
+      slug,
       description: data.description.trim(),
       category: data.category?.trim() || 'AI Software',
       status: data.status || 'LIVE',
@@ -86,9 +93,18 @@ export async function updateProduct(
 ) {
   await checkAuth();
 
-  const slug = data.slug
+  let slug = data.slug
     ? data.slug.toLowerCase().trim().replace(/[^a-z0-9-]+/g, '-').replace(/(^-|-$)/g, '')
     : undefined;
+
+  if (slug) {
+    const existing = await prisma.product.findFirst({
+      where: { slug, id: { not: id } },
+    });
+    if (existing) {
+      slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+    }
+  }
 
   const updateData: any = {};
   if (data.name !== undefined) updateData.name = data.name.trim();
@@ -133,10 +149,16 @@ export async function updateProduct(
 export async function deleteProduct(id: string) {
   await checkAuth();
 
+  const product = await prisma.product.findUnique({ where: { id } });
+
   await prisma.product.delete({ where: { id } });
 
   revalidatePath('/admin/products');
   revalidatePath('/products');
+  if (product) {
+    revalidatePath(`/products/${product.slug}`);
+  }
   revalidatePath('/');
   return { success: true };
 }
+

@@ -332,3 +332,39 @@ export function getServiceSchema(service: {
     },
   };
 }
+
+/**
+ * Software Application / Digital Product Structured Data (JSON-LD)
+ */
+export function getProductSchema(product: {
+  name: string;
+  slug: string;
+  description: string;
+  category?: string;
+  status?: string;
+  heroImage?: string | null;
+}) {
+  const url = `${SITE_URL}/products/${product.slug}`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: product.name,
+    headline: product.name,
+    description: product.description,
+    url,
+    applicationCategory: product.category || 'BusinessApplication',
+    operatingSystem: 'Web, Cloud, Desktop',
+    creator: {
+      '@type': 'Organization',
+      name: 'Quantum AI',
+      url: SITE_URL,
+    },
+    ...(product.heroImage && {
+      image: product.heroImage.startsWith('http')
+        ? product.heroImage
+        : `${SITE_URL}${product.heroImage.startsWith('/') ? '' : '/'}${product.heroImage}`,
+    }),
+  };
+}
+

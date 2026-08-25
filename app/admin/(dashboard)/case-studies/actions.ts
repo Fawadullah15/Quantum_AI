@@ -16,9 +16,17 @@ async function checkAuth() {
 export async function createCaseStudy(data: any) {
   await checkAuth();
 
-  const slug = data.slug
+  let slug = data.slug
     ? data.slug.toLowerCase().trim().replace(/[^a-z0-9-]+/g, '-').replace(/(^-|-$)/g, '')
     : data.title.toLowerCase().trim().replace(/[^a-z0-9-]+/g, '-').replace(/(^-|-$)/g, '');
+
+  if (!slug) slug = `case-study-${Date.now().toString(36)}`;
+
+  // Duplicate slug check
+  const existingSlug = await prisma.caseStudy.findUnique({ where: { slug } });
+  if (existingSlug) {
+    slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+  }
 
   const validMetrics = Array.isArray(data.metrics)
     ? data.metrics
@@ -26,6 +34,7 @@ export async function createCaseStudy(data: any) {
         .map((m: any) => ({
           label: m.label.trim(),
           value: m.value.trim(),
+          description: m.description?.trim() || null,
         }))
     : [];
 
@@ -36,7 +45,7 @@ export async function createCaseStudy(data: any) {
   const study = await prisma.caseStudy.create({
     data: {
       title: data.title.trim(),
-      slug: slug || `case-study-${Date.now().toString(36)}`,
+      slug,
       client: data.client?.trim() || 'Enterprise Client',
       industry: data.industry?.trim() || 'Artificial Intelligence',
       problem: data.problem?.trim() || data.briefDescription?.trim() || '',
@@ -58,6 +67,8 @@ export async function createCaseStudy(data: any) {
   revalidatePath('/');
   revalidatePath('/work');
   revalidatePath(`/work/${study.slug}`);
+  revalidatePath('/case-studies');
+  revalidatePath(`/case-studies/${study.slug}`);
   revalidatePath('/admin/case-studies');
   return study;
 }
@@ -65,9 +76,18 @@ export async function createCaseStudy(data: any) {
 export async function updateCaseStudy(id: string, data: any) {
   await checkAuth();
 
-  const slug = data.slug
+  let slug = data.slug
     ? data.slug.toLowerCase().trim().replace(/[^a-z0-9-]+/g, '-').replace(/(^-|-$)/g, '')
     : undefined;
+
+  if (slug) {
+    const existing = await prisma.caseStudy.findFirst({
+      where: { slug, id: { not: id } },
+    });
+    if (existing) {
+      slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+    }
+  }
 
   const galleryString = typeof data.gallery === 'string'
     ? data.gallery
@@ -99,6 +119,21 @@ export async function updateCaseStudy(id: string, data: any) {
   }
   if (data.order !== undefined) updateData.order = parseInt(data.order, 10) || 0;
 
+  if (Array.isArray(data.metrics)) {
+    await prisma.caseStudyMetric.deleteMany({ where: { caseStudyId: id } });
+    const validMetrics = data.metrics
+      .filter((m: any) => m && m.label?.trim() && m.value?.trim())
+      .map((m: any) => ({
+        caseStudyId: id,
+        label: m.label.trim(),
+        value: m.value.trim(),
+        description: m.description?.trim() || null,
+      }));
+    if (validMetrics.length > 0) {
+      await prisma.caseStudyMetric.createMany({ data: validMetrics });
+    }
+  }
+
   const study = await prisma.caseStudy.update({
     where: { id },
     data: updateData,
@@ -107,6 +142,8 @@ export async function updateCaseStudy(id: string, data: any) {
   revalidatePath('/');
   revalidatePath('/work');
   revalidatePath(`/work/${study.slug}`);
+  revalidatePath('/case-studies');
+  revalidatePath(`/case-studies/${study.slug}`);
   revalidatePath('/admin/case-studies');
   return study;
 }
@@ -114,12 +151,20 @@ export async function updateCaseStudy(id: string, data: any) {
 export async function deleteCaseStudy(id: string) {
   await checkAuth();
 
+  const study = await prisma.caseStudy.findUnique({ where: { id } });
+
   await prisma.caseStudy.delete({
     where: { id },
   });
 
   revalidatePath('/');
   revalidatePath('/work');
+  if (study) {
+    revalidatePath(`/work/${study.slug}`);
+    revalidatePath(`/case-studies/${study.slug}`);
+  }
+  revalidatePath('/case-studies');
   revalidatePath('/admin/case-studies');
   return { success: true };
 }
+
