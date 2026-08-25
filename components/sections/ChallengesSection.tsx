@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 
 interface ChallengeItem {
   code: string;
   title: string;
   desc: string;
+  shortDesc: string;
   link: string;
   action: string;
 }
@@ -16,6 +17,7 @@ const CHALLENGES: ChallengeItem[] = [
     code: '01 // OPERATIONS',
     title: 'Manual Operations',
     desc: 'Replace repetitive, error-prone manual tasks with reliable software workflows and automated pipelines that run 24/7.',
+    shortDesc: 'Automated 24/7 pipelines and workflows that replace manual errors.',
     link: '/services#automation',
     action: 'Automate',
   },
@@ -23,6 +25,7 @@ const CHALLENGES: ChallengeItem[] = [
     code: '02 // INTEGRATION',
     title: 'Disconnected Data',
     desc: 'Bring fragmented spreadsheets, legacy databases, and third-party tools into a single, cohesive source of truth.',
+    shortDesc: 'Unify fragmented tools and databases into a single source of truth.',
     link: '/services#software',
     action: 'Integrate',
   },
@@ -30,6 +33,7 @@ const CHALLENGES: ChallengeItem[] = [
     code: '03 // SPEED',
     title: 'Slow Workflows',
     desc: 'Build intuitive internal tools and dashboards that accelerate execution and eliminate delays.',
+    shortDesc: 'Custom internal tools and dashboards that accelerate execution.',
     link: '/services#software',
     action: 'Accelerate',
   },
@@ -37,6 +41,7 @@ const CHALLENGES: ChallengeItem[] = [
     code: '04 // ARCHITECTURE',
     title: 'Complex Business Processes',
     desc: 'Turn difficult operational procedures and domain logic into clear, structured, and scalable digital systems.',
+    shortDesc: 'Transform difficult domain logic into structured digital systems.',
     link: '/services#ai',
     action: 'Architect',
   },
@@ -44,72 +49,11 @@ const CHALLENGES: ChallengeItem[] = [
 
 export default function ChallengesSection() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const [mobileActiveIdx, setMobileActiveIdx] = useState<number>(0);
-  const [isTouch, setIsTouch] = useState<boolean>(false);
-  const cardRefs = useRef<(HTMLAnchorElement | null)[]>([]);
-
-  // Detect touch devices
-  useEffect(() => {
-    const checkTouch = () => {
-      setIsTouch(
-        'ontouchstart' in window ||
-        navigator.maxTouchPoints > 0 ||
-        window.matchMedia('(hover: none) and (pointer: coarse)').matches
-      );
-    };
-    checkTouch();
-    window.addEventListener('resize', checkTouch);
-    return () => window.removeEventListener('resize', checkTouch);
-  }, []);
-
-  // Viewport Center Detection for Mobile / Touch Devices
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const windowCenter = window.innerHeight / 2;
-          let closestIdx = 0;
-          let minDistance = Infinity;
-
-          cardRefs.current.forEach((el, idx) => {
-            if (!el) return;
-            const rect = el.getBoundingClientRect();
-            const cardCenter = rect.top + rect.height / 2;
-            const distance = Math.abs(windowCenter - cardCenter);
-
-            // If card is on screen, check distance to center
-            if (rect.bottom > 0 && rect.top < window.innerHeight) {
-              if (distance < minDistance) {
-                minDistance = distance;
-                closestIdx = idx;
-              }
-            }
-          });
-
-          // Only activate if the card is reasonably close to center (within 35% of viewport)
-          if (minDistance < window.innerHeight * 0.35) {
-            setMobileActiveIdx(closestIdx);
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Initial check
-
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   return (
     <section
       style={{
-        padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)',
+        padding: 'clamp(2rem, 4.5vh, 3.5rem) clamp(1rem, 5vw, 6rem)',
         pointerEvents: 'auto',
         backgroundColor: 'rgba(4, 14, 36, 0.5)',
         borderTop: '1px solid rgba(22, 119, 255, 0.08)',
@@ -117,11 +61,18 @@ export default function ChallengesSection() {
       }}
     >
       <style>{`
-        .challenges-list {
+        /* ═══════════════════════════════════════════════════════════
+           DESKTOP LAYOUT (> 768px): Horizontal Expandable Rows
+        ═══════════════════════════════════════════════════════════ */
+        .challenges-desktop-list {
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
           width: 100%;
+        }
+
+        .challenges-mobile-grid {
+          display: none;
         }
 
         .challenge-tab-card {
@@ -188,8 +139,6 @@ export default function ChallengesSection() {
           text-transform: none;
           line-height: 1.3;
           white-space: normal;
-          word-break: normal;
-          overflow-wrap: normal;
         }
 
         .challenge-card-indicator {
@@ -211,7 +160,6 @@ export default function ChallengesSection() {
           color: #38BDF8;
         }
 
-        /* ─── Smooth CSS Grid Expansion for Collapsible Body ─── */
         .challenge-card-expandable {
           display: grid;
           grid-template-rows: 0fr;
@@ -261,21 +209,96 @@ export default function ChallengesSection() {
           transform: translateX(3px);
         }
 
+        /* ═══════════════════════════════════════════════════════════
+           MOBILE LAYOUT (<= 768px): Clean 2x2 Compact Block Grid
+        ═══════════════════════════════════════════════════════════ */
         @media (max-width: 768px) {
-          .challenge-tab-card {
-            padding: 0.8rem 1rem;
+          .challenges-desktop-list {
+            display: none !important;
           }
-          .challenge-card-title-group {
+
+          .challenges-mobile-grid {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.55rem;
+            width: 100%;
+          }
+
+          .mobile-challenge-block {
+            background: rgba(6, 21, 43, 0.75);
+            border: 1px solid rgba(22, 119, 255, 0.16);
+            border-radius: 8px;
+            padding: 0.75rem 0.8rem;
+            text-decoration: none;
+            display: flex;
             flex-direction: column;
-            gap: 0.2rem;
-            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.4rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
           }
-          .challenge-card-title {
-            font-size: 0.98rem;
+
+          .mobile-challenge-block:active {
+            background-color: rgba(8, 28, 58, 0.95);
+            border-color: rgba(56, 189, 248, 0.4);
           }
-          .challenge-card-desc {
-            font-size: 0.8125rem;
-            line-height: 1.45;
+
+          .mobile-block-code {
+            font-family: var(--font-mono, monospace);
+            font-size: 0.58rem;
+            color: #38BDF8;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            line-height: 1;
+          }
+
+          .mobile-block-title {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #F8FAFC;
+            letter-spacing: -0.01em;
+            margin: 0;
+            line-height: 1.25;
+          }
+
+          .mobile-block-desc {
+            font-size: 0.68rem;
+            color: #94A3B8;
+            line-height: 1.35;
+            margin: 0;
+            font-weight: 300;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+
+          .mobile-block-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #38BDF8;
+            font-family: var(--font-mono, monospace);
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 0.15rem;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .mobile-challenge-block {
+            padding: 0.65rem 0.7rem;
+            gap: 0.35rem;
+          }
+          .mobile-block-title {
+            font-size: 0.78rem;
+          }
+          .mobile-block-desc {
+            font-size: 0.65rem;
+            -webkit-line-clamp: 2;
           }
         }
       `}</style>
@@ -289,7 +312,7 @@ export default function ChallengesSection() {
             letterSpacing: '0.25em',
             textTransform: 'uppercase',
             color: '#1677FF',
-            marginBottom: '0.5rem',
+            marginBottom: '0.4rem',
             fontWeight: 600,
           }}
         >
@@ -297,12 +320,12 @@ export default function ChallengesSection() {
         </p>
         <h2
           style={{
-            fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
+            fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
             fontWeight: 700,
             lineHeight: 1.15,
             letterSpacing: '-0.025em',
             color: '#F8FAFF',
-            marginBottom: '0.5rem',
+            marginBottom: '0.4rem',
             textTransform: 'uppercase',
           }}
         >
@@ -310,10 +333,10 @@ export default function ChallengesSection() {
         </h2>
         <p
           style={{
-            fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
+            fontSize: 'clamp(0.82rem, 1.2vw, 0.95rem)',
             color: '#94A3B8',
-            lineHeight: 1.6,
-            marginBottom: 'clamp(1.25rem, 2.5vh, 2rem)',
+            lineHeight: 1.55,
+            marginBottom: 'clamp(1rem, 2vh, 1.75rem)',
             maxWidth: 640,
             fontWeight: 300,
           }}
@@ -321,36 +344,22 @@ export default function ChallengesSection() {
           Modern organizations face operational bottlenecks and disconnected data. We engineer software systems to eliminate friction and scale productivity.
         </p>
 
-        {/* Interactive Compact Cards */}
-        <div className="challenges-list">
+        {/* ─── Desktop View: Interactive Expanding Horizontal Bars ─── */}
+        <div className="challenges-desktop-list">
           {CHALLENGES.map((item, idx) => {
-            // Determine if card is expanded:
-            // On desktop/mouse: expanded when hovered or focused
-            // On touch/mobile: expanded when active via center-screen detection or tapped
-            const isHovered = hoveredIdx === idx;
-            const isMobileActive = isTouch && mobileActiveIdx === idx;
-            const isExpanded = isHovered || isMobileActive;
+            const isExpanded = hoveredIdx === idx;
 
             return (
               <Link
                 key={idx}
-                ref={(el) => {
-                  cardRefs.current[idx] = el;
-                }}
                 href={item.link}
                 className={`challenge-tab-card ${isExpanded ? 'is-expanded' : ''}`}
-                onMouseEnter={() => !isTouch && setHoveredIdx(idx)}
-                onMouseLeave={() => !isTouch && setHoveredIdx(null)}
+                onMouseEnter={() => setHoveredIdx(idx)}
+                onMouseLeave={() => setHoveredIdx(null)}
                 onFocus={() => setHoveredIdx(idx)}
                 onBlur={() => setHoveredIdx(null)}
-                onClick={() => {
-                  if (isTouch && mobileActiveIdx !== idx) {
-                    setMobileActiveIdx(idx);
-                  }
-                }}
                 aria-expanded={isExpanded}
               >
-                {/* Default Visible Top Row */}
                 <div className="challenge-card-header">
                   <div className="challenge-card-title-group">
                     <span className="challenge-card-code">{item.code}</span>
@@ -362,7 +371,6 @@ export default function ChallengesSection() {
                   </div>
                 </div>
 
-                {/* Smoothly Revealed Content on Interaction */}
                 <div className="challenge-card-expandable">
                   <div className="challenge-card-expandable-content">
                     <p className="challenge-card-desc">{item.desc}</p>
@@ -375,6 +383,23 @@ export default function ChallengesSection() {
               </Link>
             );
           })}
+        </div>
+
+        {/* ─── Mobile View: Compact 2x2 Blocks with Small Font (Zero Hover/Jump) ─── */}
+        <div className="challenges-mobile-grid">
+          {CHALLENGES.map((item, idx) => (
+            <Link key={idx} href={item.link} className="mobile-challenge-block">
+              <div>
+                <span className="mobile-block-code">{item.code}</span>
+                <h3 className="mobile-block-title">{item.title}</h3>
+              </div>
+              <p className="mobile-block-desc">{item.desc}</p>
+              <div className="mobile-block-action">
+                <span>{item.action}</span>
+                <span>→</span>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>
