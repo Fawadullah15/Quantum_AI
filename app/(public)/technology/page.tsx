@@ -1,5 +1,6 @@
 import prisma from '@/lib/db';
 import Link from 'next/link';
+import TrustSection from '@/components/sections/TrustSection';
 
 export const dynamic = 'force-dynamic';
 
@@ -64,13 +65,16 @@ export default async function TechnologyPage() {
   }, {} as Record<string, any[]>);
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2.5rem)', paddingBottom: '5rem', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container">
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container">
       <div style={{ maxWidth: 'var(--max-width, 1000px)', margin: '0 auto' }}>
         <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
           <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.02 / ARCHITECTURE</div>
-          <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
+          <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
             CORE TECHNOLOGY.
           </h1>
+          <p style={{ fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)', color: '#94A3B8', lineHeight: 1.6, marginTop: '0.5rem', maxWidth: 580, fontWeight: 300 }}>
+            Computational foundations, machine learning models, and secure cloud infrastructure.
+          </p>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '2.25rem' }}>
@@ -112,6 +116,11 @@ export default async function TechnologyPage() {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Trust & Security Section Moved to Technology Page */}
+      <div style={{ marginTop: '4rem' }}>
+        <TrustSection />
       </div>
     </div>
   );

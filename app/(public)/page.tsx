@@ -10,7 +10,7 @@ import SolutionsSection from '@/components/sections/SolutionsSection';
 import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
 import ProcessSection from '@/components/sections/ProcessSection';
 import CapabilitiesSection from '@/components/sections/CapabilitiesSection';
-import TrustSection from '@/components/sections/TrustSection';
+import ClientsSection from '@/components/sections/ClientsSection';
 import WhyQuantumSection from '@/components/sections/WhyQuantumSection';
 
 const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr: false });
@@ -561,9 +561,9 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            TRUST & SECURITY SECTION (Desktop: Interactive Hover Cards / Mobile: 2x2 Trust Grid)
+            WITH WHOM WE HAVE WORKED WITH SECTION (Clients & Organizations)
         ═══════════════════════════════════════════════════════════ */}
-        <TrustSection />
+        <ClientsSection />
 
         {/* ═══════════════════════════════════════════════════════════
             TESTIMONIALS SECTION (Directly connected to Admin / DB)
