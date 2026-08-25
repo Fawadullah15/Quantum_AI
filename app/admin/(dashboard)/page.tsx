@@ -9,7 +9,11 @@ export default async function AdminDashboardPage() {
     productCount,
     caseStudyCount,
     blogPostCount,
+    clientCount,
+    serviceCount,
+    testimonialCount,
     unreadMessagesCount,
+    totalMessagesCount,
     recentMessages,
     recentPosts,
   ] = await Promise.all([
@@ -17,7 +21,11 @@ export default async function AdminDashboardPage() {
     prisma.product.count().catch(() => 0),
     prisma.caseStudy.count().catch(() => 0),
     prisma.blogPost.count().catch(() => 0),
+    prisma.client.count().catch(() => 0),
+    prisma.service.count().catch(() => 0),
+    prisma.testimonial.count().catch(() => 0),
     prisma.contactSubmission.count({ where: { status: 'NEW' } }).catch(() => 0),
+    prisma.contactSubmission.count().catch(() => 0),
     prisma.contactSubmission.findMany({
       take: 6,
       orderBy: { createdAt: 'desc' },
@@ -37,65 +45,157 @@ export default async function AdminDashboardPage() {
   };
 
   const statCards = [
-    { label: 'Unread Inquiries', count: unreadMessagesCount, icon: '💬', color: '#38BDF8', href: '/admin/messages', alert: unreadMessagesCount > 0 },
-    { label: 'Leadership / Team', count: leadershipCount, icon: '👥', color: '#818CF8', href: '/admin/leadership' },
-    { label: 'Products', count: productCount, icon: '📦', color: '#34D399', href: '/admin/products' },
-    { label: 'Case Studies', count: caseStudyCount, icon: '📁', color: '#FBBF24', href: '/admin/case-studies' },
-    { label: 'Blog Posts', count: blogPostCount, icon: '📝', color: '#F472B6', href: '/admin/blog' },
+    {
+      label: 'Unread Inquiries',
+      count: unreadMessagesCount,
+      total: `${totalMessagesCount} total`,
+      icon: '💬',
+      color: '#38BDF8',
+      href: '/admin/messages',
+      alert: unreadMessagesCount > 0,
+    },
+    {
+      label: 'Clients & Partners',
+      count: clientCount,
+      total: 'Active logos',
+      icon: '🏢',
+      color: '#60A5FA',
+      href: '/admin/clients',
+    },
+    {
+      label: 'Case Studies',
+      count: caseStudyCount,
+      total: 'Portfolio items',
+      icon: '📁',
+      color: '#FBBF24',
+      href: '/admin/case-studies',
+    },
+    {
+      label: 'Services',
+      count: serviceCount,
+      total: 'Solutions',
+      icon: '⚡',
+      color: '#A78BFA',
+      href: '/admin/services',
+    },
+    {
+      label: 'Products',
+      count: productCount,
+      total: 'AI Systems',
+      icon: '📦',
+      color: '#34D399',
+      href: '/admin/products',
+    },
+    {
+      label: 'Testimonials',
+      count: testimonialCount,
+      total: 'Client reviews',
+      icon: '⭐',
+      color: '#F59E0B',
+      href: '/admin/testimonials',
+    },
+    {
+      label: 'Leadership / Team',
+      count: leadershipCount,
+      total: 'Active leaders',
+      icon: '👥',
+      color: '#818CF8',
+      href: '/admin/leadership',
+    },
+    {
+      label: 'Blog Articles',
+      count: blogPostCount,
+      total: 'Published posts',
+      icon: '📝',
+      color: '#F472B6',
+      href: '/admin/blog',
+    },
+  ];
+
+  const quickActions = [
+    { label: '💬 Inquiries', href: '/admin/messages', variant: 'primary' },
+    { label: '+ Add Leader', href: '/admin/leadership/new', variant: 'secondary' },
+    { label: '+ New Case Study', href: '/admin/case-studies/new', variant: 'secondary' },
+    { label: '+ Write Article', href: '/admin/blog/new', variant: 'secondary' },
+    { label: '+ Client Logo', href: '/admin/clients', variant: 'secondary' },
+    { label: '+ Testimonial', href: '/admin/testimonials', variant: 'secondary' },
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: 1200, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', width: '100%', boxSizing: 'border-box' }}>
       
-      {/* Welcome Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+      {/* Top Header & Quick Actions */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          flexWrap: 'wrap',
+          gap: '1.25rem',
+          borderBottom: '1px solid rgba(22, 119, 255, 0.12)',
+          paddingBottom: '1.25rem',
+        }}
+      >
         <div>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.25rem', fontWeight: 600 }}>
+          <div
+            style={{
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '0.68rem',
+              letterSpacing: '0.2em',
+              color: '#1677FF',
+              textTransform: 'uppercase',
+              marginBottom: '0.25rem',
+              fontWeight: 600,
+            }}
+          >
             ADMINISTRATION CONTROL
           </div>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>Dashboard Overview</h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.825rem', marginTop: '0.25rem', fontWeight: 300 }}>
-            Welcome to the Quantum AI administration and communications hub.
+          <h1 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.35rem 0' }}>
+            Dashboard Overview
+          </h1>
+          <p style={{ color: '#94A3B8', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
+            Real-time operations, client communications, and live content metrics for Quantum AI.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <Link
-            href="/admin/messages"
-            style={{
-              padding: '0.48rem 0.95rem',
-              backgroundColor: 'rgba(56, 189, 248, 0.12)',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
-              borderRadius: 6,
-              color: '#38BDF8',
-              fontSize: '0.78rem',
-              fontWeight: 600,
-              textDecoration: 'none',
-              fontFamily: 'var(--font-mono, monospace)',
-            }}
-          >
-            💬 View All Inquiries
-          </Link>
-          <Link
-            href="/admin/case-studies/new"
-            style={{
-              padding: '0.48rem 0.95rem',
-              backgroundColor: '#1677FF',
-              borderRadius: 6,
-              color: '#FFFFFF',
-              fontSize: '0.78rem',
-              fontWeight: 600,
-              textDecoration: 'none',
-              fontFamily: 'var(--font-mono, monospace)',
-              boxShadow: '0 4px 12px rgba(22, 119, 255, 0.35)',
-            }}
-          >
-            + New Case Study
-          </Link>
+
+        {/* Quick Action Buttons */}
+        <div style={{ display: 'flex', gap: '0.45rem', flexWrap: 'wrap', alignItems: 'center' }}>
+          {quickActions.map((action, idx) => (
+            <Link
+              key={idx}
+              href={action.href}
+              style={{
+                padding: '0.45rem 0.85rem',
+                backgroundColor: action.variant === 'primary' ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
+                border: action.variant === 'primary' ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.22)',
+                borderRadius: 6,
+                color: action.variant === 'primary' ? '#FFFFFF' : '#38BDF8',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                textDecoration: 'none',
+                fontFamily: 'var(--font-mono, monospace)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                boxShadow: action.variant === 'primary' ? '0 4px 12px rgba(22, 119, 255, 0.35)' : 'none',
+                transition: 'all 0.15s ease',
+              }}
+            >
+              {action.label}
+            </Link>
+          ))}
         </div>
       </div>
 
-      {/* Stats Cards Grid - 5 concise cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
+      {/* Stats Cards Grid - 8 Real Database KPI Cards */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '1rem',
+          width: '100%',
+        }}
+      >
         {statCards.map((stat, idx) => (
           <Link
             key={idx}
@@ -104,48 +204,94 @@ export default async function AdminDashboardPage() {
               backgroundColor: 'rgba(6, 21, 43, 0.75)',
               border: '1px solid rgba(22, 119, 255, 0.18)',
               borderRadius: 10,
-              padding: '1rem 1.25rem',
+              padding: '1.15rem 1.25rem',
               textDecoration: 'none',
               display: 'flex',
               flexDirection: 'column',
-              gap: '0.5rem',
+              justifyContent: 'space-between',
+              gap: '0.65rem',
               transition: 'border-color 0.15s, transform 0.15s',
               borderLeft: stat.alert ? '3px solid #EF4444' : `3px solid ${stat.color}`,
               boxShadow: '0 8px 24px -6px rgba(0, 0, 0, 0.5)',
+              boxSizing: 'border-box',
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'var(--font-mono, monospace)' }}>
+              <span
+                style={{
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  color: '#94A3B8',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  fontFamily: 'var(--font-mono, monospace)',
+                }}
+              >
                 {stat.label}
               </span>
-              <span style={{ fontSize: '1.1rem' }}>{stat.icon}</span>
+              <span style={{ fontSize: '1.15rem' }}>{stat.icon}</span>
             </div>
-            <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#F8FAFC', lineHeight: 1 }}>
-              {stat.count}
+
+            <div>
+              <div style={{ fontSize: '1.85rem', fontWeight: 700, color: '#F8FAFC', lineHeight: 1 }}>
+                {stat.count}
+              </div>
+              <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.35rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                {stat.total}
+              </div>
             </div>
           </Link>
         ))}
       </div>
 
-      {/* 2-Column Split: Recent Messages & Recent Blog Posts */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem' }}>
+      {/* 2-Column Split: Recent Inquiries & Recent Blog Posts */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.25rem', width: '100%' }}>
         
         {/* Recent Inquiries Section */}
-        <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', borderRadius: 12, border: '1px solid rgba(22, 119, 255, 0.18)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 8px 24px -6px rgba(0,0,0,0.5)' }}>
-          <div style={{ padding: '0.95rem 1.25rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(3, 7, 18, 0.6)' }}>
+        <div
+          style={{
+            backgroundColor: 'rgba(6, 21, 43, 0.75)',
+            borderRadius: 12,
+            border: '1px solid rgba(22, 119, 255, 0.18)',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            boxShadow: '0 8px 24px -6px rgba(0, 0, 0, 0.5)',
+          }}
+        >
+          <div
+            style={{
+              padding: '0.95rem 1.25rem',
+              borderBottom: '1px solid rgba(22, 119, 255, 0.15)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              backgroundColor: 'rgba(3, 7, 18, 0.6)',
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.95rem' }}>💬</span>
               <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#F8FAFC' }}>Recent Inquiries</h2>
             </div>
-            <Link href="/admin/messages" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)' }}>
-              View All →
+            <Link
+              href="/admin/messages"
+              style={{
+                color: '#38BDF8',
+                textDecoration: 'none',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                fontFamily: 'var(--font-mono, monospace)',
+              }}
+            >
+              View All ({totalMessagesCount}) →
             </Link>
           </div>
 
           <div style={{ overflowX: 'auto', flex: 1 }}>
             {recentMessages.length === 0 ? (
-              <div style={{ padding: '2.5rem 1.5rem', textAlign: 'center', color: '#94A3B8', fontSize: '0.85rem' }}>
-                No inquiries submitted yet.
+              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#94A3B8', fontSize: '0.85rem' }}>
+                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📭</div>
+                No client inquiries submitted yet.
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -207,21 +353,50 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Recent Posts Section */}
-        <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', borderRadius: 12, border: '1px solid rgba(22, 119, 255, 0.18)', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 8px 24px -6px rgba(0,0,0,0.5)' }}>
-          <div style={{ padding: '0.95rem 1.25rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'rgba(3, 7, 18, 0.6)' }}>
+        <div
+          style={{
+            backgroundColor: 'rgba(6, 21, 43, 0.75)',
+            borderRadius: 12,
+            border: '1px solid rgba(22, 119, 255, 0.18)',
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column',
+            boxShadow: '0 8px 24px -6px rgba(0, 0, 0, 0.5)',
+          }}
+        >
+          <div
+            style={{
+              padding: '0.95rem 1.25rem',
+              borderBottom: '1px solid rgba(22, 119, 255, 0.15)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              backgroundColor: 'rgba(3, 7, 18, 0.6)',
+            }}
+          >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.95rem' }}>📝</span>
               <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#F8FAFC' }}>Recent Blog Posts</h2>
             </div>
-            <Link href="/admin/blog" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)' }}>
-              View All →
+            <Link
+              href="/admin/blog"
+              style={{
+                color: '#38BDF8',
+                textDecoration: 'none',
+                fontSize: '0.78rem',
+                fontWeight: 600,
+                fontFamily: 'var(--font-mono, monospace)',
+              }}
+            >
+              View All ({blogPostCount}) →
             </Link>
           </div>
 
           <div style={{ overflowX: 'auto', flex: 1 }}>
             {recentPosts.length === 0 ? (
-              <div style={{ padding: '2.5rem 1.5rem', textAlign: 'center', color: '#94A3B8', fontSize: '0.85rem' }}>
-                No blog posts created yet.
+              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#94A3B8', fontSize: '0.85rem' }}>
+                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📝</div>
+                No blog articles published yet.
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column' }}>

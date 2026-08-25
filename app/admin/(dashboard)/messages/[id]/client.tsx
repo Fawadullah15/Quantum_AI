@@ -3,6 +3,9 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAdminToast } from '@/components/admin/AdminToast';
+import { useAdminConfirm } from '@/components/admin/ConfirmDialog';
+import StatusBadge from '@/components/admin/StatusBadge';
 
 export interface MessageDetailData {
   id: string;
@@ -22,20 +25,19 @@ export interface MessageDetailData {
 
 export default function MessageDetailClient({ message }: { message: MessageDetailData }) {
   const router = useRouter();
+  const toast = useAdminToast();
+  const { confirm } = useAdminConfirm();
+
   const [status, setStatus] = useState(message.status || 'NEW');
   const [notes, setNotes] = useState(message.notes || '');
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [isSavingNotes, setIsSavingNotes] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [statusFeedback, setStatusFeedback] = useState<string | null>(null);
-  const [notesFeedback, setNotesFeedback] = useState<string | null>(null);
 
   const handleUpdateStatus = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setIsUpdatingStatus(true);
-      setStatusFeedback(null);
-
       const res = await fetch(`/api/admin/contact/${message.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -46,12 +48,11 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
         throw new Error('Failed to update status');
       }
 
-      setStatusFeedback('Status updated successfully!');
+      toast.success(`Status updated to "${status}"`, 'Status Updated');
       router.refresh();
-      setTimeout(() => setStatusFeedback(null), 3000);
     } catch (err) {
       console.error('Update status error:', err);
-      alert('An error occurred while updating status.');
+      toast.error('An error occurred while updating status.', 'Update Failed');
     } finally {
       setIsUpdatingStatus(false);
     }
@@ -61,8 +62,6 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
     e.preventDefault();
     try {
       setIsSavingNotes(true);
-      setNotesFeedback(null);
-
       const res = await fetch(`/api/admin/contact/${message.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
@@ -73,19 +72,25 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
         throw new Error('Failed to save notes');
       }
 
-      setNotesFeedback('Internal notes saved!');
+      toast.success('Internal notes saved successfully.', 'Notes Saved');
       router.refresh();
-      setTimeout(() => setNotesFeedback(null), 3000);
     } catch (err) {
       console.error('Save notes error:', err);
-      alert('An error occurred while saving notes.');
+      toast.error('An error occurred while saving notes.', 'Save Failed');
     } finally {
       setIsSavingNotes(false);
     }
   };
 
   const handleDelete = async () => {
-    if (confirm(`Are you sure you want to delete this message from "${message.name}"?`)) {
+    const confirmed = await confirm({
+      title: 'Delete Inquiry',
+      message: `Are you sure you want to permanently delete the inquiry from "${message.name}"? This cannot be undone.`,
+      confirmText: 'Delete Permanently',
+      confirmVariant: 'danger',
+    });
+
+    if (confirmed) {
       try {
         setIsDeleting(true);
         const res = await fetch(`/api/admin/contact/${message.id}`, {
@@ -96,34 +101,21 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
           throw new Error('Failed to delete message');
         }
 
+        toast.success(`Inquiry from "${message.name}" was deleted.`, 'Deleted');
         router.push('/admin/messages');
         router.refresh();
       } catch (err) {
         console.error('Delete error:', err);
-        alert('An error occurred while deleting message.');
+        toast.error('Failed to delete inquiry.', 'Error');
         setIsDeleting(false);
       }
     }
   };
 
-  const getStatusBadgeColor = (st: string) => {
-    switch (st) {
-      case 'NEW':
-        return { bg: 'rgba(56, 189, 248, 0.15)', text: '#38BDF8', border: 'rgba(56, 189, 248, 0.3)' };
-      case 'CONTACTED':
-        return { bg: 'rgba(245, 158, 11, 0.15)', text: '#FBBF24', border: 'rgba(245, 158, 11, 0.3)' };
-      case 'IN_PROGRESS':
-        return { bg: 'rgba(168, 85, 247, 0.15)', text: '#C084FC', border: 'rgba(168, 85, 247, 0.3)' };
-      case 'CLOSED':
-        return { bg: 'rgba(16, 185, 129, 0.15)', text: '#34D399', border: 'rgba(16, 185, 129, 0.3)' };
-      case 'ARCHIVED':
-        return { bg: 'rgba(100, 116, 139, 0.15)', text: '#94A3B8', border: 'rgba(100, 116, 139, 0.3)' };
-      default:
-        return { bg: 'rgba(56, 189, 248, 0.15)', text: '#38BDF8', border: 'rgba(56, 189, 248, 0.3)' };
-    }
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(message.email);
+    toast.info(`Copied "${message.email}" to clipboard`, 'Email Copied');
   };
-
-  const currentBadge = getStatusBadgeColor(status);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: 1100, margin: '0 auto', color: '#F8FAFC', width: '100%', boxSizing: 'border-box' }}>
@@ -156,7 +148,28 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            onClick={handleCopyEmail}
+            style={{
+              backgroundColor: 'rgba(56, 189, 248, 0.12)',
+              border: '1px solid rgba(56, 189, 248, 0.3)',
+              color: '#38BDF8',
+              padding: '0.48rem 0.95rem',
+              borderRadius: 6,
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
+            📋 Copy Email
+          </button>
+
           <a
             href={`mailto:${message.email}?subject=Regarding your inquiry at Quantum AI&body=Hi ${encodeURIComponent(message.name)},%0D%0A%0D%0AThank you for reaching out to Quantum AI.`}
             style={{
@@ -178,6 +191,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
           </a>
 
           <button
+            type="button"
             onClick={handleDelete}
             disabled={isDeleting}
             style={{
@@ -209,21 +223,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
               <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: 0 }}>
                 Contact Information
               </h2>
-              <span
-                style={{
-                  padding: '0.2rem 0.55rem',
-                  borderRadius: 4,
-                  fontSize: '0.68rem',
-                  fontWeight: 700,
-                  fontFamily: 'var(--font-mono, monospace)',
-                  letterSpacing: '0.05em',
-                  backgroundColor: currentBadge.bg,
-                  color: currentBadge.text,
-                  border: `1px solid ${currentBadge.border}`,
-                }}
-              >
-                {status}
-              </span>
+              <StatusBadge status={status} />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -238,7 +238,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
                 <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
                   Email Address
                 </div>
-                <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <a href={`mailto:${message.email}`} style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.88rem', wordBreak: 'break-all' }}>
                     {message.email}
                   </a>
@@ -280,7 +280,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
           {/* Project Details & Body */}
           <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 12, padding: '1.5rem' }}>
             <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 1rem 0', borderBottom: '1px solid rgba(22, 119, 255, 0.12)', paddingBottom: '0.65rem' }}>
-              Project Details & Message
+              Project Details &amp; Message
             </h2>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }}>
@@ -346,18 +346,12 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
                   outline: 'none',
                 }}
               >
-                <option value="NEW" style={{ backgroundColor: '#070B14' }}>New</option>
+                <option value="NEW" style={{ backgroundColor: '#070B14' }}>New (Unread)</option>
                 <option value="CONTACTED" style={{ backgroundColor: '#070B14' }}>Contacted</option>
                 <option value="IN_PROGRESS" style={{ backgroundColor: '#070B14' }}>In Progress</option>
                 <option value="CLOSED" style={{ backgroundColor: '#070B14' }}>Closed</option>
                 <option value="ARCHIVED" style={{ backgroundColor: '#070B14' }}>Archived</option>
               </select>
-
-              {statusFeedback && (
-                <div style={{ color: '#34D399', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)' }}>
-                  ✓ {statusFeedback}
-                </div>
-              )}
 
               <button
                 type="submit"
@@ -408,12 +402,6 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
                   lineHeight: 1.5,
                 }}
               />
-
-              {notesFeedback && (
-                <div style={{ color: '#34D399', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)' }}>
-                  ✓ {notesFeedback}
-                </div>
-              )}
 
               <button
                 type="submit"

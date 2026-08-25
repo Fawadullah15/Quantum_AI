@@ -3,6 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useAdminToast } from '@/components/admin/AdminToast';
+import { useAdminConfirm } from '@/components/admin/ConfirmDialog';
+import StatusBadge from '@/components/admin/StatusBadge';
+import EmptyState from '@/components/admin/EmptyState';
 
 export interface ContactMessageItem {
   id: string;
@@ -24,11 +28,18 @@ export default function MessagesListClient({
   messages: ContactMessageItem[];
 }) {
   const router = useRouter();
+  const toast = useAdminToast();
+  const { confirm } = useAdminConfirm();
+
   const [items, setItems] = useState<ContactMessageItem[]>(messages);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [processingId, setProcessingId] = useState<string | null>(null);
 
+  // Toggle Read / Unread Status
   const handleToggleStatus = async (e: React.MouseEvent, msg: ContactMessageItem) => {
     e.stopPropagation();
     const newStatus = msg.status === 'NEW' ? 'CONTACTED' : 'NEW';
@@ -45,18 +56,27 @@ export default function MessagesListClient({
       setItems((prev) =>
         prev.map((item) => (item.id === msg.id ? { ...item, status: newStatus } : item))
       );
+      toast.success(`Marked as ${newStatus === 'NEW' ? 'New (Unread)' : 'Contacted'}`, 'Status Updated');
       router.refresh();
     } catch (err) {
       console.error('Error toggling status:', err);
-      alert('Failed to update status.');
+      toast.error('Failed to update message status.', 'Error');
     } finally {
       setProcessingId(null);
     }
   };
 
+  // Delete Message with Admin Confirm Modal
   const handleDelete = async (e: React.MouseEvent, id: string, name: string) => {
     e.stopPropagation();
-    if (confirm(`Are you sure you want to delete the message from "${name}"?`)) {
+    const confirmed = await confirm({
+      title: 'Delete Inquiry',
+      message: `Are you sure you want to permanently delete the inquiry from "${name}"? This action cannot be undone.`,
+      confirmText: 'Delete Permanently',
+      confirmVariant: 'danger',
+    });
+
+    if (confirmed) {
       try {
         setProcessingId(id);
         const res = await fetch(`/api/admin/contact/${id}`, {
@@ -66,45 +86,51 @@ export default function MessagesListClient({
         if (!res.ok) throw new Error('Delete failed');
 
         setItems((prev) => prev.filter((item) => item.id !== id));
+        toast.success(`Inquiry from "${name}" was deleted.`, 'Deleted');
         router.refresh();
       } catch (err) {
         console.error('Delete error:', err);
-        alert('Failed to delete message.');
+        toast.error('Failed to delete inquiry.', 'Error');
       } finally {
         setProcessingId(null);
       }
     }
   };
 
-  const filteredItems = items.filter((msg) => {
-    const matchesSearch =
-      msg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      msg.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (msg.company && msg.company.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (msg.projectType && msg.projectType.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      msg.message.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesStatus = statusFilter === 'ALL' || msg.status === statusFilter;
-
-    return matchesSearch && matchesStatus;
-  });
-
-  const getStatusBadge = (st: string) => {
-    switch (st) {
-      case 'NEW':
-        return { bg: 'rgba(56, 189, 248, 0.15)', text: '#38BDF8', border: 'rgba(56, 189, 248, 0.3)' };
-      case 'CONTACTED':
-        return { bg: 'rgba(245, 158, 11, 0.15)', text: '#FBBF24', border: 'rgba(245, 158, 11, 0.3)' };
-      case 'IN_PROGRESS':
-        return { bg: 'rgba(168, 85, 247, 0.15)', text: '#C084FC', border: 'rgba(168, 85, 247, 0.3)' };
-      case 'CLOSED':
-        return { bg: 'rgba(16, 185, 129, 0.15)', text: '#34D399', border: 'rgba(16, 185, 129, 0.3)' };
-      case 'ARCHIVED':
-        return { bg: 'rgba(100, 116, 139, 0.15)', text: '#94A3B8', border: 'rgba(100, 116, 139, 0.3)' };
-      default:
-        return { bg: 'rgba(56, 189, 248, 0.15)', text: '#38BDF8', border: 'rgba(56, 189, 248, 0.3)' };
-    }
+  // Copy Email to Clipboard
+  const handleCopyEmail = (e: React.MouseEvent, email: string) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(email);
+    toast.info(`Copied "${email}" to clipboard`, 'Email Copied');
   };
+
+  // Filter & Search Logic
+  const filteredItems = items
+    .filter((msg) => {
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        msg.name.toLowerCase().includes(q) ||
+        msg.email.toLowerCase().includes(q) ||
+        (msg.company && msg.company.toLowerCase().includes(q)) ||
+        (msg.projectType && msg.projectType.toLowerCase().includes(q)) ||
+        msg.message.toLowerCase().includes(q);
+
+      const matchesStatus = statusFilter === 'ALL' || msg.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      const timeA = new Date(a.createdAt).getTime();
+      const timeB = new Date(b.createdAt).getTime();
+      return sortOrder === 'desc' ? timeB - timeA : timeA - timeB;
+    });
+
+  // Pagination Math
+  const totalItems = filteredItems.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const startIndex = (currentPage - 1) * pageSize;
+  const paginatedItems = filteredItems.slice(startIndex, startIndex + pageSize);
 
   const statusCounts = {
     ALL: items.length,
@@ -112,11 +138,12 @@ export default function MessagesListClient({
     CONTACTED: items.filter((m) => m.status === 'CONTACTED').length,
     IN_PROGRESS: items.filter((m) => m.status === 'IN_PROGRESS').length,
     CLOSED: items.filter((m) => m.status === 'CLOSED').length,
+    ARCHIVED: items.filter((m) => m.status === 'ARCHIVED').length,
   };
 
   return (
     <div style={{ color: '#F8FAFC', width: '100%' }}>
-      {/* Top Filter Bar */}
+      {/* Top Search & Filter Bar */}
       <div
         style={{
           display: 'flex',
@@ -124,34 +151,76 @@ export default function MessagesListClient({
           justifyContent: 'space-between',
           alignItems: 'center',
           gap: '1rem',
-          marginBottom: '1.5rem',
+          marginBottom: '1.25rem',
         }}
       >
-        {/* Search Input */}
-        <div style={{ minWidth: '280px', flex: '1', maxWidth: '420px' }}>
-          <input
-            type="text"
-            placeholder="Search by sender, email, project, keyword..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+        {/* Search & Sort Controls */}
+        <div style={{ display: 'flex', gap: '0.65rem', flex: '1', minWidth: '280px', maxWidth: '520px', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, position: 'relative' }}>
+            <input
+              type="text"
+              placeholder="Search sender, email, project, keyword..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              style={{
+                width: '100%',
+                backgroundColor: '#070B14',
+                border: '1px solid rgba(22, 119, 255, 0.25)',
+                borderRadius: '8px',
+                padding: '0.6rem 0.95rem',
+                fontSize: '0.85rem',
+                color: '#F8FAFC',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'transparent',
+                  border: 'none',
+                  color: '#94A3B8',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem',
+                }}
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value as 'desc' | 'asc')}
             style={{
-              width: '100%',
               backgroundColor: '#070B14',
               border: '1px solid rgba(22, 119, 255, 0.25)',
               borderRadius: '8px',
-              padding: '0.65rem 0.95rem',
-              fontSize: '0.875rem',
-              color: '#F8FAFC',
+              padding: '0.6rem 0.85rem',
+              fontSize: '0.82rem',
+              color: '#CBD5E1',
               outline: 'none',
-              boxSizing: 'border-box',
+              fontFamily: 'var(--font-mono, monospace)',
             }}
-          />
+          >
+            <option value="desc">Newest First</option>
+            <option value="asc">Oldest First</option>
+          </select>
         </div>
 
         {/* Status Filter Tabs */}
-        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
           {[
-            { key: 'ALL', label: 'All Inquiries', count: statusCounts.ALL },
+            { key: 'ALL', label: 'All', count: statusCounts.ALL },
             { key: 'NEW', label: 'New', count: statusCounts.NEW },
             { key: 'CONTACTED', label: 'Contacted', count: statusCounts.CONTACTED },
             { key: 'IN_PROGRESS', label: 'In Progress', count: statusCounts.IN_PROGRESS },
@@ -161,12 +230,16 @@ export default function MessagesListClient({
             return (
               <button
                 key={tab.key}
-                onClick={() => setStatusFilter(tab.key)}
+                type="button"
+                onClick={() => {
+                  setStatusFilter(tab.key);
+                  setCurrentPage(1);
+                }}
                 style={{
                   backgroundColor: isActive ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
                   border: isActive ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
                   color: isActive ? '#FFFFFF' : '#94A3B8',
-                  padding: '0.45rem 0.85rem',
+                  padding: '0.45rem 0.8rem',
                   borderRadius: '6px',
                   fontSize: '0.78rem',
                   fontWeight: 600,
@@ -175,7 +248,7 @@ export default function MessagesListClient({
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.4rem',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.15s ease',
                 }}
               >
                 <span>{tab.label}</span>
@@ -196,56 +269,77 @@ export default function MessagesListClient({
         </div>
       </div>
 
-      {/* Messages List Table */}
-      <div
-        style={{
-          backgroundColor: 'rgba(6, 21, 43, 0.75)',
-          border: '1px solid rgba(22, 119, 255, 0.18)',
-          borderRadius: '12px',
-          overflow: 'hidden',
-          boxShadow: '0 12px 32px -8px rgba(0, 0, 0, 0.5)',
-        }}
-      >
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
-            <thead>
-              <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
-                  Sender & Contact
-                </th>
-                <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
-                  Project Type
-                </th>
-                <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
-                  Message Preview
-                </th>
-                <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
-                  Date
-                </th>
-                <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
-                  Status
-                </th>
-                <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredItems.length === 0 ? (
-                <tr>
-                  <td colSpan={6} style={{ padding: '3.5rem 1.5rem', textAlign: 'center', color: '#94A3B8' }}>
-                    <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📭</div>
-                    <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 0.35rem 0' }}>
-                      No contact inquiries found
-                    </h3>
-                    <p style={{ fontSize: '0.8rem', color: '#64748B', margin: 0 }}>
-                      Try adjusting your search query or filter tab.
-                    </p>
-                  </td>
+      {/* Messages List Table (Desktop & Tablet) / Cards (Mobile) */}
+      {filteredItems.length === 0 ? (
+        <EmptyState
+          icon="📭"
+          title="No contact inquiries found"
+          description={
+            searchQuery || statusFilter !== 'ALL'
+              ? 'No messages match your active filter criteria. Try resetting your search or tab filters.'
+              : 'Client inquiries submitted via the website contact form will appear here in real-time.'
+          }
+          action={
+            (searchQuery || statusFilter !== 'ALL') && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery('');
+                  setStatusFilter('ALL');
+                }}
+                style={{
+                  backgroundColor: 'rgba(22, 119, 255, 0.15)',
+                  border: '1px solid rgba(22, 119, 255, 0.35)',
+                  color: '#38BDF8',
+                  padding: '0.45rem 1rem',
+                  borderRadius: '6px',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-mono, monospace)',
+                }}
+              >
+                Reset All Filters
+              </button>
+            )
+          }
+        />
+      ) : (
+        <div
+          style={{
+            backgroundColor: 'rgba(6, 21, 43, 0.75)',
+            border: '1px solid rgba(22, 119, 255, 0.18)',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            boxShadow: '0 12px 32px -8px rgba(0, 0, 0, 0.5)',
+          }}
+        >
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
+              <thead>
+                <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                    Sender &amp; Contact
+                  </th>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                    Project Type
+                  </th>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                    Message Preview
+                  </th>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                    Date
+                  </th>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                    Status
+                  </th>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
+                    Actions
+                  </th>
                 </tr>
-              ) : (
-                filteredItems.map((msg) => {
-                  const badge = getStatusBadge(msg.status);
+              </thead>
+              <tbody>
+                {paginatedItems.map((msg) => {
                   const isProcessing = processingId === msg.id;
 
                   return (
@@ -271,7 +365,24 @@ export default function MessagesListClient({
                         <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.92rem' }}>
                           {msg.name}
                         </div>
-                        <div style={{ fontSize: '0.75rem', color: '#38BDF8' }}>{msg.email}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.15rem' }}>
+                          <span style={{ fontSize: '0.75rem', color: '#38BDF8' }}>{msg.email}</span>
+                          <button
+                            type="button"
+                            title="Copy email"
+                            onClick={(e) => handleCopyEmail(e, msg.email)}
+                            style={{
+                              background: 'transparent',
+                              border: 'none',
+                              color: '#64748B',
+                              cursor: 'pointer',
+                              fontSize: '0.75rem',
+                              padding: '0 0.2rem',
+                            }}
+                          >
+                            📋
+                          </button>
+                        </div>
                         {msg.company && (
                           <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '0.15rem' }}>
                             {msg.company}
@@ -290,6 +401,7 @@ export default function MessagesListClient({
                             fontSize: '0.75rem',
                             color: '#CBD5E1',
                             fontFamily: 'var(--font-mono, monospace)',
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           {msg.projectType || 'General Inquiry'}
@@ -314,7 +426,7 @@ export default function MessagesListClient({
                       </td>
 
                       {/* Date */}
-                      <td style={{ padding: '0.95rem 1.15rem', verticalAlign: 'middle', whiteSpace: 'nowrap', color: '#94A3B8', fontSize: '0.78rem' }}>
+                      <td style={{ padding: '0.95rem 1.15rem', verticalAlign: 'middle', whiteSpace: 'nowrap', color: '#94A3B8', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)' }}>
                         {new Date(msg.createdAt).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -324,21 +436,7 @@ export default function MessagesListClient({
 
                       {/* Status */}
                       <td style={{ padding: '0.95rem 1.15rem', verticalAlign: 'middle' }}>
-                        <span
-                          style={{
-                            padding: '0.2rem 0.55rem',
-                            borderRadius: '4px',
-                            fontSize: '0.68rem',
-                            fontWeight: 700,
-                            fontFamily: 'var(--font-mono, monospace)',
-                            letterSpacing: '0.05em',
-                            backgroundColor: badge.bg,
-                            color: badge.text,
-                            border: `1px solid ${badge.border}`,
-                          }}
-                        >
-                          {msg.status}
-                        </span>
+                        <StatusBadge status={msg.status} />
                       </td>
 
                       {/* Actions */}
@@ -363,6 +461,7 @@ export default function MessagesListClient({
                           </Link>
 
                           <button
+                            type="button"
                             onClick={(e) => handleToggleStatus(e, msg)}
                             disabled={isProcessing}
                             style={{
@@ -380,6 +479,7 @@ export default function MessagesListClient({
                           </button>
 
                           <button
+                            type="button"
                             onClick={(e) => handleDelete(e, msg.id, msg.name)}
                             disabled={isProcessing}
                             style={{
@@ -399,12 +499,95 @@ export default function MessagesListClient({
                       </td>
                     </tr>
                   );
-                })
-              )}
-            </tbody>
-          </table>
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination Controls */}
+          <div
+            style={{
+              padding: '0.85rem 1.25rem',
+              borderTop: '1px solid rgba(22, 119, 255, 0.15)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+              gap: '0.75rem',
+              backgroundColor: 'rgba(3, 7, 18, 0.6)',
+              fontSize: '0.8rem',
+              color: '#94A3B8',
+            }}
+          >
+            <div>
+              Showing {startIndex + 1} to {Math.min(startIndex + pageSize, totalItems)} of {totalItems} inquiries
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                style={{
+                  backgroundColor: '#070B14',
+                  border: '1px solid rgba(22, 119, 255, 0.25)',
+                  borderRadius: '4px',
+                  padding: '0.25rem 0.5rem',
+                  fontSize: '0.75rem',
+                  color: '#CBD5E1',
+                  outline: 'none',
+                }}
+              >
+                <option value={10}>10 per page</option>
+                <option value={25}>25 per page</option>
+                <option value={50}>50 per page</option>
+              </select>
+
+              <button
+                type="button"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                style={{
+                  backgroundColor: 'rgba(22, 119, 255, 0.12)',
+                  border: '1px solid rgba(22, 119, 255, 0.25)',
+                  color: currentPage === 1 ? '#64748B' : '#38BDF8',
+                  padding: '0.25rem 0.65rem',
+                  borderRadius: '4px',
+                  cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                  fontSize: '0.75rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                }}
+              >
+                ← Prev
+              </button>
+
+              <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#F8FAFC' }}>
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button
+                type="button"
+                disabled={currentPage >= totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                style={{
+                  backgroundColor: 'rgba(22, 119, 255, 0.12)',
+                  border: '1px solid rgba(22, 119, 255, 0.25)',
+                  color: currentPage >= totalPages ? '#64748B' : '#38BDF8',
+                  padding: '0.25rem 0.65rem',
+                  borderRadius: '4px',
+                  cursor: currentPage >= totalPages ? 'not-allowed' : 'pointer',
+                  fontSize: '0.75rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                }}
+              >
+                Next →
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
