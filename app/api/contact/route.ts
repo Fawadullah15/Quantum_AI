@@ -37,7 +37,11 @@ export async function POST(request: Request) {
       },
     });
 
-    // Send automated email notification to fawadimraj@gmail.com
+    // Send automated email notification to configured routing email or default
+    const { getSiteSettings } = await import('@/lib/settings');
+    const settings = await getSiteSettings();
+    const notificationDestination = settings.company_routing_email || ADMIN_NOTIFICATION_EMAIL;
+
     const emailHtml = getContactAdminEmailHtml({
       name: cleanName,
       email: cleanEmail,
@@ -47,7 +51,7 @@ export async function POST(request: Request) {
     });
 
     await sendEmail({
-      to: ADMIN_NOTIFICATION_EMAIL,
+      to: notificationDestination,
       subject: `[Quantum AI Contact] New Project Inquiry from ${cleanName}`,
       html: emailHtml,
     }).catch((err) => console.error('[Contact Email Dispatch Error]:', err));

@@ -8,7 +8,7 @@ const footerLinks = {
   'COMPANY': [
     { href: '/about', label: 'About' },
     { href: '/leadership', label: 'Leadership' },
-    { href: '/careers', label: 'Careers' },
+    { href: '/careers-partnerships', label: 'Careers' },
   ],
   'SERVICES': [
     { href: '/services#ai', label: 'AI Systems' },
@@ -39,14 +39,28 @@ const lnk: React.CSSProperties = {
 };
 
 export default function Footer({
-  companyName,
-  tagline,
-  email,
+  companyName = 'QUANTUM AI',
+  tagline = 'Intelligent software for a connected world.',
+  email = 'hello@quantumai.dev',
+  socials,
+  copyright,
 }: {
-  companyName: string;
-  tagline: string;
-  email: string;
+  companyName?: string;
+  tagline?: string;
+  email?: string;
+  socials?: {
+    linkedin?: string;
+    twitter?: string;
+    github?: string;
+    instagram?: string;
+    youtube?: string;
+    facebook?: string;
+  };
+  copyright?: string;
 }) {
+  const currentYear = new Date().getFullYear();
+  const displayCopyright = copyright || `© ${currentYear} ${companyName}. All rights reserved.`;
+
   return (
     <footer style={{
       position: 'relative',
@@ -101,6 +115,51 @@ export default function Footer({
             }}>
               {tagline}
             </p>
+
+            {/* Social Links on Brand Column */}
+            {socials && (
+              <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
+                {socials.github && (
+                  <a
+                    href={socials.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#38BDF8')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+                    title="GitHub"
+                  >
+                    GitHub
+                  </a>
+                )}
+                {socials.linkedin && (
+                  <a
+                    href={socials.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#38BDF8')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+                    title="LinkedIn"
+                  >
+                    LinkedIn
+                  </a>
+                )}
+                {socials.twitter && (
+                  <a
+                    href={socials.twitter}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#38BDF8')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+                    title="Twitter / X"
+                  >
+                    Twitter
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Link columns - each spans 1 column */}
@@ -145,17 +204,17 @@ export default function Footer({
           gap: '1rem',
         }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.08em' }}>
-            © {new Date().getFullYear()} {companyName}. All rights reserved.
+            {displayCopyright}
           </span>
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-            <a href="mailto:fawadimraj@gmail.com" style={{ 
+            <a href={`mailto:${email || 'hello@quantumai.dev'}`} style={{ 
               fontFamily: 'var(--font-mono)', 
               fontSize: '0.75rem', 
               color: '#38BDF8', 
               textDecoration: 'none', 
               letterSpacing: '0.05em' 
             }}>
-              {email}
+              {email || 'hello@quantumai.dev'}
             </a>
           </div>
         </div>

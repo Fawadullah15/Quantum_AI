@@ -43,8 +43,10 @@ export default function SolutionsSection() {
   return (
     <section
       style={{
-        padding: 'clamp(2rem, 4.5vh, 3.5rem) clamp(1rem, 5vw, 6rem)',
+        padding: 'clamp(2rem, 4.5vh, 3.5rem) clamp(0.75rem, 4vw, 6rem)',
         pointerEvents: 'auto',
+        width: '100%',
+        boxSizing: 'border-box',
       }}
     >
       <style>{`
@@ -210,22 +212,25 @@ export default function SolutionsSection() {
 
           .solutions-mobile-grid {
             display: grid !important;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.55rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem;
             width: 100%;
+            box-sizing: border-box;
           }
 
           .mobile-solution-tile {
             background: rgba(6, 21, 43, 0.75);
             border: 1px solid rgba(22, 119, 255, 0.16);
             border-radius: 8px;
-            padding: 0.85rem 0.9rem;
+            padding: 0.75rem 0.75rem;
             text-decoration: none;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 80px;
+            min-height: 78px;
             box-sizing: border-box;
+            min-width: 0;
+            width: 100%;
             transition: border-color 0.2s ease, background-color 0.2s ease;
           }
 
@@ -236,39 +241,45 @@ export default function SolutionsSection() {
 
           .mobile-solution-num {
             font-family: var(--font-mono, monospace);
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             color: #38BDF8;
             font-weight: 600;
             letter-spacing: 0.05em;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.25rem;
             display: block;
           }
 
           .mobile-solution-title {
-            font-size: 0.875rem;
+            font-size: 0.82rem;
             font-weight: 600;
             color: #F8FAFC;
             letter-spacing: -0.01em;
             margin: 0;
             line-height: 1.25;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            min-width: 0;
           }
 
           .mobile-solution-arrow {
             font-family: var(--font-mono, monospace);
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: #64748B;
             align-self: flex-end;
-            margin-top: 0.25rem;
+            margin-top: 0.2rem;
           }
         }
 
         @media (max-width: 380px) {
+          .solutions-mobile-grid {
+            gap: 0.4rem;
+          }
           .mobile-solution-tile {
-            padding: 0.75rem 0.8rem;
-            min-height: 72px;
+            padding: 0.65rem 0.65rem;
+            min-height: 70px;
           }
           .mobile-solution-title {
-            font-size: 0.8125rem;
+            font-size: 0.78rem;
           }
         }
       `}</style>

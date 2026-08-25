@@ -61,6 +61,26 @@ export default function ContactPage() {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const [textFocused, setTextFocused] = useState(false);
+  const [contactSettings, setContactSettings] = useState({
+    email: 'hello@quantumai.dev',
+    responseTime: 'We review all technical inquiries within 24 hours and respond with architectural scope and feasibility analysis.',
+    location: 'San Francisco & Islamabad',
+  });
+
+  React.useEffect(() => {
+    fetch('/api/settings')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) {
+          setContactSettings({
+            email: data.company_email || 'hello@quantumai.dev',
+            responseTime: data.response_time_text || 'We review all technical inquiries within 24 hours and respond with architectural scope and feasibility analysis.',
+            location: data.company_location || 'San Francisco & Islamabad',
+          });
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -241,7 +261,7 @@ export default function ContactPage() {
                 DIRECT CONTACT
               </div>
               <a
-                href="mailto:fawadimraj@gmail.com"
+                href={`mailto:${contactSettings.email}`}
                 style={{
                   fontSize: 'clamp(1.05rem, 2.2vw, 1.45rem)',
                   fontWeight: 600,
@@ -262,7 +282,7 @@ export default function ContactPage() {
                   e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
                 }}
               >
-                hello@quantumai.dev
+                {contactSettings.email}
               </a>
             </div>
 
@@ -281,7 +301,7 @@ export default function ContactPage() {
                 RESPONSE TIME
               </div>
               <p style={{ fontSize: '0.9rem', color: '#94A3B8', margin: 0, lineHeight: 1.6, fontWeight: 300 }}>
-                We review all technical inquiries within 24 hours and respond with architectural scope and feasibility analysis.
+                {contactSettings.responseTime}
               </p>
             </div>
 

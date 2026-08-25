@@ -47,6 +47,9 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
     outline: 'none',
     opacity: disabled ? 0.5 : 1,
     background: 'transparent',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
+    textAlign: 'center',
     ...style,
   };
 
@@ -178,6 +181,9 @@ export function GalaxyButton({ href, children, onClick, className = '', style, t
     background: '#06152B',
     boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
     transition: 'box-shadow 0.3s, border-color 0.3s',
+    maxWidth: '100%',
+    boxSizing: 'border-box',
+    textAlign: 'center',
     ...style,
   };
 

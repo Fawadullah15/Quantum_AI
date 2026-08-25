@@ -98,7 +98,15 @@ function DropdownMenu({ items, visible }: { items: DropdownItem[]; visible: bool
 
 // ─── Main Navigation ─────────────────────────────────────────────────────────
 
-export default function Navigation({ companyName }: { companyName?: string }) {
+export default function Navigation({
+  companyName,
+  ctaLabel = 'Start a Project',
+  ctaLink = '/contact',
+}: {
+  companyName?: string;
+  ctaLabel?: string;
+  ctaLink?: string;
+}) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -170,6 +178,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
           padding: '0 1.5rem',
           transition: 'top 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
           pointerEvents: 'none',
+          boxSizing: 'border-box',
         }}
         className="main-navbar-container"
       >
@@ -348,7 +357,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
               </Link>
 
               <Link
-                href="/contact"
+                href={ctaLink || '/contact'}
                 className="nav-cta-btn"
                 style={{
                   display: 'inline-flex',
@@ -377,7 +386,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
                   e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.5)';
                 }}
               >
-                Start a Project
+                {ctaLabel || 'Start a Project'}
               </Link>
 
               {/* Mobile Hamburger */}
@@ -574,7 +583,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
                 </Link>
 
                 <Link
-                  href="/contact"
+                  href={ctaLink || '/contact'}
                   onClick={() => setMobileOpen(false)}
                   style={{
                     display: 'block',
@@ -590,7 +599,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
                     letterSpacing: '0.05em',
                   }}
                 >
-                  Start a Project →
+                  {ctaLabel || 'Start a Project'} →
                 </Link>
               </div>
             </motion.div>

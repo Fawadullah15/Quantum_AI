@@ -597,8 +597,8 @@ export default function TestimonialsSection({
           left: 0;
           right: 0;
           bottom: 0;
-          width: 100vw;
-          height: 100vh;
+          width: 100%;
+          height: 100%;
           background: rgba(2, 6, 23, 0.88);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);

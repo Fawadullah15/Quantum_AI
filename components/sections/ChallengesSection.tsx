@@ -53,11 +53,13 @@ export default function ChallengesSection() {
   return (
     <section
       style={{
-        padding: 'clamp(2rem, 4.5vh, 3.5rem) clamp(1rem, 5vw, 6rem)',
+        padding: 'clamp(2rem, 4.5vh, 3.5rem) clamp(0.75rem, 4vw, 6rem)',
         pointerEvents: 'auto',
         backgroundColor: 'rgba(4, 14, 36, 0.5)',
         borderTop: '1px solid rgba(22, 119, 255, 0.08)',
         borderBottom: '1px solid rgba(22, 119, 255, 0.08)',
+        width: '100%',
+        boxSizing: 'border-box',
       }}
     >
       <style>{`
@@ -222,22 +224,25 @@ export default function ChallengesSection() {
 
           .challenges-mobile-grid {
             display: grid !important;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.55rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem;
             width: 100%;
+            box-sizing: border-box;
           }
 
           .mobile-challenge-block {
             background: rgba(6, 21, 43, 0.75);
             border: 1px solid rgba(22, 119, 255, 0.16);
             border-radius: 8px;
-            padding: 0.75rem 0.8rem;
+            padding: 0.65rem 0.65rem;
             text-decoration: none;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            gap: 0.4rem;
+            gap: 0.35rem;
             box-sizing: border-box;
+            min-width: 0;
+            width: 100%;
             transition: border-color 0.2s ease, background-color 0.2s ease;
           }
 
@@ -248,21 +253,25 @@ export default function ChallengesSection() {
 
           .mobile-block-code {
             font-family: var(--font-mono, monospace);
-            font-size: 0.58rem;
+            font-size: 0.56rem;
             color: #38BDF8;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
             font-weight: 600;
             text-transform: uppercase;
             line-height: 1;
+            overflow-wrap: break-word;
           }
 
           .mobile-block-title {
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 600;
             color: #F8FAFC;
             letter-spacing: -0.01em;
             margin: 0;
             line-height: 1.25;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            min-width: 0;
           }
 
           .mobile-block-desc {
@@ -275,6 +284,8 @@ export default function ChallengesSection() {
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            word-break: break-word;
+            overflow-wrap: break-word;
           }
 
           .mobile-block-action {
@@ -283,7 +294,7 @@ export default function ChallengesSection() {
             gap: 0.25rem;
             color: #38BDF8;
             font-family: var(--font-mono, monospace);
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             font-weight: 700;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -292,12 +303,15 @@ export default function ChallengesSection() {
         }
 
         @media (max-width: 380px) {
+          .challenges-mobile-grid {
+            gap: 0.4rem;
+          }
           .mobile-challenge-block {
-            padding: 0.65rem 0.7rem;
-            gap: 0.35rem;
+            padding: 0.55rem 0.55rem;
+            gap: 0.3rem;
           }
           .mobile-block-title {
-            font-size: 0.78rem;
+            font-size: 0.75rem;
           }
           .mobile-block-desc {
             font-size: 0.65rem;

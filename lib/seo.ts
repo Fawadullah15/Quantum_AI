@@ -97,25 +97,48 @@ export function createPageMetadata({
 /**
  * Organization Structured Data (JSON-LD)
  */
-export function getOrganizationSchema() {
+export function getOrganizationSchema(settings?: {
+  company_name?: string;
+  company_legal_name?: string;
+  company_description?: string;
+  company_email?: string;
+  company_location?: string;
+  site_logo?: string;
+  company_linkedin?: string;
+  company_twitter?: string;
+  company_github?: string;
+}) {
+  const sameAs = [
+    settings?.company_github,
+    settings?.company_linkedin,
+    settings?.company_twitter,
+  ].filter(Boolean) as string[];
+
+  if (sameAs.length === 0) {
+    sameAs.push('https://github.com/Fawadullah15/Quantum_AI');
+  }
+
+  const logoUrl = settings?.site_logo
+    ? settings.site_logo.startsWith('http')
+      ? settings.site_logo
+      : `${SITE_URL}${settings.site_logo.startsWith('/') ? '' : '/'}${settings.site_logo}`
+    : `${SITE_URL}/quantum-q-logo.png`;
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
-    name: 'Quantum AI',
-    alternateName: 'Quantum AI Engineering',
+    name: settings?.company_name || 'Quantum AI',
+    alternateName: settings?.company_legal_name || 'Quantum AI Engineering',
     url: SITE_URL,
-    logo: `${SITE_URL}/quantum-q-logo.png`,
-    description: DEFAULT_DESCRIPTION,
-    email: 'hello@quantumai.dev',
+    logo: logoUrl,
+    description: settings?.company_description || DEFAULT_DESCRIPTION,
+    email: settings?.company_email || 'hello@quantumai.dev',
     address: {
       '@type': 'PostalAddress',
-      addressLocality: 'Peshawar',
-      addressRegion: 'Khyber Pakhtunkhwa',
-      addressCountry: 'PK',
+      addressLocality: settings?.company_location || 'San Francisco & Islamabad',
+      addressCountry: 'US',
     },
-    sameAs: [
-      'https://github.com/Fawadullah15/Quantum_AI',
-    ],
+    sameAs,
     knowsAbout: [
       'Artificial Intelligence Systems',
       'Machine Learning Engineering',
@@ -132,19 +155,29 @@ export function getOrganizationSchema() {
 /**
  * WebSite Structured Data (JSON-LD)
  */
-export function getWebSiteSchema() {
+export function getWebSiteSchema(settings?: {
+  company_name?: string;
+  company_description?: string;
+  site_logo?: string;
+}) {
+  const logoUrl = settings?.site_logo
+    ? settings.site_logo.startsWith('http')
+      ? settings.site_logo
+      : `${SITE_URL}${settings.site_logo.startsWith('/') ? '' : '/'}${settings.site_logo}`
+    : `${SITE_URL}/quantum-q-logo.png`;
+
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    name: 'Quantum AI',
+    name: settings?.company_name || 'Quantum AI',
     url: SITE_URL,
-    description: DEFAULT_DESCRIPTION,
+    description: settings?.company_description || DEFAULT_DESCRIPTION,
     publisher: {
       '@type': 'Organization',
-      name: 'Quantum AI',
+      name: settings?.company_name || 'Quantum AI',
       logo: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/quantum-q-logo.png`,
+        url: logoUrl,
       },
     },
   };

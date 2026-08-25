@@ -42,11 +42,13 @@ export default function ProcessSection() {
   return (
     <section
       style={{
-        padding: 'clamp(2rem, 4.5vh, 3.5rem) clamp(1rem, 5vw, 6rem)',
+        padding: 'clamp(2rem, 4.5vh, 3.5rem) clamp(0.75rem, 4vw, 6rem)',
         pointerEvents: 'auto',
         backgroundColor: 'rgba(6, 21, 43, 0.35)',
         borderTop: '1px solid rgba(22, 119, 255, 0.1)',
         borderBottom: '1px solid rgba(22, 119, 255, 0.1)',
+        width: '100%',
+        boxSizing: 'border-box',
       }}
     >
       <style>{`
@@ -193,49 +195,55 @@ export default function ProcessSection() {
 
           .process-mobile-grid {
             display: grid !important;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.55rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem;
             width: 100%;
+            box-sizing: border-box;
           }
 
           .mobile-process-tile {
             background: rgba(6, 21, 43, 0.75);
             border: 1px solid rgba(22, 119, 255, 0.16);
             border-radius: 8px;
-            padding: 0.85rem 0.9rem;
+            padding: 0.75rem 0.75rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: 76px;
+            min-height: 74px;
             box-sizing: border-box;
+            min-width: 0;
+            width: 100%;
             transition: border-color 0.2s ease, background-color 0.2s ease;
           }
 
           .mobile-process-tile.tile-center {
             grid-column: 1 / -1;
-            max-width: calc(50% - 0.275rem);
+            max-width: calc(50% - 0.25rem);
             margin: 0 auto;
             width: 100%;
           }
 
           .mobile-step-num {
             font-family: var(--font-mono, monospace);
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             color: #38BDF8;
             font-weight: 600;
             letter-spacing: 0.1em;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.25rem;
             display: block;
           }
 
           .mobile-step-title {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
             color: #F8FAFC;
             letter-spacing: 0.03em;
             margin: 0;
             text-transform: uppercase;
             line-height: 1.25;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            min-width: 0;
           }
         }
 
@@ -247,12 +255,15 @@ export default function ProcessSection() {
         }
 
         @media (max-width: 380px) {
+          .process-mobile-grid {
+            gap: 0.4rem;
+          }
           .mobile-process-tile {
-            padding: 0.75rem 0.8rem;
-            min-height: 68px;
+            padding: 0.65rem 0.65rem;
+            min-height: 66px;
           }
           .mobile-step-title {
-            font-size: 0.78rem;
+            font-size: 0.76rem;
           }
         }
       `}</style>

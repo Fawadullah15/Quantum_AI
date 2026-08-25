@@ -69,11 +69,13 @@ export default function CaseStudiesSection() {
   return (
     <section
       style={{
-        padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)',
+        padding: 'clamp(2.5rem, 5vh, 4rem) clamp(0.75rem, 4vw, 6rem)',
         pointerEvents: 'auto',
         backgroundColor: 'rgba(6, 21, 43, 0.25)',
         borderTop: '1px solid rgba(22, 119, 255, 0.08)',
         borderBottom: '1px solid rgba(22, 119, 255, 0.08)',
+        width: '100%',
+        boxSizing: 'border-box',
       }}
     >
       <style>{`
@@ -308,22 +310,25 @@ export default function CaseStudiesSection() {
 
           .case-studies-mobile-grid {
             display: grid !important;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.6rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem;
             width: 100%;
+            box-sizing: border-box;
           }
 
           .mobile-cs-tile {
             background: rgba(6, 21, 43, 0.75);
             border: 1px solid rgba(22, 119, 255, 0.16);
             border-radius: 8px;
-            padding: 0.65rem;
+            padding: 0.55rem;
             text-decoration: none;
             display: flex;
             flex-direction: column;
-            gap: 0.45rem;
+            gap: 0.4rem;
             box-sizing: border-box;
             overflow: hidden;
+            min-width: 0;
+            width: 100%;
             transition: border-color 0.2s ease, background-color 0.2s ease;
           }
 
@@ -351,24 +356,31 @@ export default function CaseStudiesSection() {
           .mobile-cs-meta {
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            flex-wrap: wrap;
+            gap: 0.25rem;
             font-family: var(--font-mono, monospace);
-            font-size: 0.58rem;
+            font-size: 0.56rem;
             color: #38BDF8;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             font-weight: 600;
-            line-height: 1;
+            line-height: 1.2;
             margin-top: 0.15rem;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            min-width: 0;
           }
 
           .mobile-cs-title {
-            font-size: 0.8125rem;
+            font-size: 0.78rem;
             font-weight: 600;
             color: #F8FAFC;
             letter-spacing: -0.01em;
             margin: 0;
             line-height: 1.25;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            min-width: 0;
           }
 
           .mobile-cs-arrow {

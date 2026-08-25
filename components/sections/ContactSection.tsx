@@ -67,7 +67,7 @@ const ContactSection: React.FC = () => {
             INTELLIGENT.
           </h2>
           <div className={styles.contactInfo}>
-            <a href="mailto:fawadimraj@gmail.com" className={styles.email}>hello@quantumai.dev</a>
+            <a href="mailto:hello@quantumai.dev" className={styles.email}>hello@quantumai.dev</a>
             <p className={styles.note}>We respond to serious inquiries within 24 hours.</p>
           </div>
         </div>

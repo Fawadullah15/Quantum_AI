@@ -134,9 +134,11 @@ export default function GlobalMapSection() {
     <section
       style={{
         position: 'relative',
-        padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)',
+        padding: 'clamp(2.5rem, 5vh, 4rem) clamp(0.75rem, 4vw, 6rem)',
         background: 'linear-gradient(180deg, #020817 0%, #030D1E 50%, #020817 100%)',
         overflow: 'hidden',
+        width: '100%',
+        boxSizing: 'border-box',
       }}
       aria-labelledby="map-heading"
     >

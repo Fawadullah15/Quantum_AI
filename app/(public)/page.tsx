@@ -262,51 +262,55 @@ export default function HomePage() {
       <ButtonStyles />
       <style>{`
         /* ── Prevent horizontal overflow on all screens ── */
-        html, body { max-width: 100vw !important; overflow-x: hidden !important; }
+        html, body { width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important; }
         * { box-sizing: border-box !important; }
-        /* ── Mobile Responsive Grid Overrides ── */
-        @media (max-width: 380px) {
-          .solutions-grid { grid-template-columns: 1fr !important; }
-          .tech-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (min-width: 381px) and (max-width: 640px) {
-          .solutions-grid { grid-template-columns: repeat(2, 1fr) !important; }
-          .solutions-grid > a { padding: 1.25rem !important; }
-          .tech-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.875rem !important; }
-          .tech-grid > div { padding: 1.25rem !important; }
-        }
+        /* ── Mobile Responsive Overrides ── */
         @media (max-width: 640px) {
           /* Hero heading */
           .hero-eyebrow { letter-spacing: 0.15em !important; font-size: 0.7rem !important; }
           /* Section padding */
-          section { padding-left: clamp(1rem, 4vw, 2rem) !important; padding-right: clamp(1rem, 4vw, 2rem) !important; }
+          section:not(.continuous-clients-section):not(.test-marquee-section) {
+            padding-left: clamp(0.75rem, 4vw, 1.5rem) !important;
+            padding-right: clamp(0.75rem, 4vw, 1.5rem) !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
           /* Contact form 2-column selects → 1-col on tiny screens */
           .form-selects-row { grid-template-columns: 1fr !important; }
           /* Leadership 2by2 on phone */
           .home-leadership-grid {
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 0.75rem !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 0.6rem !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
           }
           .home-leadership-grid > a {
             border-radius: 8px !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
           }
           .home-leadership-grid > a > div:first-child {
-            padding: 0.4rem 0.6rem !important;
+            padding: 0.4rem 0.5rem !important;
           }
           .home-leadership-grid > a > div:nth-child(2) {
             aspect-ratio: 1/1 !important;
-            max-height: 160px !important;
+            max-height: 150px !important;
           }
           .home-leadership-grid > a > div:last-child {
-            padding: 0.75rem !important;
+            padding: 0.65rem !important;
           }
           .home-leadership-grid h3 {
-            font-size: 0.95rem !important;
+            font-size: 0.85rem !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
           }
           .home-leadership-grid p {
-            font-size: 0.75rem !important;
-            line-height: 1.35 !important;
+            font-size: 0.72rem !important;
+            line-height: 1.3 !important;
             -webkit-line-clamp: 2 !important;
+            word-break: break-word !important;
+            overflow-wrap: break-word !important;
           }
         }
         @media (max-width: 480px) {
@@ -318,7 +322,7 @@ export default function HomePage() {
           canvas { display: none !important; }
         }
       `}</style>
-      <div style={{ position: 'relative', width: '100%', maxWidth: '100vw', overflowX: 'hidden', pointerEvents: 'none' }}>
+      <div style={{ position: 'relative', width: '100%', maxWidth: '100%', overflowX: 'hidden', pointerEvents: 'none' }}>
 
         {/* ═══════════════════════════════════════════════════════════
             HERO SECTION
@@ -456,10 +460,12 @@ export default function HomePage() {
               className="home-leadership-grid"
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
                 gap: '1.25rem',
                 maxWidth: 960,
+                width: '100%',
                 margin: '0 auto',
+                boxSizing: 'border-box',
               }}
             >
               {leaders.slice(0, 2).map((person) => (
@@ -474,6 +480,9 @@ export default function HomePage() {
                     display: 'flex',
                     flexDirection: 'column',
                     textDecoration: 'none',
+                    minWidth: 0,
+                    width: '100%',
+                    boxSizing: 'border-box',
                     transition: 'transform 0.2s, border-color 0.2s, box-shadow 0.2s',
                   }}
                   onMouseEnter={(e) => {
@@ -587,8 +596,8 @@ export default function HomePage() {
               CONTACT
             </p>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'clamp(2rem, 4vw, 4rem)', alignItems: 'start' }}>
-              <div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'clamp(2rem, 4vw, 4rem)', alignItems: 'start', width: '100%', boxSizing: 'border-box' }}>
+              <div style={{ minWidth: 0, width: '100%', boxSizing: 'border-box' }}>
                 <h2 style={{
                   fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
                   fontWeight: 700,
@@ -596,18 +605,20 @@ export default function HomePage() {
                   letterSpacing: '-0.025em',
                   color: '#F8FAFF',
                   marginBottom: '0.5rem',
-                  textTransform: 'uppercase'
+                  textTransform: 'uppercase',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'break-word',
                 }}>
                   Let's build something useful.
                 </h2>
-                <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.6, marginBottom: '1.25rem', fontWeight: 300 }}>
+                <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.6, marginBottom: '1.25rem', fontWeight: 300, wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                   Tell us what you are building, what problem you are solving, or what you want to improve.
                 </p>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderTop: '1px solid rgba(22, 119, 255, 0.1)', paddingTop: '1.25rem' }}>
                   <div>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>EMAIL INQUIRIES</span>
-                    <a href="mailto:fawadimraj@gmail.com" style={{ fontSize: '1rem', color: '#F8FAFF', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500 }} onMouseEnter={(e) => e.currentTarget.style.color = '#1677FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#F8FAFF'}>
+                    <a href="mailto:fawadimraj@gmail.com" style={{ fontSize: '1rem', color: '#F8FAFF', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500, wordBreak: 'break-word' }} onMouseEnter={(e) => e.currentTarget.style.color = '#1677FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#F8FAFF'}>
                       hello@quantumai.dev
                     </a>
                   </div>
@@ -623,8 +634,11 @@ export default function HomePage() {
                 backgroundColor: '#040E24',
                 border: '1px solid rgba(56, 189, 248, 0.25)',
                 borderRadius: 12,
-                padding: 'clamp(1.5rem, 3vw, 2.25rem)',
-                boxShadow: '0 16px 40px -10px rgba(0, 0, 0, 0.85), 0 0 20px -5px rgba(22, 119, 255, 0.15)'
+                padding: 'clamp(1.25rem, 3vw, 2.25rem)',
+                boxShadow: '0 16px 40px -10px rgba(0, 0, 0, 0.85), 0 0 20px -5px rgba(22, 119, 255, 0.15)',
+                minWidth: 0,
+                width: '100%',
+                boxSizing: 'border-box'
               }}>
                 {submitStatus === 'success' ? (
                   <div style={{ textAlign: 'center', padding: '2rem 0' }}>
