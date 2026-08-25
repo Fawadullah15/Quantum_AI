@@ -129,62 +129,35 @@ body {
 
 
 /* Focus */
-
 :focus-visible {
-
-  outline: 1px solid var(--color-text-secondary);
-
-  outline-offset: 4px;
-
+  outline: 2px solid #38BDF8;
+  outline-offset: 3px;
+  border-radius: 4px;
 }
-
-
 
 /* Custom Cursor Reset */
-
 @media (pointer: fine) {
-
   body.custom-cursor-active {
-
     cursor: none;
-
   }
-
   body.custom-cursor-active a, 
-
   body.custom-cursor-active button, 
-
   body.custom-cursor-active [data-cursor] {
-
     cursor: none;
-
   }
-
 }
 
-
-
 /* ============================================================
-
    TYPOGRAPHY
-
    ============================================================ */
 
 .public-layout h1, .public-layout h2, .public-layout h3, .public-layout h4, .public-layout h5, .public-layout h6 {
-
   font-family: var(--font-sans);
-
   font-weight: var(--weight-bold);
-
   line-height: var(--leading-tight);
-
   letter-spacing: var(--tracking-tight);
-
   text-transform: uppercase;
-
 }
-
-
 
 .public-layout h1 { font-size: clamp(var(--text-3xl), 6vw, var(--text-5xl)); letter-spacing: -0.04em; }
 .public-layout h2 { font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl)); letter-spacing: -0.03em; }
@@ -193,58 +166,313 @@ body {
 .public-layout h5 { font-size: var(--text-lg); letter-spacing: -0.015em; }
 .public-layout h6 { font-size: var(--text-base); letter-spacing: var(--tracking-widest); }
 
-
-
 .public-layout p {
-
   color: var(--color-text-secondary);
-
   margin-bottom: var(--space-4);
-
   max-width: var(--max-width-text);
-
   font-weight: var(--weight-light);
-
 }
-
-
 
 a {
-
   color: inherit;
-
   text-decoration: none;
-
   transition: color var(--transition-fast);
-
 }
 
-
-
 /* ============================================================
-
-   UTILITIES
-
+   UTILITIES & CONTAINERS
    ============================================================ */
 
 .container {
-
   width: 100%;
-
-  max-width: var(--max-width);
-
+  max-width: var(--max-width, 1400px);
   margin-inline: auto;
-
-  padding-inline: var(--container-px);
-
+  padding-inline: var(--container-px, clamp(1.25rem, 5vw, 4rem));
 }
 
-
+.container-narrow {
+  width: 100%;
+  max-width: 1000px;
+  margin-inline: auto;
+  padding-inline: var(--container-px, clamp(1.25rem, 5vw, 4rem));
+}
 
 .section {
+  padding-block: clamp(3rem, 7vh, 4.5rem);
+}
 
-  padding-block: clamp(3rem, 8vh, 5rem);
+.section-sm {
+  padding-block: clamp(2rem, 4vh, 3rem);
+}
 
+.section-lg {
+  padding-block: clamp(4rem, 9vh, 6rem);
+}
+
+/* ============================================================
+   REUSABLE COMPONENT SYSTEM
+   ============================================================ */
+
+/* ─── Buttons ─────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled, .btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Button Sizes */
+.btn-sm {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.72rem;
+}
+
+.btn-md {
+  padding: 0.65rem 1.4rem;
+  font-size: 0.8125rem;
+}
+
+.btn-lg {
+  padding: 0.8rem 1.85rem;
+  font-size: 0.875rem;
+}
+
+/* Button Variants */
+.btn-primary {
+  background: linear-gradient(135deg, #1677FF, #0050B3);
+  color: #FFFFFF;
+  border-color: rgba(56, 189, 248, 0.4);
+  box-shadow: 0 4px 16px -2px rgba(22, 119, 255, 0.4);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  border-color: #38BDF8;
+  box-shadow: 0 6px 20px -2px rgba(56, 189, 248, 0.5);
+}
+
+.btn-secondary {
+  background: rgba(6, 21, 43, 0.8);
+  color: #F8FAFC;
+  border-color: rgba(30, 58, 138, 0.4);
+}
+
+.btn-secondary:hover {
+  background: rgba(8, 28, 58, 0.95);
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.btn-outline {
+  background: transparent;
+  color: #38BDF8;
+  border-color: rgba(56, 189, 248, 0.35);
+}
+
+.btn-outline:hover {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: #38BDF8;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #94A3B8;
+  border-color: transparent;
+}
+
+.btn-ghost:hover {
+  color: #F8FAFC;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-link {
+  background: transparent;
+  color: #38BDF8;
+  border: none;
+  padding: 0;
+}
+
+.btn-link:hover {
+  color: #55D6FF;
+  text-decoration: underline;
+}
+
+/* ─── Cards ───────────────────────────────────────────────── */
+.card {
+  background: rgba(6, 21, 43, 0.65);
+  border: 1px solid rgba(22, 119, 255, 0.15);
+  border-radius: 12px;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  box-shadow: 0 4px 20px -4px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s, background-color 0.25s;
+}
+
+.card-subtle {
+  background: rgba(6, 21, 43, 0.4);
+  border: 1px solid rgba(30, 58, 138, 0.25);
+  box-shadow: none;
+}
+
+.card-interactive {
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(22, 119, 255, 0.25);
+  background: rgba(8, 28, 58, 0.8);
+}
+
+.card-header {
+  margin-bottom: 0.75rem;
+}
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #F8FAFC;
+  margin-bottom: 0.35rem;
+}
+
+.card-description {
+  color: #94A3B8;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.card-body {
+  margin-top: 0.5rem;
+}
+
+.card-footer {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(30, 58, 138, 0.2);
+}
+
+/* ─── Badges & Tags ───────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.badge-default {
+  background: rgba(148, 163, 184, 0.1);
+  color: #94A3B8;
+  border-color: rgba(148, 163, 184, 0.2);
+}
+
+.badge-primary {
+  background: rgba(56, 189, 248, 0.08);
+  color: #38BDF8;
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.badge-accent {
+  background: rgba(79, 70, 229, 0.12);
+  color: #818CF8;
+  border-color: rgba(79, 70, 229, 0.3);
+}
+
+.badge-success {
+  background: rgba(16, 185, 129, 0.1);
+  color: #34D399;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.1);
+  color: #FBBF24;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+/* ─── Forms & Inputs ──────────────────────────────────────── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.form-input, .form-textarea, .form-select {
+  width: 100%;
+  background: rgba(6, 21, 43, 0.7);
+  border: 1px solid rgba(30, 58, 138, 0.35);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  color: #F8FAFC;
+  font-family: var(--font-sans, sans-serif);
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+  min-height: 44px;
+}
+
+.form-input::placeholder, .form-textarea::placeholder {
+  color: #64748B;
+}
+
+.form-input:focus, .form-textarea:focus, .form-select:focus {
+  outline: none;
+  border-color: #38BDF8;
+  background: rgba(8, 28, 58, 0.9);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+.form-input.error, .form-textarea.error {
+  border-color: #EF4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.form-error {
+  font-size: 0.75rem;
+  color: #EF4444;
+  font-family: var(--font-mono, monospace);
+  margin-top: 0.25rem;
+}
+
+.form-hint {
+  font-size: 0.75rem;
+  color: #64748B;
+  margin-top: 0.25rem;
 }
 
 

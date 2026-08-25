@@ -105,8 +105,8 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
   );
 
   const motionProps = {
-    whileHover: !reduce && !disabled ? { scale: 1.04 } : {},
-    whileTap: !reduce && !disabled ? { scale: 0.97 } : {},
+    whileHover: !reduce && !disabled ? { scale: 1.02 } : {},
+    whileTap: !reduce && !disabled ? { scale: 0.98 } : {},
     onHoverStart: (e: any) => {
       const shine = e.target?.closest?.('.nova-btn')?.querySelector?.('.nova-shine');
       if (shine) shine.style.transform = 'translateX(100%)';
@@ -209,8 +209,8 @@ export function GalaxyButton({ href, children, onClick, className = '', style, t
   );
 
   const motionProps = {
-    whileHover: !reduce && !disabled ? { scale: 1.03 } : {},
-    whileTap: !reduce && !disabled ? { scale: 0.97 } : {},
+    whileHover: !reduce && !disabled ? { scale: 1.02 } : {},
+    whileTap: !reduce && !disabled ? { scale: 0.98 } : {},
     onHoverStart: (e: any) => {
       const el = e.target?.closest?.('.galaxy-btn');
       if (!el) return;
