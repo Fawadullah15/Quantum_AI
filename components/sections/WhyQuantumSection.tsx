@@ -190,20 +190,21 @@ export default function WhyQuantumSection() {
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '0.45rem',
+              marginBottom: '0.5rem',
               fontWeight: 600,
             }}
           >
             WHY QUANTUM AI.
           </p>
           <h2
+            className="section-heading"
             style={{
-              fontSize: 'clamp(1.75rem, 3.2vw, 2.65rem)',
+              fontSize: 'clamp(2.35rem, 4.2vw, 3.5rem)',
               fontWeight: 700,
-              lineHeight: 1.12,
-              letterSpacing: '-0.025em',
+              lineHeight: 1.05,
+              letterSpacing: '-0.03em',
               color: '#F8FAFF',
-              marginBottom: '0.5rem',
+              marginBottom: '0.65rem',
               textTransform: 'uppercase',
               maxWidth: 560,
               width: '100%',
@@ -214,8 +215,9 @@ export default function WhyQuantumSection() {
             We turn complex problems into intelligent, useful systems.
           </h2>
           <p
+            className="section-desc"
             style={{
-              fontSize: 'clamp(0.88rem, 1.15vw, 1.02rem)',
+              fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
               color: '#94A3B8',
               lineHeight: 1.6,
               marginBottom: '1.35rem',

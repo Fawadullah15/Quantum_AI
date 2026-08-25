@@ -71,10 +71,10 @@ export default async function TechnologyPage() {
       <div style={{ maxWidth: 'var(--max-width, 1000px)', margin: '0 auto' }}>
         <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
           <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.02 / ARCHITECTURE</div>
-          <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
+          <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
             CORE TECHNOLOGY.
           </h1>
-          <p style={{ fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)', color: '#94A3B8', lineHeight: 1.6, marginTop: '0.5rem', maxWidth: 580, fontWeight: 300 }}>
+          <p style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#94A3B8', lineHeight: 1.6, marginTop: '0.65rem', maxWidth: 580, fontWeight: 300 }}>
             Computational foundations, machine learning models, and secure cloud infrastructure.
           </p>
         </div>

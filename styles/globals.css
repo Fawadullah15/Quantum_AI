@@ -148,23 +148,49 @@ body {
 }
 
 /* ============================================================
-   TYPOGRAPHY
+   GLOBAL TYPOGRAPHY HIERARCHY
    ============================================================ */
 
-.public-layout h1, .public-layout h2, .public-layout h3, .public-layout h4, .public-layout h5, .public-layout h6 {
+/* Level 1: Page H1 */
+.public-layout h1 {
   font-family: var(--font-sans);
-  font-weight: var(--weight-bold);
-  line-height: var(--leading-tight);
-  letter-spacing: var(--tracking-tight);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.035em;
   text-transform: uppercase;
+  color: #F8FAFC;
 }
 
-.public-layout h1 { font-size: clamp(var(--text-3xl), 6vw, var(--text-5xl)); letter-spacing: -0.04em; }
-.public-layout h2 { font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl)); letter-spacing: -0.03em; }
-.public-layout h3 { font-size: clamp(var(--text-xl), 3vw, var(--text-3xl)); letter-spacing: -0.025em; }
-.public-layout h4 { font-size: clamp(var(--text-lg), 2.5vw, var(--text-2xl)); letter-spacing: -0.02em; }
-.public-layout h5 { font-size: var(--text-lg); letter-spacing: -0.015em; }
-.public-layout h6 { font-size: var(--text-base); letter-spacing: var(--tracking-widest); }
+/* Level 2: Main Section Headings (H2) - Dominant, Bold, Focal Point */
+.public-layout h2,
+.public-layout .section-heading {
+  font-family: var(--font-sans);
+  font-size: clamp(2.25rem, 4.2vw, 3.65rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #F8FAFC;
+}
+
+/* Level 4: Subsection / Accordion / Card Headings (H3) - Subordinate to Section Headings */
+.public-layout h3,
+.public-layout .card-heading,
+.public-layout .accordion-title {
+  font-family: var(--font-sans);
+  font-size: clamp(1.1rem, 1.7vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  color: #F8FAFC;
+}
+
+/* Level 5: Minor Headings (H4, H5, H6) */
+.public-layout h4 { font-size: clamp(0.95rem, 1.3vw, 1.15rem); font-weight: 600; letter-spacing: -0.01em; }
+.public-layout h5 { font-size: 0.875rem; font-weight: 600; }
+.public-layout h6 { font-size: 0.75rem; letter-spacing: var(--tracking-widest); }
 
 .public-layout p {
   color: var(--color-text-secondary);

@@ -430,18 +430,19 @@ export default function CaseStudiesSection() {
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
                 color: '#1677FF',
-                marginBottom: '0.45rem',
+                marginBottom: '0.5rem',
                 fontWeight: 600,
               }}
             >
               CASE STUDIES
             </p>
             <h2
+              className="section-heading"
               style={{
-                fontSize: 'clamp(1.75rem, 3.2vw, 2.65rem)',
+                fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
                 fontWeight: 700,
-                lineHeight: 1.12,
-                letterSpacing: '-0.025em',
+                lineHeight: 1.02,
+                letterSpacing: '-0.035em',
                 color: '#F8FAFF',
                 textTransform: 'uppercase',
                 margin: 0,

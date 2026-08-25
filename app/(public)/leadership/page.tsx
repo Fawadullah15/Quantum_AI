@@ -167,9 +167,9 @@ export default async function LeadershipPage() {
           font-weight: 600;
         }
         .ldr-h1 {
-          font-size: clamp(2rem, 4.5vw, 3.25rem);
+          font-size: clamp(2.5rem, 5vw, 4.25rem);
           font-weight: 700;
-          line-height: 1.1;
+          line-height: 1.02;
           letter-spacing: -0.035em;
           color: #F8FAFC;
           text-transform: uppercase;
@@ -177,7 +177,7 @@ export default async function LeadershipPage() {
           max-width: 900px;
         }
         .ldr-lead {
-          font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+          font-size: clamp(0.9rem, 1.1vw, 1.05rem);
           color: #94A3B8;
           max-width: 680px;
           line-height: 1.65;
@@ -199,7 +199,7 @@ export default async function LeadershipPage() {
           font-weight: 600;
         }
         .ldr-section-title {
-          font-size: clamp(1.4rem, 2.8vw, 1.85rem);
+          font-size: clamp(1.75rem, 3vw, 2.5rem);
           font-weight: 700;
           letter-spacing: -0.025em;
           color: #F8FAFC;

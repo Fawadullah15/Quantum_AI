@@ -54,15 +54,15 @@ export default function AboutPage() {
         }
         .abt-inner { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
         .abt-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.25em; color: #1677FF; text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 600; }
-        .abt-h1 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; color: #F8FAFC; text-transform: uppercase; margin-bottom: 0.75rem; }
-        .abt-lead { font-size: clamp(0.88rem, 1.3vw, 1rem); color: #94A3B8; max-width: 580px; line-height: 1.6; margin-bottom: 2.25rem; font-weight: 300; }
+        .abt-h1 { font-size: clamp(2.5rem, 5vw, 4.25rem); font-weight: 700; line-height: 1.02; letter-spacing: -0.035em; color: #F8FAFC; text-transform: uppercase; margin-bottom: 0.75rem; }
+        .abt-lead { font-size: clamp(0.9rem, 1.1vw, 1.05rem); color: #94A3B8; max-width: 580px; line-height: 1.6; margin-bottom: 2.25rem; font-weight: 300; }
         .abt-principles-header { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.2em; color: #64748B; text-transform: uppercase; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(30,58,138,0.22); margin-bottom: 0; }
         .principle { padding: 1.75rem 0; border-bottom: 1px solid rgba(30,58,138,0.22); display: grid; grid-template-columns: 60px 1fr 1.2fr; gap: 1.5rem; align-items: start; transition: border-bottom-color 0.3s; cursor: default; }
         .principle:hover { border-bottom-color: rgba(37,99,235,0.38); }
         @media (max-width: 640px) { .principle { grid-template-columns: 44px 1fr; } .principle-body { grid-column: 1 / -1; } }
         .principle-num { font-family: var(--font-mono, monospace); font-size: 0.75rem; color: #334155; letter-spacing: 0.08em; padding-top: 0.25rem; transition: color 0.3s; }
         .principle:hover .principle-num { color: #2563EB; }
-        .principle-title { font-size: clamp(1.25rem, 2.5vw, 1.85rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.025em; color: #F8FAFC; }
+        .principle-title { font-size: clamp(1.2rem, 2vw, 1.55rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.025em; color: #F8FAFC; }
         .principle-title span { display: block; }
         .principle-body { font-size: 0.875rem; color: #71809A; line-height: 1.65; max-width: 540px; padding-top: 0.25rem; transition: color 0.3s; }
         .principle:hover .principle-body { color: #A8B3C7; }

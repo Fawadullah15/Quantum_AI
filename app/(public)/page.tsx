@@ -444,30 +444,36 @@ export default function HomePage() {
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '0.45rem',
+              marginBottom: '0.5rem',
               fontWeight: 600
             }}>
               LEADERSHIP
             </p>
-            <h2 style={{
-              fontSize: 'clamp(1.75rem, 3.2vw, 2.65rem)',
-              fontWeight: 700,
-              lineHeight: 1.12,
-              color: '#F8FAFF',
-              marginBottom: '0.5rem',
-              letterSpacing: '-0.025em',
-              textTransform: 'uppercase'
-            }}>
+            <h2
+              className="section-heading"
+              style={{
+                fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
+                fontWeight: 700,
+                lineHeight: 1.02,
+                color: '#F8FAFF',
+                marginBottom: '0.65rem',
+                letterSpacing: '-0.035em',
+                textTransform: 'uppercase'
+              }}
+            >
               The people behind Quantum AI.
             </h2>
-            <p style={{
-              fontSize: 'clamp(0.88rem, 1.15vw, 1.02rem)',
-              color: '#94A3B8',
-              lineHeight: 1.6,
-              marginBottom: 'clamp(1.25rem, 2.5vh, 2rem)',
-              maxWidth: 560,
-              fontWeight: 300
-            }}>
+            <p
+              className="section-desc"
+              style={{
+                fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
+                color: '#94A3B8',
+                lineHeight: 1.6,
+                marginBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
+                maxWidth: 560,
+                fontWeight: 300
+              }}
+            >
               Engineers and architects building enterprise products.
             </p>
 
@@ -605,7 +611,7 @@ export default function HomePage() {
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '0.45rem',
+              marginBottom: '0.5rem',
               fontWeight: 600
             }}>
               CONTACT
@@ -613,20 +619,26 @@ export default function HomePage() {
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', gap: 'clamp(2rem, 4vw, 4rem)', alignItems: 'start', width: '100%', boxSizing: 'border-box' }}>
               <div style={{ minWidth: 0, width: '100%', boxSizing: 'border-box' }}>
-                <h2 style={{
-                  fontSize: 'clamp(1.75rem, 3.2vw, 2.65rem)',
-                  fontWeight: 700,
-                  lineHeight: 1.12,
-                  letterSpacing: '-0.025em',
-                  color: '#F8FAFF',
-                  marginBottom: '0.5rem',
-                  textTransform: 'uppercase',
-                  wordBreak: 'break-word',
-                  overflowWrap: 'break-word',
-                }}>
+                <h2
+                  className="section-heading"
+                  style={{
+                    fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
+                    fontWeight: 700,
+                    lineHeight: 1.02,
+                    letterSpacing: '-0.035em',
+                    color: '#F8FAFF',
+                    marginBottom: '0.65rem',
+                    textTransform: 'uppercase',
+                    wordBreak: 'break-word',
+                    overflowWrap: 'break-word',
+                  }}
+                >
                   Let's build something useful.
                 </h2>
-                <p style={{ fontSize: 'clamp(0.88rem, 1.15vw, 1.02rem)', color: '#94A3B8', lineHeight: 1.6, marginBottom: '1.25rem', fontWeight: 300, wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+                <p
+                  className="section-desc"
+                  style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#94A3B8', lineHeight: 1.6, marginBottom: '1.25rem', fontWeight: 300, wordBreak: 'break-word', overflowWrap: 'break-word' }}
+                >
                   Tell us what you are building, what problem you are solving, or what you want to improve.
                 </p>
                 

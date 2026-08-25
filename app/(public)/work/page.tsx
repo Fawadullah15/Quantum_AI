@@ -111,10 +111,10 @@ export default async function WorkPage() {
           <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
             [04 — OUR WORK]
           </div>
-          <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: '#F8FAFC', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+          <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: '#F8FAFC', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
             SELECTED DEPLOYMENTS & CASE STUDIES.
           </h1>
-          <p style={{ fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)', color: '#94A3B8', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+          <p style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#94A3B8', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
             Production software platforms, enterprise automation engines, and custom AI systems delivered by Quantum AI.
           </p>
         </div>

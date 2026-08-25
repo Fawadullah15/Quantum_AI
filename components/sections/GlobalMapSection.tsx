@@ -150,7 +150,7 @@ export default function GlobalMapSection() {
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
           color: '#1677FF',
-          marginBottom: '0.45rem',
+          marginBottom: '0.5rem',
           maxWidth: 'none',
           fontWeight: 600
         }}>
@@ -158,26 +158,30 @@ export default function GlobalMapSection() {
         </p>
         <h2
           id="map-heading"
+          className="section-heading"
           style={{
-            fontSize: 'clamp(1.75rem, 3.2vw, 2.65rem)',
+            fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
             fontWeight: 700,
-            lineHeight: 1.12,
-            letterSpacing: '-0.025em',
+            lineHeight: 1.02,
+            letterSpacing: '-0.035em',
             color: '#F8FAFF',
-            marginBottom: '0.5rem',
+            marginBottom: '0.65rem',
             textTransform: 'uppercase',
           }}
         >
           Built for a connected world.
         </h2>
-        <p style={{
-          fontSize: 'clamp(0.88rem, 1.15vw, 1.02rem)',
-          color: '#94A3B8',
-          lineHeight: 1.6,
-          maxWidth: 580,
-          margin: '0 auto',
-          fontWeight: 300,
-        }}>
+        <p
+          className="section-desc"
+          style={{
+            fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
+            color: '#94A3B8',
+            lineHeight: 1.6,
+            maxWidth: 580,
+            margin: '0 auto',
+            fontWeight: 300,
+          }}
+        >
           Building software and AI systems for businesses beyond borders. Global connection points are visual representations of our technology network.
         </p>
       </div>

@@ -277,31 +277,33 @@ export default function ProcessSection() {
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
             color: '#1677FF',
-            marginBottom: '0.45rem',
+            marginBottom: '0.5rem',
             fontWeight: 600,
           }}
         >
           HOW WE WORK
         </p>
         <h2
+          className="section-heading"
           style={{
-            fontSize: 'clamp(1.75rem, 3.2vw, 2.65rem)',
+            fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
             fontWeight: 700,
-            lineHeight: 1.12,
-            letterSpacing: '-0.025em',
+            lineHeight: 1.02,
+            letterSpacing: '-0.035em',
             color: '#F8FAFF',
-            marginBottom: '0.5rem',
+            marginBottom: '0.65rem',
             textTransform: 'uppercase',
           }}
         >
           A Clear, Structured Process.
         </h2>
         <p
+          className="section-desc"
           style={{
-            fontSize: 'clamp(0.88rem, 1.15vw, 1.02rem)',
+            fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
             color: '#94A3B8',
             lineHeight: 1.6,
-            marginBottom: 'clamp(1.25rem, 2.5vh, 2rem)',
+            marginBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
             maxWidth: 600,
             fontWeight: 300,
           }}
