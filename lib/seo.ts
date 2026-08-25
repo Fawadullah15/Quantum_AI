@@ -102,10 +102,17 @@ export function getOrganizationSchema() {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Quantum AI',
+    alternateName: 'Quantum AI Engineering',
     url: SITE_URL,
     logo: `${SITE_URL}/quantum-q-logo.png`,
     description: DEFAULT_DESCRIPTION,
     email: 'hello@quantumai.dev',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Peshawar',
+      addressRegion: 'Khyber Pakhtunkhwa',
+      addressCountry: 'PK',
+    },
     sameAs: [
       'https://github.com/Fawadullah15/Quantum_AI',
     ],
@@ -116,6 +123,8 @@ export function getOrganizationSchema() {
       'Workflow Automation',
       'Enterprise Data Architecture',
       'Cloud Infrastructure',
+      'Autonomous Multi-Agent Networks',
+      'Retrieval-Augmented Generation (RAG)',
     ],
   };
 }

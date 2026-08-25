@@ -2,7 +2,7 @@
 const nextConfig = {
   turbopack: {},
   env: {
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://quantumai-snowy.vercel.app',
   },
   images: {
     remotePatterns: [
