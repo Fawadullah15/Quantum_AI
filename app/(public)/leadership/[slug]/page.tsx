@@ -5,9 +5,112 @@ import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
+interface LeaderItem {
+  id: string;
+  publicId?: string | null;
+  slug: string;
+  name: string;
+  position: string;
+  department?: string | null;
+  shortBio: string;
+  fullBio?: string | null;
+  photo?: string | null;
+  linkedin?: string | null;
+  email?: string | null;
+  website?: string | null;
+  location?: string | null;
+  displayOrder?: number;
+  isActive?: boolean;
+}
+
+const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
+  "fawadullah-imraj": {
+    id: "f-fawadullah",
+    publicId: "QA-001",
+    slug: "fawadullah-imraj",
+    name: "Fawadullah Imraj",
+    position: "Co-Founder & Chief Executive Officer",
+    department: "Executive Leadership",
+    shortBio: "Co-Founder and CEO of Quantum AI, directing AI-powered software systems, workflow automation architectures, and enterprise digital solutions.",
+    fullBio: "Fawadullah Imraj is the Founder and CEO of Quantum AI. He focuses on building practical software powered by AI for education, businesses, and enterprise organizations. His engineering work covers neural systems, workflow automation pipelines, high-concurrency web applications, and custom software architectures engineered to eliminate operational friction and solve real-world problems.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
+    linkedin: "https://www.linkedin.com/in/fawadullahimraj/",
+    email: "fawadullah9911@gmail.com",
+    location: "Pakistan",
+    displayOrder: 1,
+    isActive: true,
+  },
+  "fahad-khan": {
+    id: "f-fahad",
+    publicId: "QA-002",
+    slug: "fahad-khan",
+    name: "Fahad Khan",
+    position: "Co-Founder & Executive Chairman",
+    department: "Executive Leadership",
+    shortBio: "Co-Founder and Executive Chairman of Quantum AI, guiding strategic direction, engineering vision, and long-term organizational growth.",
+    fullBio: "Fahad Khan is the Executive Chairman of Quantum AI. He contributes to the company's strategic direction, technical vision, major decisions, and long-term growth. With a background in mechatronics engineering and AI systems, he brings deep technical knowledge and leadership to Quantum AI's system architecture, research direction, and institutional governance.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787236158396-98299.jpg",
+    linkedin: "https://www.linkedin.com/in/fahad-khan-650a783a4/",
+    email: "fahad.off.707@gmail.com",
+    location: "Peshawar",
+    displayOrder: 2,
+    isActive: true,
+  },
+  "abdullah-mahmook": {
+    id: "f-abdullah",
+    publicId: "QA-003",
+    slug: "abdullah-mahmook",
+    name: "Abdullah Mahmood",
+    position: "Lead Software Engineer",
+    department: "Software Development",
+    shortBio: "Software developer focused on building reliable, modern web applications, scalable backends, and full-stack operational platforms.",
+    fullBio: "Abdullah is a software developer working on the design, development, testing, and improvement of software applications. He contributes to frontend and backend development and helps turn ideas into practical digital products for Quantum AI.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787054190871-Screenshot_2026-08-18_165611.png",
+    linkedin: "https://www.linkedin.com/in/abdullah-mahmood-323050346/",
+    email: "Abdullahmahmood@gmail.com",
+    location: "Peshawar",
+    displayOrder: 3,
+    isActive: true,
+  },
+  "hafizah-anisa-safdar": {
+    id: "f-anisa",
+    publicId: "QA-004",
+    slug: "hafizah-anisa-safdar",
+    name: "Hafizah Anisa Safdar",
+    position: "Business Development Partner",
+    department: "Business Development",
+    shortBio: "Business Development Partner at Quantum AI, building client relationships, strategic partnerships, and enterprise market expansion.",
+    fullBio: "Anisa Safdar is a Business Development Partner at Quantum AI, dedicated to expanding the company's reach and connecting businesses with innovative AI and digital solutions. With strong communication and marketing skills, she works to identify new opportunities, build lasting client relationships, and represent Quantum AI with professionalism and integrity.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787235947568-WhatsApp_Image_2026-08-20_at_7.09.26_PM.jpeg",
+    linkedin: "https://www.linkedin.com/in/hafizah-anisa-safdar-89a00338b",
+    email: "risingstarstar21@gmail.com",
+    location: "Pk/Remote",
+    displayOrder: 4,
+    isActive: true,
+  },
+  "waqas-ali-khan": {
+    id: "f-waqas",
+    publicId: "QA-005",
+    slug: "waqas-ali-khan",
+    name: "Waqas Ali Khan",
+    position: "Digital Marketing & Strategic Growth Partner",
+    department: "Business Development",
+    shortBio: "Digital marketing and business development professional focused on strategic partnerships, digital reach, and sustainable business growth.",
+    fullBio: "Waqas Ali Khan is a Digital Marketing & Business Development Partner focused on digital growth, strategic partnerships, client acquisition, and business development. He works on strengthening the company's digital presence, identifying new opportunities, developing partnerships, and creating strategies that support long-term business growth.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787227215810-Screenshot_2026-08-20_170002.png",
+    linkedin: "https://www.linkedin.com/in/waqas-ali-khan-278b1b414/",
+    email: "waqasalikhan683@gmail.com",
+    location: "Peshawar",
+    displayOrder: 5,
+    isActive: true,
+  },
+};
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const m = await prisma.leadership.findUnique({ where: { slug } }).catch(() => null);
+  const dbMember = await prisma.leadership.findUnique({ where: { slug } }).catch(() => null);
+  const m = dbMember || FALLBACK_MEMBERS_MAP[slug];
+
   if (!m) return { title: "Profile Not Found | Quantum AI" };
 
   return createPageMetadata({
@@ -18,83 +121,294 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   });
 }
 
+export async function generateStaticParams() {
+  const dbMembers = await prisma.leadership.findMany({ where: { isActive: true }, select: { slug: true } }).catch(() => []);
+  const dbSlugs = dbMembers.map((m) => ({ slug: m.slug }));
+  const fallbackSlugs = Object.keys(FALLBACK_MEMBERS_MAP).map((slug) => ({ slug }));
+  return dbSlugs.length > 0 ? dbSlugs : fallbackSlugs;
+}
+
 export default async function LeadershipProfilePage({ params }: { params: Promise<{ slug: string }> }) {
-  const m = await prisma.leadership.findUnique({ where: { slug: (await params).slug } }).catch(() => null);
-  if (!m || !m.isActive) notFound();
+  const { slug } = await params;
+  const dbMember = await prisma.leadership.findUnique({ where: { slug } }).catch(() => null);
+  const m = dbMember || FALLBACK_MEMBERS_MAP[slug];
+
+  if (!m || m.isActive === false) {
+    notFound();
+  }
 
   return (
-    <>
+    <div className="prof-page">
       <style>{`
-        .prof-page { padding-top: calc(var(--nav-height, 72px) + 2.5rem); padding-bottom: 5rem; padding-inline: clamp(1.25rem, 5vw, 4rem); min-height: 100vh; background: var(--color-void, #030712); }
-        .prof-inner { max-width: 1000px; margin: 0 auto; }
-        .prof-back { display: inline-flex; align-items: center; gap: 0.4rem; color: #64748B; text-decoration: none; font-size: 0.72rem; letter-spacing: 0.1em; font-family: var(--font-mono, monospace); margin-bottom: 2rem; transition: color 0.2s; }
-        .prof-back:hover { color: #3B82F6; }
-        .prof-grid { display: grid; grid-template-columns: 280px 1fr; gap: 2.5rem; align-items: start; }
-        @media (max-width: 768px) {
-          .prof-page { padding-top: calc(var(--nav-height, 72px) + 1.25rem); padding-bottom: 3rem; padding-inline: 1rem; }
-          .prof-grid { grid-template-columns: 1fr; gap: 1.5rem; }
-          .prof-photo { aspect-ratio: 3/4; max-height: 280px; }
-          .prof-name { font-size: clamp(1.5rem, 4vw, 2.25rem); }
-          .prof-back { margin-bottom: 1.25rem; }
-          .prof-short-bio { font-size: 0.95rem; line-height: 1.6; }
+        .prof-page {
+          padding-top: calc(var(--nav-height, 72px) + 2rem);
+          padding-bottom: 5rem;
+          padding-inline: var(--container-px, clamp(1.25rem, 5vw, 4rem));
+          min-height: 100vh;
+          background: var(--color-void, #030712);
+          color: #F8FAFC;
         }
-        .prof-photo { width: 100%; aspect-ratio: 4/3; max-height: 360px; border-radius: 10px; overflow: hidden; background: linear-gradient(135deg, #0A1628, #07152F); border: 1px solid rgba(30,58,138,0.4); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
-        .prof-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
-        .prof-pid { font-family: var(--font-mono, monospace); font-size: 0.65rem; color: #64748B; letter-spacing: 0.15em; margin-bottom: 0.75rem; }
-        .prof-social { display: flex; flex-direction: column; gap: 0.4rem; }
-        .prof-social-link { display: inline-flex; align-items: center; gap: 0.4rem; color: #64748B; text-decoration: none; font-size: 0.8rem; transition: color 0.2s; padding: 0.45rem 0.65rem; border: 1px solid rgba(30,58,138,0.3); border-radius: 6px; }
-        .prof-social-link:hover { color: #3B82F6; border-color: rgba(37,99,235,0.5); }
-        .prof-brand { font-family: var(--font-mono, monospace); font-size: 0.6rem; color: rgba(59,130,246,0.6); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.5rem; }
-        .prof-name { font-size: clamp(1.75rem, 3.5vw, 2.75rem); font-weight: 700; letter-spacing: -0.03em; color: #F8FAFC; line-height: 1.1; margin-bottom: 0.5rem; word-break: break-word; overflow-wrap: break-word; }
-        .prof-pos { font-family: var(--font-mono, monospace); font-size: 0.75rem; color: #3B82F6; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.25rem; }
-        .prof-dept { font-size: 0.8125rem; color: #64748B; margin-bottom: 1.75rem; }
-        .prof-divider { height: 1px; background: linear-gradient(to right, rgba(30,58,138,0.4), transparent); margin: 1.5rem 0; }
-        .prof-section-label { font-family: var(--font-mono, monospace); font-size: 0.62rem; color: #64748B; letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 0.75rem; }
-        .prof-short-bio { font-size: 1rem; color: #A8B3C7; line-height: 1.7; }
-        .prof-full-bio { font-size: 0.92rem; color: #8899B0; line-height: 1.75; white-space: pre-wrap; }
-        .prof-meta { display: flex; flex-wrap: wrap; gap: 1.25rem; }
-        .prof-meta-item { display: flex; flex-direction: column; gap: 0.2rem; }
-        .prof-meta-key { font-family: var(--font-mono, monospace); font-size: 0.62rem; color: #64748B; letter-spacing: 0.1em; text-transform: uppercase; }
-        .prof-meta-val { font-size: 0.85rem; color: #A8B3C7; }
+        .prof-inner {
+          max-width: 1060px;
+          margin: 0 auto;
+        }
+        .prof-back {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          color: #38BDF8;
+          text-decoration: none;
+          font-size: 0.72rem;
+          letter-spacing: 0.1em;
+          font-family: var(--font-mono, monospace);
+          font-weight: 600;
+          text-transform: uppercase;
+          margin-bottom: 2rem;
+          transition: color 0.2s, transform 0.2s;
+        }
+        .prof-back:hover {
+          color: #1677FF;
+          transform: translateX(-2px);
+        }
+        .prof-grid {
+          display: grid;
+          grid-template-columns: 320px 1fr;
+          gap: clamp(1.5rem, 4vw, 3rem);
+          align-items: start;
+        }
+
+        /* Portrait Container */
+        .prof-photo-box {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 4 / 4.8;
+          border-radius: 12px;
+          overflow: hidden;
+          background: linear-gradient(180deg, #07152F 0%, #030A17 100%);
+          border: 1px solid rgba(22, 119, 255, 0.2);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 1.25rem;
+        }
+        .prof-photo-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center 15%;
+        }
+
+        .prof-social-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .prof-social-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          color: #94A3B8;
+          text-decoration: none;
+          font-size: 0.78rem;
+          font-family: var(--font-mono, monospace);
+          padding: 0.55rem 0.85rem;
+          background: rgba(6, 21, 43, 0.6);
+          border: 1px solid rgba(22, 119, 255, 0.18);
+          border-radius: 6px;
+          transition: all 0.2s;
+        }
+        .prof-social-btn:hover {
+          color: #38BDF8;
+          background: rgba(8, 28, 58, 0.85);
+          border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        /* Right Content Area */
+        .prof-main {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .prof-tag {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.68rem;
+          color: #1677FF;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          font-weight: 600;
+          margin-bottom: 0.25rem;
+        }
+        .prof-name {
+          font-size: clamp(2rem, 4vw, 3rem);
+          font-weight: 700;
+          letter-spacing: -0.03em;
+          color: #F8FAFC;
+          line-height: 1.1;
+          margin: 0;
+        }
+        .prof-position {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.8rem;
+          color: #38BDF8;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-weight: 600;
+          margin-top: 0.25rem;
+        }
+        .prof-dept-pill {
+          display: inline-block;
+          font-family: var(--font-mono, monospace);
+          font-size: 0.68rem;
+          color: #64748B;
+          letter-spacing: 0.08em;
+          margin-top: 0.35rem;
+        }
+
+        .prof-card-block {
+          background: rgba(6, 21, 43, 0.55);
+          border: 1px solid rgba(22, 119, 255, 0.14);
+          border-radius: 10px;
+          padding: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .prof-card-label {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.65rem;
+          color: #1677FF;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          font-weight: 600;
+        }
+        .prof-bio-text {
+          font-size: 0.95rem;
+          color: #CBD5E1;
+          line-height: 1.75;
+          margin: 0;
+          font-weight: 300;
+        }
+
+        @media (max-width: 820px) {
+          .prof-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+          .prof-photo-box {
+            max-width: 280px;
+          }
+        }
       `}</style>
-      <div className="prof-page">
-        <div className="prof-inner">
-          <Link href="/leadership" className="prof-back">← BACK TO LEADERSHIP</Link>
-          <div className="prof-grid">
-            <div>
-              <div className="prof-photo">
-                {m.photo ? <img src={m.photo} alt={m.name} /> : (
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(59,130,246,0.25)" strokeWidth="1"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                )}
-              </div>
-              <p className="prof-pid">{m.publicId}</p>
-              <div className="prof-social">
-                {m.linkedin && <a href={m.linkedin} target="_blank" rel="noopener noreferrer" className="prof-social-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a>}
-                {m.website && <a href={m.website} target="_blank" rel="noopener noreferrer" className="prof-social-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Website</a>}
-                {m.email && <a href={"mailto:" + m.email} className="prof-social-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Email</a>}
-              </div>
-            </div>
-            <div>
-              <p className="prof-brand">QUANTUM AI</p>
-              <h1 className="prof-name">{m.name}</h1>
-              <p className="prof-pos">{m.position.replaceAll("_", " ")}</p>
-              {(m.department || m.location) && <p className="prof-dept">{[m.department, m.location].filter(Boolean).join(" · ")}</p>}
-              <div className="prof-divider" />
-              <p className="prof-section-label">OVERVIEW</p>
-              <p className="prof-short-bio">{m.shortBio}</p>
-              {m.fullBio && (<><div className="prof-divider" /><p className="prof-section-label">BIOGRAPHY</p><p className="prof-full-bio">{m.fullBio}</p></>)}
-              {(m.location || m.email || m.department) && (
-                <><div className="prof-divider" /><p className="prof-section-label">DETAILS</p>
-                <div className="prof-meta">
-                  {m.location && <div className="prof-meta-item"><span className="prof-meta-key">Location</span><span className="prof-meta-val">{m.location}</span></div>}
-                  {m.department && <div className="prof-meta-item"><span className="prof-meta-key">Department</span><span className="prof-meta-val">{m.department}</span></div>}
-                  {m.email && <div className="prof-meta-item"><span className="prof-meta-key">Email</span><a href={"mailto:" + m.email} style={{ color: "#3B82F6", textDecoration: "none", fontSize: "0.9rem" }}>{m.email}</a></div>}
-                </div></>
+
+      <div className="prof-inner">
+        {/* Navigation Breadcrumb */}
+        <Link href="/leadership" className="prof-back">
+          ← BACK TO LEADERSHIP
+        </Link>
+
+        <div className="prof-grid">
+          {/* Left Column: Portrait & Connect */}
+          <div>
+            <div className="prof-photo-box">
+              {m.photo ? (
+                <img src={m.photo} alt={m.name} className="prof-photo-img" />
+              ) : (
+                <div style={{ color: "#38BDF8", fontFamily: "var(--font-mono, monospace)", fontSize: "0.85rem" }}>
+                  QUANTUM AI
+                </div>
               )}
+            </div>
+
+            {m.publicId && (
+              <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#64748B", letterSpacing: "0.15em", marginBottom: "0.85rem" }}>
+                ID // {m.publicId}
+              </div>
+            )}
+
+            <div className="prof-social-list">
+              {m.linkedin && (
+                <a href={m.linkedin} target="_blank" rel="noopener noreferrer" className="prof-social-btn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
+                  LinkedIn Profile ↗
+                </a>
+              )}
+              {m.email && (
+                <a href={`mailto:${m.email}`} className="prof-social-btn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                  {m.email}
+                </a>
+              )}
+              {m.website && (
+                <a href={m.website.startsWith("http") ? m.website : `https://${m.website}`} target="_blank" rel="noopener noreferrer" className="prof-social-btn">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                  </svg>
+                  Personal Website ↗
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Right Column: Details & Bio */}
+          <div className="prof-main">
+            <div>
+              <div className="prof-tag">SYS.01 / LEADERSHIP PROFILE</div>
+              <h1 className="prof-name">{m.name}</h1>
+              <div className="prof-position">
+                {m.position.replace(/_/g, " ").toUpperCase()}
+              </div>
+              {(m.department || m.location) && (
+                <div className="prof-dept-pill">
+                  {[m.department, m.location].filter(Boolean).join(" · ")}
+                </div>
+              )}
+            </div>
+
+            {/* Executive Overview */}
+            <div className="prof-card-block">
+              <div className="prof-card-label">EXECUTIVE SUMMARY</div>
+              <p className="prof-bio-text">{m.shortBio}</p>
+            </div>
+
+            {/* Full Biography */}
+            {m.fullBio && (
+              <div className="prof-card-block">
+                <div className="prof-card-label">BIOGRAPHY & BACKGROUND</div>
+                <p className="prof-bio-text" style={{ whiteSpace: "pre-line" }}>
+                  {m.fullBio}
+                </p>
+              </div>
+            )}
+
+            {/* Institutional Link */}
+            <div style={{ marginTop: "1rem" }}>
+              <Link
+                href="/contact"
+                style={{
+                  display: "inline-block",
+                  padding: "0.75rem 1.75rem",
+                  backgroundColor: "#1677FF",
+                  color: "#fff",
+                  borderRadius: 6,
+                  textDecoration: "none",
+                  fontWeight: 600,
+                  fontFamily: "var(--font-mono, monospace)",
+                  letterSpacing: "0.08em",
+                  fontSize: "0.78rem",
+                }}
+              >
+                CONNECT WITH LEADERSHIP →
+              </Link>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

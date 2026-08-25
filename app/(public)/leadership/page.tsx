@@ -6,114 +6,636 @@ export const dynamic = "force-dynamic";
 
 export const metadata = createPageMetadata({
   title: "Leadership & Engineering Team — Quantum AI",
-  description: "Meet the founders, engineers, and researchers directing the systems and technology behind Quantum AI.",
+  description: "Meet the founders, executives, and software engineers directing the systems, technology, and strategic vision of Quantum AI.",
   path: "/leadership",
 });
 
+interface LeaderItem {
+  id: string;
+  publicId?: string | null;
+  slug: string;
+  name: string;
+  position: string;
+  department?: string | null;
+  shortBio: string;
+  fullBio?: string | null;
+  photo?: string | null;
+  linkedin?: string | null;
+  email?: string | null;
+  website?: string | null;
+  location?: string | null;
+  displayOrder?: number;
+}
+
+const FALLBACK_MEMBERS: LeaderItem[] = [
+  {
+    id: "f-fawadullah",
+    publicId: "QA-001",
+    slug: "fawadullah-imraj",
+    name: "Fawadullah Imraj",
+    position: "Co-Founder & Chief Executive Officer",
+    department: "Executive Leadership",
+    shortBio: "Co-Founder and CEO of Quantum AI, directing AI-powered software systems, workflow automation architectures, and enterprise digital solutions.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
+    linkedin: "https://www.linkedin.com/in/fawadullahimraj/",
+    location: "Pakistan",
+    displayOrder: 1,
+  },
+  {
+    id: "f-fahad",
+    publicId: "QA-002",
+    slug: "fahad-khan",
+    name: "Fahad Khan",
+    position: "Co-Founder & Executive Chairman",
+    department: "Executive Leadership",
+    shortBio: "Co-Founder and Executive Chairman of Quantum AI, guiding strategic direction, engineering vision, and long-term organizational growth.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787236158396-98299.jpg",
+    linkedin: "https://www.linkedin.com/in/fahad-khan-650a783a4/",
+    location: "Peshawar",
+    displayOrder: 2,
+  },
+  {
+    id: "f-abdullah",
+    publicId: "QA-003",
+    slug: "abdullah-mahmook",
+    name: "Abdullah Mahmood",
+    position: "Lead Software Engineer",
+    department: "Software Development",
+    shortBio: "Software developer focused on building reliable, modern web applications, scalable backends, and full-stack operational platforms.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787054190871-Screenshot_2026-08-18_165611.png",
+    linkedin: "https://www.linkedin.com/in/abdullah-mahmood-323050346/",
+    location: "Peshawar",
+    displayOrder: 3,
+  },
+  {
+    id: "f-anisa",
+    publicId: "QA-004",
+    slug: "hafizah-anisa-safdar",
+    name: "Hafizah Anisa Safdar",
+    position: "Business Development Partner",
+    department: "Business Development",
+    shortBio: "Business Development Partner at Quantum AI, building client relationships, strategic partnerships, and enterprise market expansion.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787235947568-WhatsApp_Image_2026-08-20_at_7.09.26_PM.jpeg",
+    linkedin: "https://www.linkedin.com/in/hafizah-anisa-safdar-89a00338b",
+    location: "Pk/Remote",
+    displayOrder: 4,
+  },
+  {
+    id: "f-waqas",
+    publicId: "QA-005",
+    slug: "waqas-ali-khan",
+    name: "Waqas Ali Khan",
+    position: "Digital Marketing & Strategic Growth Partner",
+    department: "Business Development",
+    shortBio: "Digital marketing and business development professional focused on strategic partnerships, digital reach, and sustainable business growth.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787227215810-Screenshot_2026-08-20_170002.png",
+    linkedin: "https://www.linkedin.com/in/waqas-ali-khan-278b1b414/",
+    location: "Peshawar",
+    displayOrder: 5,
+  },
+];
+
 export default async function LeadershipPage() {
-  const members = await prisma.leadership.findMany({
+  const dbMembers = await prisma.leadership.findMany({
     where: { isActive: true },
     orderBy: { displayOrder: "asc" },
   }).catch(() => []);
 
+  const members: LeaderItem[] = dbMembers && dbMembers.length > 0 ? dbMembers : FALLBACK_MEMBERS;
+
+  // ─── STRICT HIERARCHY LOGIC: CEO + CHAIRMAN AS TWO EQUAL PILLARS ───
+  const isCeo = (m: LeaderItem) =>
+    m.slug.includes("fawad") ||
+    m.position.toLowerCase().includes("ceo") ||
+    m.position.toLowerCase().includes("chief executive");
+
+  const isChairman = (m: LeaderItem) =>
+    m.slug.includes("fahad") ||
+    m.position.toLowerCase().includes("chairman") ||
+    m.position.toLowerCase().includes("chairperson");
+
+  const ceo = members.find(isCeo);
+  const chairman = members.find(isChairman);
+
+  // Collect the principal duo (CEO + Chairman)
+  const principalLeaders: LeaderItem[] = [];
+  if (ceo) principalLeaders.push(ceo);
+  if (chairman && chairman.id !== ceo?.id) principalLeaders.push(chairman);
+
+  // If neither matches by string, take first two as principal
+  if (principalLeaders.length === 0 && members.length >= 2) {
+    principalLeaders.push(members[0], members[1]);
+  }
+
+  const principalIds = new Set(principalLeaders.map((p) => p.id));
+
+  // Executive Team (the remaining leaders)
+  const executiveTeam = members.filter((m) => !principalIds.has(m.id));
+
   return (
-    <>
+    <div className="ldr-page">
       <style>{`
         .ldr-page {
-          padding-top: calc(var(--nav-height, 72px) + 2rem);
-          padding-bottom: 4rem;
-          padding-inline: clamp(1.25rem, 5vw, 4rem);
+          padding-top: calc(var(--nav-height, 72px) + 2.5rem);
+          padding-bottom: 5rem;
+          padding-inline: var(--container-px, clamp(1.25rem, 5vw, 4rem));
           min-height: 100vh;
           background: var(--color-void, #030712);
           position: relative;
+          color: #F8FAFC;
         }
-        .ldr-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
-        .ldr-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.25em; color: #1677FF; text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 600; }
-        .ldr-h1 { font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; color: #F8FAFC; text-transform: uppercase; margin-bottom: 0.75rem; }
-        .ldr-desc { font-size: clamp(0.88rem, 1.3vw, 0.98rem); color: #94A3B8; max-width: 560px; line-height: 1.6; margin-bottom: 2rem; font-weight: 300; }
-        .ldr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; max-width: 900px; }
-        @media (max-width: 768px) {
-          .ldr-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        .ldr-container {
+          max-width: 1160px;
+          margin: 0 auto;
+          position: relative;
+          z-index: 1;
         }
-        @media (max-width: 540px) {
-          .ldr-grid { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; }
-          .ldr-page { padding-inline: 0.75rem; padding-top: calc(var(--nav-height, 72px) + 1.5rem); }
-          .id-card { border-radius: 8px; }
-          .id-header { padding: 0.5rem 0.65rem; }
-          .id-brand { font-size: 0.52rem; letter-spacing: 0.1em; }
-          .id-pid { font-size: 0.52rem; }
-          .id-photo { aspect-ratio: 1/1; max-height: 180px; }
-          .id-body { padding: 0.65rem; }
-          .id-name { font-size: 0.875rem; line-height: 1.2; margin-bottom: 0.2rem; }
-          .id-pos { font-size: 0.58rem; margin-bottom: 0.4rem; }
-          .id-bio { font-size: 0.72rem; line-height: 1.35; -webkit-line-clamp: 2; }
-          .id-footer { padding: 0.45rem 0.65rem; }
-          .id-link { font-size: 0.62rem; }
-          .id-more { font-size: 0.55rem; letter-spacing: 0.04em; }
+
+        /* ─── Page Hero ─── */
+        .ldr-hero {
+          margin-bottom: clamp(2.5rem, 5vw, 4rem);
+          border-bottom: 1px solid rgba(22, 119, 255, 0.14);
+          padding-bottom: clamp(2rem, 4vw, 3rem);
         }
-        .id-card { background: var(--color-deep, #07152F); border: 1px solid rgba(30,58,138,0.45); border-radius: 10px; overflow: hidden; text-decoration: none; display: flex; flex-direction: column; transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s; position: relative; }
-        .id-card::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at top left, rgba(79,70,229,0.07) 0%, transparent 60%); pointer-events: none; z-index: 0; }
-        .id-card:hover { border-color: rgba(37,99,235,0.6); box-shadow: 0 0 0 1px rgba(37,99,235,0.2), 0 12px 40px rgba(0,0,0,0.5); transform: translateY(-4px); }
-        .id-header { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; padding: 0.875rem 1.25rem; border-bottom: 1px solid rgba(30,58,138,0.3); }
-        .id-brand { font-family: var(--font-mono, monospace); font-size: 0.6rem; letter-spacing: 0.18em; color: rgba(59,130,246,0.65); text-transform: uppercase; }
-        .id-pid { font-family: var(--font-mono, monospace); font-size: 0.6rem; color: rgba(100,116,139,0.7); letter-spacing: 0.1em; }
-        .id-photo { position: relative; z-index: 1; width: 100%; aspect-ratio: 4/3; background: linear-gradient(135deg, #0A1628 0%, #07152F 100%); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .id-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
-        .id-photo-placeholder { width: 52px; height: 52px; border-radius: 6px; background: rgba(30,58,138,0.3); display: flex; align-items: center; justify-content: center; color: rgba(59,130,246,0.4); }
-        .id-body { position: relative; z-index: 1; padding: 1.125rem 1.25rem; flex: 1; display: flex; flex-direction: column; }
-        .id-name { font-size: clamp(0.9rem, 2.5vw, 1.05rem); font-weight: 600; color: #F8FAFC; margin-bottom: 0.2rem; letter-spacing: -0.01em; word-break: break-word; overflow-wrap: break-word; line-height: 1.3; }
-        .id-pos { font-family: var(--font-mono, monospace); font-size: 0.65rem; color: #3B82F6; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.75rem; }
-        .id-bio { font-size: 0.85rem; color: #A8B3C7; line-height: 1.6; flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .id-footer { position: relative; z-index: 1; padding: 0.75rem 1.25rem; border-top: 1px solid rgba(30,58,138,0.2); display: flex; align-items: center; gap: 0.875rem; }
-        .id-link { font-size: 0.72rem; color: #64748B; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; transition: color 0.2s; }
-        .id-link:hover { color: #3B82F6; }
-        .id-more { margin-left: auto; font-size: 0.65rem; color: #64748B; font-family: var(--font-mono, monospace); letter-spacing: 0.08em; }
-        .ldr-empty { text-align: center; padding: 5rem 2rem; color: #64748B; font-family: var(--font-mono, monospace); font-size: 0.875rem; letter-spacing: 0.1em; }
+        .ldr-eyebrow {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.72rem;
+          letter-spacing: 0.25em;
+          color: #1677FF;
+          text-transform: uppercase;
+          margin-bottom: 0.65rem;
+          font-weight: 600;
+        }
+        .ldr-h1 {
+          font-size: clamp(2rem, 4.5vw, 3.25rem);
+          font-weight: 700;
+          line-height: 1.1;
+          letter-spacing: -0.035em;
+          color: #F8FAFC;
+          text-transform: uppercase;
+          margin: 0 0 1rem 0;
+          max-width: 900px;
+        }
+        .ldr-lead {
+          font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+          color: #94A3B8;
+          max-width: 680px;
+          line-height: 1.65;
+          margin: 0;
+          font-weight: 300;
+        }
+
+        /* ─── Section Headers ─── */
+        .ldr-section-header {
+          margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+        }
+        .ldr-section-tag {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.68rem;
+          color: #1677FF;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          margin-bottom: 0.35rem;
+          font-weight: 600;
+        }
+        .ldr-section-title {
+          font-size: clamp(1.4rem, 2.8vw, 1.85rem);
+          font-weight: 700;
+          letter-spacing: -0.025em;
+          color: #F8FAFC;
+          text-transform: uppercase;
+          margin: 0 0 0.5rem 0;
+        }
+        .ldr-section-intro {
+          font-size: clamp(0.88rem, 1.25vw, 0.98rem);
+          color: #94A3B8;
+          max-width: 640px;
+          line-height: 1.6;
+          margin: 0;
+          font-weight: 300;
+        }
+
+        /* ─── CEO + CHAIRMAN TWO EQUAL PILLARS GRID ─── */
+        .ldr-principals-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: clamp(1.25rem, 3vw, 2rem);
+          margin-bottom: clamp(3.5rem, 6vw, 5rem);
+        }
+
+        /* ─── Executive Team Grid ─── */
+        .ldr-exec-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+          gap: clamp(1.15rem, 2.5vw, 1.75rem);
+          margin-bottom: clamp(3.5rem, 6vw, 5rem);
+        }
+
+        /* ─── Premium Executive Card ─── */
+        .exec-card {
+          background-color: rgba(6, 21, 43, 0.65);
+          border: 1px solid rgba(22, 119, 255, 0.16);
+          border-radius: 12px;
+          overflow: hidden;
+          text-decoration: none;
+          display: flex;
+          flex-direction: column;
+          transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background-color 0.25s;
+          box-sizing: border-box;
+          position: relative;
+        }
+        .exec-card:hover {
+          background-color: rgba(8, 28, 58, 0.85);
+          border-color: rgba(56, 189, 248, 0.45);
+          transform: translateY(-3px);
+          box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(56, 189, 248, 0.25);
+        }
+
+        /* Portrait Photo Container (4:5 Aspect Ratio) */
+        .exec-photo-wrapper {
+          position: relative;
+          width: 100%;
+          aspect-ratio: 4 / 4.8;
+          background: linear-gradient(180deg, #07152F 0%, #030A17 100%);
+          overflow: hidden;
+          border-bottom: 1px solid rgba(22, 119, 255, 0.14);
+        }
+        .exec-photo-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center 15%;
+          transition: transform 0.4s ease;
+        }
+        .exec-card:hover .exec-photo-img {
+          transform: scale(1.03);
+        }
+        .exec-photo-fallback {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          color: rgba(56, 189, 248, 0.4);
+          font-family: var(--font-mono, monospace);
+          font-size: 0.8rem;
+        }
+
+        /* Top Corner Badge on Photo */
+        .exec-corner-badge {
+          position: absolute;
+          top: 0.85rem;
+          left: 0.85rem;
+          font-family: var(--font-mono, monospace);
+          font-size: 0.62rem;
+          letter-spacing: 0.15em;
+          color: #38BDF8;
+          background: rgba(3, 7, 18, 0.75);
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(56, 189, 248, 0.3);
+          padding: 0.25rem 0.55rem;
+          border-radius: 4px;
+          text-transform: uppercase;
+          font-weight: 600;
+          z-index: 2;
+        }
+
+        /* Card Information Body */
+        .exec-body {
+          padding: 1.35rem 1.45rem;
+          display: flex;
+          flex-direction: column;
+          flex-grow: 1;
+          gap: 0.45rem;
+        }
+        .exec-name {
+          font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+          font-weight: 600;
+          color: #F8FAFC;
+          letter-spacing: -0.015em;
+          margin: 0;
+          line-height: 1.25;
+        }
+        .exec-position {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.68rem;
+          color: #38BDF8;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          font-weight: 600;
+          margin-bottom: 0.25rem;
+        }
+        .exec-bio {
+          font-size: 0.86rem;
+          color: #94A3B8;
+          line-height: 1.6;
+          margin: 0;
+          font-weight: 300;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        /* Card Footer Action */
+        .exec-footer {
+          padding: 0.95rem 1.45rem;
+          border-top: 1px solid rgba(22, 119, 255, 0.12);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-family: var(--font-mono, monospace);
+        }
+        .exec-social-link {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-size: 0.72rem;
+          color: #64748B;
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+        .exec-social-link:hover {
+          color: #38BDF8;
+        }
+        .exec-action-text {
+          font-size: 0.72rem;
+          color: #1677FF;
+          font-weight: 600;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          transition: color 0.2s, transform 0.2s;
+          margin-left: auto;
+        }
+        .exec-card:hover .exec-action-text {
+          color: #38BDF8;
+          transform: translateX(3px);
+        }
+
+        /* ─── Philosophy Section ─── */
+        .ldr-philosophy-box {
+          background: rgba(6, 21, 43, 0.5);
+          border: 1px solid rgba(22, 119, 255, 0.18);
+          border-radius: 12px;
+          padding: clamp(2rem, 4vw, 3rem);
+          margin-bottom: clamp(3.5rem, 6vw, 5rem);
+          position: relative;
+          overflow: hidden;
+        }
+        .ldr-philosophy-box::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 4px;
+          height: 100%;
+          background: linear-gradient(180deg, #1677FF 0%, #38BDF8 100%);
+        }
+        .ldr-philosophy-quote {
+          font-size: clamp(1.35rem, 3vw, 2rem);
+          font-weight: 700;
+          letter-spacing: -0.025em;
+          line-height: 1.3;
+          color: #F8FAFC;
+          margin: 0 0 1rem 0;
+        }
+        .ldr-philosophy-desc {
+          font-size: 0.95rem;
+          color: #94A3B8;
+          line-height: 1.7;
+          max-width: 800px;
+          margin: 0;
+          font-weight: 300;
+        }
+
+        /* ─── Bottom CTA ─── */
+        .ldr-bottom-cta {
+          border-top: 1px solid rgba(22, 119, 255, 0.14);
+          padding-top: 3.5rem;
+          text-align: center;
+        }
+        .ldr-cta-btn {
+          display: inline-block;
+          padding: 0.85rem 2rem;
+          background-color: #1677FF;
+          color: #fff;
+          border-radius: 6px;
+          text-decoration: none;
+          font-weight: 600;
+          font-family: var(--font-mono, monospace);
+          letter-spacing: 0.08em;
+          font-size: 0.82rem;
+          transition: background-color 0.2s, transform 0.2s;
+        }
+        .ldr-cta-btn:hover {
+          background-color: #2563EB;
+          transform: translateY(-1px);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+          .ldr-principals-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.15rem;
+          }
+        }
+        @media (max-width: 680px) {
+          .ldr-principals-grid {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
+          }
+          .ldr-exec-grid {
+            grid-template-columns: 1fr;
+          }
+          .ldr-hero {
+            margin-bottom: 2rem;
+            padding-bottom: 1.75rem;
+          }
+          .exec-body {
+            padding: 1.1rem 1.15rem;
+          }
+          .exec-footer {
+            padding: 0.85rem 1.15rem;
+          }
+        }
       `}</style>
-      <div className="ldr-page">
-        <div className="ldr-inner">
-          <p className="ldr-eyebrow">[01 — LEADERSHIP]</p>
-          <h1 className="ldr-h1">The People<br />Behind<br />Quantum AI.</h1>
-          <p className="ldr-desc">The people shaping the systems, products, and technology behind Quantum AI.</p>
-          <div className="ldr-grid">
-            {members.length === 0 ? (
-              <div className="ldr-empty" style={{ textAlign: 'center', padding: '5rem 2rem', color: '#475569', gridColumn: '1 / -1' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#1677FF', marginBottom: '1rem' }}>QUANTUM AI</div>
-                <p style={{ fontSize: '1.1rem', color: '#94A3B8', lineHeight: 1.7, maxWidth: 400, margin: '0 auto 1.5rem' }}>Our leadership team directory is currently being updated. Please check back soon or contact us directly.</p>
-                <Link href="/contact" style={{ display: 'inline-flex', padding: '0.75rem 1.5rem', backgroundColor: 'rgba(22,119,255,0.12)', border: '1px solid rgba(22,119,255,0.3)', borderRadius: 8, color: '#F8FAFF', textDecoration: 'none', fontSize: '0.875rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em' }}>CONTACT US</Link>
-              </div>
-            ) : members.map((m, index) => (
-              <Link key={m.id} href={`/leadership/${m.slug}`} className="id-card">
-                <div className="id-header">
-                  <span className="id-brand">QUANTUM AI · {String(index + 1).padStart(2, '0')}</span>
-                  <span className="id-pid">{m.publicId}</span>
-                </div>
-                <div className="id-photo">
-                  {m.photo ? <img src={m.photo} alt={m.name} /> : (
-                    <div className="id-photo-placeholder">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+
+      <div className="ldr-container">
+        {/* ─── 1. PAGE HERO ─── */}
+        <section className="ldr-hero">
+          <div className="ldr-eyebrow">[01 — LEADERSHIP & TEAM]</div>
+          <h1 className="ldr-h1">
+            Building the intelligence behind tomorrow&apos;s world.
+          </h1>
+          <p className="ldr-lead">
+            Our leadership and multidisciplinary team combine artificial intelligence, software engineering, research, design, and business thinking to build intelligent systems for real-world impact.
+          </p>
+        </section>
+
+        {/* ─── 2. PRIMARY LEADERSHIP: CEO + CHAIRMAN (TWO EQUAL PILLARS) ─── */}
+        <section style={{ marginBottom: "clamp(3.5rem, 6vw, 5rem)" }}>
+          <div className="ldr-section-header">
+            <div className="ldr-section-tag">SYS.01 / PRINCIPAL LEADERSHIP</div>
+            <h2 className="ldr-section-title">LEADERSHIP.</h2>
+            <p className="ldr-section-intro">
+              At the center of Quantum AI is a leadership team focused on building meaningful technology, developing exceptional people, and turning ambitious ideas into intelligent systems.
+            </p>
+          </div>
+
+          <div className="ldr-principals-grid">
+            {principalLeaders.map((leader, idx) => (
+              <Link key={leader.id} href={`/leadership/${leader.slug}`} className="exec-card">
+                <div className="exec-photo-wrapper">
+                  <div className="exec-corner-badge">
+                    {leader.position.toLowerCase().includes("chairman")
+                      ? "EXECUTIVE CHAIRMAN"
+                      : "CHIEF EXECUTIVE OFFICER"}
+                  </div>
+                  {leader.photo ? (
+                    <img
+                      src={leader.photo}
+                      alt={leader.name}
+                      className="exec-photo-img"
+                    />
+                  ) : (
+                    <div className="exec-photo-fallback">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                      </svg>
+                      <span>QUANTUM AI</span>
                     </div>
                   )}
                 </div>
-                <div className="id-body">
-                  <div className="id-name">{m.name}</div>
-                  <div className="id-pos">{m.position.replaceAll("_", " ")}</div>
-                  <p className="id-bio">{m.shortBio}</p>
+
+                <div className="exec-body">
+                  <div className="exec-position">
+                    {leader.position.replace(/_/g, " ").toUpperCase()}
+                  </div>
+                  <h3 className="exec-name">{leader.name}</h3>
+                  <p className="exec-bio">{leader.shortBio}</p>
                 </div>
-                <div className="id-footer">
-                  {m.linkedin && (
-                    <span className="id-link">
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+
+                <div className="exec-footer">
+                  {leader.linkedin ? (
+                    <span className="exec-social-link">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                      </svg>
                       LinkedIn
                     </span>
+                  ) : (
+                    <span style={{ fontSize: "0.68rem", color: "#64748B" }}>QUANTUM AI</span>
                   )}
-                  <span className="id-more">VIEW PROFILE →</span>
+                  <span className="exec-action-text">
+                    VIEW PROFILE <span>→</span>
+                  </span>
                 </div>
               </Link>
             ))}
           </div>
-        </div>
+        </section>
+
+        {/* ─── 3. EXECUTIVE & ENGINEERING TEAM ─── */}
+        {executiveTeam.length > 0 && (
+          <section style={{ marginBottom: "clamp(3.5rem, 6vw, 5rem)" }}>
+            <div className="ldr-section-header">
+              <div className="ldr-section-tag">SYS.02 / EXECUTIVE TEAM</div>
+              <h2 className="ldr-section-title">EXECUTIVE LEADERSHIP & SPECIALISTS.</h2>
+              <p className="ldr-section-intro">
+                Senior engineering, product design, and business development leads driving execution across Quantum AI platforms and client deployments.
+              </p>
+            </div>
+
+            <div className="ldr-exec-grid">
+              {executiveTeam.map((member, idx) => (
+                <Link key={member.id} href={`/leadership/${member.slug}`} className="exec-card">
+                  <div className="exec-photo-wrapper">
+                    {member.department && (
+                      <div className="exec-corner-badge">
+                        {member.department.trim()}
+                      </div>
+                    )}
+                    {member.photo ? (
+                      <img
+                        src={member.photo}
+                        alt={member.name}
+                        className="exec-photo-img"
+                      />
+                    ) : (
+                      <div className="exec-photo-fallback">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                          <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <span>QUANTUM AI</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="exec-body">
+                    <div className="exec-position">
+                      {member.position.replace(/_/g, " ").toUpperCase()}
+                    </div>
+                    <h3 className="exec-name">{member.name}</h3>
+                    <p className="exec-bio">{member.shortBio}</p>
+                  </div>
+
+                  <div className="exec-footer">
+                    {member.linkedin ? (
+                      <span className="exec-social-link">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                        </svg>
+                        LinkedIn
+                      </span>
+                    ) : (
+                      <span style={{ fontSize: "0.68rem", color: "#64748B" }}>QUANTUM AI</span>
+                    )}
+                    <span className="exec-action-text">
+                      VIEW PROFILE <span>→</span>
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ─── 4. LEADERSHIP PHILOSOPHY ─── */}
+        <section className="ldr-philosophy-box">
+          <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#38BDF8", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem", fontWeight: 600 }}>
+            CORE PRINCIPLE
+          </div>
+          <h2 className="ldr-philosophy-quote">
+            Technology is built by people. Intelligence is shaped by purpose.
+          </h2>
+          <p className="ldr-philosophy-desc">
+            We believe deep technical precision and human-centric engineering must advance hand in hand. Every neural model, operational portal, and automated pipeline we deploy is engineered with rigorous attention to detail, long-term reliability, and genuine real-world utility for the organizations we serve.
+          </p>
+        </section>
+
+        {/* ─── 5. FINAL CALL TO ACTION ─── */}
+        <section className="ldr-bottom-cta">
+          <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#1677FF", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem", fontWeight: 600 }}>
+            COLLABORATION & INQUIRIES
+          </div>
+          <h2 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", color: "#F8FAFC", fontWeight: 700, textTransform: "uppercase", margin: "0 0 0.5rem 0", letterSpacing: "-0.02em" }}>
+            LET&apos;S BUILD WHAT&apos;S NEXT.
+          </h2>
+          <p style={{ color: "#94A3B8", marginBottom: "1.75rem", maxWidth: 520, margin: "0 auto 1.75rem", fontSize: "0.92rem", lineHeight: 1.6, fontWeight: 300 }}>
+            Have an idea, a challenge, or a system that needs intelligent technology? Connect directly with our leadership and engineering team.
+          </p>
+          <Link href="/contact" className="ldr-cta-btn">
+            START A CONVERSATION →
+          </Link>
+        </section>
       </div>
-    </>
+    </div>
   );
 }
