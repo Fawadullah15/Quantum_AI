@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 
 export interface ClientItem {
@@ -15,35 +15,44 @@ export interface ClientItem {
   order?: number;
 }
 
-const DEFAULT_CLIENTS: ClientItem[] = [
+const FALLBACK_CLIENTS: ClientItem[] = [
   {
-    name: 'School Operations Manager',
-    industry: 'Education / Institution',
-    description: 'Centralized school management platform bringing academic, attendance, and administrative workflows into one digital system.',
-    website: '/work/school-operations-manager',
-  },
-  {
-    name: 'Sales Pipeline System',
-    industry: 'Sales / Business Automation',
-    description: 'Centralized CRM and opportunity tracking engine with automated lead routing and CRM synchronization pipelines.',
+    id: 'c-inventra',
+    name: 'Inventra Design & Automation',
+    industry: 'Design & Automation',
+    logo: '/uploads/clients/inventra-logo.png',
+    description: 'Industrial design and process automation platforms engineered for scalable precision.',
     website: '/work/sales-pipeline-automation-system',
+    order: 1,
   },
   {
-    name: 'Vector Search Knowledge Base',
-    industry: 'AI / Knowledge Management',
-    description: 'Enterprise semantic search over knowledge sources and document archives powered by embeddings and vector indexing.',
+    id: 'c-eden',
+    name: 'Eden School System',
+    industry: 'Education & Institutional Management',
+    logo: '/uploads/clients/eden-school-logo.png',
+    description: 'Centralized school operations manager bringing academic, attendance, and administrative workflows into one digital system.',
+    website: '/work/school-operations-manager',
+    order: 2,
+  },
+  {
+    id: 'c-emerge',
+    name: 'Emerge Technologies',
+    industry: 'Enterprise Software & Systems',
+    logo: '/uploads/clients/emerge-tech-logo.png',
+    description: 'Scalable data architecture and modern operational platforms.',
     website: '/work/vector-search-knowledge-base',
-  },
-  {
-    name: 'AI Support Assistant',
-    industry: 'AI / Customer Support',
-    description: 'Context-aware customer support system automating frequent inquiries and accelerating team response workflows.',
-    website: '/work/ai-powered-customer-support-assistant',
+    order: 3,
   },
 ];
 
 export default function ClientsSection({ initialClients }: { initialClients?: ClientItem[] }) {
-  const [clients, setClients] = useState<ClientItem[]>(initialClients && initialClients.length > 0 ? initialClients : DEFAULT_CLIENTS);
+  const [clients, setClients] = useState<ClientItem[]>(
+    initialClients && initialClients.length > 0 ? initialClients : FALLBACK_CLIENTS
+  );
+  const [isVisible, setIsVisible] = useState(false);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     fetch('/api/clients')
@@ -56,291 +65,405 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
       .catch(() => {});
   }, []);
 
+  // Intersection observer for entrance animation
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Mouse parallax handler
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMouseOffset({ x: x * 15, y: y * 15 });
+  };
+
+  const handleMouseLeave = () => {
+    setMouseOffset({ x: 0, y: 0 });
+  };
+
   return (
     <section
+      ref={sectionRef}
       id="clients-worked-with"
-      style={{
-        padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)',
-        pointerEvents: 'auto',
-        backgroundColor: 'rgba(4, 14, 36, 0.6)',
-        borderTop: '1px solid rgba(22, 119, 255, 0.1)',
-        borderBottom: '1px solid rgba(22, 119, 255, 0.1)',
-      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="clients-animated-section"
     >
       <style>{`
-        /* ═══════════════════════════════════════════════════════════
-           DESKTOP VIEW (> 768px): Compact Grid Cards
-        ═══════════════════════════════════════════════════════════ */
-        .clients-desktop-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 0.85rem;
-          width: 100%;
+        .clients-animated-section {
+          padding: clamp(3rem, 6vh, 5.5rem) clamp(1rem, 5vw, 6rem);
+          background: radial-gradient(circle at 50% 35%, rgba(14, 42, 85, 0.25) 0%, rgba(3, 7, 18, 0.98) 75%);
+          border-top: 1px solid rgba(22, 119, 255, 0.14);
+          border-bottom: 1px solid rgba(22, 119, 255, 0.14);
+          position: relative;
+          overflow: hidden;
+          color: #F8FAFC;
         }
 
-        .clients-mobile-grid {
-          display: none;
-        }
-
-        .client-card {
-          background-color: rgba(6, 21, 43, 0.65);
-          border: 1px solid rgba(22, 119, 255, 0.14);
-          border-radius: 10px;
-          padding: 1rem 1.25rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          gap: 0.5rem;
-          transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-          box-sizing: border-box;
-          text-decoration: none;
-          min-height: 110px;
-        }
-
-        .client-card:hover {
-          background-color: rgba(8, 28, 58, 0.85);
-          border-color: rgba(56, 189, 248, 0.4);
-          transform: translateY(-1px);
-          box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.25);
-        }
-
-        .client-card-top {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 0.75rem;
-        }
-
-        .client-card-name {
-          font-size: 1.05rem;
-          font-weight: 600;
-          color: #F8FAFF;
-          margin: 0;
-          letter-spacing: -0.01em;
-          text-transform: none;
-          line-height: 1.3;
-        }
-
-        .client-card-industry {
+        /* ─── Background Watermark Typography ─── */
+        .clients-watermark {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
           font-family: var(--font-mono, monospace);
-          font-size: 0.65rem;
-          color: #38BDF8;
-          letter-spacing: 0.1em;
-          font-weight: 600;
+          font-size: clamp(3.5rem, 10vw, 9rem);
+          font-weight: 900;
+          color: rgba(22, 119, 255, 0.035);
+          letter-spacing: 0.18em;
           text-transform: uppercase;
-          background: rgba(22, 119, 255, 0.12);
-          border: 1px solid rgba(56, 189, 248, 0.25);
-          padding: 0.2rem 0.5rem;
-          border-radius: 4px;
+          pointer-events: none;
+          user-select: none;
           white-space: nowrap;
+          z-index: 0;
         }
 
-        .client-card-desc {
+        .clients-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          position: relative;
+          z-index: 1;
+        }
+
+        /* ─── Header ─── */
+        .clients-header {
+          text-align: center;
+          margin-bottom: clamp(2.5rem, 5vw, 4rem);
+        }
+        .clients-tag {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.72rem;
+          letter-spacing: 0.25em;
+          text-transform: uppercase;
+          color: #1677FF;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+        }
+        .clients-title {
+          font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+          font-weight: 700;
+          line-height: 1.15;
+          letter-spacing: -0.03em;
+          color: #F8FAFF;
+          margin: 0 0 0.65rem 0;
+          text-transform: uppercase;
+        }
+        .clients-subtitle {
+          font-size: clamp(0.88rem, 1.25vw, 1.05rem);
           color: #94A3B8;
-          font-size: 0.85rem;
-          line-height: 1.5;
-          margin: 0;
+          max-width: 600px;
+          margin: 0 auto;
+          line-height: 1.6;
           font-weight: 300;
         }
 
-        /* ═══════════════════════════════════════════════════════════
-           MOBILE VIEW (<= 768px): Clean 2x2 Block Grid
-        ═══════════════════════════════════════════════════════════ */
-        @media (max-width: 768px) {
-          .clients-desktop-grid {
-            display: none !important;
-          }
+        /* ─── Desktop Artistic Constellation Wall ─── */
+        .clients-constellation-stage {
+          position: relative;
+          min-height: 440px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
 
-          .clients-mobile-grid {
-            display: grid !important;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.55rem;
-            width: 100%;
-          }
+        .clients-constellation-grid {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          align-items: center;
+          gap: clamp(1.5rem, 3.5vw, 3rem);
+          max-width: 1050px;
+          margin: 0 auto;
+        }
 
-          .mobile-client-tile {
-            background-color: rgba(6, 21, 43, 0.75);
-            border: 1px solid rgba(22, 119, 255, 0.16);
-            border-radius: 8px;
-            padding: 0.75rem 0.8rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            gap: 0.35rem;
-            min-height: 95px;
-            box-sizing: border-box;
-            text-decoration: none;
-          }
+        /* ─── Dynamic Logo Item Card ─── */
+        .logo-constellation-card {
+          position: relative;
+          background: rgba(6, 21, 43, 0.65);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(22, 119, 255, 0.18);
+          border-radius: 16px;
+          padding: clamp(1.25rem, 2.5vw, 1.85rem) clamp(1.5rem, 3vw, 2.25rem);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          text-decoration: none;
+          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                      border-color 0.3s ease,
+                      box-shadow 0.3s ease,
+                      opacity 0.3s ease,
+                      background-color 0.3s ease;
+          box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          min-width: 220px;
+          max-width: 310px;
+          flex: 1 1 240px;
+          height: 180px;
+          box-sizing: border-box;
+          opacity: 0;
+          transform: translateY(30px) scale(0.92);
+        }
 
-          .mobile-client-name {
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: #F8FAFC;
-            letter-spacing: -0.01em;
-            margin: 0;
-            line-height: 1.25;
-          }
+        .logo-constellation-card.is-active {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
 
-          .mobile-client-industry {
-            font-family: var(--font-mono, monospace);
-            font-size: 0.56rem;
-            color: #38BDF8;
-            letter-spacing: 0.08em;
-            font-weight: 600;
-            text-transform: uppercase;
-            line-height: 1.2;
+        /* Floating Idle Breathing Animation */
+        @keyframes floatBreathing {
+          0% {
+            transform: translateY(0px);
           }
-
-          .mobile-client-desc {
-            font-size: 0.72rem;
-            color: #94A3B8;
-            line-height: 1.35;
-            margin: 0;
-            font-weight: 300;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+          50% {
+            transform: translateY(-6px);
+          }
+          100% {
+            transform: translateY(0px);
           }
         }
 
-        @media (max-width: 380px) {
-          .mobile-client-tile {
-            padding: 0.65rem 0.7rem;
-            min-height: 88px;
+        .logo-constellation-card.is-active.idle-float {
+          animation: floatBreathing 5.5s ease-in-out infinite;
+        }
+
+        /* Hover Elevation & Focus */
+        .logo-constellation-card:hover {
+          background-color: rgba(8, 28, 58, 0.9);
+          border-color: rgba(56, 189, 248, 0.6);
+          transform: translateY(-8px) scale(1.04) !important;
+          box-shadow: 0 20px 48px -10px rgba(22, 119, 255, 0.35),
+                      0 0 0 1px rgba(56, 189, 248, 0.4),
+                      inset 0 1px 1px rgba(255, 255, 255, 0.1);
+          z-index: 10;
+        }
+
+        .clients-constellation-grid.has-hover .logo-constellation-card:not(:hover) {
+          opacity: 0.55;
+          filter: grayscale(20%);
+        }
+
+        /* Logo Image Container */
+        .logo-img-wrapper {
+          width: 100%;
+          height: 90px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          padding: 0.5rem;
+          box-sizing: border-box;
+        }
+
+        .logo-img-element {
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+          transition: transform 0.3s ease, filter 0.3s ease;
+          filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+        }
+
+        .logo-constellation-card:hover .logo-img-element {
+          transform: scale(1.05);
+          filter: drop-shadow(0 6px 16px rgba(56, 189, 248, 0.3));
+        }
+
+        /* Fallback Emblem */
+        .logo-placeholder-box {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.85rem;
+          font-weight: 700;
+          color: #38BDF8;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.35rem;
+        }
+
+        /* Hover Tooltip Details */
+        .logo-info-bar {
+          margin-top: 0.75rem;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.2rem;
+          width: 100%;
+        }
+
+        .logo-org-name {
+          font-size: 0.88rem;
+          font-weight: 600;
+          color: #F8FAFC;
+          letter-spacing: -0.01em;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
+        }
+
+        .logo-industry-tag {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.62rem;
+          color: #38BDF8;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          background: rgba(22, 119, 255, 0.15);
+          border: 1px solid rgba(56, 189, 248, 0.25);
+          padding: 0.15rem 0.45rem;
+          border-radius: 4px;
+        }
+
+        /* Mobile View (< 768px) */
+        @media (max-width: 768px) {
+          .clients-constellation-grid {
+            gap: 1rem;
           }
-          .mobile-client-name {
-            font-size: 0.76rem;
+          .logo-constellation-card {
+            min-width: 160px;
+            height: 160px;
+            padding: 1rem;
           }
-          .mobile-client-desc {
-            font-size: 0.68rem;
+          .logo-img-wrapper {
+            height: 75px;
+          }
+          .logo-org-name {
+            font-size: 0.78rem;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .logo-constellation-card {
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
           }
         }
       `}</style>
 
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        {/* Eyebrow & Title */}
-        <p
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.72rem',
-            letterSpacing: '0.25em',
-            textTransform: 'uppercase',
-            color: '#1677FF',
-            marginBottom: '0.4rem',
-            fontWeight: 600,
-          }}
-        >
-          SYS.07 / CLIENTS & COLLABORATIONS
-        </p>
-        <h2
-          style={{
-            fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
-            fontWeight: 700,
-            lineHeight: 1.15,
-            letterSpacing: '-0.025em',
-            color: '#F8FAFF',
-            marginBottom: '0.4rem',
-            textTransform: 'uppercase',
-          }}
-        >
-          With whom we have worked with.
-        </h2>
-        <p
-          style={{
-            fontSize: 'clamp(0.85rem, 1.2vw, 0.95rem)',
-            color: '#94A3B8',
-            lineHeight: 1.6,
-            marginBottom: 'clamp(1.25rem, 2.5vh, 2rem)',
-            maxWidth: 640,
-            fontWeight: 300,
-          }}
-        >
-          We construct reliable software architectures, custom AI systems, and automated platforms for educational institutions, businesses, and enterprises.
-        </p>
+      {/* Background Watermark */}
+      <div className="clients-watermark">PARTNERSHIPS</div>
 
-        {/* ─── Desktop View: 2-Column Responsive Client Cards ─── */}
-        <div className="clients-desktop-grid">
-          {clients.map((c, idx) => {
-            const cardContent = (
-              <>
-                <div className="client-card-top">
-                  <h3 className="client-card-name">{c.name}</h3>
-                  {c.industry && <span className="client-card-industry">{c.industry}</span>}
-                </div>
-                {c.description && <p className="client-card-desc">{c.description}</p>}
-              </>
-            );
-
-            if (c.website) {
-              if (c.website.startsWith('/')) {
-                return (
-                  <Link key={c.id || idx} href={c.website} className="client-card">
-                    {cardContent}
-                  </Link>
-                );
-              }
-              return (
-                <a
-                  key={c.id || idx}
-                  href={c.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="client-card"
-                >
-                  {cardContent}
-                </a>
-              );
-            }
-
-            return (
-              <div key={c.id || idx} className="client-card">
-                {cardContent}
-              </div>
-            );
-          })}
+      <div className="clients-container">
+        {/* Section Header */}
+        <div className="clients-header">
+          <div className="clients-tag">SYS.07 / CLIENTS & COLLABORATIONS</div>
+          <h2 className="clients-title">WITH WHOM WE HAVE WORKED.</h2>
+          <p className="clients-subtitle">
+            Trusted by organizations that believe in building what comes next. Real software systems, custom AI platforms, and operational engineering.
+          </p>
         </div>
 
-        {/* ─── Mobile View: Clean 2x2 Compact Block Grid ─── */}
-        <div className="clients-mobile-grid">
-          {clients.map((c, idx) => {
-            const mobileContent = (
-              <>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                  <span className="mobile-client-industry">{c.industry || 'CLIENT'}</span>
-                  <h3 className="mobile-client-name">{c.name}</h3>
-                </div>
-                {c.description && <p className="mobile-client-desc">{c.description}</p>}
-              </>
-            );
+        {/* Dynamic Logo Constellation Stage */}
+        <div className="clients-constellation-stage">
+          <div className={`clients-constellation-grid ${hoveredId ? 'has-hover' : ''}`}>
+            {clients.map((client, index) => {
+              const delaySec = index * 0.15;
+              const floatDelay = `${(index * 1.2) % 4}s`;
 
-            if (c.website) {
-              if (c.website.startsWith('/')) {
+              const cardMarkup = (
+                <>
+                  <div className="logo-img-wrapper">
+                    {client.logo ? (
+                      <img
+                        src={client.logo}
+                        alt={`${client.name} logo`}
+                        className="logo-img-element"
+                        onError={(e) => {
+                          // Gracefully handle broken image by displaying styled monogram
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <div className="logo-placeholder-box">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path d="M3 21h18M3 7v14M21 7v14M6 11h4M6 15h4M14 11h4M14 15h4M9 3h6v4H9z" />
+                        </svg>
+                        <span>{client.name.slice(0, 12)}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="logo-info-bar">
+                    <div className="logo-org-name">{client.name}</div>
+                    {client.industry && (
+                      <div className="logo-industry-tag">{client.industry}</div>
+                    )}
+                  </div>
+                </>
+              );
+
+              if (client.website) {
+                if (client.website.startsWith('/')) {
+                  return (
+                    <Link
+                      key={client.id || index}
+                      href={client.website}
+                      onMouseEnter={() => setHoveredId(client.id || String(index))}
+                      onMouseLeave={() => setHoveredId(null)}
+                      className={`logo-constellation-card ${isVisible ? 'is-active idle-float' : ''}`}
+                      style={{
+                        transitionDelay: `${delaySec}s`,
+                        animationDelay: floatDelay,
+                      }}
+                    >
+                      {cardMarkup}
+                    </Link>
+                  );
+                }
+
                 return (
-                  <Link key={c.id || idx} href={c.website} className="mobile-client-tile">
-                    {mobileContent}
-                  </Link>
+                  <a
+                    key={client.id || index}
+                    href={client.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onMouseEnter={() => setHoveredId(client.id || String(index))}
+                    onMouseLeave={() => setHoveredId(null)}
+                    className={`logo-constellation-card ${isVisible ? 'is-active idle-float' : ''}`}
+                    style={{
+                      transitionDelay: `${delaySec}s`,
+                      animationDelay: floatDelay,
+                    }}
+                  >
+                    {cardMarkup}
+                  </a>
                 );
               }
-              return (
-                <a
-                  key={c.id || idx}
-                  href={c.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mobile-client-tile"
-                >
-                  {mobileContent}
-                </a>
-              );
-            }
 
-            return (
-              <div key={c.id || idx} className="mobile-client-tile">
-                {mobileContent}
-              </div>
-            );
-          })}
+              return (
+                <div
+                  key={client.id || index}
+                  onMouseEnter={() => setHoveredId(client.id || String(index))}
+                  onMouseLeave={() => setHoveredId(null)}
+                  className={`logo-constellation-card ${isVisible ? 'is-active idle-float' : ''}`}
+                  style={{
+                    transitionDelay: `${delaySec}s`,
+                    animationDelay: floatDelay,
+                  }}
+                >
+                  {cardMarkup}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

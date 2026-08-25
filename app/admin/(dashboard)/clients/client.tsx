@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { createClient, updateClient, deleteClient } from './actions';
 
 export interface ClientItem {
@@ -25,7 +25,9 @@ export default function ClientsManagerClient({
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -66,6 +68,36 @@ export default function ClientsManagerClient({
     });
     setCurrentId(null);
     setIsEditing(true);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploading(true);
+      const data = new FormData();
+      data.append('file', file);
+
+      const res = await fetch('/api/media', {
+        method: 'POST',
+        body: data,
+      });
+
+      if (!res.ok) {
+        throw new Error('Upload failed');
+      }
+
+      const result = await res.json();
+      if (result.url) {
+        setFormData((prev) => ({ ...prev, logo: result.url }));
+      }
+    } catch (err) {
+      console.error('File upload error:', err);
+      alert('Failed to upload logo image. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleTogglePublish = async (c: ClientItem) => {
@@ -162,7 +194,7 @@ export default function ClientsManagerClient({
     <div style={{ color: '#F8FAFC', width: '100%' }}>
       {!isEditing ? (
         <>
-          {/* Top action row */}
+          {/* Top Control Bar */}
           <div
             style={{
               display: 'flex',
@@ -170,10 +202,10 @@ export default function ClientsManagerClient({
               justifyContent: 'space-between',
               alignItems: 'center',
               gap: '1rem',
-              marginBottom: '1.5rem',
+              marginBottom: '1.75rem',
             }}
           >
-            <div style={{ position: 'relative', minWidth: '260px', flex: '1', maxWidth: '380px' }}>
+            <div style={{ position: 'relative', minWidth: '260px', flex: '1', maxWidth: '400px' }}>
               <input
                 type="text"
                 placeholder="Search organizations or industry..."
@@ -184,7 +216,7 @@ export default function ClientsManagerClient({
                   backgroundColor: '#070B14',
                   border: '1px solid rgba(22, 119, 255, 0.25)',
                   borderRadius: '8px',
-                  padding: '0.6rem 0.9rem',
+                  padding: '0.65rem 0.95rem',
                   fontSize: '0.875rem',
                   color: '#F8FAFC',
                   outline: 'none',
@@ -198,7 +230,7 @@ export default function ClientsManagerClient({
               style={{
                 backgroundColor: '#1677FF',
                 color: '#FFFFFF',
-                padding: '0.6rem 1.25rem',
+                padding: '0.65rem 1.35rem',
                 borderRadius: '6px',
                 fontWeight: 600,
                 fontSize: '0.85rem',
@@ -209,15 +241,14 @@ export default function ClientsManagerClient({
                 gap: '0.4rem',
                 fontFamily: 'var(--font-mono, monospace)',
                 letterSpacing: '0.04em',
-                boxShadow: '0 4px 12px rgba(22, 119, 255, 0.3)',
-                transition: 'background-color 0.2s',
+                boxShadow: '0 4px 14px rgba(22, 119, 255, 0.35)',
               }}
             >
-              <span>+</span> ADD ORGANIZATION
+              <span>+</span> ADD ORGANISATION
             </button>
           </div>
 
-          {/* Grid of Client Cards */}
+          {/* Grid of Client Organizations */}
           {filteredItems.length === 0 ? (
             <div
               style={{
@@ -230,10 +261,10 @@ export default function ClientsManagerClient({
             >
               <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🏢</div>
               <h3 style={{ fontSize: '1.15rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 0.5rem 0' }}>
-                No organizations found
+                No organisations found
               </h3>
               <p style={{ color: '#94A3B8', fontSize: '0.875rem', maxWidth: '400px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
-                Add organizations, companies, or products you have deployed to showcase on the landing page.
+                Add organisations, companies, or partner logos to populate the animated logo wall on your landing page.
               </p>
               <button
                 onClick={handleCreate}
@@ -248,7 +279,7 @@ export default function ClientsManagerClient({
                   cursor: 'pointer',
                 }}
               >
-                + Add First Organization
+                + Add First Organisation
               </button>
             </div>
           ) : (
@@ -266,8 +297,8 @@ export default function ClientsManagerClient({
                   style={{
                     backgroundColor: 'rgba(6, 21, 43, 0.75)',
                     border: '1px solid rgba(22, 119, 255, 0.18)',
-                    borderRadius: '10px',
-                    padding: '1.25rem',
+                    borderRadius: '12px',
+                    padding: '1.35rem',
                     display: 'flex',
                     flexDirection: 'column',
                     justifyContent: 'space-between',
@@ -277,32 +308,32 @@ export default function ClientsManagerClient({
                   }}
                 >
                   <div>
-                    {/* Top Row: Name, Logo & Status Badge */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.65rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    {/* Logo & Header */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                         <div
                           style={{
-                            width: '38px',
-                            height: '38px',
-                            borderRadius: '6px',
-                            backgroundColor: 'rgba(22, 119, 255, 0.14)',
+                            width: '54px',
+                            height: '54px',
+                            borderRadius: '8px',
+                            backgroundColor: '#030712',
                             border: '1px solid rgba(56, 189, 248, 0.25)',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '1.1rem',
+                            padding: '4px',
                             overflow: 'hidden',
                             flexShrink: 0,
                           }}
                         >
                           {c.logo ? (
-                            <img src={c.logo} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            <img src={c.logo} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                           ) : (
-                            <span>🏢</span>
+                            <span style={{ fontSize: '1.25rem' }}>🏢</span>
                           )}
                         </div>
                         <div>
-                          <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#F8FAFC', margin: 0, lineHeight: 1.25 }}>
+                          <h3 style={{ fontSize: '1.02rem', fontWeight: 600, color: '#F8FAFC', margin: 0, lineHeight: 1.25 }}>
                             {c.name}
                           </h3>
                           {c.industry && (
@@ -314,7 +345,7 @@ export default function ClientsManagerClient({
                                 letterSpacing: '0.05em',
                                 textTransform: 'uppercase',
                                 display: 'block',
-                                marginTop: '0.15rem',
+                                marginTop: '0.2rem',
                               }}
                             >
                               {c.industry}
@@ -337,7 +368,7 @@ export default function ClientsManagerClient({
                           whiteSpace: 'nowrap',
                         }}
                       >
-                        {c.published ? 'LIVE' : 'DRAFT'}
+                        {c.published ? 'ACTIVE' : 'INACTIVE'}
                       </span>
                     </div>
 
@@ -350,7 +381,7 @@ export default function ClientsManagerClient({
                           lineHeight: 1.5,
                           margin: '0 0 0.65rem 0',
                           display: '-webkit-box',
-                          WebkitLineClamp: 3,
+                          WebkitLineClamp: 2,
                           WebkitBoxOrient: 'vertical',
                           overflow: 'hidden',
                           fontWeight: 300,
@@ -362,7 +393,7 @@ export default function ClientsManagerClient({
 
                     {/* Target Link */}
                     {c.website && (
-                      <div style={{ marginTop: '0.35rem' }}>
+                      <div style={{ marginTop: '0.25rem' }}>
                         <a
                           href={c.website}
                           target="_blank"
@@ -408,7 +439,7 @@ export default function ClientsManagerClient({
                         fontFamily: 'var(--font-mono, monospace)',
                       }}
                     >
-                      {c.published ? 'Unpublish' : 'Publish'}
+                      {c.published ? 'Deactivate' : 'Activate'}
                     </button>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -452,13 +483,13 @@ export default function ClientsManagerClient({
           )}
         </>
       ) : (
-        /* Form / Modal View for Create or Edit */
+        /* Create or Edit Form / Modal */
         <div
           style={{
-            backgroundColor: 'rgba(6, 21, 43, 0.85)',
+            backgroundColor: 'rgba(6, 21, 43, 0.9)',
             border: '1px solid rgba(22, 119, 255, 0.25)',
-            borderRadius: '12px',
-            padding: '1.75rem',
+            borderRadius: '14px',
+            padding: '2rem',
             maxWidth: '680px',
             margin: '0 auto',
             boxSizing: 'border-box',
@@ -476,10 +507,10 @@ export default function ClientsManagerClient({
           >
             <div>
               <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#1677FF', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-                CLIENT & COLLABORATION
+                ORGANISATION MANAGEMENT
               </div>
               <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
-                {currentId ? `Edit: ${formData.name}` : 'Add New Organization / Client'}
+                {currentId ? `Edit: ${formData.name}` : 'Add New Organisation & Logo'}
               </h2>
             </div>
 
@@ -500,17 +531,84 @@ export default function ClientsManagerClient({
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
             <div>
-              <label style={labelStyle}>Organization / Client Name *</label>
+              <label style={labelStyle}>Organisation Name *</label>
               <input
                 type="text"
                 required
-                placeholder="e.g. School Operations Manager"
+                placeholder="e.g. Inventra Design & Automation"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 style={inputStyle}
               />
+            </div>
+
+            {/* Logo Upload & Preview Section */}
+            <div>
+              <label style={labelStyle}>Organisation Logo (Image / SVG / PNG / WebP)</label>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                {/* Visual Logo Preview */}
+                <div
+                  style={{
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '8px',
+                    backgroundColor: '#030712',
+                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '6px',
+                    boxSizing: 'border-box',
+                    overflow: 'hidden',
+                    flexShrink: 0,
+                  }}
+                >
+                  {formData.logo ? (
+                    <img src={formData.logo} alt="Preview" style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+                  ) : (
+                    <span style={{ fontSize: '0.65rem', color: '#64748B', textAlign: 'center' }}>NO LOGO</span>
+                  )}
+                </div>
+
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading}
+                      style={{
+                        backgroundColor: 'rgba(22, 119, 255, 0.2)',
+                        border: '1px solid rgba(22, 119, 255, 0.4)',
+                        color: '#38BDF8',
+                        padding: '0.5rem 1rem',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        fontFamily: 'var(--font-mono, monospace)',
+                      }}
+                    >
+                      {isUploading ? 'Uploading...' : '📁 Upload Logo File'}
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*,.svg"
+                      onChange={handleFileUpload}
+                      style={{ display: 'none' }}
+                    />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Or enter image URL: /uploads/clients/logo.png"
+                    value={formData.logo}
+                    onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
+                    style={{ ...inputStyle, fontSize: '0.78rem', padding: '0.45rem 0.65rem' }}
+                  />
+                </div>
+              </div>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -518,7 +616,7 @@ export default function ClientsManagerClient({
                 <label style={labelStyle}>Industry / Category</label>
                 <input
                   type="text"
-                  placeholder="e.g. Education / Institution"
+                  placeholder="e.g. Design & Automation"
                   value={formData.industry}
                   onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
                   style={inputStyle}
@@ -538,10 +636,10 @@ export default function ClientsManagerClient({
             </div>
 
             <div>
-              <label style={labelStyle}>Website or Case Study URL</label>
+              <label style={labelStyle}>Optional Website or Case Study URL</label>
               <input
                 type="text"
-                placeholder="e.g. /work/school-operations-manager or https://client.com"
+                placeholder="e.g. /work/sales-pipeline-automation-system or https://client.com"
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
                 style={inputStyle}
@@ -549,21 +647,10 @@ export default function ClientsManagerClient({
             </div>
 
             <div>
-              <label style={labelStyle}>Logo Image URL (Optional)</label>
-              <input
-                type="text"
-                placeholder="e.g. /uploads/client-logo.png"
-                value={formData.logo}
-                onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
-                style={inputStyle}
-              />
-            </div>
-
-            <div>
-              <label style={labelStyle}>Short Description</label>
+              <label style={labelStyle}>Short Description (Optional)</label>
               <textarea
-                rows={3}
-                placeholder="Brief summary of the platform, collaboration, or system built..."
+                rows={2}
+                placeholder="Brief summary of the platform, partnership, or system built..."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 style={{ ...inputStyle, resize: 'vertical' }}
@@ -577,7 +664,7 @@ export default function ClientsManagerClient({
                   checked={formData.published}
                   onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
                 />
-                <span>Published (Visible on site)</span>
+                <span>Active (Display on public website)</span>
               </label>
 
               <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.85rem' }}>
@@ -637,7 +724,7 @@ export default function ClientsManagerClient({
                   letterSpacing: '0.04em',
                 }}
               >
-                {isSaving ? 'Saving...' : currentId ? 'Save Changes' : 'Create Organization'}
+                {isSaving ? 'Saving...' : currentId ? 'Save Changes' : 'Save Organisation'}
               </button>
             </div>
           </form>

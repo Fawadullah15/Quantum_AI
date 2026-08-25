@@ -4,69 +4,51 @@ const prisma = new PrismaClient();
 
 const CLIENTS = [
   {
-    name: 'School Operations Manager',
-    slug: 'school-operations-manager',
-    industry: 'Education / Institution',
-    description: 'Centralized school management platform bringing academic, attendance, and administrative workflows into one digital system.',
-    website: '/work/school-operations-manager',
+    name: 'Inventra Design & Automation',
+    slug: 'inventra-design-automation',
+    logo: '/uploads/clients/inventra-logo.png',
+    industry: 'Design & Automation',
+    description: 'Industrial design and process automation platforms engineered for scalable precision.',
+    website: '/work/sales-pipeline-automation-system',
     featured: true,
     published: true,
     order: 1,
   },
   {
-    name: 'Sales Pipeline System',
-    slug: 'sales-pipeline-system',
-    industry: 'Sales / Business Automation',
-    description: 'Centralized CRM and opportunity tracking engine with automated lead routing and CRM synchronization pipelines.',
-    website: '/work/sales-pipeline-automation-system',
+    name: 'Eden School System',
+    slug: 'eden-school-system',
+    logo: '/uploads/clients/eden-school-logo.png',
+    industry: 'Education & Institutional Management',
+    description: 'Centralized school operations manager bringing academic, attendance, and administrative workflows into one digital system.',
+    website: '/work/school-operations-manager',
     featured: true,
     published: true,
     order: 2,
   },
   {
-    name: 'Vector Search Knowledge Base',
-    slug: 'vector-search-knowledge-base',
-    industry: 'AI / Knowledge Management',
-    description: 'Enterprise semantic search over knowledge sources and document archives powered by embeddings and vector indexing.',
+    name: 'Emerge Technologies',
+    slug: 'emerge-technologies',
+    logo: '/uploads/clients/emerge-tech-logo.png',
+    industry: 'Enterprise Software & Systems',
+    description: 'Scalable data architecture and modern operational platforms.',
     website: '/work/vector-search-knowledge-base',
     featured: true,
     published: true,
     order: 3,
   },
-  {
-    name: 'AI Support Assistant',
-    slug: 'ai-support-assistant',
-    industry: 'AI / Customer Support',
-    description: 'Context-aware customer support system automating frequent inquiries and accelerating team response workflows.',
-    website: '/work/ai-powered-customer-support-assistant',
-    featured: true,
-    published: true,
-    order: 4,
-  },
 ];
 
 async function seedClients() {
-  console.log('Seeding Clients & Organizations into database...');
+  console.log('Seeding real Client Organizations into database...');
+
+  // Clean old placeholder records to keep data pristine
+  await prisma.client.deleteMany();
 
   for (const client of CLIENTS) {
-    const existing = await prisma.client.findFirst({
-      where: {
-        OR: [{ slug: client.slug }, { name: client.name }],
-      },
+    await prisma.client.create({
+      data: client,
     });
-
-    if (!existing) {
-      await prisma.client.create({
-        data: client,
-      });
-      console.log(`Created client: ${client.name}`);
-    } else {
-      await prisma.client.update({
-        where: { id: existing.id },
-        data: client,
-      });
-      console.log(`Updated client: ${client.name}`);
-    }
+    console.log(`Created client: ${client.name}`);
   }
 
   const allClients = await prisma.client.findMany();
