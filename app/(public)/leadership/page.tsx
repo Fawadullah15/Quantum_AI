@@ -449,27 +449,60 @@ export default async function LeadershipPage() {
         /* Responsive Breakpoints */
         @media (max-width: 900px) {
           .ldr-principals-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.15rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+          }
+          .ldr-exec-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
           }
         }
         @media (max-width: 680px) {
           .ldr-principals-grid {
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: clamp(0.5rem, 2.5vw, 0.75rem) !important;
           }
           .ldr-exec-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: clamp(0.5rem, 2.5vw, 0.75rem) !important;
           }
           .ldr-hero {
             margin-bottom: 2rem;
             padding-bottom: 1.75rem;
           }
+          .exec-card {
+            border-radius: 8px !important;
+          }
+          .exec-corner-badge {
+            font-size: 0.52rem !important;
+            padding: 0.15rem 0.35rem !important;
+            top: 0.45rem !important;
+            left: 0.45rem !important;
+          }
           .exec-body {
-            padding: 1.1rem 1.15rem;
+            padding: 0.65rem 0.75rem !important;
+            gap: 0.25rem !important;
+          }
+          .exec-name {
+            font-size: clamp(0.85rem, 3.5vw, 1rem) !important;
+            line-height: 1.2 !important;
+          }
+          .exec-position {
+            font-size: 0.6rem !important;
+            letter-spacing: 0.06em !important;
+            margin-bottom: 0.15rem !important;
+          }
+          .exec-bio {
+            font-size: 0.72rem !important;
+            line-height: 1.35 !important;
+            -webkit-line-clamp: 2 !important;
           }
           .exec-footer {
-            padding: 0.85rem 1.15rem;
+            padding: 0.5rem 0.75rem !important;
+          }
+          .exec-social-link,
+          .exec-action-text {
+            font-size: 0.62rem !important;
           }
         }
       `}</style>
