@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 interface ProcessStep {
   step: string;
@@ -362,6 +363,31 @@ export default function ProcessSection() {
               </div>
             );
           })}
+        </div>
+
+        {/* ─── Process Next Step ─── */}
+        <div style={{ marginTop: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', borderTop: '1px solid rgba(22, 119, 255, 0.12)', paddingTop: '1.25rem' }}>
+          <p style={{ color: '#94A3B8', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
+            Have a system to engineer or operational workflow to automate?
+          </p>
+          <Link
+            href="/contact"
+            style={{
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '0.75rem',
+              color: '#38BDF8',
+              textDecoration: 'none',
+              letterSpacing: '0.08em',
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              transition: 'color 0.2s',
+            }}
+          >
+            DISCUSS YOUR PROJECT →
+          </Link>
         </div>
       </div>
     </section>
