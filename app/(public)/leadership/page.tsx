@@ -267,6 +267,15 @@ export default async function LeadershipPage() {
           object-position: center 15%;
           transition: transform 0.4s ease;
         }
+        /* Featured Executive (CEO & Chairman) Natural Portrait Framing */
+        .principal-photo-wrapper {
+          aspect-ratio: 1 / 1 !important;
+          background: radial-gradient(circle at center, #0B224E 0%, #030A17 100%) !important;
+        }
+        .principal-photo-img {
+          object-fit: cover !important;
+          object-position: center top !important;
+        }
         .exec-card:hover .exec-photo-img {
           transform: scale(1.03);
         }
@@ -489,8 +498,8 @@ export default async function LeadershipPage() {
 
           <div className="ldr-principals-grid">
             {principalLeaders.map((leader, idx) => (
-              <Link key={leader.id} href={`/leadership/${leader.slug}`} className="exec-card">
-                <div className="exec-photo-wrapper">
+              <Link key={leader.id} href={`/leadership/${leader.slug}`} className="exec-card principal-card">
+                <div className="exec-photo-wrapper principal-photo-wrapper">
                   <div className="exec-corner-badge">
                     {leader.position.toLowerCase().includes("chairman")
                       ? "EXECUTIVE CHAIRMAN"
@@ -500,7 +509,7 @@ export default async function LeadershipPage() {
                     <img
                       src={leader.photo}
                       alt={leader.name}
-                      className="exec-photo-img"
+                      className="exec-photo-img principal-photo-img"
                     />
                   ) : (
                     <div className="exec-photo-fallback">

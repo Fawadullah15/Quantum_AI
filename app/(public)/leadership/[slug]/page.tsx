@@ -191,11 +191,19 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
           justify-content: center;
           margin-bottom: 1.25rem;
         }
+        .prof-photo-box.is-principal-profile {
+          aspect-ratio: 1 / 1 !important;
+          background: radial-gradient(circle at center, #0B224E 0%, #030A17 100%) !important;
+        }
         .prof-photo-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
           object-position: center 15%;
+        }
+        .prof-photo-img.is-principal-profile {
+          object-fit: cover !important;
+          object-position: center top !important;
         }
 
         .prof-social-list {
@@ -309,15 +317,29 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
         <div className="prof-grid">
           {/* Left Column: Portrait & Connect */}
           <div>
-            <div className="prof-photo-box">
-              {m.photo ? (
-                <img src={m.photo} alt={m.name} className="prof-photo-img" />
-              ) : (
-                <div style={{ color: "#38BDF8", fontFamily: "var(--font-mono, monospace)", fontSize: "0.85rem" }}>
-                  QUANTUM AI
+            {(() => {
+              const isPrincipal =
+                m.slug.includes("fawad") ||
+                m.slug.includes("fahad") ||
+                m.position.toLowerCase().includes("ceo") ||
+                m.position.toLowerCase().includes("chairman");
+
+              return (
+                <div className={`prof-photo-box ${isPrincipal ? 'is-principal-profile' : ''}`}>
+                  {m.photo ? (
+                    <img
+                      src={m.photo}
+                      alt={m.name}
+                      className={`prof-photo-img ${isPrincipal ? 'is-principal-profile' : ''}`}
+                    />
+                  ) : (
+                    <div style={{ color: "#38BDF8", fontFamily: "var(--font-mono, monospace)", fontSize: "0.85rem" }}>
+                      QUANTUM AI
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              );
+            })()}
 
             {m.publicId && (
               <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#64748B", letterSpacing: "0.15em", marginBottom: "0.85rem" }}>
