@@ -92,6 +92,26 @@ export default function TestimonialsSection({
     initialTestimonials.length > 0 ? initialTestimonials : FALLBACK_TESTIMONIALS
   );
   const [isVisible, setIsVisible] = useState(false);
+  const [isSlowMode, setIsSlowMode] = useState(false);
+  const [isPausedByUser, setIsPausedByUser] = useState(false);
+  const [activeReadingItem, setActiveReadingItem] = useState<TestimonialItem | null>(null);
+
+  // Submit Testimonial Modal State
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
+  const [submitForm, setSubmitForm] = useState({
+    name: '',
+    company: '',
+    role: '',
+    rating: 5,
+    content: '',
+    photo: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [fileError, setFileError] = useState('');
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -128,6 +148,83 @@ export default function TestimonialsSection({
     return () => observer.disconnect();
   }, []);
 
+  // Handle Photo Upload in Submit Modal
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileError('');
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+    if (!validTypes.includes(file.type.toLowerCase())) {
+      setFileError('Please upload a valid PNG, JPG, or WebP image.');
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      setFileError('Image size exceeds 2MB limit. Please choose a smaller photo.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (uploadEvent) => {
+      const result = uploadEvent.target?.result as string;
+      if (result) {
+        setSubmitForm((prev) => ({ ...prev, photo: result }));
+      }
+    };
+    reader.onerror = () => {
+      setFileError('Failed to read image file. Please try again.');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Submit Testimonial Handler (Sends directly to admin panel for review)
+  const handleSubmitTestimonial = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitError('');
+
+    if (!submitForm.name.trim() || !submitForm.content.trim()) {
+      setSubmitError('Please fill in your name and testimonial quote.');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const res = await fetch('/api/testimonials/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(submitForm),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Submission failed');
+      }
+
+      setSubmitSuccess(true);
+    } catch (err: any) {
+      console.error('Submission error:', err);
+      setSubmitError(err.message || 'An error occurred while submitting your review.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCloseSubmitModal = () => {
+    setShowSubmitModal(false);
+    setSubmitSuccess(false);
+    setSubmitError('');
+    setFileError('');
+    setSubmitForm({
+      name: '',
+      company: '',
+      role: '',
+      rating: 5,
+      content: '',
+      photo: '',
+    });
+  };
+
   // Construct deterministic sequence for 1 single continuous row
   const generateSingleRowItems = (items: TestimonialItem[]) => {
     if (!items || items.length === 0) return [];
@@ -135,33 +232,38 @@ export default function TestimonialsSection({
     while (baseList.length < 6) {
       baseList = [...baseList, ...items];
     }
-    // Duplicate exactly once for mathematically seamless -50% marquee loop
-    return [...baseList, ...baseList];
+    return [...baseList, ...baseList]; // Duplicate for seamless -50% loop
   };
 
   const rowItems = generateSingleRowItems(testimonials);
 
   const renderStars = (rating: number = 5) => {
     const clamped = Math.max(1, Math.min(5, Math.round(rating)));
-    return (
-      <div className="test-stars">
-        {'★'.repeat(clamped)}
-      </div>
-    );
+    return <div className="test-stars">{'★'.repeat(clamped)}</div>;
   };
 
   const renderCard = (t: TestimonialItem, keyIdx: string | number) => {
-    const initials = t.name
-      .split(' ')
-      .map((n) => n[0])
-      .filter(Boolean)
-      .slice(0, 2)
-      .join('')
-      .toUpperCase() || 'QA';
+    const initials =
+      t.name
+        .split(' ')
+        .map((n) => n[0])
+        .filter(Boolean)
+        .slice(0, 2)
+        .join('')
+        .toUpperCase() || 'QA';
 
     return (
-      <div key={keyIdx} className="test-square-card">
-        {/* Top Header: Large Quote Mark & Star Rating */}
+      <div
+        key={keyIdx}
+        className="test-square-card"
+        onClick={() => setActiveReadingItem(t)}
+        onMouseEnter={() => setIsSlowMode(true)}
+        onMouseLeave={() => setIsSlowMode(false)}
+        role="button"
+        tabIndex={0}
+        title="Click to expand and read full testimonial"
+      >
+        {/* Top Header: Quote Mark & Star Rating */}
         <div className="test-card-top">
           <span className="test-quote-mark">“</span>
           {renderStars(t.rating || 5)}
@@ -199,6 +301,8 @@ export default function TestimonialsSection({
             )}
           </div>
         </div>
+
+        <div className="test-card-hint">Click to read</div>
       </div>
     );
   };
@@ -219,7 +323,7 @@ export default function TestimonialsSection({
         /* ─── Header ─── */
         .test-header {
           text-align: center;
-          margin-bottom: clamp(2rem, 4vw, 3.25rem);
+          margin-bottom: clamp(2rem, 4vw, 3rem);
           padding: 0 clamp(1.25rem, 4vw, 3rem);
         }
         .test-tag {
@@ -244,9 +348,56 @@ export default function TestimonialsSection({
           font-size: clamp(0.88rem, 1.2vw, 1.05rem);
           color: #94A3B8;
           max-width: 620px;
-          margin: 0 auto;
+          margin: 0 auto 1.25rem auto;
           line-height: 1.6;
           font-weight: 300;
+        }
+
+        /* Action Buttons Bar */
+        .test-header-actions {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.85rem;
+          flex-wrap: wrap;
+        }
+        .test-submit-btn {
+          background: #1677FF;
+          color: #FFFFFF;
+          border: none;
+          padding: 0.55rem 1.25rem;
+          border-radius: 6px;
+          font-size: 0.82rem;
+          font-weight: 600;
+          font-family: var(--font-mono, monospace);
+          letter-spacing: 0.04em;
+          cursor: pointer;
+          transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+          box-shadow: 0 4px 14px rgba(22, 119, 255, 0.35);
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+        .test-submit-btn:hover {
+          background: #2563EB;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(22, 119, 255, 0.5);
+        }
+
+        .test-pause-toggle-btn {
+          background: rgba(6, 21, 43, 0.8);
+          border: 1px solid rgba(22, 119, 255, 0.3);
+          color: #94A3B8;
+          padding: 0.55rem 1rem;
+          border-radius: 6px;
+          font-size: 0.78rem;
+          font-family: var(--font-mono, monospace);
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .test-pause-toggle-btn:hover {
+          color: #38BDF8;
+          border-color: #38BDF8;
         }
 
         /* ─── Edge Gradient Masking ─── */
@@ -267,11 +418,20 @@ export default function TestimonialsSection({
           width: max-content;
           will-change: transform;
           user-select: none;
-          animation: singleTestScrollLeft 45s linear infinite;
+          animation: singleTestScrollLeft 48s linear infinite;
+        }
+
+        /* Slow down mode on hover / click */
+        .test-row.is-slow {
+          animation-duration: 120s;
+        }
+
+        .test-row.is-paused {
+          animation-play-state: paused !important;
         }
 
         .test-row:hover {
-          animation-play-state: paused;
+          animation-duration: 120s;
         }
 
         /* Continuous Left Movement */
@@ -311,6 +471,7 @@ export default function TestimonialsSection({
                       background-color 0.25s ease,
                       box-shadow 0.25s ease;
           position: relative;
+          cursor: pointer;
         }
 
         .test-square-card:hover {
@@ -319,6 +480,25 @@ export default function TestimonialsSection({
           transform: scale(1.05) translateY(-4px);
           box-shadow: 0 20px 44px -10px rgba(22, 119, 255, 0.4), 0 0 0 1px rgba(56, 189, 248, 0.4);
           z-index: 50;
+        }
+
+        .test-card-hint {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          font-family: var(--font-mono, monospace);
+          font-size: 0.58rem;
+          color: rgba(56, 189, 248, 0.6);
+          background: rgba(22, 119, 255, 0.12);
+          border: 1px solid rgba(56, 189, 248, 0.2);
+          padding: 2px 6px;
+          border-radius: 4px;
+          opacity: 0;
+          transition: opacity 0.2s ease;
+          pointer-events: none;
+        }
+        .test-square-card:hover .test-card-hint {
+          opacity: 1;
         }
 
         /* Top Row */
@@ -417,6 +597,50 @@ export default function TestimonialsSection({
           white-space: normal;
         }
 
+        /* Modal Overlay */
+        .test-modal-backdrop {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: rgba(2, 6, 23, 0.85);
+          backdrop-filter: blur(8px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          padding: 1.5rem;
+          box-sizing: border-box;
+        }
+        .test-modal-card {
+          background: #070E1E;
+          border: 1px solid rgba(56, 189, 248, 0.35);
+          border-radius: 16px;
+          padding: clamp(1.5rem, 3vw, 2.25rem);
+          max-width: 560px;
+          width: 100%;
+          position: relative;
+          box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8), 0 0 35px rgba(22, 119, 255, 0.2);
+          box-sizing: border-box;
+          max-height: 90vh;
+          overflow-y: auto;
+        }
+        .test-modal-close {
+          position: absolute;
+          top: 16px;
+          right: 18px;
+          background: transparent;
+          border: none;
+          color: #94A3B8;
+          font-size: 1.35rem;
+          cursor: pointer;
+          transition: color 0.2s;
+        }
+        .test-modal-close:hover {
+          color: #F8FAFC;
+        }
+
         /* Mobile View (< 768px) */
         @media (max-width: 768px) {
           .test-square-card {
@@ -432,7 +656,10 @@ export default function TestimonialsSection({
             font-size: 0.82rem;
           }
           .test-row {
-            animation-duration: 32s;
+            animation-duration: 34s;
+          }
+          .test-row.is-slow {
+            animation-duration: 90s;
           }
         }
 
@@ -457,16 +684,312 @@ export default function TestimonialsSection({
         <p className="test-subtitle">
           Real experiences from the people and organizations we&apos;ve worked with.
         </p>
+
+        <div className="test-header-actions">
+          <button
+            onClick={() => setShowSubmitModal(true)}
+            className="test-submit-btn"
+          >
+            <span>+</span> SHARE YOUR EXPERIENCE
+          </button>
+
+          <button
+            onClick={() => setIsPausedByUser(!isPausedByUser)}
+            className="test-pause-toggle-btn"
+          >
+            {isPausedByUser ? '▶ RESUME SLIDER' : '⏸ PAUSE / SLOW'}
+          </button>
+        </div>
       </div>
 
       {/* 1 Single Line Continuous Square Testimonial Marquee */}
       <div className="test-stage-wrapper">
-        <div className={`test-row ${!isVisible ? 'paused' : ''}`}>
+        <div
+          className={`test-row ${!isVisible ? 'is-paused' : ''} ${isPausedByUser ? 'is-paused' : ''} ${isSlowMode ? 'is-slow' : ''}`}
+        >
           <div className="test-track">
             {rowItems.map((t, idx) => renderCard(t, `single-test-${idx}`))}
           </div>
         </div>
       </div>
+
+      {/* Full Testimonial Reader Modal (When user clicks a card to read it in full) */}
+      {activeReadingItem && (
+        <div className="test-modal-backdrop" onClick={() => setActiveReadingItem(null)}>
+          <div className="test-modal-card" onClick={(e) => e.stopPropagation()}>
+            <button className="test-modal-close" onClick={() => setActiveReadingItem(null)}>
+              ✕
+            </button>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <span style={{ fontSize: '2.5rem', color: '#1677FF', opacity: 0.6, lineHeight: 1, fontFamily: 'serif' }}>“</span>
+              {renderStars(activeReadingItem.rating || 5)}
+            </div>
+
+            <p style={{ fontSize: '1.05rem', color: '#E2E8F0', lineHeight: 1.7, margin: '0 0 1.5rem 0', fontWeight: 300, fontStyle: 'italic' }}>
+              &quot;{activeReadingItem.content}&quot;
+            </p>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', borderTop: '1px solid rgba(22, 119, 255, 0.18)', paddingTop: '1rem' }}>
+              <div
+                style={{
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '50%',
+                  backgroundColor: 'rgba(22, 119, 255, 0.2)',
+                  border: '1px solid rgba(56, 189, 248, 0.35)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  overflow: 'hidden',
+                  flexShrink: 0,
+                }}
+              >
+                {activeReadingItem.photo ? (
+                  <img src={activeReadingItem.photo} alt={activeReadingItem.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontWeight: 700, color: '#38BDF8', fontSize: '0.85rem' }}>
+                    {activeReadingItem.name.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+              </div>
+
+              <div>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: 0 }}>
+                  {activeReadingItem.name}
+                </h3>
+                {(activeReadingItem.role || activeReadingItem.company) && (
+                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', textTransform: 'uppercase' }}>
+                    {[activeReadingItem.role, activeReadingItem.company].filter(Boolean).join(' · ')}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Submit Testimonial Modal (Direct to Admin Approval) */}
+      {showSubmitModal && (
+        <div className="test-modal-backdrop" onClick={handleCloseSubmitModal}>
+          <div className="test-modal-card" onClick={(e) => e.stopPropagation()}>
+            <button className="test-modal-close" onClick={handleCloseSubmitModal}>
+              ✕
+            </button>
+
+            {submitSuccess ? (
+              <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+                <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>🎉</div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.5rem 0' }}>
+                  Thank You for Your Feedback!
+                </h3>
+                <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.6, maxWidth: '420px', margin: '0 auto 1.5rem' }}>
+                  Your testimonial has been successfully received and sent to our team for administrative review. It will appear on the live slider once approved.
+                </p>
+                <button
+                  onClick={handleCloseSubmitModal}
+                  style={{
+                    backgroundColor: '#1677FF',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    padding: '0.6rem 1.5rem',
+                    borderRadius: '6px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <div>
+                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#1677FF', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                  CLIENT REVIEW
+                </div>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.5rem 0' }}>
+                  Share Your Experience
+                </h3>
+                <p style={{ color: '#94A3B8', fontSize: '0.82rem', margin: '0 0 1.25rem 0', lineHeight: 1.5 }}>
+                  Submissions are reviewed by our team before appearing on the public website.
+                </p>
+
+                {submitError && (
+                  <div style={{ backgroundColor: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: '#F87171', padding: '0.6rem 0.85rem', borderRadius: 6, fontSize: '0.82rem', marginBottom: '1rem' }}>
+                    {submitError}
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmitTestimonial} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                      Your Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Muhammad Tariq"
+                      value={submitForm.name}
+                      onChange={(e) => setSubmitForm({ ...submitForm, name: e.target.value })}
+                      style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#030712', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, color: '#F8FAFC', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
+                    />
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                        Position / Role
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Director of Operations"
+                        value={submitForm.role}
+                        onChange={(e) => setSubmitForm({ ...submitForm, role: e.target.value })}
+                        style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#030712', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, color: '#F8FAFC', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                        Company / Organization
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Eden School System"
+                        value={submitForm.company}
+                        onChange={(e) => setSubmitForm({ ...submitForm, company: e.target.value })}
+                        style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#030712', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, color: '#F8FAFC', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                      Rating
+                    </label>
+                    <select
+                      value={submitForm.rating}
+                      onChange={(e) => setSubmitForm({ ...submitForm, rating: Number(e.target.value) || 5 })}
+                      style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#030712', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, color: '#F8FAFC', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
+                    >
+                      <option value={5}>★★★★★ (5 Stars - Exceptional)</option>
+                      <option value={4}>★★★★☆ (4 Stars - Great)</option>
+                      <option value={3}>★★★☆☆ (3 Stars - Good)</option>
+                      <option value={2}>★★☆☆☆ (2 Stars - Fair)</option>
+                      <option value={1}>★☆☆☆☆ (1 Star - Needs Improvement)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                      Your Review / Testimonial *
+                    </label>
+                    <textarea
+                      rows={4}
+                      required
+                      placeholder="Share your experience working with Quantum AI, the systems engineered, and the results achieved..."
+                      value={submitForm.content}
+                      onChange={(e) => setSubmitForm({ ...submitForm, content: e.target.value })}
+                      style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#030712', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, color: '#F8FAFC', fontSize: '0.875rem', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
+                    />
+                  </div>
+
+                  {/* Photo Upload */}
+                  <div>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                      Your Photo / Avatar (Optional)
+                    </label>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                      <div
+                        style={{
+                          width: '46px',
+                          height: '46px',
+                          borderRadius: '50%',
+                          backgroundColor: '#030712',
+                          border: '1px solid rgba(56, 189, 248, 0.3)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          overflow: 'hidden',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {submitForm.photo ? (
+                          <img src={submitForm.photo} alt="Avatar Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        ) : (
+                          <span style={{ fontSize: '0.65rem', color: '#64748B' }}>NO PHOTO</span>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        style={{
+                          backgroundColor: 'rgba(22, 119, 255, 0.15)',
+                          border: '1px solid rgba(22, 119, 255, 0.35)',
+                          color: '#38BDF8',
+                          padding: '0.45rem 0.85rem',
+                          borderRadius: '6px',
+                          fontSize: '0.78rem',
+                          fontFamily: 'var(--font-mono, monospace)',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        📁 Choose Photo File
+                      </button>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handlePhotoUpload}
+                        style={{ display: 'none' }}
+                      />
+                    </div>
+                    {fileError && <p style={{ color: '#F87171', fontSize: '0.75rem', margin: '0.35rem 0 0 0' }}>{fileError}</p>}
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem', marginTop: '0.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)', paddingTop: '0.85rem' }}>
+                    <button
+                      type="button"
+                      onClick={handleCloseSubmitModal}
+                      style={{
+                        backgroundColor: 'transparent',
+                        border: '1px solid rgba(148, 163, 184, 0.3)',
+                        color: '#94A3B8',
+                        padding: '0.55rem 1.15rem',
+                        borderRadius: 6,
+                        cursor: 'pointer',
+                        fontWeight: 600,
+                        fontSize: '0.82rem',
+                      }}
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      style={{
+                        backgroundColor: '#1677FF',
+                        border: 'none',
+                        color: '#FFFFFF',
+                        padding: '0.55rem 1.35rem',
+                        borderRadius: 6,
+                        cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                        fontWeight: 600,
+                        fontSize: '0.82rem',
+                        opacity: isSubmitting ? 0.7 : 1,
+                        fontFamily: 'var(--font-mono, monospace)',
+                      }}
+                    >
+                      {isSubmitting ? 'Submitting...' : 'Submit Testimonial'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 }
