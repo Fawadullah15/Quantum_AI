@@ -505,12 +505,13 @@ export default function ContactPage() {
                     }}
                   >
                     <option value="" style={{ backgroundColor: '#040E24', color: '#64748B' }}>Select project type...</option>
-                    <option value="AI Systems Architecture" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>AI Systems Architecture</option>
-                    <option value="Machine Learning Engineering" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Machine Learning Engineering</option>
-                    <option value="Custom Business Software" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Custom Business Software</option>
-                    <option value="Automation Pipeline" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Automation Pipeline</option>
-                    <option value="Enterprise Architecture Consulting" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Enterprise Architecture Consulting</option>
-                    <option value="Other Technical Inquiry" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Other Technical Inquiry</option>
+                    <option value="AI System" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>AI System</option>
+                    <option value="Business Software" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Business Software</option>
+                    <option value="Automation" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Automation</option>
+                    <option value="Digital Product" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Digital Product</option>
+                    <option value="Website / Web Application" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Website / Web Application</option>
+                    <option value="Existing System Improvement" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Existing System Improvement</option>
+                    <option value="Other" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Other</option>
                   </select>
                 </div>
               </div>

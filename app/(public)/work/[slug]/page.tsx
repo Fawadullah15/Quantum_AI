@@ -80,13 +80,44 @@ export default async function CaseStudyPage({ params }: Props) {
       </div>
 
       <header style={{ marginBottom: '2.5rem' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', marginBottom: '1rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-          {study.client && (
-            <>
-              <span>CLIENT: {study.client}</span>
-              <span style={{ opacity: 0.4 }}>/</span>
-            </>
-          )}
+        <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.75rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', marginBottom: '1rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          {(() => {
+            const clientStr = (study.client || '').trim().toLowerCase();
+            let originLabel = 'CLIENT PROJECT';
+            let originColor = '#38BDF8';
+            let originBg = 'rgba(56, 189, 248, 0.12)';
+            let orgText = `CLIENT: ${study.client}`;
+
+            if (clientStr.includes('internal / quantum ai') || study.title.includes('Intelligence') || study.title.includes('Automation Platform')) {
+              originLabel = 'R&D / CONCEPT';
+              originColor = '#A78BFA';
+              originBg = 'rgba(167, 139, 250, 0.12)';
+              orgText = 'CONCEPT / R&D';
+            } else if (clientStr.includes('quantum ai') || clientStr.includes('internal')) {
+              originLabel = 'INTERNAL PRODUCT';
+              originColor = '#34D399';
+              originBg = 'rgba(52, 211, 153, 0.12)';
+              orgText = 'BUILT BY QUANTUM AI';
+            }
+            return (
+              <>
+                <span
+                  style={{
+                    color: originColor,
+                    backgroundColor: originBg,
+                    border: `1px solid ${originColor}33`,
+                    padding: '0.2rem 0.55rem',
+                    borderRadius: '4px',
+                    fontWeight: 600,
+                  }}
+                >
+                  {originLabel}
+                </span>
+                <span>{orgText}</span>
+                <span style={{ opacity: 0.4 }}>/</span>
+              </>
+            );
+          })()}
           <span>INDUSTRY: {study.industry}</span>
           <span style={{ opacity: 0.4 }}>/</span>
           <span>YEAR: {study.year}</span>
@@ -279,34 +310,56 @@ export default async function CaseStudyPage({ params }: Props) {
       {/* CTA Box */}
       <section style={{ textAlign: 'center', paddingTop: '3.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)', marginTop: '3.5rem' }}>
         <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.65rem', fontWeight: 600 }}>
-          START YOUR PROJECT
+          [NEXT STEPS]
         </div>
         <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.35rem)', fontWeight: 700, color: '#F8FAFC', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
-          Ready to Build Something Similar?
+          Have a system like this in mind?
         </h2>
         <p style={{ color: '#94A3B8', fontSize: '0.95rem', maxWidth: '540px', margin: '0 auto 2rem', lineHeight: 1.6, fontWeight: 300 }}>
-          Let&apos;s discuss your system requirements, operational friction, and architecture scope.
+          Tell us what you are building, what problem you are solving, or what operational software your organization needs.
         </p>
-        <Link
-          href="/contact"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            padding: '0.8rem 2rem',
-            background: 'linear-gradient(135deg, #1677FF, #0050B3)',
-            color: '#FFFFFF',
-            fontWeight: 700,
-            fontFamily: 'var(--font-mono, monospace)',
-            fontSize: '0.8125rem',
-            letterSpacing: '0.1em',
-            borderRadius: '8px',
-            textDecoration: 'none',
-            boxShadow: '0 8px 24px -4px rgba(22, 119, 255, 0.5)',
-            textTransform: 'uppercase',
-          }}
-        >
-          START A SIMILAR PROJECT →
-        </Link>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <Link
+            href="/contact"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '0.8rem 2rem',
+              background: 'linear-gradient(135deg, #1677FF, #0050B3)',
+              color: '#FFFFFF',
+              fontWeight: 700,
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '0.8125rem',
+              letterSpacing: '0.1em',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              boxShadow: '0 8px 24px -4px rgba(22, 119, 255, 0.5)',
+              textTransform: 'uppercase',
+            }}
+          >
+            START A PROJECT →
+          </Link>
+          <Link
+            href="/work"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '0.8rem 1.75rem',
+              border: '1px solid rgba(56, 189, 248, 0.35)',
+              background: 'rgba(56, 189, 248, 0.08)',
+              color: '#38BDF8',
+              fontWeight: 700,
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '0.8125rem',
+              letterSpacing: '0.1em',
+              borderRadius: '8px',
+              textDecoration: 'none',
+              textTransform: 'uppercase',
+            }}
+          >
+            VIEW MORE WORK
+          </Link>
+        </div>
       </section>
     </div>
   );

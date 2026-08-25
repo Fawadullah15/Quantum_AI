@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import { NovaButton, GalaxyButton, ButtonStyles } from '@/components/ui/Buttons';
 import ChallengesSection from '@/components/sections/ChallengesSection';
 import SolutionsSection from '@/components/sections/SolutionsSection';
+import WhoWeHelpSection from '@/components/sections/WhoWeHelpSection';
 import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
 import ProcessSection from '@/components/sections/ProcessSection';
 import CapabilitiesSection from '@/components/sections/CapabilitiesSection';
@@ -40,7 +41,7 @@ export default function HomePage() {
       id: '1',
       name: 'Fawadullah Imraj',
       position: 'Co-Founder & CEO',
-      shortBio: 'Co Founder and CEO of Quantum AI, building AI powered software and digital solutions for schools, colleges, and businesses',
+      shortBio: 'Co-Founder and CEO of Quantum AI, building AI-powered software and digital solutions for schools, colleges, and businesses.',
       photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049252241-Screenshot_2025-02-11_170816.png',
       slug: 'fawadullah-imraj',
       publicId: 'QA-001'
@@ -49,7 +50,7 @@ export default function HomePage() {
       id: '2',
       name: 'Fahad Khan',
       position: 'Co-Founder & Executive Chairman',
-      shortBio: 'Co Founder and Executive Chairman of Quantum AI, supporting strategic direction, technical vision, and long term growth.',
+      shortBio: 'Co-Founder and Executive Chairman of Quantum AI, supporting strategic direction, technical vision, and long-term growth.',
       photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049467020-Screenshot_2026-08-18_153738.png',
       slug: 'fahad-khan',
       publicId: 'QA-002'
@@ -382,10 +383,10 @@ export default function HomePage() {
               color: '#94A3B8',
               lineHeight: 1.6,
               marginBottom: '1.75rem',
-              maxWidth: 580,
+              maxWidth: 620,
               fontWeight: 300,
             }}>
-              Quantum AI builds AI systems, custom business software, and automation for organizations that need better ways to operate.
+              Quantum AI builds AI systems, custom business software, and automation designed around the way your organization actually works.
             </p>
 
             {/* CTAs */}
@@ -397,32 +398,37 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            CHALLENGES WE SOLVE (Interactive Compact Tabs with Framer-like Hover & Center Viewport Detection)
-        ═══════════════════════════════════════════════════════════ */}
-        <ChallengesSection />
-
-        {/* ═══════════════════════════════════════════════════════════
-            SOLUTIONS SECTION (Desktop: Interactive Expanding Horizontal Cards / Mobile: 2x2 Clean Compact Grid)
+            01 // WHAT WE BUILD (Solutions: AI Systems, Business Software, Automation, Digital Products)
         ═══════════════════════════════════════════════════════════ */}
         <SolutionsSection />
 
         {/* ═══════════════════════════════════════════════════════════
-            CASE STUDIES / SELECTED DEPLOYMENTS (Desktop: Interactive Hover Cards with Photos / Mobile: 2x2 Grid with Photos)
+            02 // WHO WE HELP (Education, Businesses, Startups, Organizations)
+        ═══════════════════════════════════════════════════════════ */}
+        <WhoWeHelpSection />
+
+        {/* ═══════════════════════════════════════════════════════════
+            03 // PROBLEMS WE SOLVE (Manual Operations, Disconnected Data, Slow Workflows, Complex Processes)
+        ═══════════════════════════════════════════════════════════ */}
+        <ChallengesSection />
+
+        {/* ═══════════════════════════════════════════════════════════
+            04 // SELECTED WORK & DEPLOYMENTS
         ═══════════════════════════════════════════════════════════ */}
         <CaseStudiesSection />
 
         {/* ═══════════════════════════════════════════════════════════
-            HOW WE WORK / DELIVERY PROCESS (Desktop: Interactive Hover Steps / Mobile: 2-Column Process Grid)
+            05 // HOW WE WORK / DELIVERY PROCESS
         ═══════════════════════════════════════════════════════════ */}
         <ProcessSection />
 
         {/* ═══════════════════════════════════════════════════════════
-            WHY QUANTUM AI & THINK DEEPER (Desktop: Balanced 2-Column / Mobile: 2x2 Clean Philosophy Grid)
+            06 // WHY QUANTUM AI
         ═══════════════════════════════════════════════════════════ */}
         <WhyQuantumSection />
 
         {/* ═══════════════════════════════════════════════════════════
-            CAPABILITIES / TECH STACK SECTION (Desktop: Interactive Hover Cards / Mobile: 2x2 Tech Grid)
+            07 // CORE TECHNOLOGY CAPABILITIES
         ═══════════════════════════════════════════════════════════ */}
         <CapabilitiesSection />
 
@@ -645,7 +651,7 @@ export default function HomePage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderTop: '1px solid rgba(22, 119, 255, 0.1)', paddingTop: '1.25rem' }}>
                   <div>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>EMAIL INQUIRIES</span>
-                    <a href="mailto:fawadimraj@gmail.com" style={{ fontSize: '1rem', color: '#F8FAFF', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500, wordBreak: 'break-word' }} onMouseEnter={(e) => e.currentTarget.style.color = '#1677FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#F8FAFF'}>
+                    <a href="mailto:hello@quantumai.dev" style={{ fontSize: '1rem', color: '#F8FAFC', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500, wordBreak: 'break-word' }} onMouseEnter={(e) => e.currentTarget.style.color = '#1677FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#F8FAFC'}>
                       hello@quantumai.dev
                     </a>
                   </div>
@@ -770,11 +776,14 @@ export default function HomePage() {
                             cursor: 'pointer'
                           }}
                         >
-                          <option value="">Select type...</option>
-                          <option value="AI Systems">AI Systems</option>
+                          <option value="">Select project type...</option>
+                          <option value="AI System">AI System</option>
                           <option value="Business Software">Business Software</option>
                           <option value="Automation">Automation</option>
-                          <option value="Digital Products">Digital Products</option>
+                          <option value="Digital Product">Digital Product</option>
+                          <option value="Website / Web Application">Website / Web Application</option>
+                          <option value="Existing System Improvement">Existing System Improvement</option>
+                          <option value="Other">Other</option>
                         </select>
                       </div>
 
@@ -797,10 +806,11 @@ export default function HomePage() {
                           }}
                         >
                           <option value="">Select budget...</option>
-                          <option value="< $10k">&lt; $10k</option>
-                          <option value="$10k - $50k">$10k - $50k</option>
-                          <option value="$50k - $100k">$50k - $100k</option>
-                          <option value="$100k+">$100k+</option>
+                          <option value="< $5,000">&lt; $5,000</option>
+                          <option value="$5,000 - $15,000">$5,000 - $15,000</option>
+                          <option value="$15,000 - $50,000">$15,000 - $50,000</option>
+                          <option value="$50,000+">$50,000+</option>
+                          <option value="Undecided / Flexible">Undecided / Flexible</option>
                         </select>
                       </div>
                     </div>

@@ -34,7 +34,7 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
   { href: '/about', label: 'About' },
-  { href: '/leadership', label: 'Team' },
+  { href: '/leadership', label: 'Leadership' },
 ];
 
 // ─── Subcomponents ───────────────────────────────────────────────────────────

@@ -23,8 +23,8 @@ const footerLinks = {
     { href: '/technologies/data-systems', label: 'Data Systems' },
   ],
   'WORK': [
-    { href: '/work', label: 'Case Studies' },
-    { href: '/work', label: 'Projects' },
+    { href: '/work', label: 'Client Work & Case Studies' },
+    { href: '/products', label: 'Software Products' },
     { href: '/contact', label: 'Start a Project' },
   ],
 };

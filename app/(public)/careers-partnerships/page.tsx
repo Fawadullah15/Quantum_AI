@@ -13,6 +13,21 @@ export default function CareersPartnershipsPage() {
   const [partnershipType, setPartnershipType] = useState('Technology Partnership');
   const [experienceLevel, setExperienceLevel] = useState('Mid Level');
   const [workType, setWorkType] = useState('Full Time');
+  const [positionInput, setPositionInput] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab');
+      const roleParam = params.get('role');
+      if (tabParam === 'career') {
+        setActiveTab('CAREER');
+      }
+      if (roleParam) {
+        setPositionInput(roleParam);
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -526,6 +541,8 @@ export default function CareersPartnershipsPage() {
                           required
                           type="text"
                           name="position"
+                          value={positionInput}
+                          onChange={(e) => setPositionInput(e.target.value)}
                           placeholder="e.g. AI Engineer, Full-Stack Developer, Researcher, Intern..."
                           style={inputBoxStyle}
                         />

@@ -14,25 +14,25 @@ const SOLUTIONS: SolutionItem[] = [
   {
     step: '01',
     name: 'AI Systems',
-    desc: 'Custom AI systems for business workflows and intelligent decision making.',
+    desc: 'AI assistants, multi-agent workflows, document intelligence, and knowledge retrieval systems designed to assist human teams and automate decision making.',
     href: '/services#ai',
   },
   {
     step: '02',
     name: 'Business Software',
-    desc: 'Web applications and internal systems designed around real business processes.',
+    desc: 'Custom management portals, internal operations platforms, real-time dashboards, and ERP/CRM-style systems built specifically for your organization\'s workflow.',
     href: '/services#software',
   },
   {
     step: '03',
     name: 'Automation',
-    desc: 'Automated workflows that reduce repetitive manual work.',
+    desc: 'Workflow automation pipelines, API integrations, and event-driven data flows that eliminate repetitive manual tasks and accelerate business execution.',
     href: '/services#automation',
   },
   {
     step: '04',
     name: 'Digital Products',
-    desc: 'Customer facing software products, platforms, and intelligent tools.',
+    desc: 'Scalable SaaS platforms, web applications, and customer-facing digital products engineered with modern architectures, security, and high reliability.',
     href: '/services#products',
   },
 ];

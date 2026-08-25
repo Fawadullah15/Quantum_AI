@@ -22,7 +22,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     industry: 'Education',
     year: '2026',
     title: 'School Operations Manager',
-    desc: 'A centralized school management platform designed to bring academic, administrative, student, staff, attendance, communication, and operational workflows into one digital system. The goal is to reduce fragmented processes and provide schools with a single platform for managing day-to-day operations.',
+    desc: 'Built for educational institutions to eliminate fragmented paper records and spreadsheets by centralizing student registries, attendance, fee collection, and administrative reporting into one real-time platform.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Node.js'],
     slug: 'school-operations-manager',
     gradient: 'linear-gradient(135deg, #061A3A 0%, #0F2B5C 100%)',
@@ -33,7 +33,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     industry: 'Retail',
     year: '2026',
     title: 'Offline Shop Management System',
-    desc: 'A desktop-ready shop management system designed for businesses that need product, inventory, sales, and operational management without depending entirely on an internet connection.',
+    desc: 'Built for retail businesses operating in areas with unstable internet to ensure point-of-sale transactions, product inventory, and daily sales tracking work seamlessly offline with automatic cloud sync.',
     technologies: ['Python', 'FastAPI', 'SQLAlchemy', 'SQLite', 'React'],
     slug: 'offline-shop-management-system',
     gradient: 'linear-gradient(135deg, #091C36 0%, #113665 100%)',
@@ -44,7 +44,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     industry: 'Technology',
     year: '2026',
     title: 'Quantum AI Corporate Website',
-    desc: "A modern corporate website created to present Quantum AI's services, products, technology capabilities, leadership, case studies, testimonials, blog content, and business identity through a centralized digital platform.",
+    desc: 'Designed as a high-performance corporate platform to showcase deployed software systems, interactive technology demos, and live client inquiry pipelines with zero layout latency.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Prisma'],
     slug: 'quantum-ai-corporate-website',
     gradient: 'linear-gradient(135deg, #071630 0%, #133B70 100%)',
@@ -55,7 +55,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     industry: 'Nonprofit',
     year: '2026',
     title: 'Youth Development Program Website',
-    desc: 'A structured organizational website designed to present leadership, chapters, activities, news, updates, and organizational information through a centralized online platform.',
+    desc: 'Engineered for community organizations to centralize leadership registries, regional chapter initiatives, and public announcements into a secure, accessible web portal.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Prisma'],
     slug: 'youth-development-program-website',
     gradient: 'linear-gradient(135deg, #051A2E 0%, #0A3258 100%)',
@@ -63,8 +63,37 @@ const CASE_STUDIES: CaseStudyItem[] = [
   },
 ];
 
-export default function CaseStudiesSection() {
+export default function CaseStudiesSection({ initialStudies }: { initialStudies?: any[] }) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [studies, setStudies] = useState<any[]>(initialStudies || CASE_STUDIES);
+
+  React.useEffect(() => {
+    fetch('/api/case-studies')
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const published = data.filter((s: any) => s.published !== false);
+          if (published.length > 0) {
+            const mapped = published.slice(0, 4).map((s: any, i: number) => ({
+              step: String(i + 1).padStart(2, '0'),
+              industry: s.industry ? s.industry.split('/')[0].trim() : 'Technology',
+              year: String(s.year || new Date().getFullYear()),
+              title: s.title,
+              desc: s.problem || s.solution || '',
+              technologies: s.technologies
+                ? s.technologies.split(',').map((t: string) => t.trim()).filter(Boolean)
+                : ['Next.js', 'TypeScript', 'Prisma'],
+              slug: s.slug,
+              image: s.heroImage || undefined,
+              gradient: i % 2 === 0 ? 'linear-gradient(135deg, #061A3A 0%, #0F2B5C 100%)' : 'linear-gradient(135deg, #091C36 0%, #113665 100%)',
+              accentIcon: '⚡',
+            }));
+            setStudies(mapped);
+          }
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   return (
     <section
@@ -473,7 +502,7 @@ export default function CaseStudiesSection() {
 
         {/* ─── Desktop View: Interactive Compact Cards with Photos & Hover Reveal ─── */}
         <div className="case-studies-desktop-list">
-          {CASE_STUDIES.map((study, idx) => {
+          {studies.map((study, idx) => {
             const isExpanded = hoveredIdx === idx;
 
             return (
@@ -521,7 +550,7 @@ export default function CaseStudiesSection() {
                     <p className="cs-card-desc">{study.desc}</p>
                     <div className="cs-card-bottom-row">
                       <div className="cs-tech-pills">
-                        {study.technologies.map((t) => (
+                        {study.technologies.map((t: string) => (
                           <span key={t} className="cs-tech-pill">
                             {t}
                           </span>
@@ -541,7 +570,7 @@ export default function CaseStudiesSection() {
 
         {/* ─── Mobile View: Clean 2x2 Grid with Project Photos (No Hover) ─── */}
         <div className="case-studies-mobile-grid">
-          {CASE_STUDIES.map((study, idx) => (
+          {studies.map((study, idx) => (
             <Link key={idx} href={`/work/${study.slug}`} className="mobile-cs-tile">
               <div className="mobile-cs-img-wrap" style={{ background: study.gradient }}>
                 {study.image ? (

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 interface TechCategory {
   num: string;
@@ -274,47 +275,78 @@ export default function CapabilitiesSection() {
       `}</style>
 
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        {/* Eyebrow & Title */}
-        <p
+        {/* Header with Title and Link */}
+        <div
           style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: '#1677FF',
-            marginBottom: '0.5rem',
-            fontWeight: 600,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            marginBottom: 'clamp(1.5rem, 3vh, 2rem)',
+            gap: '1rem',
+            flexWrap: 'wrap',
           }}
         >
-          CAPABILITIES
-        </p>
-        <h2
-          className="section-heading"
-          style={{
-            fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
-            fontWeight: 700,
-            lineHeight: 1.02,
-            color: '#F8FAFF',
-            marginBottom: '0.65rem',
-            letterSpacing: '-0.035em',
-            textTransform: 'uppercase',
-          }}
-        >
-          Our tech stack.
-        </h2>
-        <p
-          className="section-desc"
-          style={{
-            fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-            color: '#94A3B8',
-            lineHeight: 1.6,
-            marginBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
-            maxWidth: 600,
-            fontWeight: 300,
-          }}
-        >
-          We construct systems using production-proven languages and platforms capable of scaling seamlessly.
-        </p>
+          <div>
+            <p
+              style={{
+                fontFamily: 'var(--font-mono)',
+                fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                color: '#1677FF',
+                marginBottom: '0.5rem',
+                fontWeight: 600,
+              }}
+            >
+              CAPABILITIES
+            </p>
+            <h2
+              className="section-heading"
+              style={{
+                fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
+                fontWeight: 700,
+                lineHeight: 1.02,
+                color: '#F8FAFF',
+                marginBottom: '0.65rem',
+                letterSpacing: '-0.035em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Our tech stack.
+            </h2>
+            <p
+              className="section-desc"
+              style={{
+                fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
+                color: '#94A3B8',
+                lineHeight: 1.6,
+                margin: 0,
+                maxWidth: 580,
+                fontWeight: 300,
+              }}
+            >
+              Production technologies engineered for high uptime, clean code maintainability, and domain intelligence.
+            </p>
+          </div>
+
+          <Link
+            href="/technology"
+            style={{
+              color: '#38BDF8',
+              textDecoration: 'none',
+              fontSize: '0.75rem',
+              fontWeight: 600,
+              whiteSpace: 'nowrap',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.05em',
+            }}
+          >
+            View full technology stack <span>→</span>
+          </Link>
+        </div>
 
         {/* ─── Desktop View: Interactive Compact Tech Rows with Hover Reveal ─── */}
         <div className="capabilities-desktop-list">

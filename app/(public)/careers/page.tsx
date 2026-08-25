@@ -75,7 +75,7 @@ export default async function CareersPage() {
 
               <div>
                 <Link
-                  href="/careers-partnerships"
+                  href={`/careers-partnerships?tab=career&role=${encodeURIComponent(role.title)}`}
                   style={{
                     display: 'inline-block',
                     fontFamily: 'var(--font-mono, monospace)',

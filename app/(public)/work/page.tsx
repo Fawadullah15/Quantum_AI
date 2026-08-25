@@ -23,16 +23,34 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
     orderBy: { order: 'asc' },
   }).catch(() => []);
 
-  const categories = ['ALL', 'ARTIFICIAL INTELLIGENCE', 'BUSINESS SOFTWARE', 'EDUCATION', 'RETAIL'];
+  const categories = [
+    'ALL',
+    'CLIENT PROJECTS',
+    'INTERNAL PRODUCTS',
+    'R&D / CONCEPTS',
+    'EDUCATION',
+    'RETAIL',
+    'ARTIFICIAL INTELLIGENCE',
+  ];
 
   const filteredCaseStudies = activeCategory === 'ALL'
     ? allCaseStudies
     : allCaseStudies.filter((study) => {
         const ind = (study.industry || '').toUpperCase();
-        if (activeCategory === 'ARTIFICIAL INTELLIGENCE') return ind.includes('ARTIFICIAL INTELLIGENCE') || ind.includes('AI');
-        if (activeCategory === 'BUSINESS SOFTWARE') return ind.includes('SOFTWARE') || ind.includes('MANAGEMENT') || ind.includes('OPERATIONS');
+        const clientStr = (study.client || '').trim().toLowerCase();
+        
+        if (activeCategory === 'CLIENT PROJECTS') {
+          return clientStr.includes('eden school') || clientStr.includes('youth development') || (clientStr && !clientStr.includes('internal') && !clientStr.includes('quantum ai'));
+        }
+        if (activeCategory === 'INTERNAL PRODUCTS') {
+          return clientStr.includes('product') || clientStr.includes('platform') || clientStr.includes('internal / custom') || study.title.includes('Offline Shop') || study.title.includes('Quantum AI');
+        }
+        if (activeCategory === 'R&D / CONCEPTS') {
+          return clientStr.includes('internal / quantum ai') || study.title.includes('Intelligence') || study.title.includes('Automation Platform');
+        }
         if (activeCategory === 'EDUCATION') return ind.includes('EDUCATION') || ind.includes('SCHOOL');
         if (activeCategory === 'RETAIL') return ind.includes('RETAIL') || ind.includes('SHOP');
+        if (activeCategory === 'ARTIFICIAL INTELLIGENCE') return ind.includes('ARTIFICIAL INTELLIGENCE') || ind.includes('AI');
         return true;
       });
 
@@ -298,18 +316,40 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
                 ? study.technologies.split(',').map((t: string) => t.trim()).filter(Boolean)
                 : [];
 
+              const clientStr = (study.client || '').trim().toLowerCase();
+              let originBadge = { label: 'CLIENT PROJECT', color: '#38BDF8', bg: 'rgba(56, 189, 248, 0.12)', displayOrg: study.client };
+              if (clientStr.includes('internal / quantum ai') || study.title.includes('Intelligence') || study.title.includes('Automation Platform')) {
+                originBadge = { label: 'R&D / CONCEPT', color: '#A78BFA', bg: 'rgba(167, 139, 250, 0.12)', displayOrg: 'Concept / R&D' };
+              } else if (clientStr.includes('quantum ai') || clientStr.includes('internal')) {
+                originBadge = { label: 'INTERNAL PRODUCT', color: '#34D399', bg: 'rgba(52, 211, 153, 0.12)', displayOrg: 'Built by Quantum AI' };
+              }
+
               return (
                 <Link key={study.id} href={`/work/${study.slug}`} className="work-card">
                   <div className="work-card-header">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
                       <span className="work-num">
                         {String(index + 1).padStart(2, '0')}
                       </span>
-                      {study.client && (
-                        <span className="work-client">
-                          {study.client}
-                        </span>
-                      )}
+                      <span className="work-client">
+                        {originBadge.displayOrg}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-mono, monospace)',
+                          fontSize: '0.65rem',
+                          color: originBadge.color,
+                          backgroundColor: originBadge.bg,
+                          border: `1px solid ${originBadge.color}33`,
+                          padding: '0.15rem 0.5rem',
+                          borderRadius: '4px',
+                          textTransform: 'uppercase',
+                          fontWeight: 600,
+                          letterSpacing: '0.05em',
+                        }}
+                      >
+                        {originBadge.label}
+                      </span>
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                       <span className="work-category-badge">

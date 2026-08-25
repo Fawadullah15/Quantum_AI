@@ -592,22 +592,22 @@ export default async function LeadershipPage() {
       <div className="ldr-container">
         {/* ─── 1. PAGE HERO ─── */}
         <section className="ldr-hero">
-          <div className="ldr-eyebrow">[01 — LEADERSHIP & TEAM]</div>
+          <div className="ldr-eyebrow">[01 — LEADERSHIP &amp; TEAM]</div>
           <h1 className="ldr-h1">
-            Building the intelligence behind tomorrow&apos;s world.
+            The Team Behind Quantum AI.
           </h1>
           <p className="ldr-lead">
-            Our leadership and multidisciplinary team combine artificial intelligence, software engineering, research, design, and business thinking to build intelligent systems for real-world impact.
+            Engineering leads, software architects, and business strategists combining artificial intelligence, software engineering, business understanding, and product development to build practical systems for real-world impact.
           </p>
         </section>
 
-        {/* ─── 2. PRIMARY LEADERSHIP: CEO + CHAIRMAN (TWO EQUAL PILLARS) ─── */}
+        {/* ─── 2. PRIMARY LEADERSHIP: CEO + CHAIRMAN (FOUNDERS / EXECUTIVE LEADERSHIP) ─── */}
         <section style={{ marginBottom: "clamp(3.5rem, 6vw, 5rem)" }}>
           <div className="ldr-section-header">
-            <div className="ldr-section-tag">SYS.01 / PRINCIPAL LEADERSHIP</div>
-            <h2 className="ldr-section-title">LEADERSHIP.</h2>
+            <div className="ldr-section-tag">SYS.01 // EXECUTIVE LEADERSHIP</div>
+            <h2 className="ldr-section-title">FOUNDERS &amp; EXECUTIVE LEADERSHIP.</h2>
             <p className="ldr-section-intro">
-              At the center of Quantum AI is a leadership team focused on building meaningful technology, developing exceptional people, and turning ambitious ideas into intelligent systems.
+              Strategic and technical direction, executive governance, and long-term architectural vision for Quantum AI.
             </p>
           </div>
 
@@ -665,14 +665,14 @@ export default async function LeadershipPage() {
           </div>
         </section>
 
-        {/* ─── 3. EXECUTIVE & ENGINEERING TEAM ─── */}
+        {/* ─── 3. CORE TEAM ─── */}
         {executiveTeam.length > 0 && (
           <section style={{ marginBottom: "clamp(3.5rem, 6vw, 5rem)" }}>
             <div className="ldr-section-header">
-              <div className="ldr-section-tag">SYS.02 / EXECUTIVE TEAM</div>
-              <h2 className="ldr-section-title">EXECUTIVE LEADERSHIP & SPECIALISTS.</h2>
+              <div className="ldr-section-tag">SYS.02 // CORE TEAM</div>
+              <h2 className="ldr-section-title">CORE TEAM.</h2>
               <p className="ldr-section-intro">
-                Senior engineering, product design, and business development leads driving execution across Quantum AI platforms and client deployments.
+                Software development, business development, and growth specialists driving execution across Quantum AI platforms and partner initiatives.
               </p>
             </div>
 
