@@ -22,6 +22,25 @@ const ICON_PRESETS = [
   { icon: '🌐', label: 'Globe / Web' },
 ];
 
+function renderTechIcon(icon?: string | null) {
+  if (!icon) return '⚡';
+  const clean = icon.trim();
+  const isImageUrl = clean.startsWith('http') || clean.startsWith('/') || clean.startsWith('data:') || /\.(png|jpg|jpeg|svg|webp|gif)$/i.test(clean);
+  if (isImageUrl) {
+    return (
+      <img
+        src={clean}
+        alt="Tech icon"
+        style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }}
+      />
+    );
+  }
+  if (clean.length > 4) {
+    return '⚡';
+  }
+  return clean;
+}
+
 export default function TechnologyClient({ initialData = [] }: { initialData: Technology[] }) {
   const router = useRouter();
   const toast = useAdminToast();
@@ -487,7 +506,7 @@ export default function TechnologyClient({ initialData = [] }: { initialData: Te
                     {filteredTechs.map((tech, index) => (
                       <tr key={tech.id} style={{ borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
                         {/* Order Controls */}
-                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
+                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', width: '70px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
                             <button
                               type="button"
@@ -528,7 +547,7 @@ export default function TechnologyClient({ initialData = [] }: { initialData: Te
                         </td>
 
                         {/* Title & Slug */}
-                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
+                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', maxWidth: '280px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             <div
                               style={{
@@ -542,20 +561,22 @@ export default function TechnologyClient({ initialData = [] }: { initialData: Te
                                 justifyContent: 'center',
                                 fontSize: '1.1rem',
                                 flexShrink: 0,
+                                overflow: 'hidden',
+                                position: 'relative',
                               }}
                             >
-                              {tech.icon || '⚡'}
+                              {renderTechIcon(tech.icon)}
                             </div>
 
-                            <div style={{ minWidth: 0 }}>
-                              <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.92rem' }}>
+                            <div style={{ minWidth: 0, overflow: 'hidden' }}>
+                              <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.92rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {tech.name}
                               </div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.15rem' }}>
                                 <Link
                                   href={`/technologies/${tech.slug}`}
                                   target="_blank"
-                                  style={{ fontSize: '0.72rem', color: '#38BDF8', textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
+                                  style={{ fontSize: '0.72rem', color: '#38BDF8', textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
                                 >
                                   /technologies/{tech.slug} ↗
                                 </Link>
@@ -580,7 +601,7 @@ export default function TechnologyClient({ initialData = [] }: { initialData: Te
                             {tech.category}
                           </span>
                           {tech.usage && (
-                            <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                            <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', fontFamily: 'var(--font-mono, monospace)', maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {tech.usage}
                             </div>
                           )}
@@ -752,7 +773,7 @@ export default function TechnologyClient({ initialData = [] }: { initialData: Te
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Icon Symbol</label>
+                  <label style={labelStyle}>Icon Symbol / Preset</label>
                   <select
                     value={formData.icon}
                     onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
