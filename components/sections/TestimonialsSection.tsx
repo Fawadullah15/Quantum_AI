@@ -128,21 +128,18 @@ export default function TestimonialsSection({
     return () => observer.disconnect();
   }, []);
 
-  // Generate deterministic shifted permutations for 3 continuous rows
-  const generateRowItems = (items: TestimonialItem[], shiftOffset: number) => {
+  // Construct deterministic sequence for 1 single continuous row
+  const generateSingleRowItems = (items: TestimonialItem[]) => {
     if (!items || items.length === 0) return [];
     let baseList = [...items];
     while (baseList.length < 6) {
       baseList = [...baseList, ...items];
     }
-    const len = baseList.length;
-    const shifted = baseList.map((_, i) => baseList[(i + shiftOffset) % len]);
-    return [...shifted, ...shifted]; // Duplicate for seamless -50% loop
+    // Duplicate exactly once for mathematically seamless -50% marquee loop
+    return [...baseList, ...baseList];
   };
 
-  const row1 = generateRowItems(testimonials, 0);
-  const row2 = generateRowItems(testimonials, 2);
-  const row3 = generateRowItems(testimonials, 4);
+  const rowItems = generateSingleRowItems(testimonials);
 
   const renderStars = (rating: number = 5) => {
     const clamped = Math.max(1, Math.min(5, Math.round(rating)));
@@ -170,7 +167,7 @@ export default function TestimonialsSection({
           {renderStars(t.rating || 5)}
         </div>
 
-        {/* Middle: Testimonial Text */}
+        {/* Middle: Testimonial Quote Text */}
         <div className="test-card-body">
           <p className="test-quote-text">{t.content}</p>
         </div>
@@ -210,7 +207,7 @@ export default function TestimonialsSection({
     <section ref={sectionRef} id="testimonials-section" className="test-marquee-section">
       <style>{`
         .test-marquee-section {
-          padding: clamp(3.5rem, 6.5vh, 6rem) 0;
+          padding: clamp(3.5rem, 6.5vh, 5.5rem) 0;
           background: radial-gradient(circle at 50% 50%, rgba(10, 32, 68, 0.28) 0%, rgba(3, 7, 18, 0.98) 85%);
           border-top: 1px solid rgba(22, 119, 255, 0.14);
           border-bottom: 1px solid rgba(22, 119, 255, 0.14);
@@ -222,7 +219,7 @@ export default function TestimonialsSection({
         /* ─── Header ─── */
         .test-header {
           text-align: center;
-          margin-bottom: clamp(2rem, 4vw, 3.5rem);
+          margin-bottom: clamp(2rem, 4vw, 3.25rem);
           padding: 0 clamp(1.25rem, 4vw, 3rem);
         }
         .test-tag {
@@ -259,76 +256,57 @@ export default function TestimonialsSection({
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          gap: clamp(1.15rem, 2.2vw, 1.75rem);
           -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
           mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+          padding: 0.75rem 0;
         }
 
-        /* ─── Continuous Horizontal Rows ─── */
+        /* ─── 1 Single Continuous Horizontal Row ─── */
         .test-row {
           display: flex;
           width: max-content;
           will-change: transform;
           user-select: none;
+          animation: singleTestScrollLeft 45s linear infinite;
         }
 
         .test-row:hover {
           animation-play-state: paused;
         }
 
-        /* Left and Right Infinite Animations */
-        @keyframes testScrollLeft {
+        /* Continuous Left Movement */
+        @keyframes singleTestScrollLeft {
           0% {
             transform: translate3d(0, 0, 0);
           }
           100% {
             transform: translate3d(-50%, 0, 0);
           }
-        }
-
-        @keyframes testScrollRight {
-          0% {
-            transform: translate3d(-50%, 0, 0);
-          }
-          100% {
-            transform: translate3d(0, 0, 0);
-          }
-        }
-
-        /* Calm, readable speeds */
-        .test-row-left-1 {
-          animation: testScrollLeft 40s linear infinite;
-        }
-        .test-row-right-2 {
-          animation: testScrollRight 48s linear infinite;
-        }
-        .test-row-left-3 {
-          animation: testScrollLeft 44s linear infinite;
         }
 
         .test-track {
           display: flex;
           align-items: center;
-          gap: clamp(1.15rem, 2.2vw, 1.75rem);
-          padding: 0 0.5rem;
+          gap: clamp(1.25rem, 2.5vw, 2rem);
+          padding: 0 0.75rem;
         }
 
-        /* ─── STRICT SQUARE TESTIMONIAL CARD (aspect-ratio: 1 / 1) ─── */
+        /* ─── SQUARE TESTIMONIAL CARD ─── */
         .test-square-card {
-          width: clamp(230px, 26vw, 290px);
+          width: clamp(270px, 28vw, 320px);
           aspect-ratio: 1 / 1;
-          background: rgba(6, 21, 43, 0.75);
+          background: rgba(6, 21, 43, 0.78);
           backdrop-filter: blur(14px);
           border: 1px solid rgba(22, 119, 255, 0.18);
           border-radius: 18px;
-          padding: clamp(1.15rem, 2.2vw, 1.55rem);
+          padding: clamp(1.25rem, 2.2vw, 1.65rem);
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           flex-shrink: 0;
           box-sizing: border-box;
           box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
                       border-color 0.25s ease,
                       background-color 0.25s ease,
                       box-shadow 0.25s ease;
@@ -339,7 +317,7 @@ export default function TestimonialsSection({
           background-color: rgba(8, 28, 58, 0.95);
           border-color: rgba(56, 189, 248, 0.6);
           transform: scale(1.05) translateY(-4px);
-          box-shadow: 0 20px 44px -10px rgba(22, 119, 255, 0.35), 0 0 0 1px rgba(56, 189, 248, 0.4);
+          box-shadow: 0 20px 44px -10px rgba(22, 119, 255, 0.4), 0 0 0 1px rgba(56, 189, 248, 0.4);
           z-index: 50;
         }
 
@@ -354,13 +332,13 @@ export default function TestimonialsSection({
           font-size: 2.25rem;
           line-height: 1;
           color: #1677FF;
-          opacity: 0.55;
+          opacity: 0.6;
           user-select: none;
         }
         .test-stars {
           color: #F59E0B;
-          font-size: 0.85rem;
-          letter-spacing: 0.15em;
+          font-size: 0.88rem;
+          letter-spacing: 0.12em;
           line-height: 1;
         }
 
@@ -369,7 +347,7 @@ export default function TestimonialsSection({
           flex: 1;
           display: flex;
           align-items: center;
-          padding: 0.35rem 0;
+          padding: 0.4rem 0;
         }
         .test-quote-text {
           font-size: clamp(0.82rem, 1.1vw, 0.88rem);
@@ -387,15 +365,15 @@ export default function TestimonialsSection({
         .test-card-footer {
           display: flex;
           align-items: center;
-          gap: 0.65rem;
+          gap: 0.75rem;
           border-top: 1px solid rgba(22, 119, 255, 0.12);
-          padding-top: 0.65rem;
+          padding-top: 0.75rem;
         }
         .test-avatar-box {
-          width: 36px;
-          height: 36px;
+          width: 38px;
+          height: 38px;
           border-radius: 50%;
-          background: rgba(22, 119, 255, 0.15);
+          background: rgba(22, 119, 255, 0.18);
           border: 1px solid rgba(56, 189, 248, 0.3);
           display: flex;
           align-items: center;
@@ -410,7 +388,7 @@ export default function TestimonialsSection({
         }
         .test-avatar-initials {
           font-family: var(--font-mono, monospace);
-          font-size: 0.72rem;
+          font-size: 0.75rem;
           font-weight: 700;
           color: #38BDF8;
         }
@@ -418,48 +396,42 @@ export default function TestimonialsSection({
         .test-author-details {
           display: flex;
           flex-direction: column;
-          gap: 0.1rem;
+          gap: 0.15rem;
           overflow: hidden;
         }
         .test-author-name {
-          font-size: 0.86rem;
+          font-size: 0.88rem;
           font-weight: 600;
           color: #F8FAFC;
           margin: 0;
-          line-height: 1.2;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          line-height: 1.25;
+          white-space: normal;
         }
         .test-author-role {
           font-family: var(--font-mono, monospace);
           font-size: 0.62rem;
           color: #38BDF8;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.03em;
           text-transform: uppercase;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          line-height: 1.3;
+          white-space: normal;
         }
 
         /* Mobile View (< 768px) */
         @media (max-width: 768px) {
           .test-square-card {
-            width: 220px;
-            padding: 1rem;
+            width: 240px;
+            padding: 1.15rem;
             border-radius: 14px;
           }
           .test-quote-text {
             font-size: 0.78rem;
             -webkit-line-clamp: 4;
           }
-          .test-row-left-1 {
-            animation-duration: 30s;
+          .test-author-name {
+            font-size: 0.82rem;
           }
-          .test-row-right-2 {
-            animation-duration: 36s;
-          }
-          .test-row-left-3 {
+          .test-row {
             animation-duration: 32s;
           }
         }
@@ -487,26 +459,11 @@ export default function TestimonialsSection({
         </p>
       </div>
 
-      {/* 3-Row Continuous Square Testimonial Marquee */}
+      {/* 1 Single Line Continuous Square Testimonial Marquee */}
       <div className="test-stage-wrapper">
-        {/* ROW 1: Glides Left */}
-        <div className={`test-row test-row-left-1 ${!isVisible ? 'paused' : ''}`}>
+        <div className={`test-row ${!isVisible ? 'paused' : ''}`}>
           <div className="test-track">
-            {row1.map((t, idx) => renderCard(t, `r1-${idx}`))}
-          </div>
-        </div>
-
-        {/* ROW 2: Glides Right */}
-        <div className={`test-row test-row-right-2 ${!isVisible ? 'paused' : ''}`}>
-          <div className="test-track">
-            {row2.map((t, idx) => renderCard(t, `r2-${idx}`))}
-          </div>
-        </div>
-
-        {/* ROW 3: Glides Left */}
-        <div className={`test-row test-row-left-3 ${!isVisible ? 'paused' : ''}`}>
-          <div className="test-track">
-            {row3.map((t, idx) => renderCard(t, `r3-${idx}`))}
+            {rowItems.map((t, idx) => renderCard(t, `single-test-${idx}`))}
           </div>
         </div>
       </div>
