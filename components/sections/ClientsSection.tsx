@@ -78,7 +78,10 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setClients(data);
+          const activeList = data.filter((c: ClientItem) => c.published !== false);
+          if (activeList.length > 0) {
+            setClients(activeList);
+          }
         }
       })
       .catch(() => {});
@@ -104,25 +107,18 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
     return () => observer.disconnect();
   }, []);
 
-  // Construct deterministic permutations for 4 distinct rows
-  const generateRowItems = (items: ClientItem[], shiftOffset: number) => {
+  // Construct deterministic sequence for 1 single continuous row
+  const generateSingleRowItems = (items: ClientItem[]) => {
     if (!items || items.length === 0) return [];
-    // Ensure we have at least 8 items per row before duplicating to guarantee full viewport coverage
     let baseList = [...items];
     while (baseList.length < 8) {
       baseList = [...baseList, ...items];
     }
-    // Shift elements deterministically so each row starts with a different sequence
-    const len = baseList.length;
-    const shifted = baseList.map((_, i) => baseList[(i + shiftOffset) % len]);
     // Duplicate exactly once for mathematically seamless -50% marquee loop
-    return [...shifted, ...shifted];
+    return [...baseList, ...baseList];
   };
 
-  const row1 = generateRowItems(clients, 0);
-  const row2 = generateRowItems(clients, 3);
-  const row3 = generateRowItems(clients, 6);
-  const row4 = generateRowItems(clients, 9);
+  const rowItems = generateSingleRowItems(clients);
 
   const renderLogoCard = (client: ClientItem, keyIdx: string | number) => {
     const cardContent = (
@@ -140,10 +136,10 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
             />
           ) : (
             <div className="marquee-placeholder">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M3 21h18M3 7v14M21 7v14M6 11h4M6 15h4M14 11h4M14 15h4M9 3h6v4H9z" />
               </svg>
-              <span>{client.name.slice(0, 10)}</span>
+              <span>{client.name.slice(0, 12)}</span>
             </div>
           )}
         </div>
@@ -188,8 +184,8 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
     <section ref={sectionRef} id="clients-worked-with" className="continuous-clients-section">
       <style>{`
         .continuous-clients-section {
-          padding: clamp(3.5rem, 6.5vh, 6rem) 0;
-          background: radial-gradient(circle at 50% 50%, rgba(10, 32, 68, 0.3) 0%, rgba(3, 7, 18, 0.98) 80%);
+          padding: clamp(3.5rem, 6.5vh, 5.5rem) 0;
+          background: radial-gradient(circle at 50% 50%, rgba(10, 32, 68, 0.28) 0%, rgba(3, 7, 18, 0.98) 80%);
           border-top: 1px solid rgba(22, 119, 255, 0.14);
           border-bottom: 1px solid rgba(22, 119, 255, 0.14);
           position: relative;
@@ -200,7 +196,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         /* ─── Header ─── */
         .clients-marquee-header {
           text-align: center;
-          margin-bottom: clamp(2rem, 4vw, 3.5rem);
+          margin-bottom: clamp(2rem, 4vw, 3.25rem);
           padding: 0 clamp(1.25rem, 4vw, 3rem);
         }
         .clients-marquee-tag {
@@ -237,82 +233,59 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          gap: clamp(0.85rem, 1.8vw, 1.35rem);
           -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
           mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+          padding: 0.75rem 0;
         }
 
-        /* ─── Infinite Marquee Rows ─── */
+        /* ─── 1 Single Infinite Marquee Row ─── */
         .marquee-row {
           display: flex;
           width: max-content;
           will-change: transform;
           user-select: none;
+          animation: singleScrollLeft 38s linear infinite;
         }
 
         .marquee-row:hover {
           animation-play-state: paused;
         }
 
-        /* Continuous Left Movement */
-        @keyframes scrollLeft {
+        /* Continuous Single Line Left Movement */
+        @keyframes singleScrollLeft {
           0% {
             transform: translate3d(0, 0, 0);
           }
           100% {
             transform: translate3d(-50%, 0, 0);
           }
-        }
-
-        /* Continuous Right Movement */
-        @keyframes scrollRight {
-          0% {
-            transform: translate3d(-50%, 0, 0);
-          }
-          100% {
-            transform: translate3d(0, 0, 0);
-          }
-        }
-
-        /* Speed variations for natural rhythm */
-        .row-left-1 {
-          animation: scrollLeft 34s linear infinite;
-        }
-        .row-right-2 {
-          animation: scrollRight 44s linear infinite;
-        }
-        .row-left-3 {
-          animation: scrollLeft 38s linear infinite;
-        }
-        .row-right-4 {
-          animation: scrollRight 48s linear infinite;
         }
 
         .marquee-track {
           display: flex;
           align-items: center;
-          gap: clamp(0.85rem, 2vw, 1.35rem);
-          padding: 0 0.5rem;
+          gap: clamp(1.25rem, 2.5vw, 2rem);
+          padding: 0 0.75rem;
         }
 
-        /* ─── Logo Pill Card ─── */
+        /* ─── Logo Card ─── */
         .marquee-card {
           position: relative;
-          background: rgba(6, 21, 43, 0.72);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(22, 119, 255, 0.16);
-          border-radius: 12px;
-          padding: 0.75rem clamp(1.25rem, 2.5vw, 1.85rem);
+          background: rgba(6, 21, 43, 0.75);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(22, 119, 255, 0.18);
+          border-radius: 14px;
+          padding: 0.85rem clamp(1.5rem, 3vw, 2.25rem);
           display: flex;
           align-items: center;
           justify-content: center;
           text-decoration: none;
-          min-width: 175px;
-          max-width: 230px;
-          height: 82px;
+          min-width: 200px;
+          max-width: 260px;
+          height: 92px;
           flex-shrink: 0;
           box-sizing: border-box;
-          box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.45);
+          box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
           transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
                       border-color 0.25s ease,
                       background-color 0.25s ease,
@@ -322,8 +295,8 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         .marquee-card:hover {
           background-color: rgba(8, 28, 58, 0.95);
           border-color: rgba(56, 189, 248, 0.6);
-          transform: scale(1.08) translateY(-3px);
-          box-shadow: 0 16px 36px -8px rgba(22, 119, 255, 0.4), 0 0 0 1px rgba(56, 189, 248, 0.4);
+          transform: scale(1.06) translateY(-3px);
+          box-shadow: 0 18px 40px -8px rgba(22, 119, 255, 0.4), 0 0 0 1px rgba(56, 189, 248, 0.4);
           z-index: 50;
         }
 
@@ -336,37 +309,37 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         }
 
         .marquee-logo-img {
-          max-width: 155px;
-          max-height: 52px;
+          max-width: 170px;
+          max-height: 60px;
           object-fit: contain;
           transition: transform 0.25s ease, filter 0.25s ease;
-          filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+          filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.35));
         }
 
         .marquee-card:hover .marquee-logo-img {
           transform: scale(1.04);
-          filter: drop-shadow(0 4px 12px rgba(56, 189, 248, 0.35));
+          filter: drop-shadow(0 4px 14px rgba(56, 189, 248, 0.35));
         }
 
         .marquee-placeholder {
           font-family: var(--font-mono, monospace);
-          font-size: 0.72rem;
+          font-size: 0.76rem;
           color: #38BDF8;
           display: flex;
           align-items: center;
-          gap: 0.4rem;
+          gap: 0.45rem;
         }
 
         /* ─── Hover Tooltip ─── */
         .marquee-tooltip {
           position: absolute;
-          bottom: -32px;
+          bottom: -34px;
           left: 50%;
           transform: translateX(-50%) translateY(4px);
-          background: rgba(3, 7, 18, 0.94);
+          background: rgba(3, 7, 18, 0.95);
           border: 1px solid rgba(56, 189, 248, 0.4);
           border-radius: 6px;
-          padding: 0.25rem 0.65rem;
+          padding: 0.25rem 0.7rem;
           display: flex;
           align-items: center;
           gap: 0.35rem;
@@ -375,7 +348,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           opacity: 0;
           transition: opacity 0.2s ease, transform 0.2s ease;
           z-index: 100;
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+          box-shadow: 0 8px 22px rgba(0, 0, 0, 0.6);
         }
 
         .marquee-card:hover .marquee-tooltip {
@@ -384,14 +357,14 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         }
 
         .marquee-tooltip-name {
-          font-size: 0.68rem;
+          font-size: 0.72rem;
           font-weight: 600;
           color: #F8FAFC;
         }
 
         .marquee-tooltip-ind {
           font-family: var(--font-mono, monospace);
-          font-size: 0.58rem;
+          font-size: 0.6rem;
           color: #38BDF8;
           text-transform: uppercase;
         }
@@ -399,26 +372,17 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         /* ─── Responsive Adjustments ─── */
         @media (max-width: 768px) {
           .marquee-card {
-            min-width: 140px;
-            max-width: 175px;
-            height: 68px;
-            padding: 0.5rem 0.85rem;
+            min-width: 155px;
+            max-width: 190px;
+            height: 74px;
+            padding: 0.6rem 1rem;
           }
           .marquee-logo-img {
-            max-width: 120px;
-            max-height: 40px;
+            max-width: 130px;
+            max-height: 46px;
           }
-          .row-left-1 {
-            animation-duration: 26s;
-          }
-          .row-right-2 {
-            animation-duration: 32s;
-          }
-          .row-left-3 {
+          .marquee-row {
             animation-duration: 28s;
-          }
-          .row-right-4 {
-            animation-duration: 36s;
           }
         }
 
@@ -444,33 +408,11 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         </p>
       </div>
 
-      {/* Multi-Row Continuous Sliding Stage */}
+      {/* 1 Single Line Continuous Sliding Stage */}
       <div className="marquee-stage-wrapper">
-        {/* ROW 1: Moves Left */}
-        <div className={`marquee-row row-left-1 ${!isVisible ? 'paused' : ''}`}>
+        <div className={`marquee-row ${!isVisible ? 'paused' : ''}`}>
           <div className="marquee-track">
-            {row1.map((client, idx) => renderLogoCard(client, `r1-${idx}`))}
-          </div>
-        </div>
-
-        {/* ROW 2: Moves Right */}
-        <div className={`marquee-row row-right-2 ${!isVisible ? 'paused' : ''}`}>
-          <div className="marquee-track">
-            {row2.map((client, idx) => renderLogoCard(client, `r2-${idx}`))}
-          </div>
-        </div>
-
-        {/* ROW 3: Moves Left */}
-        <div className={`marquee-row row-left-3 ${!isVisible ? 'paused' : ''}`}>
-          <div className="marquee-track">
-            {row3.map((client, idx) => renderLogoCard(client, `r3-${idx}`))}
-          </div>
-        </div>
-
-        {/* ROW 4: Moves Right */}
-        <div className={`marquee-row row-right-4 ${!isVisible ? 'paused' : ''}`}>
-          <div className="marquee-track">
-            {row4.map((client, idx) => renderLogoCard(client, `r4-${idx}`))}
+            {rowItems.map((client, idx) => renderLogoCard(client, `single-${idx}`))}
           </div>
         </div>
       </div>
