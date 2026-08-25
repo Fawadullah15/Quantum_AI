@@ -17,7 +17,7 @@ export default async function WorkPage() {
   }).catch(() => [])
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 80px) + 2rem)', paddingBottom: '5rem', paddingInline: 'clamp(1rem, 5vw, 4rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', paddingInline: 'clamp(1rem, 5vw, 4rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
       <style>{`
         .works-grid-container {
           display: flex;
@@ -29,12 +29,14 @@ export default async function WorkPage() {
           background-color: rgba(6, 21, 43, 0.65);
           border: 1px solid rgba(22, 119, 255, 0.14);
           border-radius: 10px;
-          padding: 1.1rem clamp(1rem, 2.5vw, 1.75rem);
+          padding: 1.15rem clamp(1rem, 2.5vw, 1.75rem);
           display: flex;
           flex-direction: column;
           gap: 0.65rem;
           transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s, background-color 0.2s;
           box-sizing: border-box;
+          width: 100%;
+          text-decoration: none;
         }
         .work-card:hover {
           background-color: rgba(8, 28, 58, 0.8);
@@ -42,11 +44,30 @@ export default async function WorkPage() {
           transform: translateY(-1px);
           box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.2);
         }
+        .work-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+        .work-eyebrow {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.65rem;
+          color: #38BDF8;
+          letter-spacing: 0.15em;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+        .work-client {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.72rem;
+          color: #94A3B8;
+        }
         .work-title {
-          font-size: clamp(1.15rem, 2vw, 1.35rem);
+          font-size: clamp(1.1rem, 2vw, 1.35rem);
           font-weight: 600;
           color: #F8FAFC;
-          margin: 0;
           letter-spacing: -0.015em;
           text-transform: none;
           line-height: 1.25;
@@ -90,11 +111,11 @@ export default async function WorkPage() {
           <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
             [04 — OUR WORK]
           </div>
-          <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: '#F8FAFC', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
-            SELECTED DEPLOYMENTS.
+          <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: '#F8FAFC', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+            SELECTED DEPLOYMENTS & CASE STUDIES.
           </h1>
-          <p style={{ fontSize: 'clamp(0.88rem, 1.3vw, 1rem)', color: '#94A3B8', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
-            Production systems, automation engines, and enterprise AI software built for clients worldwide.
+          <p style={{ fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)', color: '#94A3B8', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+            Production software platforms, enterprise automation engines, and custom AI systems delivered by Quantum AI.
           </p>
         </div>
 
