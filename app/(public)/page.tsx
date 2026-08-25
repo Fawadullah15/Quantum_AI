@@ -340,6 +340,20 @@ export default function HomePage() {
           <h1 className="sr-only">We Build Intelligent Software — Quantum AI</h1>
 
           <div style={{ maxWidth: 860, pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
+            <p
+              className="hero-eyebrow"
+              style={{
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '0.72rem',
+                letterSpacing: '0.22em',
+                textTransform: 'uppercase',
+                color: '#38BDF8',
+                marginBottom: '0.85rem',
+                fontWeight: 600,
+              }}
+            >
+              [SYS.01] AI SYSTEMS · BUSINESS SOFTWARE · AUTOMATION
+            </p>
 
             {/* ParticleText visual headline */}
             <div style={{
