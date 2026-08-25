@@ -1,35 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useAdminToast } from '@/components/admin/AdminToast';
+import { useAdminConfirm } from '@/components/admin/ConfirmDialog';
+import StatusBadge from '@/components/admin/StatusBadge';
+import EmptyState from '@/components/admin/EmptyState';
+import { createTestimonial, updateTestimonial, deleteTestimonial } from './actions';
+import type { Testimonial } from '@prisma/client';
 
-export interface TestimonialItem {
-  id: string;
-  name: string;
-  company?: string | null;
-  role?: string | null;
-  content: string;
-  rating?: number;
-  photo?: string | null;
-  published: boolean;
-  order: number;
-}
-
-export default function TestimonialsAdminClient({
-  testimonials = [],
-}: {
-  testimonials: TestimonialItem[];
-}) {
+export default function TestimonialsClient({ testimonials: initialTestimonials = [] }: { testimonials: Testimonial[] }) {
   const router = useRouter();
-  const [items, setItems] = useState<TestimonialItem[]>(testimonials);
+  const toast = useAdminToast();
+  const { confirm } = useAdminConfirm();
+
+  const [items, setItems] = useState<Testimonial[]>(initialTestimonials);
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'ALL' | 'PENDING' | 'ACTIVE'>('ALL');
 
-  // Form State
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'PUBLISHED' | 'PENDING'>('ALL');
+  const [ratingFilter, setRatingFilter] = useState<'ALL' | '5' | '4' | '3'>('ALL');
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [formData, setFormData] = useState({
     name: '',
     company: '',
@@ -38,23 +36,8 @@ export default function TestimonialsAdminClient({
     rating: 5,
     photo: '',
     published: true,
-    order: 1,
+    order: 0,
   });
-
-  const handleEdit = (t: TestimonialItem) => {
-    setFormData({
-      name: t.name,
-      company: t.company || '',
-      role: t.role || '',
-      content: t.content,
-      rating: t.rating || 5,
-      photo: t.photo || '',
-      published: t.published,
-      order: t.order || 1,
-    });
-    setCurrentId(t.id);
-    setIsEditing(true);
-  };
 
   const handleCreate = () => {
     setFormData({
@@ -68,6 +51,21 @@ export default function TestimonialsAdminClient({
       order: items.length + 1,
     });
     setCurrentId(null);
+    setIsEditing(true);
+  };
+
+  const handleEdit = (t: Testimonial) => {
+    setFormData({
+      name: t.name || '',
+      company: t.company || '',
+      role: t.role || '',
+      content: t.content || '',
+      rating: t.rating || 5,
+      photo: t.photo || '',
+      published: t.published ?? true,
+      order: t.order || 0,
+    });
+    setCurrentId(t.id);
     setIsEditing(true);
   };
 
@@ -85,118 +83,141 @@ export default function TestimonialsAdminClient({
         body: data,
       });
 
-      if (!res.ok) {
-        throw new Error('Upload failed');
-      }
+      if (!res.ok) throw new Error('Upload failed');
 
       const result = await res.json();
       if (result.url) {
         setFormData((prev) => ({ ...prev, photo: result.url }));
+        toast.success('Client photo uploaded successfully!', 'Asset Ready');
       }
     } catch (err) {
-      console.error('File upload error:', err);
-      alert('Failed to upload photo. Please try again.');
+      console.error('Upload error:', err);
+      toast.error('Failed to upload photo.', 'Upload Error');
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleTogglePublish = async (t: TestimonialItem) => {
+  const handleTogglePublish = async (testimonial: Testimonial) => {
+    const newStatus = !testimonial.published;
     try {
-      const nextState = !t.published;
-      const res = await fetch(`/api/testimonials/${t.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ published: nextState }),
+      await updateTestimonial(testimonial.id, {
+        published: newStatus,
       });
-
-      if (!res.ok) throw new Error('Status update failed');
-
       setItems((prev) =>
-        prev.map((item) => (item.id === t.id ? { ...item, published: nextState } : item))
+        prev.map((t) => (t.id === testimonial.id ? { ...t, published: newStatus } : t))
+      );
+      toast.success(
+        `"${testimonial.name}" is now ${newStatus ? 'Approved & Live in Slider' : 'Pending Review / Hidden'}`,
+        'Visibility Updated'
       );
       router.refresh();
-    } catch (error) {
-      console.error('Failed to toggle status:', error);
-      alert('An error occurred while updating status.');
+    } catch (err) {
+      toast.error('Failed to update status.', 'Error');
+    }
+  };
+
+  const handleMoveOrder = async (index: number, direction: 'UP' | 'DOWN') => {
+    const targetIndex = direction === 'UP' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= items.length) return;
+
+    const newItems = [...items];
+    const itemA = newItems[index];
+    const itemB = newItems[targetIndex];
+
+    const tempOrder = itemA.order;
+    itemA.order = itemB.order;
+    itemB.order = tempOrder;
+
+    newItems[index] = itemB;
+    newItems[targetIndex] = itemA;
+
+    setItems(newItems);
+
+    try {
+      await Promise.all([
+        updateTestimonial(itemA.id, { order: itemA.order }),
+        updateTestimonial(itemB.id, { order: itemB.order }),
+      ]);
+      toast.info('Testimonial sequence updated.', 'Reordered');
+      router.refresh();
+    } catch (err) {
+      toast.error('Failed to save order.', 'Error');
+    }
+  };
+
+  const handleDelete = async (id: string, name: string) => {
+    const confirmed = await confirm({
+      title: 'Delete Testimonial',
+      message: `Are you sure you want to permanently delete the testimonial from "${name}"?`,
+      confirmText: 'Delete Permanently',
+      confirmVariant: 'danger',
+    });
+
+    if (confirmed) {
+      try {
+        await deleteTestimonial(id);
+        setItems((prev) => prev.filter((t) => t.id !== id));
+        toast.success(`Testimonial from "${name}" was deleted.`, 'Deleted');
+        router.refresh();
+      } catch (err) {
+        toast.error('Failed to delete testimonial.', 'Error');
+      }
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.content.trim()) {
-      alert('Please fill in the client name and testimonial text.');
+    if (!formData.name.trim()) {
+      toast.warning('Please enter client name', 'Validation');
+      return;
+    }
+    if (!formData.content.trim()) {
+      toast.warning('Please enter testimonial quote', 'Validation');
       return;
     }
 
     try {
-      setIsSaving(true);
+      setIsSubmitting(true);
       if (currentId) {
-        const res = await fetch(`/api/testimonials/${currentId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-        if (!res.ok) throw new Error('Update failed');
-        const updated = await res.json();
+        const updated = await updateTestimonial(currentId, formData);
         setItems((prev) =>
-          prev.map((item) => (item.id === currentId ? (updated as TestimonialItem) : item))
+          prev.map((t) => (t.id === currentId ? (updated as Testimonial) : t))
         );
+        toast.success(`Testimonial from "${formData.name}" updated!`, 'Saved');
       } else {
-        const res = await fetch('/api/testimonials', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
-        });
-        if (!res.ok) throw new Error('Create failed');
-        const created = await res.json();
-        setItems((prev) => [...prev, created as TestimonialItem]);
+        const created = await createTestimonial(formData);
+        setItems((prev) => [created as Testimonial, ...prev]);
+        toast.success(`Testimonial from "${formData.name}" created!`, 'Created');
       }
       setIsEditing(false);
       setCurrentId(null);
       router.refresh();
-    } catch (error) {
-      console.error('Failed to save testimonial:', error);
-      alert('An error occurred while saving.');
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to save testimonial', 'Error');
     } finally {
-      setIsSaving(false);
+      setIsSubmitting(false);
     }
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (confirm(`Are you sure you want to delete the testimonial from "${name}"?`)) {
-      try {
-        const res = await fetch(`/api/testimonials/${id}`, {
-          method: 'DELETE',
-        });
-        if (!res.ok) throw new Error('Delete failed');
-        setItems((prev) => prev.filter((item) => item.id !== id));
-        router.refresh();
-      } catch (error) {
-        console.error('Failed to delete testimonial:', error);
-        alert('An error occurred while deleting.');
-      }
-    }
-  };
-
-  const pendingCount = items.filter((item) => !item.published).length;
-  const activeCount = items.filter((item) => item.published).length;
-
-  const filteredItems = items.filter((item) => {
+  const filteredItems = items.filter((t) => {
+    const q = searchQuery.toLowerCase().trim();
     const matchesSearch =
-      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (item.company && item.company.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (item.role && item.role.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      item.content.toLowerCase().includes(searchQuery.toLowerCase());
+      !q ||
+      t.name.toLowerCase().includes(q) ||
+      (t.company && t.company.toLowerCase().includes(q)) ||
+      (t.role && t.role.toLowerCase().includes(q)) ||
+      t.content.toLowerCase().includes(q);
 
     const matchesStatus =
-      statusFilter === 'ALL'
-        ? true
-        : statusFilter === 'PENDING'
-        ? !item.published
-        : item.published;
+      statusFilter === 'ALL' ||
+      (statusFilter === 'PUBLISHED' && t.published) ||
+      (statusFilter === 'PENDING' && !t.published);
 
-    return matchesSearch && matchesStatus;
+    const matchesRating =
+      ratingFilter === 'ALL' || t.rating === Number(ratingFilter);
+
+    return matchesSearch && matchesStatus && matchesRating;
   });
 
   const inputStyle: React.CSSProperties = {
@@ -226,55 +247,7 @@ export default function TestimonialsAdminClient({
     <div style={{ color: '#F8FAFC', width: '100%' }}>
       {!isEditing ? (
         <>
-          {/* Pending Reviews Notice Banner */}
-          {pendingCount > 0 && (
-            <div
-              style={{
-                backgroundColor: 'rgba(245, 158, 11, 0.12)',
-                border: '1px solid rgba(245, 158, 11, 0.35)',
-                borderRadius: '8px',
-                padding: '0.85rem 1.25rem',
-                marginBottom: '1.5rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                flexWrap: 'wrap',
-                gap: '0.75rem',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <span style={{ fontSize: '1.15rem' }}>⚠️</span>
-                <div>
-                  <div style={{ fontWeight: 600, color: '#FBBF24', fontSize: '0.88rem' }}>
-                    {pendingCount} New Client Review{pendingCount > 1 ? 's' : ''} Awaiting Approval
-                  </div>
-                  <div style={{ color: '#94A3B8', fontSize: '0.78rem' }}>
-                    Submitted via public &quot;+ Share Your Experience&quot; form. Click &quot;Approve &amp; Publish&quot; to show on the live slider.
-                  </div>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setStatusFilter('PENDING')}
-                style={{
-                  backgroundColor: 'rgba(245, 158, 11, 0.2)',
-                  border: '1px solid rgba(245, 158, 11, 0.4)',
-                  color: '#FBBF24',
-                  padding: '0.35rem 0.75rem',
-                  borderRadius: '6px',
-                  fontSize: '0.75rem',
-                  fontWeight: 600,
-                  fontFamily: 'var(--font-mono, monospace)',
-                  cursor: 'pointer',
-                }}
-              >
-                View Pending ({pendingCount})
-              </button>
-            </div>
-          )}
-
-          {/* Top Control Bar */}
+          {/* Top Controls Toolbar */}
           <div
             style={{
               display: 'flex',
@@ -285,84 +258,93 @@ export default function TestimonialsAdminClient({
               marginBottom: '1.5rem',
             }}
           >
-            {/* Search Input */}
-            <div style={{ position: 'relative', minWidth: '240px', flex: '1', maxWidth: '360px' }}>
-              <input
-                type="text"
-                placeholder="Search by client, company, or quote..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+            <div style={{ display: 'flex', gap: '0.65rem', flex: 1, minWidth: '260px', maxWidth: '640px', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, position: 'relative', minWidth: '200px' }}>
+                <input
+                  type="text"
+                  placeholder="Search client name, company, quote..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  style={{
+                    width: '100%',
+                    backgroundColor: '#070B14',
+                    border: '1px solid rgba(22, 119, 255, 0.25)',
+                    borderRadius: '8px',
+                    padding: '0.6rem 0.95rem',
+                    fontSize: '0.85rem',
+                    color: '#F8FAFC',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                />
+              </div>
+
+              <select
+                value={ratingFilter}
+                onChange={(e) => setRatingFilter(e.target.value as any)}
                 style={{
-                  width: '100%',
                   backgroundColor: '#070B14',
                   border: '1px solid rgba(22, 119, 255, 0.25)',
                   borderRadius: '8px',
-                  padding: '0.65rem 0.95rem',
-                  fontSize: '0.875rem',
-                  color: '#F8FAFC',
+                  padding: '0.6rem 0.85rem',
+                  fontSize: '0.82rem',
+                  color: '#CBD5E1',
                   outline: 'none',
-                  boxSizing: 'border-box',
+                  fontFamily: 'var(--font-mono, monospace)',
                 }}
-              />
+              >
+                <option value="ALL">All Ratings</option>
+                <option value="5">⭐⭐⭐⭐⭐ (5 Stars)</option>
+                <option value="4">⭐⭐⭐⭐ (4 Stars)</option>
+                <option value="3">⭐⭐⭐ (3 Stars)</option>
+              </select>
+
+              <div style={{ display: 'flex', gap: '0.25rem' }}>
+                {(['ALL', 'PUBLISHED', 'PENDING'] as const).map((st) => (
+                  <button
+                    key={st}
+                    type="button"
+                    onClick={() => setStatusFilter(st)}
+                    style={{
+                      backgroundColor: statusFilter === st ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
+                      border: statusFilter === st ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
+                      color: statusFilter === st ? '#FFFFFF' : '#94A3B8',
+                      padding: '0.45rem 0.75rem',
+                      borderRadius: 6,
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      fontFamily: 'var(--font-mono, monospace)',
+                    }}
+                  >
+                    {st === 'PUBLISHED' ? 'LIVE IN SLIDER' : st === 'PENDING' ? 'PENDING REVIEW' : 'ALL'}
+                  </button>
+                ))}
+              </div>
             </div>
 
-            {/* Filter Tabs & Add Button */}
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
-              <div style={{ display: 'flex', gap: '0.3rem' }}>
-                <button
-                  type="button"
-                  onClick={() => setStatusFilter('ALL')}
-                  style={{
-                    backgroundColor: statusFilter === 'ALL' ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
-                    border: statusFilter === 'ALL' ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
-                    color: statusFilter === 'ALL' ? '#FFFFFF' : '#94A3B8',
-                    padding: '0.45rem 0.75rem',
-                    borderRadius: '6px',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    fontFamily: 'var(--font-mono, monospace)',
-                  }}
-                >
-                  All ({items.length})
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setStatusFilter('PENDING')}
-                  style={{
-                    backgroundColor: statusFilter === 'PENDING' ? '#F59E0B' : 'rgba(6, 21, 43, 0.65)',
-                    border: statusFilter === 'PENDING' ? '1px solid #F59E0B' : '1px solid rgba(245, 158, 11, 0.25)',
-                    color: statusFilter === 'PENDING' ? '#000000' : '#FBBF24',
-                    padding: '0.45rem 0.75rem',
-                    borderRadius: '6px',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    fontFamily: 'var(--font-mono, monospace)',
-                  }}
-                >
-                  Pending ({pendingCount})
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setStatusFilter('ACTIVE')}
-                  style={{
-                    backgroundColor: statusFilter === 'ACTIVE' ? '#10B981' : 'rgba(6, 21, 43, 0.65)',
-                    border: statusFilter === 'ACTIVE' ? '1px solid #10B981' : '1px solid rgba(16, 185, 129, 0.25)',
-                    color: statusFilter === 'ACTIVE' ? '#000000' : '#34D399',
-                    padding: '0.45rem 0.75rem',
-                    borderRadius: '6px',
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    fontFamily: 'var(--font-mono, monospace)',
-                  }}
-                >
-                  Active ({activeCount})
-                </button>
-              </div>
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <Link
+                href="/#testimonials"
+                target="_blank"
+                style={{
+                  backgroundColor: 'rgba(22, 119, 255, 0.12)',
+                  border: '1px solid rgba(22, 119, 255, 0.25)',
+                  color: '#38BDF8',
+                  padding: '0.55rem 1rem',
+                  borderRadius: 6,
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                }}
+              >
+                <span>View Slider on Site</span>
+                <span>↗</span>
+              </Link>
 
               <button
                 type="button"
@@ -370,10 +352,10 @@ export default function TestimonialsAdminClient({
                 style={{
                   backgroundColor: '#1677FF',
                   color: '#FFFFFF',
-                  padding: '0.55rem 1.15rem',
+                  padding: '0.55rem 1.25rem',
                   borderRadius: '6px',
                   fontWeight: 600,
-                  fontSize: '0.8rem',
+                  fontSize: '0.82rem',
                   border: 'none',
                   cursor: 'pointer',
                   display: 'inline-flex',
@@ -389,395 +371,454 @@ export default function TestimonialsAdminClient({
             </div>
           </div>
 
-          {/* Testimonial Cards Grid */}
+          {/* Testimonial List Table */}
           {filteredItems.length === 0 ? (
-            <div
-              style={{
-                backgroundColor: 'rgba(6, 21, 43, 0.65)',
-                border: '1px solid rgba(22, 119, 255, 0.18)',
-                borderRadius: '12px',
-                padding: '3.5rem 2rem',
-                textAlign: 'center',
-              }}
-            >
-              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>⭐</div>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 0.5rem 0' }}>
-                No testimonials found
-              </h3>
-              <p style={{ color: '#94A3B8', fontSize: '0.875rem', maxWidth: '400px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
-                Add client reviews to showcase in the continuous horizontal marquee on the landing page.
-              </p>
-              <button
-                type="button"
-                onClick={handleCreate}
-                style={{
-                  backgroundColor: '#1677FF',
-                  color: '#FFFFFF',
-                  padding: '0.6rem 1.25rem',
-                  borderRadius: '6px',
-                  fontWeight: 600,
-                  fontSize: '0.85rem',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                + Add First Testimonial
-              </button>
-            </div>
+            <EmptyState
+              icon="💬"
+              title="No testimonials found"
+              description={
+                searchQuery || statusFilter !== 'ALL' || ratingFilter !== 'ALL'
+                  ? 'No reviews match your active search and filter criteria.'
+                  : 'Add client testimonials or approve user submissions to feature them in the continuous horizontal slider on the homepage.'
+              }
+              action={
+                <button
+                  type="button"
+                  onClick={handleCreate}
+                  style={{
+                    backgroundColor: '#1677FF',
+                    color: '#FFFFFF',
+                    padding: '0.5rem 1.15rem',
+                    borderRadius: 6,
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
+                  + Add First Testimonial
+                </button>
+              }
+            />
           ) : (
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-                gap: '1.25rem',
-                width: '100%',
+                backgroundColor: 'rgba(6, 21, 43, 0.75)',
+                border: '1px solid rgba(22, 119, 255, 0.18)',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                boxShadow: '0 12px 32px -8px rgba(0, 0, 0, 0.5)',
               }}
             >
-              {filteredItems.map((t) => (
-                <div
-                  key={t.id}
-                  style={{
-                    backgroundColor: 'rgba(6, 21, 43, 0.75)',
-                    border: !t.published ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid rgba(22, 119, 255, 0.18)',
-                    borderRadius: '12px',
-                    padding: '1.35rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    gap: '0.85rem',
-                    boxSizing: 'border-box',
-                    transition: 'border-color 0.2s',
-                    boxShadow: !t.published ? '0 0 16px rgba(245, 158, 11, 0.15)' : 'none',
-                  }}
-                >
-                  <div>
-                    {/* Top Row: Author & Rating */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.75rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                        <div
-                          style={{
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            backgroundColor: 'rgba(22, 119, 255, 0.15)',
-                            border: '1px solid rgba(56, 189, 248, 0.25)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            overflow: 'hidden',
-                            flexShrink: 0,
-                          }}
-                        >
-                          {t.photo ? (
-                            <img src={t.photo} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          ) : (
-                            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', fontFamily: 'var(--font-mono)' }}>
-                              {t.name.slice(0, 2).toUpperCase()}
-                            </span>
-                          )}
-                        </div>
-
-                        <div>
-                          <h3 style={{ fontSize: '0.98rem', fontWeight: 600, color: '#F8FAFC', margin: 0, lineHeight: 1.25 }}>
-                            {t.name}
-                          </h3>
-                          {(t.role || t.company) && (
-                            <span
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', width: '70px' }}>
+                        Order
+                      </th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                        Client &amp; Company
+                      </th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                        Testimonial Quote
+                      </th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                        Rating
+                      </th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                        Status / Approval
+                      </th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredItems.map((item, index) => (
+                      <tr key={item.id} style={{ borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
+                        {/* Order Controls */}
+                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', width: '70px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                            <button
+                              type="button"
+                              title="Move up"
+                              disabled={index === 0}
+                              onClick={() => handleMoveOrder(index, 'UP')}
                               style={{
-                                fontFamily: 'var(--font-mono, monospace)',
-                                fontSize: '0.65rem',
-                                color: '#38BDF8',
-                                display: 'block',
-                                marginTop: '0.15rem',
+                                background: 'transparent',
+                                border: 'none',
+                                color: index === 0 ? '#334155' : '#38BDF8',
+                                cursor: index === 0 ? 'not-allowed' : 'pointer',
+                                fontSize: '0.85rem',
+                                padding: 0,
                               }}
                             >
-                              {[t.role, t.company].filter(Boolean).join(' · ')}
+                              ▲
+                            </button>
+                            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#94A3B8', minWidth: '16px', textAlign: 'center' }}>
+                              {index + 1}
                             </span>
-                          )}
-                        </div>
-                      </div>
+                            <button
+                              type="button"
+                              title="Move down"
+                              disabled={index === filteredItems.length - 1}
+                              onClick={() => handleMoveOrder(index, 'DOWN')}
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: index === filteredItems.length - 1 ? '#334155' : '#38BDF8',
+                                cursor: index === filteredItems.length - 1 ? 'not-allowed' : 'pointer',
+                                fontSize: '0.85rem',
+                                padding: 0,
+                              }}
+                            >
+                              ▼
+                            </button>
+                          </div>
+                        </td>
 
-                      <span
-                        style={{
-                          fontFamily: 'var(--font-mono, monospace)',
-                          fontSize: '0.62rem',
-                          padding: '0.2rem 0.5rem',
-                          borderRadius: '4px',
-                          fontWeight: 600,
-                          letterSpacing: '0.08em',
-                          backgroundColor: t.published ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.15)',
-                          color: t.published ? '#34D399' : '#FBBF24',
-                          border: t.published ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(245, 158, 11, 0.4)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {t.published ? 'LIVE / ACTIVE' : 'PENDING REVIEW'}
-                      </span>
-                    </div>
+                        {/* Client & Avatar */}
+                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', minWidth: '220px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <div
+                              style={{
+                                width: '38px',
+                                height: '38px',
+                                borderRadius: '50%',
+                                backgroundColor: 'rgba(22, 119, 255, 0.15)',
+                                border: '1px solid rgba(22, 119, 255, 0.3)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '0.9rem',
+                                fontWeight: 700,
+                                color: '#38BDF8',
+                                flexShrink: 0,
+                                overflow: 'hidden',
+                                position: 'relative',
+                              }}
+                            >
+                              {item.photo ? (
+                                <Image
+                                  src={item.photo}
+                                  alt={item.name}
+                                  fill
+                                  sizes="38px"
+                                  style={{ objectFit: 'cover' }}
+                                />
+                              ) : (
+                                item.name.charAt(0).toUpperCase()
+                              )}
+                            </div>
 
-                    {/* Star Rating */}
-                    {t.rating && (
-                      <div style={{ color: '#F59E0B', fontSize: '0.8rem', letterSpacing: '0.1em', marginBottom: '0.4rem' }}>
-                        {'★'.repeat(t.rating)}
-                      </div>
-                    )}
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.92rem' }}>
+                                {item.name}
+                              </div>
+                              <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.15rem' }}>
+                                {item.role ? `${item.role}, ` : ''}{item.company || 'Client'}
+                              </div>
+                            </div>
+                          </div>
+                        </td>
 
-                    {/* Testimonial Quote */}
-                    <p
-                      style={{
-                        fontSize: '0.84rem',
-                        color: '#CBD5E1',
-                        lineHeight: 1.55,
-                        margin: 0,
-                        display: '-webkit-box',
-                        WebkitLineClamp: 3,
-                        WebkitBoxOrient: 'vertical',
-                        overflow: 'hidden',
-                        fontWeight: 300,
-                        fontStyle: 'italic',
-                      }}
-                    >
-                      &quot;{t.content}&quot;
-                    </p>
-                  </div>
+                        {/* Quote */}
+                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', maxWidth: '380px' }}>
+                          <div style={{ fontSize: '0.82rem', color: '#CBD5E1', lineHeight: 1.45, fontStyle: 'italic' }}>
+                            "{item.content}"
+                          </div>
+                        </td>
 
-                  {/* Actions Bottom Bar */}
-                  <div
-                    style={{
-                      paddingTop: '0.75rem',
-                      borderTop: '1px solid rgba(22, 119, 255, 0.12)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      fontSize: '0.75rem',
-                    }}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleTogglePublish(t)}
-                      style={{
-                        backgroundColor: !t.published ? 'rgba(16, 185, 129, 0.2)' : 'transparent',
-                        border: !t.published ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(148, 163, 184, 0.25)',
-                        color: !t.published ? '#34D399' : '#94A3B8',
-                        borderRadius: '4px',
-                        padding: '0.3rem 0.65rem',
-                        cursor: 'pointer',
-                        fontSize: '0.72rem',
-                        fontWeight: 600,
-                        fontFamily: 'var(--font-mono, monospace)',
-                      }}
-                    >
-                      {!t.published ? '✓ Approve & Publish' : 'Deactivate'}
-                    </button>
+                        {/* Rating */}
+                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
+                          <div style={{ color: '#FBBF24', fontSize: '0.85rem', letterSpacing: '0.1em' }}>
+                            {'★'.repeat(item.rating || 5)}
+                          </div>
+                        </td>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <button
-                        type="button"
-                        onClick={() => handleEdit(t)}
-                        style={{
-                          backgroundColor: 'rgba(22, 119, 255, 0.15)',
-                          border: '1px solid rgba(22, 119, 255, 0.35)',
-                          color: '#38BDF8',
-                          borderRadius: '4px',
-                          padding: '0.25rem 0.65rem',
-                          cursor: 'pointer',
-                          fontWeight: 600,
-                          fontSize: '0.72rem',
-                          fontFamily: 'var(--font-mono, monospace)',
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(t.id, t.name)}
-                        style={{
-                          backgroundColor: 'rgba(239, 68, 68, 0.12)',
-                          border: '1px solid rgba(239, 68, 68, 0.3)',
-                          color: '#F87171',
-                          borderRadius: '4px',
-                          padding: '0.25rem 0.65rem',
-                          cursor: 'pointer',
-                          fontSize: '0.72rem',
-                          fontFamily: 'var(--font-mono, monospace)',
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                        {/* Published / Approval Status */}
+                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
+                          <button
+                            type="button"
+                            onClick={() => handleTogglePublish(item)}
+                            style={{
+                              backgroundColor: item.published ? 'rgba(16, 185, 129, 0.15)' : 'rgba(234, 179, 8, 0.15)',
+                              border: item.published ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(234, 179, 8, 0.35)',
+                              color: item.published ? '#34D399' : '#FBBF24',
+                              padding: '0.25rem 0.6rem',
+                              borderRadius: '4px',
+                              fontSize: '0.72rem',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                              fontFamily: 'var(--font-mono, monospace)',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.35rem',
+                            }}
+                          >
+                            <span
+                              style={{
+                                width: '5px',
+                                height: '5px',
+                                borderRadius: '50%',
+                                backgroundColor: item.published ? '#34D399' : '#FBBF24',
+                              }}
+                            />
+                            {item.published ? 'LIVE IN SLIDER' : 'PENDING APPROVAL'}
+                          </button>
+                        </td>
+
+                        {/* Actions */}
+                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', textAlign: 'right' }}>
+                          <div style={{ display: 'flex', gap: '0.45rem', justifyContent: 'flex-end' }}>
+                            <button
+                              type="button"
+                              onClick={() => handleEdit(item)}
+                              style={{
+                                backgroundColor: 'rgba(22, 119, 255, 0.15)',
+                                border: '1px solid rgba(22, 119, 255, 0.35)',
+                                color: '#38BDF8',
+                                padding: '0.3rem 0.65rem',
+                                borderRadius: '4px',
+                                fontSize: '0.72rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                fontFamily: 'var(--font-mono, monospace)',
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(item.id, item.name)}
+                              style={{
+                                backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                                border: '1px solid rgba(239, 68, 68, 0.3)',
+                                color: '#F87171',
+                                padding: '0.3rem 0.55rem',
+                                borderRadius: '4px',
+                                fontSize: '0.72rem',
+                                cursor: 'pointer',
+                                fontFamily: 'var(--font-mono, monospace)',
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </>
       ) : (
-        /* Edit / Create Form View */
+        /* Create & Edit Modal Form */
         <div
           style={{
             backgroundColor: 'rgba(6, 21, 43, 0.85)',
             border: '1px solid rgba(22, 119, 255, 0.25)',
             borderRadius: '12px',
-            padding: 'clamp(1.5rem, 3vw, 2.5rem)',
-            maxWidth: '650px',
+            padding: '1.75rem',
+            maxWidth: '720px',
             margin: '0 auto',
-            boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+            boxShadow: '0 20px 50px -10px rgba(0, 0, 0, 0.7)',
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', paddingBottom: '0.75rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
-              {currentId ? 'Edit Testimonial' : 'Create New Testimonial'}
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#F8FAFC' }}>
+              {currentId ? `Edit Testimonial: ${formData.name}` : 'Add Client Testimonial'}
             </h2>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                color: '#94A3B8',
-                fontSize: '1.25rem',
-                cursor: 'pointer',
-              }}
+              style={{ background: 'transparent', border: 'none', color: '#94A3B8', fontSize: '1.1rem', cursor: 'pointer' }}
             >
               ✕
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {/* Section 1: Client Overview */}
             <div>
-              <label style={labelStyle}>Client / Author Full Name *</label>
-              <input
-                type="text"
-                required
-                placeholder="e.g. Muhammad Tariq"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                style={inputStyle}
-              />
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div>
-                <label style={labelStyle}>Role / Job Title</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Director of Academic Operations"
-                  value={formData.role}
-                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                  style={inputStyle}
-                />
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                1. Client &amp; Organization Details
               </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+                <div>
+                  <label style={labelStyle}>Full Name *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Dr. Usman Farooq"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    style={inputStyle}
+                  />
+                </div>
 
-              <div>
-                <label style={labelStyle}>Company / Organization</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Eden School System"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  style={inputStyle}
-                />
-              </div>
-            </div>
+                <div>
+                  <label style={labelStyle}>Role / Designation</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. VP of Systems Engineering"
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                    style={inputStyle}
+                  />
+                </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div>
-                <label style={labelStyle}>Star Rating</label>
-                <select
-                  value={formData.rating}
-                  onChange={(e) => setFormData({ ...formData, rating: Number(e.target.value) || 5 })}
-                  style={inputStyle}
-                >
-                  <option value={5}>★★★★★ (5 Stars)</option>
-                  <option value={4}>★★★★☆ (4 Stars)</option>
-                  <option value={3}>★★★☆☆ (3 Stars)</option>
-                  <option value={2}>★★☆☆☆ (2 Stars)</option>
-                  <option value={1}>★☆☆☆☆ (1 Star)</option>
-                </select>
-              </div>
+                <div>
+                  <label style={labelStyle}>Company / Organization</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Emerge Technologies"
+                    value={formData.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                    style={inputStyle}
+                  />
+                </div>
 
-              <div>
-                <label style={labelStyle}>Display Order</label>
-                <input
-                  type="number"
-                  min={1}
-                  value={formData.order}
-                  onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 1 })}
-                  style={inputStyle}
-                />
+                <div>
+                  <label style={labelStyle}>Star Rating</label>
+                  <select
+                    value={formData.rating}
+                    onChange={(e) => setFormData({ ...formData, rating: Number(e.target.value) })}
+                    style={inputStyle}
+                  >
+                    <option value={5}>⭐⭐⭐⭐⭐ (5 Stars)</option>
+                    <option value={4}>⭐⭐⭐⭐ (4 Stars)</option>
+                    <option value={3}>⭐⭐⭐ (3 Stars)</option>
+                  </select>
+                </div>
               </div>
             </div>
 
+            {/* Section 2: Avatar & Media */}
             <div>
-              <label style={labelStyle}>Testimonial Quote / Experience *</label>
-              <textarea
-                rows={4}
-                required
-                placeholder="Enter detailed testimonial quote describing the impact of Quantum AI's systems..."
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                style={{ ...inputStyle, resize: 'vertical' }}
-              />
-            </div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                2. Client Photo (Optional)
+              </div>
 
-            {/* Photo Upload Section */}
-            <div>
-              <label style={labelStyle}>Author Photo / Avatar</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                 <div
                   style={{
-                    width: '48px',
-                    height: '48px',
+                    width: '54px',
+                    height: '54px',
                     borderRadius: '50%',
-                    backgroundColor: '#030712',
-                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    position: 'relative',
+                    overflow: 'hidden',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    overflow: 'hidden',
                     flexShrink: 0,
                   }}
                 >
                   {formData.photo ? (
-                    <img src={formData.photo} alt="Avatar preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <Image
+                      src={formData.photo}
+                      alt="Avatar preview"
+                      fill
+                      sizes="54px"
+                      style={{ objectFit: 'cover' }}
+                    />
                   ) : (
-                    <span style={{ fontSize: '0.65rem', color: '#64748B' }}>NO PHOTO</span>
+                    <span style={{ fontSize: '1.2rem', color: '#64748B' }}>👤</span>
                   )}
                 </div>
 
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                   <input
                     type="file"
+                    ref={fileInputRef}
                     accept="image/*"
                     onChange={handleFileUpload}
-                    disabled={isUploading}
-                    style={{ fontSize: '0.8rem', color: '#94A3B8' }}
+                    style={{ display: 'none' }}
                   />
-                  {isUploading && (
-                    <div style={{ fontSize: '0.72rem', color: '#38BDF8', marginTop: '0.25rem' }}>
-                      Uploading image...
-                    </div>
-                  )}
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <button
+                      type="button"
+                      disabled={isUploading}
+                      onClick={() => fileInputRef.current?.click()}
+                      style={{
+                        backgroundColor: 'rgba(22, 119, 255, 0.15)',
+                        border: '1px solid rgba(22, 119, 255, 0.35)',
+                        color: '#38BDF8',
+                        padding: '0.4rem 0.75rem',
+                        borderRadius: '6px',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        cursor: isUploading ? 'not-allowed' : 'pointer',
+                        fontFamily: 'var(--font-mono, monospace)',
+                      }}
+                    >
+                      {isUploading ? 'Uploading...' : '📁 Upload Photo'}
+                    </button>
+                    {formData.photo && (
+                      <button
+                        type="button"
+                        onClick={() => setFormData({ ...formData, photo: '' })}
+                        style={{
+                          backgroundColor: 'transparent',
+                          border: '1px solid rgba(239, 68, 68, 0.3)',
+                          color: '#F87171',
+                          padding: '0.4rem 0.65rem',
+                          borderRadius: '6px',
+                          fontSize: '0.78rem',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Or paste direct image URL (e.g. /images/clients/avatar.jpg)"
+                    value={formData.photo}
+                    onChange={(e) => setFormData({ ...formData, photo: e.target.value })}
+                    style={{ ...inputStyle, fontSize: '0.78rem', padding: '0.45rem 0.65rem' }}
+                  />
                 </div>
               </div>
             </div>
 
-            {/* Published Toggle */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginTop: '0.5rem' }}>
+            {/* Section 3: Testimonial Quote */}
+            <div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                3. Testimonial Quote *
+              </div>
+
+              <textarea
+                rows={4}
+                required
+                placeholder="Share the client's direct feedback on technical architecture, speed, reliability, and business impact..."
+                value={formData.content}
+                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.5 }}
+              />
+            </div>
+
+            {/* Publish Checkbox */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
               <input
                 type="checkbox"
-                id="testimonialPublished"
+                id="testPublished"
                 checked={formData.published}
                 onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                style={{ cursor: 'pointer', width: '16px', height: '16px' }}
               />
-              <label htmlFor="testimonialPublished" style={{ color: '#F8FAFC', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 500 }}>
-                Publish immediately to live public continuous marquee slider
+              <label htmlFor="testPublished" style={{ fontSize: '0.85rem', color: '#CBD5E1', cursor: 'pointer' }}>
+                Approve &amp; display immediately in the continuous horizontal marquee on the homepage (<span style={{ color: '#38BDF8' }}>/#testimonials</span>)
               </label>
             </div>
 
             {/* Form Actions */}
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)', paddingTop: '1.25rem' }}>
+            <div style={{ display: 'flex', gap: '0.65rem', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
               <button
                 type="button"
                 onClick={() => setIsEditing(false)}
@@ -785,11 +826,12 @@ export default function TestimonialsAdminClient({
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
                   color: '#94A3B8',
-                  padding: '0.6rem 1.25rem',
-                  borderRadius: 6,
-                  cursor: 'pointer',
+                  padding: '0.55rem 1.15rem',
+                  borderRadius: '6px',
                   fontWeight: 600,
-                  fontSize: '0.85rem',
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-mono, monospace)',
                 }}
               >
                 Cancel
@@ -797,21 +839,21 @@ export default function TestimonialsAdminClient({
 
               <button
                 type="submit"
-                disabled={isSaving}
+                disabled={isSubmitting}
                 style={{
                   backgroundColor: '#1677FF',
                   border: 'none',
                   color: '#FFFFFF',
-                  padding: '0.6rem 1.5rem',
-                  borderRadius: 6,
-                  cursor: isSaving ? 'not-allowed' : 'pointer',
+                  padding: '0.55rem 1.45rem',
+                  borderRadius: '6px',
                   fontWeight: 600,
-                  fontSize: '0.85rem',
-                  opacity: isSaving ? 0.7 : 1,
+                  fontSize: '0.82rem',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
                   fontFamily: 'var(--font-mono, monospace)',
+                  boxShadow: '0 4px 14px rgba(22, 119, 255, 0.35)',
                 }}
               >
-                {isSaving ? 'Saving...' : currentId ? 'Update Testimonial' : 'Create Testimonial'}
+                {isSubmitting ? 'Saving...' : currentId ? 'Save Changes' : 'Create Testimonial'}
               </button>
             </div>
           </form>
