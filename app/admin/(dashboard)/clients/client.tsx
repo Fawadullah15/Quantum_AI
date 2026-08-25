@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { createClient, updateClient, deleteClient } from './actions';
 
-interface ClientItem {
+export interface ClientItem {
   id: string;
   name: string;
   slug?: string | null;
@@ -62,7 +62,7 @@ export default function ClientsManagerClient({
       description: '',
       featured: true,
       published: true,
-      order: items.length,
+      order: items.length + 1,
     });
     setCurrentId(null);
     setIsEditing(true);
@@ -117,8 +117,8 @@ export default function ClientsManagerClient({
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (confirm('Are you sure you want to delete this organization?')) {
+  const handleDelete = async (id: string, name: string) => {
+    if (confirm(`Are you sure you want to delete "${name}"?`)) {
       try {
         await deleteClient(id);
         setItems((prev) => prev.filter((item) => item.id !== id));
@@ -129,133 +129,318 @@ export default function ClientsManagerClient({
     }
   };
 
-  const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (item.industry && item.industry.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredItems = items.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (item.industry && item.industry.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '0.65rem 0.85rem',
+    backgroundColor: '#070B14',
+    border: '1px solid rgba(22, 119, 255, 0.22)',
+    borderRadius: 6,
+    color: '#F8FAFC',
+    fontSize: '0.875rem',
+    outline: 'none',
+    boxSizing: 'border-box',
+  };
+
+  const labelStyle: React.CSSProperties = {
+    display: 'block',
+    fontSize: '0.75rem',
+    fontWeight: 600,
+    color: '#94A3B8',
+    marginBottom: '0.35rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.05em',
+    fontFamily: 'var(--font-mono, monospace)',
+  };
+
   return (
-    <div className="text-gray-200">
+    <div style={{ color: '#F8FAFC', width: '100%' }}>
       {!isEditing ? (
         <>
           {/* Top action row */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-            <div className="relative w-full sm:w-72">
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '1rem',
+              marginBottom: '1.5rem',
+            }}
+          >
+            <div style={{ position: 'relative', minWidth: '260px', flex: '1', maxWidth: '380px' }}>
               <input
                 type="text"
-                placeholder="Search organizations..."
+                placeholder="Search organizations or industry..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-[#081735] border border-blue-900/40 rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                style={{
+                  width: '100%',
+                  backgroundColor: '#070B14',
+                  border: '1px solid rgba(22, 119, 255, 0.25)',
+                  borderRadius: '8px',
+                  padding: '0.6rem 0.9rem',
+                  fontSize: '0.875rem',
+                  color: '#F8FAFC',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                }}
               />
             </div>
 
             <button
               onClick={handleCreate}
-              className="bg-[#1677FF] hover:bg-blue-600 text-white px-4 py-2 rounded-md font-medium text-sm transition-colors flex items-center gap-2 shadow-lg shadow-blue-500/20"
+              style={{
+                backgroundColor: '#1677FF',
+                color: '#FFFFFF',
+                padding: '0.6rem 1.25rem',
+                borderRadius: '6px',
+                fontWeight: 600,
+                fontSize: '0.85rem',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                fontFamily: 'var(--font-mono, monospace)',
+                letterSpacing: '0.04em',
+                boxShadow: '0 4px 12px rgba(22, 119, 255, 0.3)',
+                transition: 'background-color 0.2s',
+              }}
             >
-              <span>+</span> Add Organization
+              <span>+</span> ADD ORGANIZATION
             </button>
           </div>
 
-          {/* Table / List */}
+          {/* Grid of Client Cards */}
           {filteredItems.length === 0 ? (
-            <div className="bg-[#06152B] border border-blue-950/60 rounded-xl p-12 text-center">
-              <div className="text-3xl mb-3">🏢</div>
-              <h3 className="text-lg font-semibold text-gray-200 mb-1">No organizations found</h3>
-              <p className="text-sm text-gray-400 mb-4 max-w-sm mx-auto">
-                Add clients, companies, or partners you have worked with to showcase on the landing page.
+            <div
+              style={{
+                backgroundColor: 'rgba(6, 21, 43, 0.65)',
+                border: '1px solid rgba(22, 119, 255, 0.18)',
+                borderRadius: '12px',
+                padding: '3.5rem 2rem',
+                textAlign: 'center',
+              }}
+            >
+              <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🏢</div>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 0.5rem 0' }}>
+                No organizations found
+              </h3>
+              <p style={{ color: '#94A3B8', fontSize: '0.875rem', maxWidth: '400px', margin: '0 auto 1.5rem', lineHeight: 1.5 }}>
+                Add organizations, companies, or products you have deployed to showcase on the landing page.
               </p>
               <button
                 onClick={handleCreate}
-                className="bg-[#1677FF] hover:bg-blue-600 text-white px-4 py-2 rounded-md font-medium text-sm transition-colors inline-flex items-center gap-2"
+                style={{
+                  backgroundColor: '#1677FF',
+                  color: '#FFFFFF',
+                  padding: '0.6rem 1.25rem',
+                  borderRadius: '6px',
+                  fontWeight: 600,
+                  fontSize: '0.85rem',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
               >
-                <span>+</span> Add First Organization
+                + Add First Organization
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                gap: '1.25rem',
+                width: '100%',
+              }}
+            >
               {filteredItems.map((c) => (
                 <div
                   key={c.id}
-                  className="bg-[#06152B] border border-blue-900/30 rounded-xl p-5 flex flex-col justify-between hover:border-blue-500/40 transition-all group relative"
+                  style={{
+                    backgroundColor: 'rgba(6, 21, 43, 0.75)',
+                    border: '1px solid rgba(22, 119, 255, 0.18)',
+                    borderRadius: '10px',
+                    padding: '1.25rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    gap: '0.85rem',
+                    boxSizing: 'border-box',
+                    transition: 'border-color 0.2s, transform 0.2s',
+                  }}
                 >
                   <div>
-                    {/* Header */}
-                    <div className="flex items-start justify-between gap-3 mb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-blue-950/80 border border-blue-800/40 flex items-center justify-center text-lg overflow-hidden shrink-0">
+                    {/* Top Row: Name, Logo & Status Badge */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.75rem', marginBottom: '0.65rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                        <div
+                          style={{
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '6px',
+                            backgroundColor: 'rgba(22, 119, 255, 0.14)',
+                            border: '1px solid rgba(56, 189, 248, 0.25)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '1.1rem',
+                            overflow: 'hidden',
+                            flexShrink: 0,
+                          }}
+                        >
                           {c.logo ? (
-                            <img src={c.logo} alt={c.name} className="w-full h-full object-cover" />
+                            <img src={c.logo} alt={c.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           ) : (
                             <span>🏢</span>
                           )}
                         </div>
                         <div>
-                          <h3 className="font-semibold text-gray-100 text-base leading-snug group-hover:text-blue-400 transition-colors">
+                          <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#F8FAFC', margin: 0, lineHeight: 1.25 }}>
                             {c.name}
                           </h3>
-                          <span className="text-xs text-blue-400/80 font-mono">
-                            {c.industry || 'General Client'}
-                          </span>
+                          {c.industry && (
+                            <span
+                              style={{
+                                fontFamily: 'var(--font-mono, monospace)',
+                                fontSize: '0.65rem',
+                                color: '#38BDF8',
+                                letterSpacing: '0.05em',
+                                textTransform: 'uppercase',
+                                display: 'block',
+                                marginTop: '0.15rem',
+                              }}
+                            >
+                              {c.industry}
+                            </span>
+                          )}
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1.5">
-                        <span
-                          className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${
-                            c.published
-                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
-                              : 'bg-amber-500/10 text-amber-400 border-amber-500/30'
-                          }`}
-                        >
-                          {c.published ? 'LIVE' : 'DRAFT'}
-                        </span>
-                      </div>
+                      <span
+                        style={{
+                          fontFamily: 'var(--font-mono, monospace)',
+                          fontSize: '0.62rem',
+                          padding: '0.2rem 0.5rem',
+                          borderRadius: '4px',
+                          fontWeight: 600,
+                          letterSpacing: '0.08em',
+                          backgroundColor: c.published ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.12)',
+                          color: c.published ? '#34D399' : '#FBBF24',
+                          border: c.published ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(245, 158, 11, 0.3)',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {c.published ? 'LIVE' : 'DRAFT'}
+                      </span>
                     </div>
 
                     {/* Description */}
                     {c.description && (
-                      <p className="text-xs text-gray-400 line-clamp-2 mb-3 leading-relaxed">
+                      <p
+                        style={{
+                          fontSize: '0.825rem',
+                          color: '#94A3B8',
+                          lineHeight: 1.5,
+                          margin: '0 0 0.65rem 0',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 3,
+                          WebkitBoxOrient: 'vertical',
+                          overflow: 'hidden',
+                          fontWeight: 300,
+                        }}
+                      >
                         {c.description}
                       </p>
                     )}
 
-                    {/* Website */}
+                    {/* Target Link */}
                     {c.website && (
-                      <a
-                        href={c.website}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-xs text-blue-400/70 hover:text-blue-300 font-mono flex items-center gap-1 mb-3"
-                      >
-                        <span>{c.website.replace(/^https?:\/\//, '')}</span>
-                        <span>↗</span>
-                      </a>
+                      <div style={{ marginTop: '0.35rem' }}>
+                        <a
+                          href={c.website}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            fontSize: '0.72rem',
+                            color: '#38BDF8',
+                            fontFamily: 'var(--font-mono, monospace)',
+                            textDecoration: 'none',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.25rem',
+                          }}
+                        >
+                          <span>{c.website}</span>
+                          <span>↗</span>
+                        </a>
+                      </div>
                     )}
                   </div>
 
                   {/* Actions Bottom Bar */}
-                  <div className="pt-3 border-t border-blue-950/80 flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => handleTogglePublish(c)}
-                        className="text-gray-400 hover:text-gray-200 font-medium transition-colors"
-                      >
-                        {c.published ? 'Unpublish' : 'Publish'}
-                      </button>
-                    </div>
+                  <div
+                    style={{
+                      paddingTop: '0.75rem',
+                      borderTop: '1px solid rgba(22, 119, 255, 0.12)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      fontSize: '0.75rem',
+                    }}
+                  >
+                    <button
+                      onClick={() => handleTogglePublish(c)}
+                      style={{
+                        background: 'transparent',
+                        border: '1px solid rgba(148, 163, 184, 0.25)',
+                        color: c.published ? '#94A3B8' : '#34D399',
+                        borderRadius: '4px',
+                        padding: '0.25rem 0.55rem',
+                        cursor: 'pointer',
+                        fontSize: '0.72rem',
+                        fontFamily: 'var(--font-mono, monospace)',
+                      }}
+                    >
+                      {c.published ? 'Unpublish' : 'Publish'}
+                    </button>
 
-                    <div className="flex items-center gap-3">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <button
                         onClick={() => handleEdit(c)}
-                        className="text-blue-400 hover:text-blue-300 font-medium transition-colors"
+                        style={{
+                          backgroundColor: 'rgba(22, 119, 255, 0.15)',
+                          border: '1px solid rgba(22, 119, 255, 0.35)',
+                          color: '#38BDF8',
+                          borderRadius: '4px',
+                          padding: '0.25rem 0.65rem',
+                          cursor: 'pointer',
+                          fontWeight: 600,
+                          fontSize: '0.72rem',
+                          fontFamily: 'var(--font-mono, monospace)',
+                        }}
                       >
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(c.id)}
-                        className="text-rose-400 hover:text-rose-300 font-medium transition-colors"
+                        onClick={() => handleDelete(c.id, c.name)}
+                        style={{
+                          backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                          border: '1px solid rgba(239, 68, 68, 0.3)',
+                          color: '#F87171',
+                          borderRadius: '4px',
+                          padding: '0.25rem 0.65rem',
+                          cursor: 'pointer',
+                          fontWeight: 600,
+                          fontSize: '0.72rem',
+                          fontFamily: 'var(--font-mono, monospace)',
+                        }}
                       >
                         Delete
                       </button>
@@ -267,137 +452,192 @@ export default function ClientsManagerClient({
           )}
         </>
       ) : (
-        /* Form / Modal View */
-        <div className="max-w-2xl bg-[#06152B] border border-blue-900/40 rounded-xl p-6 sm:p-8">
-          <div className="flex items-center justify-between pb-4 border-b border-blue-950/80 mb-6">
-            <h2 className="text-xl font-bold text-gray-100">
-              {currentId ? 'Edit Organization' : 'Add New Organization'}
-            </h2>
+        /* Form / Modal View for Create or Edit */
+        <div
+          style={{
+            backgroundColor: 'rgba(6, 21, 43, 0.85)',
+            border: '1px solid rgba(22, 119, 255, 0.25)',
+            borderRadius: '12px',
+            padding: '1.75rem',
+            maxWidth: '680px',
+            margin: '0 auto',
+            boxSizing: 'border-box',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              borderBottom: '1px solid rgba(22, 119, 255, 0.15)',
+              paddingBottom: '0.85rem',
+              marginBottom: '1.25rem',
+            }}
+          >
+            <div>
+              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#1677FF', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
+                CLIENT & COLLABORATION
+              </div>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
+                {currentId ? `Edit: ${formData.name}` : 'Add New Organization / Client'}
+              </h2>
+            </div>
+
             <button
-              onClick={() => setIsEditing(false)}
-              className="text-gray-400 hover:text-gray-200 text-sm"
+              onClick={() => {
+                setIsEditing(false);
+                setCurrentId(null);
+              }}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: '#94A3B8',
+                fontSize: '1.25rem',
+                cursor: 'pointer',
+              }}
             >
-              Cancel
+              ✕
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-gray-400 mb-1.5">
-                Organization / Client Name <span className="text-blue-400">*</span>
-              </label>
+              <label style={labelStyle}>Organization / Client Name *</label>
               <input
                 type="text"
                 required
-                placeholder="e.g. Apex Education, Zenith Retail, CloudBase"
+                placeholder="e.g. School Operations Manager"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full bg-[#081735] border border-blue-900/50 rounded-lg px-3.5 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                style={inputStyle}
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-gray-400 mb-1.5">
-                  Industry / Sector
-                </label>
+                <label style={labelStyle}>Industry / Category</label>
                 <input
                   type="text"
-                  placeholder="e.g. Education, Retail, AI & ML, Healthcare"
+                  placeholder="e.g. Education / Institution"
                   value={formData.industry}
                   onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
-                  className="w-full bg-[#081735] border border-blue-900/50 rounded-lg px-3.5 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                  style={inputStyle}
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-mono uppercase tracking-wider text-gray-400 mb-1.5">
-                  Display Order
-                </label>
+                <label style={labelStyle}>Display Order</label>
                 <input
                   type="number"
+                  placeholder="1, 2, 3..."
                   value={formData.order}
-                  onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                  className="w-full bg-[#081735] border border-blue-900/50 rounded-lg px-3.5 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                  onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) || 0 })}
+                  style={inputStyle}
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-gray-400 mb-1.5">
-                Website URL (Optional)
-              </label>
+              <label style={labelStyle}>Website or Case Study URL</label>
               <input
-                type="url"
-                placeholder="https://example.com"
+                type="text"
+                placeholder="e.g. /work/school-operations-manager or https://client.com"
                 value={formData.website}
                 onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                className="w-full bg-[#081735] border border-blue-900/50 rounded-lg px-3.5 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                style={inputStyle}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-gray-400 mb-1.5">
-                Logo Image URL (Optional)
-              </label>
+              <label style={labelStyle}>Logo Image URL (Optional)</label>
               <input
-                type="url"
-                placeholder="https://... or upload in media library"
+                type="text"
+                placeholder="e.g. /uploads/client-logo.png"
                 value={formData.logo}
                 onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
-                className="w-full bg-[#081735] border border-blue-900/50 rounded-lg px-3.5 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                style={inputStyle}
               />
             </div>
 
             <div>
-              <label className="block text-xs font-mono uppercase tracking-wider text-gray-400 mb-1.5">
-                Project / Work Description
-              </label>
+              <label style={labelStyle}>Short Description</label>
               <textarea
                 rows={3}
-                placeholder="Briefly describe what Quantum AI built or automated for this organization..."
+                placeholder="Brief summary of the platform, collaboration, or system built..."
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full bg-[#081735] border border-blue-900/50 rounded-lg px-3.5 py-2.5 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                style={{ ...inputStyle, resize: 'vertical' }}
               />
             </div>
 
-            <div className="flex items-center gap-6 pt-2">
-              <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300">
+            <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.25rem' }}>
+              <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.85rem' }}>
                 <input
                   type="checkbox"
                   checked={formData.published}
                   onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                  className="rounded bg-[#081735] border-blue-900 text-blue-500 focus:ring-0"
                 />
-                <span>Published (Visible on Site)</span>
+                <span>Published (Visible on site)</span>
               </label>
 
-              <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-300">
+              <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.85rem' }}>
                 <input
                   type="checkbox"
                   checked={formData.featured}
                   onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                  className="rounded bg-[#081735] border-blue-900 text-blue-500 focus:ring-0"
                 />
-                <span>Featured Badge</span>
+                <span>Featured</span>
               </label>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-6 border-t border-blue-950/80">
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '0.75rem',
+                marginTop: '1rem',
+                borderTop: '1px solid rgba(22, 119, 255, 0.15)',
+                paddingTop: '1rem',
+              }}
+            >
               <button
                 type="button"
-                onClick={() => setIsEditing(false)}
-                className="px-4 py-2 text-sm text-gray-400 hover:text-gray-200 transition-colors"
+                onClick={() => {
+                  setIsEditing(false);
+                  setCurrentId(null);
+                }}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: '1px solid rgba(148, 163, 184, 0.3)',
+                  color: '#94A3B8',
+                  padding: '0.6rem 1.25rem',
+                  borderRadius: 6,
+                  cursor: 'pointer',
+                  fontWeight: 600,
+                  fontSize: '0.85rem',
+                }}
               >
                 Cancel
               </button>
+
               <button
                 type="submit"
                 disabled={isSaving}
-                className="bg-[#1677FF] hover:bg-blue-600 disabled:opacity-50 text-white px-5 py-2 rounded-md font-medium text-sm transition-colors shadow-lg shadow-blue-500/20"
+                style={{
+                  backgroundColor: '#1677FF',
+                  border: 'none',
+                  color: '#FFFFFF',
+                  padding: '0.6rem 1.5rem',
+                  borderRadius: 6,
+                  cursor: isSaving ? 'not-allowed' : 'pointer',
+                  fontWeight: 600,
+                  fontSize: '0.85rem',
+                  opacity: isSaving ? 0.7 : 1,
+                  fontFamily: 'var(--font-mono, monospace)',
+                  letterSpacing: '0.04em',
+                }}
               >
-                {isSaving ? 'Saving...' : currentId ? 'Update Organization' : 'Create Organization'}
+                {isSaving ? 'Saving...' : currentId ? 'Save Changes' : 'Create Organization'}
               </button>
             </div>
           </form>
