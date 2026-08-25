@@ -10,6 +10,7 @@ import SolutionsSection from '@/components/sections/SolutionsSection';
 import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
 import ProcessSection from '@/components/sections/ProcessSection';
 import CapabilitiesSection from '@/components/sections/CapabilitiesSection';
+import TrustSection from '@/components/sections/TrustSection';
 
 const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr: false });
 const GlobalMapSection = dynamic(() => import('@/components/sections/GlobalMapSection'), { ssr: false });
@@ -624,152 +625,9 @@ export default function HomePage() {
         </section>
 
         {/* ═══════════════════════════════════════════════════════════
-            TRUST & SECURITY SECTION (1 Card Per Row)
+            TRUST & SECURITY SECTION (Desktop: Interactive Hover Cards / Mobile: 2x2 Trust Grid)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(4, 14, 36, 0.6)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
-          <style>{`
-            .trust-list-container {
-              display: flex;
-              flex-direction: column;
-              gap: 0.65rem;
-              width: 100%;
-            }
-            .trust-horizontal-card {
-              background-color: rgba(6, 21, 43, 0.65);
-              border: 1px solid rgba(22, 119, 255, 0.14);
-              border-radius: 10px;
-              padding: 0.85rem clamp(1rem, 2.5vw, 1.75rem);
-              display: grid;
-              grid-template-columns: minmax(200px, 240px) 1fr;
-              align-items: center;
-              gap: 1.5rem;
-              transition: border-color 0.2s, box-shadow 0.2s;
-              box-sizing: border-box;
-              width: 100%;
-            }
-            .trust-horizontal-card:hover {
-              border-color: rgba(56, 189, 248, 0.4);
-              box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.25);
-            }
-            .trust-card-left {
-              display: flex;
-              flex-direction: column;
-              gap: 0.15rem;
-            }
-            .trust-card-code {
-              font-family: var(--font-mono);
-              font-size: 0.625rem;
-              color: #38BDF8;
-              letter-spacing: 0.15em;
-              font-weight: 600;
-              text-transform: uppercase;
-            }
-            .trust-card-title {
-              font-size: 1.05rem;
-              font-weight: 600;
-              color: #F8FAFF;
-              margin: 0;
-              letter-spacing: -0.01em;
-              text-transform: none;
-              line-height: 1.3;
-            }
-            .trust-card-desc {
-              color: #94A3B8;
-              font-size: 0.875rem;
-              line-height: 1.5;
-              margin: 0;
-              font-weight: 300;
-            }
-
-            @media (max-width: 860px) {
-              .trust-horizontal-card {
-                grid-template-columns: 1fr;
-                gap: 0.35rem;
-                padding: 0.85rem 1.1rem;
-              }
-              .trust-card-title {
-                font-size: 0.95rem;
-              }
-              .trust-card-desc {
-                font-size: 0.8125rem;
-                line-height: 1.45;
-              }
-            }
-          `}</style>
-          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <p style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.72rem',
-              letterSpacing: '0.25em',
-              textTransform: 'uppercase',
-              color: '#1677FF',
-              marginBottom: '0.5rem',
-              fontWeight: 600
-            }}>
-              TRUST & SECURITY
-            </p>
-            <h2 style={{
-              fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
-              fontWeight: 700,
-              lineHeight: 1.15,
-              letterSpacing: '-0.025em',
-              color: '#F8FAFF',
-              marginBottom: '0.5rem',
-              textTransform: 'uppercase'
-            }}>
-              Engineered for Reliability and Security.
-            </h2>
-            <p style={{
-              fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
-              color: '#94A3B8',
-              lineHeight: 1.6,
-              marginBottom: 'clamp(1.5rem, 3vh, 2.25rem)',
-              maxWidth: 620,
-              fontWeight: 300
-            }}>
-              We prioritize data privacy, strict access control, and dependable cloud infrastructure across every software solution we deploy.
-            </p>
-
-            <div className="trust-list-container">
-              {[
-                {
-                  code: '01 // PRIVACY',
-                  title: 'Data Privacy & Ownership',
-                  desc: 'Your proprietary data, intellectual property, and client records remain completely yours, isolated in private cloud containers.'
-                },
-                {
-                  code: '02 // ACCESS',
-                  title: 'Role-Based Access Control',
-                  desc: 'Granular user permission models, session authentication, and audit logs built into all internal platforms and APIs.'
-                },
-                {
-                  code: '03 // INFRASTRUCTURE',
-                  title: 'Production Cloud Reliability',
-                  desc: 'Modern containerized infrastructure with continuous health monitoring, automated backups, and high uptime resilience.'
-                },
-                {
-                  code: '04 // CONTINUITY',
-                  title: 'Long-Term Support & Evolution',
-                  desc: 'Clean, documented codebases and ongoing engineering maintenance so your systems stay performant as your business grows.'
-                },
-              ].map((item, idx) => (
-                <div key={idx} className="trust-horizontal-card">
-                  <div className="trust-card-left">
-                    <span className="trust-card-code">
-                      {item.code}
-                    </span>
-                    <h3 className="trust-card-title">
-                      {item.title}
-                    </h3>
-                  </div>
-                  <p className="trust-card-desc">
-                    {item.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <TrustSection />
 
         {/* ═══════════════════════════════════════════════════════════
             TESTIMONIALS SECTION (Directly connected to Admin / DB)
