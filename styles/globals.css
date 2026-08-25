@@ -186,16 +186,11 @@ body {
 
 
 
-.public-layout h1 { font-size: clamp(var(--text-5xl), 10vw, var(--text-9xl)); letter-spacing: -0.05em; }
-
-.public-layout h2 { font-size: clamp(var(--text-4xl), 8vw, var(--text-7xl)); letter-spacing: -0.04em; }
-
-.public-layout h3 { font-size: clamp(var(--text-3xl), 5vw, var(--text-5xl)); letter-spacing: -0.03em; }
-
-.public-layout h4 { font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl)); letter-spacing: -0.02em; }
-
-.public-layout h5 { font-size: var(--text-xl); letter-spacing: -0.02em; }
-
+.public-layout h1 { font-size: clamp(var(--text-3xl), 6vw, var(--text-5xl)); letter-spacing: -0.04em; }
+.public-layout h2 { font-size: clamp(var(--text-2xl), 4vw, var(--text-4xl)); letter-spacing: -0.03em; }
+.public-layout h3 { font-size: clamp(var(--text-xl), 3vw, var(--text-3xl)); letter-spacing: -0.025em; }
+.public-layout h4 { font-size: clamp(var(--text-lg), 2.5vw, var(--text-2xl)); letter-spacing: -0.02em; }
+.public-layout h5 { font-size: var(--text-lg); letter-spacing: -0.015em; }
 .public-layout h6 { font-size: var(--text-base); letter-spacing: var(--tracking-widest); }
 
 
@@ -248,7 +243,7 @@ a {
 
 .section {
 
-  padding-block: clamp(var(--space-20), 15vh, var(--space-48));
+  padding-block: clamp(3rem, 8vh, 5rem);
 
 }
 
@@ -406,17 +401,33 @@ a {
 
    ============================================================ */
 
+@media (max-width: 1024px) {
+
+  :root {
+
+    --text-9xl: 4.5rem;
+
+    --text-8xl: 3.5rem;
+
+    --text-7xl: 3rem;
+
+  }
+
+}
+
+
+
 @media (max-width: 768px) {
 
   :root {
 
     --container-px: 1.25rem;
 
-    --text-9xl: 5rem;
+    --text-9xl: 3.5rem;
 
-    --text-8xl: 4rem;
+    --text-8xl: 3rem;
 
-    --text-7xl: 3rem;
+    --text-7xl: 2.5rem;
 
   }
 
@@ -436,9 +447,9 @@ a {
 
   .section {
 
-    padding-top: var(--space-16);
+    padding-top: 2.5rem;
 
-    padding-bottom: var(--space-16);
+    padding-bottom: 2.5rem;
 
   }
 
@@ -464,11 +475,11 @@ a {
 
     --container-px: 1rem;
 
-    --text-9xl: 3.5rem;
+    --text-9xl: 2.75rem;
 
-    --text-8xl: 3rem;
+    --text-8xl: 2.5rem;
 
-    --text-7xl: 2.5rem;
+    --text-7xl: 2.25rem;
 
   }
 

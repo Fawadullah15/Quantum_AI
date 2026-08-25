@@ -18,18 +18,18 @@ export default async function LeadershipPage() {
     <>
       <style>{`
         .ldr-page {
-          padding-top: calc(var(--nav-height, 80px) + 3.5rem);
-          padding-bottom: 6rem;
+          padding-top: calc(var(--nav-height, 72px) + 2.5rem);
+          padding-bottom: 5rem;
           padding-inline: clamp(1.25rem, 5vw, 4rem);
           min-height: 100vh;
           background: var(--color-void, #030712);
           position: relative;
         }
-        .ldr-inner { max-width: 1280px; margin: 0 auto; position: relative; z-index: 1; }
-        .ldr-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.2em; color: #64748B; text-transform: uppercase; margin-bottom: 1.5rem; }
-        .ldr-h1 { font-size: clamp(3rem, 8vw, 7rem); font-weight: 700; line-height: 0.93; letter-spacing: -0.045em; color: #F8FAFC; text-transform: uppercase; margin-bottom: 1.75rem; }
-        .ldr-desc { font-size: clamp(1rem, 1.5vw, 1.2rem); color: #A8B3C7; max-width: 560px; line-height: 1.7; margin-bottom: 4.5rem; }
-        .ldr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.75rem; max-width: 960px; }
+        .ldr-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+        .ldr-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.2em; color: #1677FF; text-transform: uppercase; margin-bottom: 0.75rem; }
+        .ldr-h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.035em; color: #F8FAFC; text-transform: uppercase; margin-bottom: 1rem; }
+        .ldr-desc { font-size: clamp(0.88rem, 1.3vw, 0.98rem); color: #94A3B8; max-width: 560px; line-height: 1.6; margin-bottom: 2.5rem; }
+        .ldr-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; max-width: 900px; }
         @media (max-width: 768px) {
           .ldr-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         }

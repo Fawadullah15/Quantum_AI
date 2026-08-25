@@ -31,8 +31,8 @@ export default function AboutPage() {
     <>
       <style>{`
         .abt-page {
-          padding-top: calc(var(--nav-height, 80px) + 4rem);
-          padding-bottom: 6rem;
+          padding-top: calc(var(--nav-height, 72px) + 2.5rem);
+          padding-bottom: 4.5rem;
           padding-inline: clamp(1.25rem, 5vw, 4rem);
           min-height: 100vh;
           background: var(--color-void, #030712);
@@ -49,19 +49,19 @@ export default function AboutPage() {
           pointer-events: none;
           z-index: 0;
         }
-        .abt-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
-        .abt-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.7rem; letter-spacing: 0.2em; color: #64748B; text-transform: uppercase; margin-bottom: 1.75rem; }
-        .abt-h1 { font-size: clamp(3.25rem, 7.5vw, 7.5rem); font-weight: 700; line-height: 0.92; letter-spacing: -0.045em; color: #F8FAFC; text-transform: uppercase; margin-bottom: 2rem; }
-        .abt-lead { font-size: clamp(1.05rem, 1.5vw, 1.25rem); color: #A8B3C7; max-width: 600px; line-height: 1.75; margin-bottom: 5.5rem; }
-        .abt-principles-header { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.2em; color: #64748B; text-transform: uppercase; padding-bottom: 2rem; border-bottom: 1px solid rgba(30,58,138,0.22); margin-bottom: 0; }
-        .principle { padding: 2.75rem 0; border-bottom: 1px solid rgba(30,58,138,0.22); display: grid; grid-template-columns: 72px 1fr 1fr; gap: 2rem; align-items: start; transition: border-bottom-color 0.3s; cursor: default; }
+        .abt-inner { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
+        .abt-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.2em; color: #64748B; text-transform: uppercase; margin-bottom: 1rem; }
+        .abt-h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.035em; color: #F8FAFC; text-transform: uppercase; margin-bottom: 1.25rem; }
+        .abt-lead { font-size: clamp(0.92rem, 1.3vw, 1.05rem); color: #A8B3C7; max-width: 580px; line-height: 1.65; margin-bottom: 3rem; }
+        .abt-principles-header { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.2em; color: #64748B; text-transform: uppercase; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(30,58,138,0.22); margin-bottom: 0; }
+        .principle { padding: 1.75rem 0; border-bottom: 1px solid rgba(30,58,138,0.22); display: grid; grid-template-columns: 60px 1fr 1.2fr; gap: 1.5rem; align-items: start; transition: border-bottom-color 0.3s; cursor: default; }
         .principle:hover { border-bottom-color: rgba(37,99,235,0.38); }
-        @media (max-width: 640px) { .principle { grid-template-columns: 52px 1fr; } .principle-body { grid-column: 1 / -1; } }
-        .principle-num { font-family: var(--font-mono, monospace); font-size: 0.78rem; color: #334155; letter-spacing: 0.08em; padding-top: 0.45rem; transition: color 0.3s; }
+        @media (max-width: 640px) { .principle { grid-template-columns: 44px 1fr; } .principle-body { grid-column: 1 / -1; } }
+        .principle-num { font-family: var(--font-mono, monospace); font-size: 0.75rem; color: #334155; letter-spacing: 0.08em; padding-top: 0.25rem; transition: color 0.3s; }
         .principle:hover .principle-num { color: #2563EB; }
-        .principle-title { font-size: clamp(2rem, 3.5vw, 3.25rem); font-weight: 700; line-height: 1.0; letter-spacing: -0.03em; color: #F8FAFC; }
+        .principle-title { font-size: clamp(1.25rem, 2.5vw, 1.85rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.025em; color: #F8FAFC; }
         .principle-title span { display: block; }
-        .principle-body { font-size: 1rem; color: #71809A; line-height: 1.8; max-width: 540px; padding-top: 0.5rem; transition: color 0.3s; }
+        .principle-body { font-size: 0.875rem; color: #71809A; line-height: 1.65; max-width: 540px; padding-top: 0.25rem; transition: color 0.3s; }
         .principle:hover .principle-body { color: #A8B3C7; }
       `}</style>
       <div className="abt-page">

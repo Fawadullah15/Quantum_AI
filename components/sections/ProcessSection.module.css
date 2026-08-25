@@ -1,5 +1,5 @@
 .section {
-  padding: clamp(6rem, 15vh, 12rem) clamp(1.5rem, 5vw, 4rem);
+  padding: clamp(3rem, 7vh, 5rem) clamp(1.25rem, 4vw, 3rem);
   background-color: var(--color-bg-primary, #030508);
   color: var(--color-text-primary, #ffffff);
   font-family: 'Space Grotesk', sans-serif;
@@ -7,26 +7,26 @@
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .header {
-  margin-bottom: 6rem;
+  margin-bottom: 2.5rem;
 }
 
 .label {
   font-family: 'Space Mono', monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
   color: var(--color-text-muted, #8a8f98);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .heading {
-  font-size: clamp(3rem, 6vw, 5rem);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.05;
   letter-spacing: -0.03em;
   margin: 0;
   text-transform: uppercase;
@@ -82,14 +82,14 @@
 
 .stageNumber {
   font-family: 'Space Mono', monospace;
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
   color: var(--color-bg-primary, #030508);
   -webkit-text-stroke: 1px var(--color-text-muted, #8a8f98);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   background: var(--color-bg-primary, #030508);
   display: inline-block;
-  padding-right: 1rem;
+  padding-right: 0.75rem;
   transition: color 0.3s ease, -webkit-text-stroke-color 0.3s ease;
 }
 

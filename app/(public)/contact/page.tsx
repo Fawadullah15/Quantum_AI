@@ -97,8 +97,8 @@ export default function ContactPage() {
     <div className="contact-page-wrapper">
       <style>{`
         .contact-page-wrapper {
-          padding-top: calc(var(--nav-height, 80px) + 2.5rem);
-          padding-bottom: 6rem;
+          padding-top: calc(var(--nav-height, 72px) + 2rem);
+          padding-bottom: 4.5rem;
           padding-inline: clamp(1rem, 4vw, 3rem);
           min-height: 100vh;
           box-sizing: border-box;
@@ -112,27 +112,27 @@ export default function ContactPage() {
         .contact-top-grid {
           display: grid;
           grid-template-columns: 1.15fr 0.85fr;
-          gap: clamp(1.5rem, 3.5vw, 3rem);
+          gap: clamp(1.5rem, 3.5vw, 2.5rem);
           align-items: center;
-          margin-bottom: clamp(2rem, 4vw, 3.5rem);
+          margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
           width: 100%;
         }
         .contact-form-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 1.25rem;
+          gap: 1rem;
           width: 100%;
         }
         .contact-submit-btn {
-          padding: 0.95rem 2.5rem;
+          padding: 0.8rem 2rem;
           background: linear-gradient(135deg, #1677FF, #0050B3);
           color: #FFFFFF;
           border: none;
           border-radius: 8px;
           font-family: var(--font-mono, monospace);
-          font-size: 0.875rem;
+          font-size: 0.8125rem;
           font-weight: 700;
-          letter-spacing: 0.12em;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
           cursor: pointer;
           box-shadow: 0 8px 24px -4px rgba(22, 119, 255, 0.5);
@@ -145,19 +145,19 @@ export default function ContactPage() {
         @media (max-width: 860px) {
           .contact-top-grid {
             grid-template-columns: 1fr;
-            gap: 1.75rem;
-            margin-bottom: 2rem;
+            gap: 1.5rem;
+            margin-bottom: 1.75rem;
           }
           .contact-form-grid {
             grid-template-columns: 1fr;
-            gap: 1.25rem;
+            gap: 1rem;
           }
           .contact-submit-btn {
             width: 100%;
             text-align: center;
           }
           .contact-page-wrapper {
-            padding-top: calc(var(--nav-height, 80px) + 1.5rem);
+            padding-top: calc(var(--nav-height, 72px) + 1.25rem);
             padding-inline: 1rem;
           }
           input, select, textarea {
@@ -174,11 +174,11 @@ export default function ContactPage() {
             <div
               style={{
                 fontFamily: 'var(--font-mono, monospace)',
-                fontSize: '0.75rem',
-                letterSpacing: '0.25em',
+                fontSize: '0.72rem',
+                letterSpacing: '0.2em',
                 color: '#38BDF8',
                 textTransform: 'uppercase',
-                marginBottom: '0.85rem',
+                marginBottom: '0.65rem',
                 fontWeight: 600,
               }}
             >
@@ -186,23 +186,23 @@ export default function ContactPage() {
             </div>
             <h1
               style={{
-                fontSize: 'clamp(2.4rem, 6.5vw, 4.75rem)',
+                fontSize: 'clamp(1.85rem, 4.5vw, 3rem)',
                 fontWeight: 700,
-                lineHeight: 0.95,
-                letterSpacing: '-0.04em',
+                lineHeight: 1.05,
+                letterSpacing: '-0.03em',
                 color: '#F8FAFC',
                 textTransform: 'uppercase',
-                margin: '0 0 1.25rem 0',
+                margin: '0 0 1rem 0',
                 wordBreak: 'break-word',
               }}
             >
-              LET'S BUILD<br />SOMETHING<br />USEFUL.
+              LET&apos;S BUILD<br />SOMETHING<br />USEFUL.
             </h1>
             <p
               style={{
-                fontSize: 'clamp(0.95rem, 1.8vw, 1.15rem)',
+                fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
                 color: '#94A3B8',
-                lineHeight: 1.65,
+                lineHeight: 1.6,
                 margin: 0,
                 maxWidth: '520px',
               }}

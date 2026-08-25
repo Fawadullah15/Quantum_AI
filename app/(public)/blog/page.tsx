@@ -14,37 +14,37 @@ export default async function BlogPage() {
   }).catch(() => []);
 
   return (
-    <div style={{ paddingTop: '8rem', paddingBottom: '6rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '80rem', margin: '0 auto' }}>
-      <h1 style={{ fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.025em', color: 'var(--color-primary)', marginBottom: '4rem' }}>INSIGHTS.</h1>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2.5rem)', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '75rem', margin: '0 auto' }}>
+      <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', color: 'var(--color-text-primary, #F8FAFC)', marginBottom: '2.5rem' }}>INSIGHTS.</h1>
       
       {posts.length === 0 ? (
-        <div style={{ padding: '6rem 0', textAlign: 'center', border: '1px solid var(--color-border)', color: 'var(--color-muted)', fontFamily: 'var(--font-space-mono)' }}>
+        <div style={{ padding: '4rem 0', textAlign: 'center', border: '1px solid var(--color-border, rgba(30,58,138,0.22))', color: 'var(--color-text-secondary, #94A3B8)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.875rem' }}>
           <p>No articles published yet.</p>
         </div>
       ) : (
-        <div className="blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem' }}>
+        <div className="blog-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.25rem' }}>
           {posts.map((post) => (
-            <Link key={post.id} href={`/blog/${post.slug}`} style={{ display: 'flex', flexDirection: 'column', height: '100%', border: '1px solid var(--color-border)', background: 'var(--color-surface)', textDecoration: 'none', color: 'inherit' }}>
+            <Link key={post.id} href={`/blog/${post.slug}`} style={{ display: 'flex', flexDirection: 'column', height: '100%', border: '1px solid var(--color-border, rgba(30,58,138,0.22))', background: 'var(--color-surface, #0A2347)', textDecoration: 'none', color: 'inherit', borderRadius: 4, overflow: 'hidden' }}>
               {post.coverImage ? (
-                <div style={{ aspectRatio: '16/9', width: '100%', background: '#000', position: 'relative', borderBottom: '1px solid var(--color-border)', overflow: 'hidden' }}>
+                <div style={{ aspectRatio: '16/9', width: '100%', background: '#000', position: 'relative', borderBottom: '1px solid var(--color-border, rgba(30,58,138,0.22))', overflow: 'hidden' }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={post.coverImage} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               ) : (
-                <div style={{ aspectRatio: '16/9', width: '100%', background: 'var(--color-bg)', position: 'relative', borderBottom: '1px solid var(--color-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-space-mono)', color: 'var(--color-muted)', fontSize: '0.875rem' }}>
+                <div style={{ aspectRatio: '16/9', width: '100%', background: 'var(--color-void, #030712)', position: 'relative', borderBottom: '1px solid var(--color-border, rgba(30,58,138,0.22))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-mono, monospace)', color: 'var(--color-text-secondary, #94A3B8)', fontSize: '0.8rem' }}>
                   {post.category || 'Article'}
                 </div>
               )}
-              <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'var(--font-space-mono)', fontSize: '0.75rem', color: 'var(--color-muted)', marginBottom: '1rem' }}>
-                  <span style={{ textTransform: 'uppercase', color: 'var(--color-primary)' }}>{post.category}</span>
+              <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: 'var(--color-text-secondary, #94A3B8)', marginBottom: '0.75rem' }}>
+                  <span style={{ textTransform: 'uppercase', color: '#38BDF8' }}>{post.category}</span>
                   <span>{new Date(post.publishedAt ?? post.createdAt).toLocaleDateString()}</span>
                 </div>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.75rem' }}>{post.title}</h3>
-                <p style={{ color: 'var(--color-muted)', fontSize: '0.875rem', marginBottom: '1.5rem', lineHeight: 1.6 }}>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, marginBottom: '0.5rem', lineHeight: 1.35, color: '#F8FAFC' }}>{post.title}</h3>
+                <p style={{ color: '#94A3B8', fontSize: '0.85rem', marginBottom: '1.25rem', lineHeight: 1.55 }}>
                   {post.excerpt}
                 </p>
-                <div style={{ marginTop: 'auto', paddingTop: '1rem', borderTop: '1px solid var(--color-border)', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-primary)' }}>
+                <div style={{ marginTop: 'auto', paddingTop: '0.75rem', borderTop: '1px solid rgba(30,58,138,0.22)', fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#38BDF8' }}>
                  	Read Article &rarr;
                 </div>
               </div>

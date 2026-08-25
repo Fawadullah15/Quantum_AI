@@ -8,24 +8,24 @@
 }
 
 .header {
-  padding: clamp(4rem, 10vh, 8rem) clamp(1.5rem, 5vw, 4rem) 2rem;
-  max-width: 1400px;
+  padding: clamp(3rem, 7vh, 5rem) clamp(1.25rem, 4vw, 3rem) 1.5rem;
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
 }
 
 .label {
   font-family: 'Space Mono', monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
   color: var(--color-text-muted, #8a8f98);
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .heading {
-  font-size: clamp(3rem, 6vw, 5rem);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.05;
   letter-spacing: -0.03em;
   margin: 0;
   text-transform: uppercase;

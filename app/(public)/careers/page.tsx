@@ -15,34 +15,35 @@ export default function CareersPage() {
   ];
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 80px) * 2)', paddingBottom: 'var(--space-32, 6rem)', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container section">
-      <div style={{ maxWidth: 'var(--max-width, 1200px)', margin: '0 auto' }}>
-        <div style={{ marginBottom: 'var(--space-32, 4rem)' }}>
-          <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '1rem' }}>SYS.12 / ORBITAL SYSTEM</div>
-          <h1 style={{ fontSize: 'clamp(3rem, 10vw, 8rem)', fontWeight: 700, lineHeight: 0.9, letterSpacing: '-0.05em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
-            JOIN<br />THE SYSTEM.
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2.5rem)', paddingBottom: '5rem', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container">
+      <div style={{ maxWidth: 'var(--max-width, 1000px)', margin: '0 auto' }}>
+        <div style={{ marginBottom: '2.5rem' }}>
+          <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>SYS.12 / ORBITAL SYSTEM</div>
+          <h1 style={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.035em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
+            JOIN THE SYSTEM.
           </h1>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 'var(--space-8, 1.5rem)', borderTop: '1px solid var(--color-border, rgba(255,255,255,0.1))', paddingTop: 'var(--space-16, 2rem)' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem', borderTop: '1px solid var(--color-border, rgba(30,58,138,0.22))', paddingTop: '1.5rem' }}>
           {roles.map((role, idx) => (
             <div key={idx} style={{
-              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: 'var(--space-8, 1.5rem)', borderBottom: '1px solid var(--color-border, rgba(255,255,255,0.1))',
-              paddingBottom: 'var(--space-8, 1.5rem)', alignItems: 'center'
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '1rem', borderBottom: '1px solid var(--color-border, rgba(30,58,138,0.22))',
+              paddingBottom: '1.25rem', alignItems: 'center'
             }}>
               <div>
-                <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>ORBIT / {role.orbit}</div>
-                <h2 style={{ fontSize: 'clamp(1.2rem, 2.5vw, 1.75rem)', fontWeight: 600, color: 'var(--color-text-primary, #F8FAFC)', margin: 0 }}>{role.title}</h2>
+                <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.35rem' }}>ORBIT / {role.orbit}</div>
+                <h2 style={{ fontSize: 'clamp(1.05rem, 2vw, 1.35rem)', fontWeight: 600, color: 'var(--color-text-primary, #F8FAFC)', margin: 0 }}>{role.title}</h2>
               </div>
-              <div style={{ color: 'var(--color-text-secondary, #94A3B8)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.85rem' }}>
+              <div style={{ color: 'var(--color-text-secondary, #94A3B8)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8125rem' }}>
                 {role.type}
               </div>
               <div>
                 <Link href="/contact" style={{
-                  display: 'inline-block', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8rem',
-                  letterSpacing: '0.15em', color: '#1677FF', textDecoration: 'none',
-                  border: '1px solid #1677FF', padding: '0.6rem 1.5rem', borderRadius: 6, transition: 'all 0.2s'
+                  display: 'inline-block', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem',
+                  letterSpacing: '0.1em', color: '#1677FF', textDecoration: 'none',
+                  border: '1px solid rgba(22, 119, 255, 0.5)', padding: '0.45rem 1.1rem', borderRadius: 6, transition: 'all 0.2s',
+                  backgroundColor: 'rgba(22, 119, 255, 0.08)'
                 }}>APPLY →</Link>
               </div>
             </div>

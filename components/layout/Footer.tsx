@@ -65,7 +65,7 @@ export default function Footer({
         boxShadow: '0 0 40px 15px rgba(55, 48, 163, 0.15)',
         pointerEvents: 'none',
       }} />
-      <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+      <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2.25rem' }}>
 
         {/* Top grid - Desktop: 5 columns, Tablet: 3 columns, Mobile: 2 columns */}
         <div
@@ -78,8 +78,8 @@ export default function Footer({
         >
           {/* Brand - spans full width on mobile, 1 col on desktop */}
           <div className="footer-brand" style={{ gridColumn: 'span 1' }}>
-            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none', marginBottom: '1.25rem' }}>
-              <QuantumLogo width={54} height={54} style={{ filter: 'drop-shadow(0 0 14px rgba(56, 189, 248, 0.45))' }} />
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none', marginBottom: '1rem' }}>
+              <QuantumLogo width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(56, 189, 248, 0.45))' }} />
               <span style={{
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 700,

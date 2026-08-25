@@ -202,7 +202,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
               position: 'relative',
               margin: '1.5px',
               borderRadius: 999,
-              height: scrolled ? 58 : 66,
+              height: scrolled ? 52 : 58,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -226,7 +226,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
                 flexShrink: 0,
               }}
             >
-              <QuantumLogo width={52} height={52} style={{ filter: 'drop-shadow(0 0 12px rgba(56, 189, 248, 0.5))' }} />
+              <QuantumLogo width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(56, 189, 248, 0.45))' }} />
               <span className="nav-wordmark-text" style={{
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 700,
@@ -451,10 +451,10 @@ export default function Navigation({ companyName }: { companyName?: string }) {
               }}
             >
               {/* Top bar */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2.5rem' }}>
-                <Link href="/" onClick={() => setMobileOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-                  <QuantumLogo width={54} height={54} style={{ filter: 'drop-shadow(0 0 14px rgba(56, 189, 248, 0.5))' }} />
-                  <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '1rem', letterSpacing: '0.12em', color: '#F8FAFF', textTransform: 'uppercase' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                <Link href="/" onClick={() => setMobileOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
+                  <QuantumLogo width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(56, 189, 248, 0.45))' }} />
+                  <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '0.12em', color: '#F8FAFF', textTransform: 'uppercase' }}>
                     QUANTUM AI
                   </span>
                 </Link>
@@ -492,7 +492,7 @@ export default function Navigation({ companyName }: { companyName?: string }) {
                         padding: '1.125rem 0',
                         cursor: 'pointer',
                         color: '#F8FAFF',
-                        fontSize: '1.25rem',
+                        fontSize: '1.05rem',
                         fontFamily: 'var(--font-sans)',
                         fontWeight: 600,
                         textAlign: 'left',
@@ -550,21 +550,21 @@ export default function Navigation({ companyName }: { companyName?: string }) {
               </nav>
 
               {/* Bottom CTA */}
-              <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
                 <Link
                   href="/careers-partnerships"
                   onClick={() => setMobileOpen(false)}
                   style={{
                     display: 'block',
                     textAlign: 'center',
-                    padding: '0.85rem',
+                    padding: '0.7rem',
                     backgroundColor: 'rgba(56, 189, 248, 0.1)',
                     border: '1px solid rgba(56, 189, 248, 0.35)',
                     color: '#38BDF8',
-                    borderRadius: 12,
+                    borderRadius: 10,
                     textDecoration: 'none',
                     fontWeight: 600,
-                    fontSize: '0.875rem',
+                    fontSize: '0.8rem',
                     fontFamily: 'var(--font-mono)',
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
@@ -579,13 +579,13 @@ export default function Navigation({ companyName }: { companyName?: string }) {
                   style={{
                     display: 'block',
                     textAlign: 'center',
-                    padding: '0.95rem',
+                    padding: '0.75rem',
                     backgroundColor: '#1677FF',
                     color: '#fff',
-                    borderRadius: 12,
+                    borderRadius: 10,
                     textDecoration: 'none',
                     fontWeight: 600,
-                    fontSize: '0.95rem',
+                    fontSize: '0.875rem',
                     fontFamily: 'var(--font-sans)',
                     letterSpacing: '0.05em',
                   }}

@@ -48,12 +48,12 @@
   --text-xl:    1.5rem;     /* Subhead */
   --text-2xl:   2.0rem;     /* Section Head */
   --text-3xl:   2.5rem;     /* 40px */
-  --text-4xl:   3.5rem;     /* 56px */
-  --text-5xl:   4.5rem;     /* 72px */
-  --text-6xl:   6.0rem;     /* 96px */
-  --text-7xl:   8.0rem;     /* 128px */
-  --text-8xl:   10.0rem;    /* 160px */
-  --text-9xl:   12.0rem;    /* 192px - Architectural scale */
+  --text-4xl:   3.25rem;    /* 52px */
+  --text-5xl:   3.5rem;     /* 56px — Hero headline */
+  --text-6xl:   4rem;       /* 64px — Large display */
+  --text-7xl:   5rem;       /* 80px — Desktop hero max */
+  --text-8xl:   6rem;       /* 96px — Architectural */
+  --text-9xl:   7rem;       /* 112px — Max hero cap */
 
   --weight-light:     300;
   --weight-regular:   400;
@@ -92,10 +92,10 @@
   --space-64:   16rem;
 
   /* ─── Layout ─────────────────────────────────────────────── */
-  --max-width:        1600px;
+  --max-width:        1400px;
   --max-width-text:   640px;
-  --nav-height:       80px;
-  --container-px:     clamp(2rem, 6vw, 6rem);
+  --nav-height:       72px;
+  --container-px:     clamp(1.5rem, 5vw, 5rem);
 
   /* ─── Borders ────────────────────────────────────────────── */
   --radius-sm:  0px;  /* Sharp edges for architectural feel */

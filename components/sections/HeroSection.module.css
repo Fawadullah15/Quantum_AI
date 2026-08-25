@@ -6,7 +6,7 @@
   background-color: transparent;
   display: flex;
   flex-direction: column;
-  padding: clamp(4rem, 10vh, 8rem) clamp(1.5rem, 5vw, 4rem) 2rem;
+  padding: clamp(3rem, 7vh, 5rem) clamp(1.25rem, 4vw, 3rem) 2rem;
   color: var(--color-text-primary, #ffffff);
   font-family: 'Space Grotesk', sans-serif;
   overflow: hidden;
@@ -17,15 +17,15 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  max-width: 1400px;
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
 }
 
 .eyebrow {
   font-family: 'Space Mono', monospace;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
   color: var(--color-text-muted, #8a8f98);
   opacity: 0;
 }
@@ -35,27 +35,27 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 900px;
-  margin-top: 4rem;
+  max-width: 800px;
+  margin-top: 2.5rem;
 }
 
 .headline {
-  font-size: clamp(3rem, 8vw, 7rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  margin: 0 0 2rem 0;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  margin: 0 0 1.25rem 0;
   color: var(--color-text-primary, #fcfcfc);
   opacity: 0;
   text-transform: uppercase;
 }
 
 .description {
-  font-size: clamp(1.1rem, 2vw, 1.25rem);
+  font-size: clamp(0.92rem, 1.3vw, 1.05rem);
   line-height: 1.6;
   max-width: 500px;
   color: var(--color-text-muted, #8a8f98);
-  margin: 0 0 3rem 0;
+  margin: 0 0 2rem 0;
   opacity: 0;
 }
 
@@ -71,9 +71,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2rem;
+  padding: 0.7rem 1.75rem;
   font-family: 'Space Mono', monospace;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-bg-primary, #030508);
@@ -93,9 +93,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2rem;
+  padding: 0.7rem 1.75rem;
   font-family: 'Space Mono', monospace;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--color-text-primary, #ffffff);
