@@ -243,12 +243,17 @@ export default async function LeadershipPage() {
           transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background-color 0.25s;
           box-sizing: border-box;
           position: relative;
+          outline: none;
         }
         .exec-card:hover {
           background-color: rgba(8, 28, 58, 0.85);
           border-color: rgba(56, 189, 248, 0.45);
           transform: translateY(-3px);
           box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(56, 189, 248, 0.25);
+        }
+        .exec-card:focus-visible {
+          border-color: #38BDF8;
+          box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.4);
         }
 
         /* Portrait Photo Container (4:5 Aspect Ratio) */
@@ -445,6 +450,10 @@ export default async function LeadershipPage() {
           background-color: #2563EB;
           transform: translateY(-1px);
         }
+        .ldr-cta-btn:focus-visible {
+          outline: none;
+          box-shadow: 0 0 0 2px #38BDF8;
+        }
 
         /* Responsive Breakpoints */
         @media (max-width: 900px) {
@@ -458,51 +467,124 @@ export default async function LeadershipPage() {
           }
         }
         @media (max-width: 680px) {
+          .ldr-page {
+            padding-top: calc(var(--nav-height, 72px) + 1.25rem) !important;
+            padding-bottom: 3.5rem !important;
+            padding-inline: clamp(0.65rem, 3vw, 1.25rem) !important;
+          }
+          .ldr-h1 {
+            font-size: clamp(1.85rem, 6.5vw, 2.75rem) !important;
+            margin-bottom: 0.75rem !important;
+          }
+          .ldr-lead {
+            font-size: 0.86rem !important;
+            line-height: 1.5 !important;
+          }
+          .ldr-section-header {
+            margin-bottom: 1.5rem !important;
+          }
+          .ldr-section-title {
+            font-size: clamp(1.25rem, 4.5vw, 1.65rem) !important;
+          }
+          .ldr-section-intro {
+            font-size: 0.82rem !important;
+            line-height: 1.5 !important;
+          }
           .ldr-principals-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            gap: clamp(0.5rem, 2.5vw, 0.75rem) !important;
+            gap: clamp(0.45rem, 2.5vw, 0.75rem) !important;
+            margin-bottom: 2.5rem !important;
           }
           .ldr-exec-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-            gap: clamp(0.5rem, 2.5vw, 0.75rem) !important;
+            gap: clamp(0.45rem, 2.5vw, 0.75rem) !important;
+            margin-bottom: 2.5rem !important;
           }
           .ldr-hero {
-            margin-bottom: 2rem;
-            padding-bottom: 1.75rem;
+            margin-bottom: 2rem !important;
+            padding-bottom: 1.5rem !important;
           }
           .exec-card {
             border-radius: 8px !important;
+            min-width: 0 !important;
+          }
+          .exec-photo-wrapper {
+            aspect-ratio: 1 / 1 !important;
           }
           .exec-corner-badge {
-            font-size: 0.52rem !important;
-            padding: 0.15rem 0.35rem !important;
-            top: 0.45rem !important;
-            left: 0.45rem !important;
+            font-size: 0.5rem !important;
+            padding: 0.12rem 0.35rem !important;
+            top: 0.4rem !important;
+            left: 0.4rem !important;
           }
           .exec-body {
-            padding: 0.65rem 0.75rem !important;
-            gap: 0.25rem !important;
+            padding: 0.55rem 0.65rem !important;
+            gap: 0.2rem !important;
           }
           .exec-name {
-            font-size: clamp(0.85rem, 3.5vw, 1rem) !important;
+            font-size: clamp(0.82rem, 3.2vw, 0.95rem) !important;
             line-height: 1.2 !important;
+            word-break: break-word !important;
           }
           .exec-position {
-            font-size: 0.6rem !important;
-            letter-spacing: 0.06em !important;
-            margin-bottom: 0.15rem !important;
+            font-size: 0.58rem !important;
+            letter-spacing: 0.04em !important;
+            margin-bottom: 0.1rem !important;
           }
           .exec-bio {
-            font-size: 0.72rem !important;
+            font-size: 0.7rem !important;
             line-height: 1.35 !important;
             -webkit-line-clamp: 2 !important;
           }
           .exec-footer {
-            padding: 0.5rem 0.75rem !important;
+            padding: 0.45rem 0.65rem !important;
           }
           .exec-social-link,
           .exec-action-text {
-            font-size: 0.62rem !important;
+            font-size: 0.6rem !important;
+          }
+          .ldr-philosophy-box {
+            padding: clamp(1.25rem, 4vw, 2rem) !important;
+            margin-bottom: 2.5rem !important;
+          }
+          .ldr-philosophy-quote {
+            font-size: clamp(1.15rem, 4vw, 1.5rem) !important;
+          }
+          .ldr-philosophy-desc {
+            font-size: 0.85rem !important;
+            line-height: 1.55 !important;
+          }
+          .ldr-bottom-cta {
+            padding-top: 2.5rem !important;
+          }
+          .ldr-cta-btn {
+            width: min(100%, 280px) !important;
+            padding: 0.75rem 1.25rem !important;
+            font-size: 0.75rem !important;
+          }
+        }
+        @media (max-width: 360px) {
+          .ldr-page {
+            padding-inline: 0.5rem !important;
+          }
+          .ldr-principals-grid,
+          .ldr-exec-grid {
+            gap: 0.35rem !important;
+          }
+          .exec-body {
+            padding: 0.45rem 0.5rem !important;
+          }
+          .exec-name {
+            font-size: 0.78rem !important;
+          }
+          .exec-position {
+            font-size: 0.54rem !important;
+          }
+          .exec-bio {
+            font-size: 0.65rem !important;
+          }
+          .exec-footer {
+            padding: 0.35rem 0.5rem !important;
           }
         }
       `}</style>
