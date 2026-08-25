@@ -5,9 +5,16 @@ import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 
-export async function updateSubmissionStatus(type: 'PARTNERSHIP' | 'CAREER', id: string, status: string) {
+async function checkAuth() {
   const session = await getServerSession(authOptions);
-  if (!session) throw new Error('Unauthorized');
+  if (!session) {
+    throw new Error('Unauthorized');
+  }
+  return session;
+}
+
+export async function updateSubmissionStatus(type: 'PARTNERSHIP' | 'CAREER', id: string, status: string) {
+  await checkAuth();
 
   if (type === 'PARTNERSHIP') {
     await prisma.partnershipRequest.update({
@@ -27,8 +34,7 @@ export async function updateSubmissionStatus(type: 'PARTNERSHIP' | 'CAREER', id:
 }
 
 export async function assignSubmission(type: 'PARTNERSHIP' | 'CAREER', id: string, assignedTo: string) {
-  const session = await getServerSession(authOptions);
-  if (!session) throw new Error('Unauthorized');
+  await checkAuth();
 
   if (type === 'PARTNERSHIP') {
     await prisma.partnershipRequest.update({
@@ -48,8 +54,7 @@ export async function assignSubmission(type: 'PARTNERSHIP' | 'CAREER', id: strin
 }
 
 export async function addSubmissionNote(type: 'PARTNERSHIP' | 'CAREER', id: string, content: string) {
-  const session = await getServerSession(authOptions);
-  if (!session) throw new Error('Unauthorized');
+  const session = await checkAuth();
 
   const authorName = session.user?.name || 'Administrator';
   const authorEmail = session.user?.email || 'admin@quantumai.dev';
@@ -81,8 +86,7 @@ export async function addSubmissionNote(type: 'PARTNERSHIP' | 'CAREER', id: stri
 }
 
 export async function deleteSubmission(type: 'PARTNERSHIP' | 'CAREER', id: string) {
-  const session = await getServerSession(authOptions);
-  if (!session) throw new Error('Unauthorized');
+  await checkAuth();
 
   if (type === 'PARTNERSHIP') {
     await prisma.partnershipRequest.delete({ where: { id } });
@@ -90,6 +94,80 @@ export async function deleteSubmission(type: 'PARTNERSHIP' | 'CAREER', id: strin
     await prisma.careerApplication.delete({ where: { id } });
   }
 
+  revalidatePath('/admin/careers-partnerships');
+  return { success: true };
+}
+
+// ─────────────────────────────────────────────────────────────
+// CAREER POSITIONS (JOB OPENINGS CATALOG)
+// ─────────────────────────────────────────────────────────────
+
+export async function createCareerPosition(data: {
+  title: string;
+  department?: string;
+  location?: string;
+  workType?: string;
+  description?: string;
+  isActive?: boolean;
+  order?: number;
+}) {
+  await checkAuth();
+
+  const pos = await prisma.careerPosition.create({
+    data: {
+      title: data.title.trim(),
+      department: data.department || 'AI Engineering',
+      location: data.location || 'Remote / Hybrid',
+      workType: data.workType || 'Full Time',
+      description: data.description || null,
+      isActive: data.isActive ?? true,
+      order: Number(data.order) || 0,
+    },
+  });
+
+  revalidatePath('/careers');
+  revalidatePath('/admin/careers-partnerships');
+  return pos;
+}
+
+export async function updateCareerPosition(
+  id: string,
+  data: {
+    title: string;
+    department?: string;
+    location?: string;
+    workType?: string;
+    description?: string;
+    isActive?: boolean;
+    order?: number;
+  }
+) {
+  await checkAuth();
+
+  const pos = await prisma.careerPosition.update({
+    where: { id },
+    data: {
+      title: data.title.trim(),
+      department: data.department || 'AI Engineering',
+      location: data.location || 'Remote / Hybrid',
+      workType: data.workType || 'Full Time',
+      description: data.description || null,
+      isActive: Boolean(data.isActive),
+      order: Number(data.order) || 0,
+    },
+  });
+
+  revalidatePath('/careers');
+  revalidatePath('/admin/careers-partnerships');
+  return pos;
+}
+
+export async function deleteCareerPosition(id: string) {
+  await checkAuth();
+
+  await prisma.careerPosition.delete({ where: { id } });
+
+  revalidatePath('/careers');
   revalidatePath('/admin/careers-partnerships');
   return { success: true };
 }

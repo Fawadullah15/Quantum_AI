@@ -15,10 +15,10 @@ async function checkAuth() {
 
 export async function createClient(data: {
   name: string;
-  logo?: string;
-  website?: string;
-  industry?: string;
-  description?: string;
+  logo?: string | null;
+  website?: string | null;
+  industry?: string | null;
+  description?: string | null;
   featured?: boolean;
   published?: boolean;
   order?: number;
@@ -50,11 +50,11 @@ export async function createClient(data: {
 export async function updateClient(
   id: string,
   data: {
-    name: string;
-    logo?: string;
-    website?: string;
-    industry?: string;
-    description?: string;
+    name?: string;
+    logo?: string | null;
+    website?: string | null;
+    industry?: string | null;
+    description?: string | null;
     featured?: boolean;
     published?: boolean;
     order?: number;
@@ -62,18 +62,19 @@ export async function updateClient(
 ) {
   await checkAuth();
 
+  const updateData: any = {};
+  if (data.name !== undefined) updateData.name = data.name.trim();
+  if (data.logo !== undefined) updateData.logo = data.logo || null;
+  if (data.website !== undefined) updateData.website = data.website || null;
+  if (data.industry !== undefined) updateData.industry = data.industry || null;
+  if (data.description !== undefined) updateData.description = data.description || null;
+  if (data.featured !== undefined) updateData.featured = Boolean(data.featured);
+  if (data.published !== undefined) updateData.published = Boolean(data.published);
+  if (data.order !== undefined) updateData.order = Number(data.order) || 0;
+
   const client = await prisma.client.update({
     where: { id },
-    data: {
-      name: data.name.trim(),
-      logo: data.logo || null,
-      website: data.website || null,
-      industry: data.industry || null,
-      description: data.description || null,
-      featured: Boolean(data.featured),
-      published: Boolean(data.published),
-      order: Number(data.order) || 0,
-    },
+    data: updateData,
   });
 
   revalidatePath('/');

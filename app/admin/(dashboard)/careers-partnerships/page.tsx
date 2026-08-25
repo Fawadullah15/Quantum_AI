@@ -10,7 +10,7 @@ export default async function CareersPartnershipsAdminPage() {
   const session = await getServerSession(authOptions);
   if (!session) redirect('/admin/login');
 
-  const [partnerships, applications] = await Promise.all([
+  const [partnerships, applications, positions] = await Promise.all([
     prisma.partnershipRequest.findMany({
       orderBy: { createdAt: 'desc' },
       include: { notes: true },
@@ -18,6 +18,9 @@ export default async function CareersPartnershipsAdminPage() {
     prisma.careerApplication.findMany({
       orderBy: { createdAt: 'desc' },
       include: { notes: true },
+    }).catch(() => []),
+    prisma.careerPosition.findMany({
+      orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
     }).catch(() => []),
   ]);
 
@@ -32,6 +35,7 @@ export default async function CareersPartnershipsAdminPage() {
     <CareersPartnershipsClient
       partnerships={partnerships}
       applications={applications}
+      positions={positions}
       metrics={{
         totalSubmissions,
         newApplications,
