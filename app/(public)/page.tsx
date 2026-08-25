@@ -11,6 +11,7 @@ import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
 import ProcessSection from '@/components/sections/ProcessSection';
 import CapabilitiesSection from '@/components/sections/CapabilitiesSection';
 import TrustSection from '@/components/sections/TrustSection';
+import WhyQuantumSection from '@/components/sections/WhyQuantumSection';
 
 const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr: false });
 const GlobalMapSection = dynamic(() => import('@/components/sections/GlobalMapSection'), { ssr: false });
@@ -398,74 +399,9 @@ export default function HomePage() {
         <ProcessSection />
 
         {/* ═══════════════════════════════════════════════════════════
-            WHY QUANTUM AI / PRINCIPLES
+            WHY QUANTUM AI & THINK DEEPER (Desktop: Balanced 2-Column / Mobile: 2x2 Clean Philosophy Grid)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
-          <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'clamp(2rem, 4vw, 4rem)', alignItems: 'center' }}>
-            {/* Left text */}
-            <div>
-              <p style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.72rem',
-                letterSpacing: '0.25em',
-                textTransform: 'uppercase',
-                color: '#1677FF',
-                marginBottom: '0.5rem',
-                fontWeight: 600
-              }}>
-                WHY QUANTUM AI.
-              </p>
-              <h2 style={{
-                fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
-                fontWeight: 700,
-                lineHeight: 1.15,
-                letterSpacing: '-0.025em',
-                color: '#F8FAFF',
-                marginBottom: '1rem',
-                textTransform: 'uppercase'
-              }}>
-                We turn complex problems into intelligent, useful systems.
-              </h2>
-              <p style={{ fontSize: '0.95rem', color: '#94A3B8', lineHeight: 1.65, marginBottom: '1.75rem', fontWeight: 300 }}>
-                We combine AI, software, and thoughtful engineering to build technology that solves real problems and creates lasting value.
-              </p>
-              <NovaButton href="/about">LEARN MORE ABOUT US</NovaButton>
-            </div>
-
-            {/* Right: principles */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-              <div style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.68rem',
-                color: '#38BDF8',
-                letterSpacing: '0.2em',
-                textTransform: 'uppercase',
-                fontWeight: 600,
-                marginBottom: '0.4rem',
-                paddingBottom: '0.4rem',
-                borderBottom: '1px solid rgba(22, 119, 255, 0.15)'
-              }}>
-                THINK DEEPER
-              </div>
-              {[
-                { title: 'Understand First', desc: 'Study the problem before building the solution.' },
-                { title: 'Build Smarter', desc: 'Choose technology for value, not hype.' },
-                { title: 'Keep it Human', desc: 'Powerful systems should feel simple to use.' },
-                { title: 'Create What Matters', desc: 'Build technology with real purpose and value.' },
-              ].map((item, i) => (
-                <div key={i} style={{
-                  padding: '1rem 0',
-                  borderTop: i === 0 ? 'none' : '1px solid rgba(22, 119, 255, 0.08)',
-                  borderBottom: i === 3 ? '1px solid rgba(22, 119, 255, 0.08)' : 'none',
-                }}>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#1677FF', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.2rem', fontWeight: 600 }}>0{i + 1}</div>
-                  <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFF', marginBottom: '0.2rem', letterSpacing: '-0.01em', textTransform: 'none' }}>{item.title}</h3>
-                  <p style={{ color: '#64748B', fontSize: '0.875rem', lineHeight: 1.5, margin: 0, fontWeight: 300 }}>{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <WhyQuantumSection />
 
         {/* ═══════════════════════════════════════════════════════════
             CAPABILITIES / TECH STACK SECTION (Desktop: Interactive Hover Cards / Mobile: 2x2 Tech Grid)
