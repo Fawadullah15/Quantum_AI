@@ -8,7 +8,7 @@ import { useAdminToast } from '@/components/admin/AdminToast';
 import { useAdminConfirm } from '@/components/admin/ConfirmDialog';
 import StatusBadge from '@/components/admin/StatusBadge';
 import EmptyState from '@/components/admin/EmptyState';
-import { createLeadershipMember, updateLeadershipMember, deleteLeadershipMember } from './actions';
+import { createLeadershipMember, updateLeadershipMember, deleteLeadershipMember, reorderLeadershipMembers } from './actions';
 import type { Leadership } from '@prisma/client';
 
 const ROLE_PRESETS = [
@@ -166,31 +166,30 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
     }
   };
 
-  const handleMoveOrder = async (index: number, direction: 'UP' | 'DOWN') => {
-    const targetIndex = direction === 'UP' ? index - 1 : index + 1;
+  const handleMoveOrder = async (memberId: string, direction: 'UP' | 'DOWN') => {
+    const currentIndex = members.findIndex((m) => m.id === memberId);
+    if (currentIndex === -1) return;
+
+    const targetIndex = direction === 'UP' ? currentIndex - 1 : currentIndex + 1;
     if (targetIndex < 0 || targetIndex >= members.length) return;
 
     const newItems = [...members];
-    const itemA = newItems[index];
-    const itemB = newItems[targetIndex];
+    const [movedItem] = newItems.splice(currentIndex, 1);
+    newItems.splice(targetIndex, 0, movedItem);
 
-    const tempOrder = itemA.displayOrder;
-    itemA.displayOrder = itemB.displayOrder;
-    itemB.displayOrder = tempOrder;
+    const reorderedItems = newItems.map((item, idx) => ({
+      ...item,
+      displayOrder: idx + 1,
+    }));
 
-    newItems[index] = itemB;
-    newItems[targetIndex] = itemA;
-
-    setMembers(newItems);
+    setMembers(reorderedItems);
 
     try {
-      await Promise.all([
-        updateLeadershipMember(itemA.id, { displayOrder: itemA.displayOrder }),
-        updateLeadershipMember(itemB.id, { displayOrder: itemB.displayOrder }),
-      ]);
-      toast.info('Leadership order updated.', 'Reordered');
+      await reorderLeadershipMembers(reorderedItems.map((item) => item.id));
+      toast.success('Leadership order updated successfully!', 'Reordered');
       router.refresh();
     } catch (err) {
+      console.error(err);
       toast.error('Failed to save order.', 'Error');
     }
   };
@@ -494,44 +493,63 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                     {filteredMembers.map((member, index) => (
                       <tr key={member.id} style={{ borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
                         {/* Order Controls */}
-                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', width: '70px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-                            <button
-                              type="button"
-                              title="Move up"
-                              disabled={index === 0}
-                              onClick={() => handleMoveOrder(index, 'UP')}
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: index === 0 ? '#334155' : '#38BDF8',
-                                cursor: index === 0 ? 'not-allowed' : 'pointer',
-                                fontSize: '0.85rem',
-                                padding: 0,
-                              }}
-                            >
-                              ▲
-                            </button>
-                            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#94A3B8', minWidth: '16px', textAlign: 'center' }}>
-                              {index + 1}
-                            </span>
-                            <button
-                              type="button"
-                              title="Move down"
-                              disabled={index === filteredMembers.length - 1}
-                              onClick={() => handleMoveOrder(index, 'DOWN')}
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: index === filteredMembers.length - 1 ? '#334155' : '#38BDF8',
-                                cursor: index === filteredMembers.length - 1 ? 'not-allowed' : 'pointer',
-                                fontSize: '0.85rem',
-                                padding: 0,
-                              }}
-                            >
-                              ▼
-                            </button>
-                          </div>
+                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', width: '80px' }}>
+                          {(() => {
+                            const memberIdx = members.findIndex((m) => m.id === member.id);
+                            const isFirst = memberIdx <= 0;
+                            const isLast = memberIdx === -1 || memberIdx >= members.length - 1;
+                            const orderNumber = memberIdx !== -1 ? memberIdx + 1 : index + 1;
+
+                            return (
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                                <button
+                                  type="button"
+                                  title="Move up"
+                                  disabled={isFirst}
+                                  onClick={() => handleMoveOrder(member.id, 'UP')}
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: isFirst ? 'rgba(148, 163, 184, 0.25)' : '#38BDF8',
+                                    cursor: isFirst ? 'not-allowed' : 'pointer',
+                                    fontSize: '0.95rem',
+                                    padding: '0.15rem 0.25rem',
+                                    borderRadius: '3px',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    lineHeight: 1,
+                                  }}
+                                >
+                                  ▲
+                                </button>
+                                <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#94A3B8', minWidth: '16px', textAlign: 'center', fontWeight: 600 }}>
+                                  {orderNumber}
+                                </span>
+                                <button
+                                  type="button"
+                                  title="Move down"
+                                  disabled={isLast}
+                                  onClick={() => handleMoveOrder(member.id, 'DOWN')}
+                                  style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    color: isLast ? 'rgba(148, 163, 184, 0.25)' : '#38BDF8',
+                                    cursor: isLast ? 'not-allowed' : 'pointer',
+                                    fontSize: '0.95rem',
+                                    padding: '0.15rem 0.25rem',
+                                    borderRadius: '3px',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    lineHeight: 1,
+                                  }}
+                                >
+                                  ▼
+                                </button>
+                              </div>
+                            );
+                          })()}
                         </td>
 
                         {/* Member & ID */}

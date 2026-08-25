@@ -110,7 +110,7 @@ export async function updateLeadershipMember(
   if (data.linkedin !== undefined) updateData.linkedin = data.linkedin?.trim() || null;
   if (data.website !== undefined) updateData.website = data.website?.trim() || null;
   if (data.location !== undefined) updateData.location = data.location?.trim() || null;
-  if (data.displayOrder !== undefined) updateData.displayOrder = Number(data.displayOrder) || 0;
+  if (data.displayOrder !== undefined) updateData.displayOrder = Number(data.displayOrder);
   if (data.isActive !== undefined) updateData.isActive = Boolean(data.isActive);
 
   const member = await prisma.leadership.update({
@@ -125,6 +125,26 @@ export async function updateLeadershipMember(
   revalidatePath('/about');
   revalidatePath('/');
   return member;
+}
+
+export async function reorderLeadershipMembers(orderedIds: string[]) {
+  await checkAuth();
+
+  await prisma.$transaction(
+    orderedIds.map((id, index) =>
+      prisma.leadership.update({
+        where: { id },
+        data: { displayOrder: index + 1 },
+      })
+    )
+  );
+
+  revalidatePath('/admin/leadership');
+  revalidatePath('/leadership');
+  revalidatePath('/team');
+  revalidatePath('/about');
+  revalidatePath('/');
+  return { success: true };
 }
 
 export async function deleteLeadershipMember(id: string) {
