@@ -12,22 +12,85 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div style={{ minHeight: '100vh', backgroundColor: 'var(--color-bg)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1.5rem', textAlign: 'center' }}>
-      <div style={{ position: 'relative', marginBottom: '2rem' }}>
-        <div style={{ fontSize: '12rem', fontWeight: 'bold', fontFamily: 'var(--font-mono)', color: 'var(--color-surface)', opacity: 0.5, userSelect: 'none' }}>404</div>
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '2rem', height: '2rem', borderRadius: '50%', backgroundColor: 'var(--color-primary)', boxShadow: '0 0 30px rgba(var(--color-primary-rgb),0.8)' }}></div>
+    <div style={{ minHeight: '100vh', backgroundColor: '#030712', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center', color: '#F8FAFC' }}>
+      <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
+        <div style={{ fontSize: 'clamp(6rem, 15vw, 10rem)', fontWeight: 700, fontFamily: 'var(--font-mono, monospace)', color: 'rgba(22, 119, 255, 0.15)', userSelect: 'none', lineHeight: 1 }}>
+          404
         </div>
       </div>
       
-      <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--color-primary)', marginBottom: '1rem' }}>PAGE NOT FOUND</h1>
-      <p style={{ color: 'var(--color-muted)', fontFamily: 'var(--font-mono)', marginBottom: '3rem', maxWidth: '28rem' }}>
-        This part of the system does not exist or has been relocated.
+      <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', letterSpacing: '0.2em', color: '#38BDF8', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
+        [SYS.ERROR // PAGE NOT FOUND]
+      </div>
+      <h1 style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#F8FAFC', marginBottom: '0.75rem' }}>
+        Page Not Found
+      </h1>
+      <p style={{ color: '#94A3B8', fontSize: '0.95rem', maxWidth: '440px', margin: '0 auto 2.5rem', lineHeight: 1.6, fontWeight: 300 }}>
+        The system path you requested does not exist, has been relocated, or is no longer available.
       </p>
       
-      <Link href="/" style={{ padding: '1rem 2rem', border: '1px solid var(--color-primary)', color: 'var(--color-primary)', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', fontSize: '0.875rem', textDecoration: 'none' }}>
-        Return to Core
-      </Link>
+      <div style={{ display: 'flex', gap: '0.85rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <Link
+          href="/"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '0.75rem 1.65rem',
+            background: 'linear-gradient(135deg, #1677FF, #0050B3)',
+            color: '#FFFFFF',
+            fontWeight: 700,
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: '0.8125rem',
+            letterSpacing: '0.08em',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+            boxShadow: '0 4px 16px -2px rgba(22, 119, 255, 0.4)',
+          }}
+        >
+          RETURN HOME
+        </Link>
+        <Link
+          href="/work"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '0.75rem 1.5rem',
+            border: '1px solid rgba(56, 189, 248, 0.35)',
+            background: 'rgba(56, 189, 248, 0.08)',
+            color: '#38BDF8',
+            fontWeight: 600,
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: '0.8125rem',
+            letterSpacing: '0.08em',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+          }}
+        >
+          VIEW OUR WORK
+        </Link>
+        <Link
+          href="/contact"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            padding: '0.75rem 1.5rem',
+            border: '1px solid rgba(22, 119, 255, 0.3)',
+            background: 'rgba(6, 21, 43, 0.75)',
+            color: '#94A3B8',
+            fontWeight: 600,
+            fontFamily: 'var(--font-mono, monospace)',
+            fontSize: '0.8125rem',
+            letterSpacing: '0.08em',
+            borderRadius: '6px',
+            textDecoration: 'none',
+            textTransform: 'uppercase',
+          }}
+        >
+          START A PROJECT
+        </Link>
+      </div>
     </div>
   );
 }
