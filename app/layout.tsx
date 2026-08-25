@@ -3,6 +3,7 @@ import { Space_Grotesk, Space_Mono } from 'next/font/google'
 import React from 'react'
 import '@/styles/tokens.css'
 import '@/styles/globals.css'
+import { SITE_URL, SITE_NAME, DEFAULT_TITLE, DEFAULT_DESCRIPTION } from '@/lib/seo'
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -19,23 +20,42 @@ const spaceMono = Space_Mono({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXTAUTH_URL || 'http://localhost:3000'),
+  metadataBase: new URL(SITE_URL),
   title: {
     template: '%s | Quantum AI',
-    default: 'Quantum AI — AI Systems & Business Software',
+    default: DEFAULT_TITLE,
   },
-  description:
-    'Quantum AI builds AI systems, custom business software, and automation for organizations that need better ways to operate.',
+  description: DEFAULT_DESCRIPTION,
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'Quantum AI',
-    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: [{ url: '/quantum-q-logo.png', width: 1200, height: 630, alt: 'Quantum AI' }],
   },
   twitter: {
     card: 'summary_large_image',
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: ['/quantum-q-logo.png'],
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    'max-image-preview': 'large',
+    'max-snippet': -1,
+    'max-video-preview': -1,
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

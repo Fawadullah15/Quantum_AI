@@ -1,12 +1,14 @@
 import prisma from '@/lib/db';
 import Link from 'next/link';
+import { createPageMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Services & Capabilities — Quantum AI',
-  description: 'AI systems, custom software platforms, intelligent automation, and digital products engineered for scale.',
-};
+export const metadata = createPageMetadata({
+  title: 'AI & Custom Software Engineering Services — Quantum AI',
+  description: 'Explore our core software development services: custom AI architectures, enterprise web applications, workflow automation, and scalable digital products.',
+  path: '/services',
+});
 
 const DEFAULT_SERVICES = [
   {

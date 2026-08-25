@@ -1,7 +1,10 @@
-export const metadata = {
-  title: 'Philosophy & Design Tenets — Quantum AI',
-  description: 'How we think: aesthetics as utility, architectural scale, and systemic intelligence.',
-};
+import { createPageMetadata } from '@/lib/seo';
+
+export const metadata = createPageMetadata({
+  title: 'Engineering Philosophy & Design Tenets — Quantum AI',
+  description: 'How we think: aesthetics as utility, architectural scale, computational precision, and systemic intelligence.',
+  path: '/philosophy',
+});
 
 export default function PhilosophyPage() {
   return (

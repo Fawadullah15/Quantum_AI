@@ -1,11 +1,13 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import prisma from '@/lib/db';
+import { createPageMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Blog',
-  description: 'Insights on AI, software engineering, and the future of technology.',
-};
+export const metadata: Metadata = createPageMetadata({
+  title: 'Engineering Insights & Research Blog — Quantum AI',
+  description: 'Technical insights, system design architecture, neural networks, and modern software engineering practices from Quantum AI.',
+  path: '/blog',
+});
 
 export default async function BlogPage() {
   const posts = await prisma.blogPost.findMany({

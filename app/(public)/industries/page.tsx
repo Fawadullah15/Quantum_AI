@@ -1,7 +1,10 @@
-export const metadata = {
-  title: 'Industries & Sectors — Quantum AI',
-  description: 'Applied intelligent software systems across healthcare, finance, logistics, education, manufacturing, and enterprise sectors.',
-};
+import { createPageMetadata } from '@/lib/seo';
+
+export const metadata = createPageMetadata({
+  title: 'Industries & Enterprise Sectors — Quantum AI',
+  description: 'Applied intelligent software systems engineered across healthcare, finance, logistics, education, manufacturing, and retail sectors.',
+  path: '/industries',
+});
 
 export default function IndustriesPage() {
   const industries = [

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import prisma from '@/lib/db';
+import { createPageMetadata, getCaseStudySchema } from '@/lib/seo';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -10,15 +11,14 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const caseStudy = await prisma.caseStudy.findUnique({ where: { slug } }).catch(() => null);
-  if (!caseStudy) return { title: 'Not Found' };
+  if (!caseStudy) return { title: 'Case Study Not Found' };
   
-  return {
-    title: caseStudy.title,
-    description: caseStudy.problem.slice(0, 160),
-    openGraph: {
-      images: caseStudy.heroImage ? [caseStudy.heroImage] : [],
-    },
-  };
+  return createPageMetadata({
+    title: `${caseStudy.title} — Case Study | Quantum AI`,
+    description: caseStudy.problem ? caseStudy.problem.slice(0, 160) : `Detailed engineering case study for ${caseStudy.title} built by Quantum AI.`,
+    path: `/work/${slug}`,
+    image: caseStudy.heroImage || undefined,
+  });
 }
 
 export async function generateStaticParams() {
@@ -38,9 +38,15 @@ export default async function CaseStudyPage({ params }: Props) {
   }
 
   const technologies = typeof study.technologies === 'string' ? study.technologies.split(',') : [];
+  const schemaJson = getCaseStudySchema(study);
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2.5rem)', paddingBottom: '5rem', paddingInline: 'clamp(1.25rem, 5vw, 4rem)', maxWidth: '1000px', margin: '0 auto', minHeight: '100vh' }}>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', paddingInline: 'clamp(1.25rem, 5vw, 4rem)', maxWidth: '1000px', margin: '0 auto', minHeight: '100vh' }}>
+      {/* Schema.org Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
+      />
       {/* Breadcrumb back link */}
       <div style={{ marginBottom: '1.5rem' }}>
         <Link

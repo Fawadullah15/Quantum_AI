@@ -1,11 +1,13 @@
 import prisma from '@/lib/db';
+import { createPageMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Intelligent Systems Architecture — Quantum AI',
-  description: 'Neural systems, autonomous agent nodes, and operational computational architectures.',
-};
+export const metadata = createPageMetadata({
+  title: 'Intelligent Systems & Neural Architecture — Quantum AI',
+  description: 'Neural systems, autonomous agent nodes, and operational computational architectures built for businesses.',
+  path: '/systems',
+});
 
 export default async function SystemsPage() {
   const services = await prisma.service.findMany({

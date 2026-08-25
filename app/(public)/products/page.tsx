@@ -1,12 +1,14 @@
 import prisma from '@/lib/db';
 import Link from 'next/link';
+import { createPageMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Products & Systems — Quantum AI',
-  description: 'Intelligent software platforms, custom engines, and digital products engineered by Quantum AI.',
-};
+export const metadata = createPageMetadata({
+  title: 'Digital Products & Intelligent Software Engines — Quantum AI',
+  description: 'Explore custom software products, internal tools, intelligent portals, and autonomous operational platforms engineered by Quantum AI.',
+  path: '/products',
+});
 
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({

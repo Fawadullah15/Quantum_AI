@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import prisma from '@/lib/db';
+import { createPageMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -114,12 +115,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const dbTech = await prisma.technology.findUnique({ where: { slug } }).catch(() => null);
   const tech = dbTech || FALLBACK_CATALOG[slug];
 
-  if (!tech) return { title: 'Technology | Quantum AI' };
+  if (!tech) return { title: 'Technology Architecture | Quantum AI' };
   
-  return {
-    title: `${tech.name} | Quantum AI`,
-    description: tech.shortDescription,
-  };
+  return createPageMetadata({
+    title: `${tech.name} Architecture & Deployment — Quantum AI`,
+    description: tech.heroDescription || tech.shortDescription || `Engineering specifications, feature breakdown, and production use cases for ${tech.name}.`,
+    path: `/technologies/${slug}`,
+    image: tech.heroImage || undefined,
+  });
 }
 
 export default async function TechnologyDetailPage({ params }: Props) {

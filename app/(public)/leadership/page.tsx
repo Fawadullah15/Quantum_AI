@@ -1,12 +1,14 @@
 import prisma from "@/lib/db";
 import Link from "next/link";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Leadership",
-  description: "The people shaping the systems, products, and technology behind Quantum AI.",
-};
+export const metadata = createPageMetadata({
+  title: "Leadership & Engineering Team — Quantum AI",
+  description: "Meet the founders, engineers, and researchers directing the systems and technology behind Quantum AI.",
+  path: "/leadership",
+});
 
 export default async function LeadershipPage() {
   const members = await prisma.leadership.findMany({

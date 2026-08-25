@@ -1,7 +1,10 @@
-export const metadata = {
+import { createPageMetadata } from '@/lib/seo';
+
+export const metadata = createPageMetadata({
   title: 'Applied Research & Intelligence Labs — Quantum AI',
-  description: 'Autonomous systems, multi-modal reasoning models, and generative operational workflows.',
-};
+  description: 'Applied research into autonomous agent frameworks, multi-modal reasoning models, and generative operational systems.',
+  path: '/research',
+});
 
 export default function ResearchPage() {
   return (

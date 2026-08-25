@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import prisma from '@/lib/db';
+import { createPageMetadata, getArticleSchema } from '@/lib/seo';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -11,17 +12,17 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = await prisma.blogPost.findUnique({ where: { slug } }).catch(() => null);
-  if (!post) return { title: 'Not Found' };
+  if (!post) return { title: 'Article Not Found' };
   
-  return {
-    title: post.title,
-    description: post.excerpt,
-    openGraph: {
-      images: post.coverImage ? [post.coverImage] : [],
-      type: 'article',
-      publishedTime: post.publishedAt?.toISOString() ?? post.createdAt.toISOString(),
-    },
-  };
+  return createPageMetadata({
+    title: `${post.title} — Insights & Engineering | Quantum AI`,
+    description: post.excerpt || `Read ${post.title} by ${post.author || 'Quantum AI Team'}.`,
+    path: `/blog/${slug}`,
+    image: post.coverImage || undefined,
+    type: 'article',
+    publishedTime: post.publishedAt?.toISOString() ?? post.createdAt.toISOString(),
+    authors: post.author ? [post.author] : ['Quantum AI Team'],
+  });
 }
 
 export async function generateStaticParams() {
@@ -37,8 +38,15 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
+  const articleSchema = getArticleSchema(post);
+
   return (
-    <article style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2.5rem)', paddingBottom: '5rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '44rem', margin: '0 auto' }}>
+    <article style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', paddingLeft: '1.5rem', paddingRight: '1.5rem', maxWidth: '44rem', margin: '0 auto' }}>
+      {/* Schema.org Article Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <header style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.75rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', textTransform: 'uppercase', color: '#38BDF8', marginBottom: '1rem' }}>
           {post.category && <span>{post.category}</span>}

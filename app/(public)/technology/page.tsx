@@ -1,13 +1,15 @@
 import prisma from '@/lib/db';
 import Link from 'next/link';
 import TrustSection from '@/components/sections/TrustSection';
+import { createPageMetadata } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'Core Technology & Engineering Architecture — Quantum AI',
-  description: 'The computational foundations, machine learning models, and infrastructure powering Quantum AI systems.',
-};
+export const metadata = createPageMetadata({
+  title: 'Core Technology Stack & Architecture — Quantum AI',
+  description: 'Computational foundations, neural networks, vector databases, and resilient cloud infrastructure engineered by Quantum AI.',
+  path: '/technology',
+});
 
 const DEFAULT_TECHS = [
   {

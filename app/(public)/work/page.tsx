@@ -1,12 +1,14 @@
 import prisma from '@/lib/db'
 import Link from 'next/link'
+import { createPageMetadata } from '@/lib/seo'
 
 export const dynamic = 'force-dynamic'
 
-export const metadata = {
-  title: 'Works & Case Studies | Quantum AI',
-  description: 'Real client software systems, platforms, and AI architectures delivered by Quantum AI.',
-}
+export const metadata = createPageMetadata({
+  title: 'Selected Deployments & Client Case Studies — Quantum AI',
+  description: 'Explore production deployments, operational software platforms, and custom AI systems engineered for enterprise clients.',
+  path: '/work',
+})
 
 export default async function WorkPage() {
   const caseStudies = await prisma.caseStudy.findMany({

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import prisma from '@/lib/db';
+import { createPageMetadata } from '@/lib/seo';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -10,12 +11,14 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const product = await prisma.product.findUnique({ where: { slug } }).catch(() => null);
-  if (!product) return { title: 'Not Found' };
+  if (!product) return { title: 'Product Not Found' };
   
-  return {
-    title: product.name,
-    description: product.description,
-  };
+  return createPageMetadata({
+    title: `${product.name} — Software Product & Systems | Quantum AI`,
+    description: product.description ? product.description.slice(0, 160) : `Detailed architecture specifications and feature breakdown for ${product.name}.`,
+    path: `/products/${slug}`,
+    image: product.heroImage || undefined,
+  });
 }
 
 export async function generateStaticParams() {

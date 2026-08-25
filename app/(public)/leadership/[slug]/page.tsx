@@ -1,13 +1,21 @@
 import prisma from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const m = await prisma.leadership.findUnique({ where: { slug: (await params).slug } }).catch(() => null);
-  if (!m) return { title: "Not Found" };
-  return { title: `${m.name} — Leadership`, description: m.shortBio };
+  const { slug } = await params;
+  const m = await prisma.leadership.findUnique({ where: { slug } }).catch(() => null);
+  if (!m) return { title: "Profile Not Found | Quantum AI" };
+
+  return createPageMetadata({
+    title: `${m.name} (${m.position}) — Leadership | Quantum AI`,
+    description: m.shortBio || `${m.name} is ${m.position} at Quantum AI.`,
+    path: `/leadership/${slug}`,
+    image: m.photo || undefined,
+  });
 }
 
 export default async function LeadershipProfilePage({ params }: { params: Promise<{ slug: string }> }) {

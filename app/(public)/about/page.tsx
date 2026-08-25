@@ -1,7 +1,10 @@
-export const metadata = {
-  title: "About",
-  description: "Why Quantum AI exists and how we think about building technology.",
-};
+import { createPageMetadata } from '@/lib/seo';
+
+export const metadata = createPageMetadata({
+  title: 'About Quantum AI — Engineering Philosophy & Principles',
+  description: 'Learn why Quantum AI exists, our engineering philosophy, and our core principles for constructing reliable AI systems and custom business software.',
+  path: '/about',
+});
 
 const principles = [
   {

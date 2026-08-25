@@ -1,9 +1,11 @@
 import Link from 'next/link';
+import { createPageMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'Careers — Quantum AI',
-  description: 'Join our team building intelligent software, neural systems, and AI workflows.',
-};
+export const metadata = createPageMetadata({
+  title: 'Engineering Careers & Open Roles — Quantum AI',
+  description: 'Join the engineering and research team at Quantum AI. Explore open positions in AI systems, backend architecture, and product design.',
+  path: '/careers',
+});
 
 export default function CareersPage() {
   const roles = [
