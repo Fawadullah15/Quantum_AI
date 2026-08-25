@@ -21,7 +21,6 @@ const FALLBACK_CLIENTS: ClientItem[] = [
     name: 'Inventra Design & Automation',
     industry: 'Design & Automation',
     logo: '/uploads/clients/inventra-logo.png',
-    description: 'Industrial design and process automation platforms engineered for scalable precision.',
     website: '/work/sales-pipeline-automation-system',
     order: 1,
   },
@@ -30,7 +29,6 @@ const FALLBACK_CLIENTS: ClientItem[] = [
     name: 'Eden School System',
     industry: 'Education & Institutional Management',
     logo: '/uploads/clients/eden-school-logo.png',
-    description: 'Centralized school operations manager bringing academic, attendance, and administrative workflows into one digital system.',
     website: '/work/school-operations-manager',
     order: 2,
   },
@@ -39,9 +37,32 @@ const FALLBACK_CLIENTS: ClientItem[] = [
     name: 'Emerge Technologies',
     industry: 'Enterprise Software & Systems',
     logo: '/uploads/clients/emerge-tech-logo.png',
-    description: 'Scalable data architecture and modern operational platforms.',
     website: '/work/vector-search-knowledge-base',
     order: 3,
+  },
+  {
+    id: 'c-inventra-2',
+    name: 'Inventra Robotics & AI',
+    industry: 'Industrial Robotics',
+    logo: '/uploads/clients/inventra-logo.png',
+    website: '/work/sales-pipeline-automation-system',
+    order: 4,
+  },
+  {
+    id: 'c-eden-2',
+    name: 'Eden Higher Secondary Academy',
+    industry: 'Academic Administration',
+    logo: '/uploads/clients/eden-school-logo.png',
+    website: '/work/school-operations-manager',
+    order: 5,
+  },
+  {
+    id: 'c-emerge-2',
+    name: 'Emerge Cloud Infrastructure',
+    industry: 'Cloud Architecture',
+    logo: '/uploads/clients/emerge-tech-logo.png',
+    website: '/work/vector-search-knowledge-base',
+    order: 6,
   },
 ];
 
@@ -50,8 +71,6 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
     initialClients && initialClients.length > 0 ? initialClients : FALLBACK_CLIENTS
   );
   const [isVisible, setIsVisible] = useState(false);
-  const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -65,7 +84,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
       .catch(() => {});
   }, []);
 
-  // Intersection observer for entrance animation
+  // Intersection observer for performance (only animate when section is near viewport)
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -75,7 +94,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.05 }
     );
 
     if (sectionRef.current) {
@@ -85,31 +104,92 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
     return () => observer.disconnect();
   }, []);
 
-  // Mouse parallax handler
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!sectionRef.current) return;
-    const rect = sectionRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setMouseOffset({ x: x * 15, y: y * 15 });
+  // Construct deterministic permutations for 4 distinct rows
+  const generateRowItems = (items: ClientItem[], shiftOffset: number) => {
+    if (!items || items.length === 0) return [];
+    // Ensure we have at least 8 items per row before duplicating to guarantee full viewport coverage
+    let baseList = [...items];
+    while (baseList.length < 8) {
+      baseList = [...baseList, ...items];
+    }
+    // Shift elements deterministically so each row starts with a different sequence
+    const len = baseList.length;
+    const shifted = baseList.map((_, i) => baseList[(i + shiftOffset) % len]);
+    // Duplicate exactly once for mathematically seamless -50% marquee loop
+    return [...shifted, ...shifted];
   };
 
-  const handleMouseLeave = () => {
-    setMouseOffset({ x: 0, y: 0 });
+  const row1 = generateRowItems(clients, 0);
+  const row2 = generateRowItems(clients, 3);
+  const row3 = generateRowItems(clients, 6);
+  const row4 = generateRowItems(clients, 9);
+
+  const renderLogoCard = (client: ClientItem, keyIdx: string | number) => {
+    const cardContent = (
+      <>
+        <div className="marquee-logo-box">
+          {client.logo ? (
+            <img
+              src={client.logo}
+              alt={`${client.name} logo`}
+              className="marquee-logo-img"
+              loading="lazy"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
+          ) : (
+            <div className="marquee-placeholder">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M3 21h18M3 7v14M21 7v14M6 11h4M6 15h4M14 11h4M14 15h4M9 3h6v4H9z" />
+              </svg>
+              <span>{client.name.slice(0, 10)}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Floating Tooltip Pill on Hover */}
+        <div className="marquee-tooltip">
+          <span className="marquee-tooltip-name">{client.name}</span>
+          {client.industry && <span className="marquee-tooltip-ind">{client.industry}</span>}
+        </div>
+      </>
+    );
+
+    if (client.website) {
+      if (client.website.startsWith('/')) {
+        return (
+          <Link key={keyIdx} href={client.website} className="marquee-card">
+            {cardContent}
+          </Link>
+        );
+      }
+      return (
+        <a
+          key={keyIdx}
+          href={client.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="marquee-card"
+        >
+          {cardContent}
+        </a>
+      );
+    }
+
+    return (
+      <div key={keyIdx} className="marquee-card">
+        {cardContent}
+      </div>
+    );
   };
 
   return (
-    <section
-      ref={sectionRef}
-      id="clients-worked-with"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="clients-animated-section"
-    >
+    <section ref={sectionRef} id="clients-worked-with" className="continuous-clients-section">
       <style>{`
-        .clients-animated-section {
-          padding: clamp(3rem, 6vh, 5.5rem) clamp(1rem, 5vw, 6rem);
-          background: radial-gradient(circle at 50% 35%, rgba(14, 42, 85, 0.25) 0%, rgba(3, 7, 18, 0.98) 75%);
+        .continuous-clients-section {
+          padding: clamp(3.5rem, 6.5vh, 6rem) 0;
+          background: radial-gradient(circle at 50% 50%, rgba(10, 32, 68, 0.3) 0%, rgba(3, 7, 18, 0.98) 80%);
           border-top: 1px solid rgba(22, 119, 255, 0.14);
           border-bottom: 1px solid rgba(22, 119, 255, 0.14);
           position: relative;
@@ -117,37 +197,13 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           color: #F8FAFC;
         }
 
-        /* ─── Background Watermark Typography ─── */
-        .clients-watermark {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-family: var(--font-mono, monospace);
-          font-size: clamp(3.5rem, 10vw, 9rem);
-          font-weight: 900;
-          color: rgba(22, 119, 255, 0.035);
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-          pointer-events: none;
-          user-select: none;
-          white-space: nowrap;
-          z-index: 0;
-        }
-
-        .clients-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          position: relative;
-          z-index: 1;
-        }
-
         /* ─── Header ─── */
-        .clients-header {
+        .clients-marquee-header {
           text-align: center;
-          margin-bottom: clamp(2.5rem, 5vw, 4rem);
+          margin-bottom: clamp(2rem, 4vw, 3.5rem);
+          padding: 0 clamp(1.25rem, 4vw, 3rem);
         }
-        .clients-tag {
+        .clients-marquee-tag {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.25em;
@@ -156,7 +212,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           margin-bottom: 0.5rem;
           font-weight: 600;
         }
-        .clients-title {
+        .clients-marquee-title {
           font-size: clamp(1.6rem, 3.5vw, 2.5rem);
           font-weight: 700;
           line-height: 1.15;
@@ -165,304 +221,256 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           margin: 0 0 0.65rem 0;
           text-transform: uppercase;
         }
-        .clients-subtitle {
-          font-size: clamp(0.88rem, 1.25vw, 1.05rem);
+        .clients-marquee-subtitle {
+          font-size: clamp(0.88rem, 1.2vw, 1.05rem);
           color: #94A3B8;
-          max-width: 600px;
+          max-width: 620px;
           margin: 0 auto;
           line-height: 1.6;
           font-weight: 300;
         }
 
-        /* ─── Desktop Artistic Constellation Wall ─── */
-        .clients-constellation-stage {
+        /* ─── Smooth Side Edge Gradient Masking ─── */
+        .marquee-stage-wrapper {
           position: relative;
-          min-height: 440px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
-        .clients-constellation-grid {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          align-items: center;
-          gap: clamp(1.5rem, 3.5vw, 3rem);
-          max-width: 1050px;
-          margin: 0 auto;
-        }
-
-        /* ─── Dynamic Logo Item Card ─── */
-        .logo-constellation-card {
-          position: relative;
-          background: rgba(6, 21, 43, 0.65);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(22, 119, 255, 0.18);
-          border-radius: 16px;
-          padding: clamp(1.25rem, 2.5vw, 1.85rem) clamp(1.5rem, 3vw, 2.25rem);
+          width: 100%;
+          overflow: hidden;
           display: flex;
           flex-direction: column;
+          gap: clamp(0.85rem, 1.8vw, 1.35rem);
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+        }
+
+        /* ─── Infinite Marquee Rows ─── */
+        .marquee-row {
+          display: flex;
+          width: max-content;
+          will-change: transform;
+          user-select: none;
+        }
+
+        .marquee-row:hover {
+          animation-play-state: paused;
+        }
+
+        /* Continuous Left Movement */
+        @keyframes scrollLeft {
+          0% {
+            transform: translate3d(0, 0, 0);
+          }
+          100% {
+            transform: translate3d(-50%, 0, 0);
+          }
+        }
+
+        /* Continuous Right Movement */
+        @keyframes scrollRight {
+          0% {
+            transform: translate3d(-50%, 0, 0);
+          }
+          100% {
+            transform: translate3d(0, 0, 0);
+          }
+        }
+
+        /* Speed variations for natural rhythm */
+        .row-left-1 {
+          animation: scrollLeft 34s linear infinite;
+        }
+        .row-right-2 {
+          animation: scrollRight 44s linear infinite;
+        }
+        .row-left-3 {
+          animation: scrollLeft 38s linear infinite;
+        }
+        .row-right-4 {
+          animation: scrollRight 48s linear infinite;
+        }
+
+        .marquee-track {
+          display: flex;
+          align-items: center;
+          gap: clamp(0.85rem, 2vw, 1.35rem);
+          padding: 0 0.5rem;
+        }
+
+        /* ─── Logo Pill Card ─── */
+        .marquee-card {
+          position: relative;
+          background: rgba(6, 21, 43, 0.72);
+          backdrop-filter: blur(10px);
+          border: 1px solid rgba(22, 119, 255, 0.16);
+          border-radius: 12px;
+          padding: 0.75rem clamp(1.25rem, 2.5vw, 1.85rem);
+          display: flex;
           align-items: center;
           justify-content: center;
           text-decoration: none;
-          transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-                      border-color 0.3s ease,
-                      box-shadow 0.3s ease,
-                      opacity 0.3s ease,
-                      background-color 0.3s ease;
-          box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-          min-width: 190px;
-          max-width: 260px;
-          flex: 1 1 210px;
-          height: 155px;
+          min-width: 175px;
+          max-width: 230px;
+          height: 82px;
+          flex-shrink: 0;
           box-sizing: border-box;
-          opacity: 0;
-          transform: translateY(30px) scale(0.92);
+          box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.45);
+          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                      border-color 0.25s ease,
+                      background-color 0.25s ease,
+                      box-shadow 0.25s ease;
         }
 
-        .logo-constellation-card.is-active {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-
-        /* Floating Idle Breathing Animation */
-        @keyframes floatBreathing {
-          0% {
-            transform: translateY(0px);
-          }
-          50% {
-            transform: translateY(-6px);
-          }
-          100% {
-            transform: translateY(0px);
-          }
-        }
-
-        .logo-constellation-card.is-active.idle-float {
-          animation: floatBreathing 5.5s ease-in-out infinite;
-        }
-
-        /* Hover Elevation & Focus */
-        .logo-constellation-card:hover {
-          background-color: rgba(8, 28, 58, 0.9);
+        .marquee-card:hover {
+          background-color: rgba(8, 28, 58, 0.95);
           border-color: rgba(56, 189, 248, 0.6);
-          transform: translateY(-8px) scale(1.04) !important;
-          box-shadow: 0 20px 48px -10px rgba(22, 119, 255, 0.35),
-                      0 0 0 1px rgba(56, 189, 248, 0.4),
-                      inset 0 1px 1px rgba(255, 255, 255, 0.1);
-          z-index: 10;
+          transform: scale(1.08) translateY(-3px);
+          box-shadow: 0 16px 36px -8px rgba(22, 119, 255, 0.4), 0 0 0 1px rgba(56, 189, 248, 0.4);
+          z-index: 50;
         }
 
-        .clients-constellation-grid.has-hover .logo-constellation-card:not(:hover) {
-          opacity: 0.55;
-          filter: grayscale(20%);
-        }
-
-        /* Logo Image Container */
-        .logo-img-wrapper {
+        .marquee-logo-box {
           width: 100%;
-          height: 90px;
+          height: 100%;
           display: flex;
           align-items: center;
           justify-content: center;
-          position: relative;
-          padding: 0.5rem;
-          box-sizing: border-box;
         }
 
-        .logo-img-element {
-          max-width: 100%;
-          max-height: 100%;
+        .marquee-logo-img {
+          max-width: 155px;
+          max-height: 52px;
           object-fit: contain;
-          transition: transform 0.3s ease, filter 0.3s ease;
-          filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+          transition: transform 0.25s ease, filter 0.25s ease;
+          filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
         }
 
-        .logo-constellation-card:hover .logo-img-element {
-          transform: scale(1.05);
-          filter: drop-shadow(0 6px 16px rgba(56, 189, 248, 0.3));
+        .marquee-card:hover .marquee-logo-img {
+          transform: scale(1.04);
+          filter: drop-shadow(0 4px 12px rgba(56, 189, 248, 0.35));
         }
 
-        /* Fallback Emblem */
-        .logo-placeholder-box {
+        .marquee-placeholder {
           font-family: var(--font-mono, monospace);
-          font-size: 0.85rem;
-          font-weight: 700;
+          font-size: 0.72rem;
           color: #38BDF8;
           display: flex;
-          flex-direction: column;
+          align-items: center;
+          gap: 0.4rem;
+        }
+
+        /* ─── Hover Tooltip ─── */
+        .marquee-tooltip {
+          position: absolute;
+          bottom: -32px;
+          left: 50%;
+          transform: translateX(-50%) translateY(4px);
+          background: rgba(3, 7, 18, 0.94);
+          border: 1px solid rgba(56, 189, 248, 0.4);
+          border-radius: 6px;
+          padding: 0.25rem 0.65rem;
+          display: flex;
           align-items: center;
           gap: 0.35rem;
+          white-space: nowrap;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.2s ease, transform 0.2s ease;
+          z-index: 100;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
         }
 
-        /* Hover Tooltip Details */
-        .logo-info-bar {
-          margin-top: 0.75rem;
-          text-align: center;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 0.2rem;
-          width: 100%;
+        .marquee-card:hover .marquee-tooltip {
+          opacity: 1;
+          transform: translateX(-50%) translateY(0);
         }
 
-        .logo-org-name {
-          font-size: 0.88rem;
+        .marquee-tooltip-name {
+          font-size: 0.68rem;
           font-weight: 600;
           color: #F8FAFC;
-          letter-spacing: -0.01em;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          max-width: 100%;
         }
 
-        .logo-industry-tag {
+        .marquee-tooltip-ind {
           font-family: var(--font-mono, monospace);
-          font-size: 0.62rem;
+          font-size: 0.58rem;
           color: #38BDF8;
-          letter-spacing: 0.08em;
           text-transform: uppercase;
-          background: rgba(22, 119, 255, 0.15);
-          border: 1px solid rgba(56, 189, 248, 0.25);
-          padding: 0.15rem 0.45rem;
-          border-radius: 4px;
         }
 
-        /* Mobile View (< 768px) */
+        /* ─── Responsive Adjustments ─── */
         @media (max-width: 768px) {
-          .clients-constellation-grid {
-            gap: 1rem;
+          .marquee-card {
+            min-width: 140px;
+            max-width: 175px;
+            height: 68px;
+            padding: 0.5rem 0.85rem;
           }
-          .logo-constellation-card {
-            min-width: 160px;
-            height: 160px;
-            padding: 1rem;
+          .marquee-logo-img {
+            max-width: 120px;
+            max-height: 40px;
           }
-          .logo-img-wrapper {
-            height: 75px;
+          .row-left-1 {
+            animation-duration: 26s;
           }
-          .logo-org-name {
-            font-size: 0.78rem;
+          .row-right-2 {
+            animation-duration: 32s;
+          }
+          .row-left-3 {
+            animation-duration: 28s;
+          }
+          .row-right-4 {
+            animation-duration: 36s;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .logo-constellation-card {
-            opacity: 1 !important;
-            transform: none !important;
+          .marquee-row {
             animation: none !important;
-            transition: none !important;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+          }
+          .marquee-stage-wrapper {
+            mask-image: none;
+            -webkit-mask-image: none;
           }
         }
       `}</style>
 
-      {/* Background Watermark */}
-      <div className="clients-watermark">PARTNERSHIPS</div>
+      <div className="clients-marquee-header">
+        <div className="clients-marquee-tag">SYS.07 / CLIENTS & COLLABORATIONS</div>
+        <h2 className="clients-marquee-title">WITH WHOM WE HAVE WORKED.</h2>
+        <p className="clients-marquee-subtitle">
+          Trusted by organizations that believe in building what comes next. Real software systems, custom AI platforms, and operational engineering.
+        </p>
+      </div>
 
-      <div className="clients-container">
-        {/* Section Header */}
-        <div className="clients-header">
-          <div className="clients-tag">SYS.07 / CLIENTS & COLLABORATIONS</div>
-          <h2 className="clients-title">WITH WHOM WE HAVE WORKED.</h2>
-          <p className="clients-subtitle">
-            Trusted by organizations that believe in building what comes next. Real software systems, custom AI platforms, and operational engineering.
-          </p>
+      {/* Multi-Row Continuous Sliding Stage */}
+      <div className="marquee-stage-wrapper">
+        {/* ROW 1: Moves Left */}
+        <div className={`marquee-row row-left-1 ${!isVisible ? 'paused' : ''}`}>
+          <div className="marquee-track">
+            {row1.map((client, idx) => renderLogoCard(client, `r1-${idx}`))}
+          </div>
         </div>
 
-        {/* Dynamic Logo Constellation Stage */}
-        <div className="clients-constellation-stage">
-          <div className={`clients-constellation-grid ${hoveredId ? 'has-hover' : ''}`}>
-            {clients.map((client, index) => {
-              const delaySec = index * 0.15;
-              const floatDelay = `${(index * 1.2) % 4}s`;
+        {/* ROW 2: Moves Right */}
+        <div className={`marquee-row row-right-2 ${!isVisible ? 'paused' : ''}`}>
+          <div className="marquee-track">
+            {row2.map((client, idx) => renderLogoCard(client, `r2-${idx}`))}
+          </div>
+        </div>
 
-              const cardMarkup = (
-                <>
-                  <div className="logo-img-wrapper">
-                    {client.logo ? (
-                      <img
-                        src={client.logo}
-                        alt={`${client.name} logo`}
-                        className="logo-img-element"
-                        onError={(e) => {
-                          // Gracefully handle broken image by displaying styled monogram
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    ) : (
-                      <div className="logo-placeholder-box">
-                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <path d="M3 21h18M3 7v14M21 7v14M6 11h4M6 15h4M14 11h4M14 15h4M9 3h6v4H9z" />
-                        </svg>
-                        <span>{client.name.slice(0, 12)}</span>
-                      </div>
-                    )}
-                  </div>
+        {/* ROW 3: Moves Left */}
+        <div className={`marquee-row row-left-3 ${!isVisible ? 'paused' : ''}`}>
+          <div className="marquee-track">
+            {row3.map((client, idx) => renderLogoCard(client, `r3-${idx}`))}
+          </div>
+        </div>
 
-                  <div className="logo-info-bar">
-                    <div className="logo-org-name">{client.name}</div>
-                    {client.industry && (
-                      <div className="logo-industry-tag">{client.industry}</div>
-                    )}
-                  </div>
-                </>
-              );
-
-              if (client.website) {
-                if (client.website.startsWith('/')) {
-                  return (
-                    <Link
-                      key={client.id || index}
-                      href={client.website}
-                      onMouseEnter={() => setHoveredId(client.id || String(index))}
-                      onMouseLeave={() => setHoveredId(null)}
-                      className={`logo-constellation-card ${isVisible ? 'is-active idle-float' : ''}`}
-                      style={{
-                        transitionDelay: `${delaySec}s`,
-                        animationDelay: floatDelay,
-                      }}
-                    >
-                      {cardMarkup}
-                    </Link>
-                  );
-                }
-
-                return (
-                  <a
-                    key={client.id || index}
-                    href={client.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onMouseEnter={() => setHoveredId(client.id || String(index))}
-                    onMouseLeave={() => setHoveredId(null)}
-                    className={`logo-constellation-card ${isVisible ? 'is-active idle-float' : ''}`}
-                    style={{
-                      transitionDelay: `${delaySec}s`,
-                      animationDelay: floatDelay,
-                    }}
-                  >
-                    {cardMarkup}
-                  </a>
-                );
-              }
-
-              return (
-                <div
-                  key={client.id || index}
-                  onMouseEnter={() => setHoveredId(client.id || String(index))}
-                  onMouseLeave={() => setHoveredId(null)}
-                  className={`logo-constellation-card ${isVisible ? 'is-active idle-float' : ''}`}
-                  style={{
-                    transitionDelay: `${delaySec}s`,
-                    animationDelay: floatDelay,
-                  }}
-                >
-                  {cardMarkup}
-                </div>
-              );
-            })}
+        {/* ROW 4: Moves Right */}
+        <div className={`marquee-row row-right-4 ${!isVisible ? 'paused' : ''}`}>
+          <div className="marquee-track">
+            {row4.map((client, idx) => renderLogoCard(client, `r4-${idx}`))}
           </div>
         </div>
       </div>
