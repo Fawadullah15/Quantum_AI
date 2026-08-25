@@ -62,7 +62,7 @@ export default async function BlogPage() {
             grid-template-columns: repeat(2, 1fr);
           }
         }
-        @media (max-width: 480px) {
+        @media (max-width: 640px) {
           .blog-grid {
             grid-template-columns: 1fr;
           }

@@ -35,7 +35,7 @@ export default async function LeadershipPage() {
         }
         @media (max-width: 540px) {
           .ldr-grid { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; }
-          .ldr-page { padding-inline: 0.75rem; padding-top: calc(var(--nav-height, 80px) + 2rem); }
+          .ldr-page { padding-inline: 0.75rem; padding-top: calc(var(--nav-height, 72px) + 1.5rem); }
           .id-card { border-radius: 8px; }
           .id-header { padding: 0.5rem 0.65rem; }
           .id-brand { font-size: 0.52rem; letter-spacing: 0.1em; }
