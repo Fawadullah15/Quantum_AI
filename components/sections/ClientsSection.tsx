@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
 
-interface ClientItem {
+export interface ClientItem {
   id?: string;
   name: string;
   industry?: string | null;
@@ -10,6 +11,8 @@ interface ClientItem {
   website?: string | null;
   logo?: string | null;
   featured?: boolean;
+  published?: boolean;
+  order?: number;
 }
 
 const DEFAULT_CLIENTS: ClientItem[] = [
@@ -17,30 +20,30 @@ const DEFAULT_CLIENTS: ClientItem[] = [
     name: 'School Operations Manager',
     industry: 'Education / Institution',
     description: 'Centralized school management platform bringing academic, attendance, and administrative workflows into one digital system.',
-    website: 'https://quantumai.dev/work/school-operations-manager',
+    website: '/work/school-operations-manager',
   },
   {
     name: 'Sales Pipeline System',
     industry: 'Sales / Business Automation',
     description: 'Centralized CRM and opportunity tracking engine with automated lead routing and CRM synchronization pipelines.',
-    website: 'https://quantumai.dev/work/sales-pipeline-automation-system',
+    website: '/work/sales-pipeline-automation-system',
   },
   {
     name: 'Vector Search Knowledge Base',
     industry: 'AI / Knowledge Management',
     description: 'Enterprise semantic search over knowledge sources and document archives powered by embeddings and vector indexing.',
-    website: 'https://quantumai.dev/work/vector-search-knowledge-base',
+    website: '/work/vector-search-knowledge-base',
   },
   {
     name: 'AI Support Assistant',
     industry: 'AI / Customer Support',
     description: 'Context-aware customer support system automating frequent inquiries and accelerating team response workflows.',
-    website: 'https://quantumai.dev/work/ai-powered-customer-support-assistant',
+    website: '/work/ai-powered-customer-support-assistant',
   },
 ];
 
-export default function ClientsSection() {
-  const [clients, setClients] = useState<ClientItem[]>(DEFAULT_CLIENTS);
+export default function ClientsSection({ initialClients }: { initialClients?: ClientItem[] }) {
+  const [clients, setClients] = useState<ClientItem[]>(initialClients && initialClients.length > 0 ? initialClients : DEFAULT_CLIENTS);
 
   useEffect(() => {
     fetch('/api/clients')
@@ -166,6 +169,7 @@ export default function ClientsSection() {
             gap: 0.35rem;
             min-height: 95px;
             box-sizing: border-box;
+            text-decoration: none;
           }
 
           .mobile-client-name {
@@ -269,12 +273,19 @@ export default function ClientsSection() {
             );
 
             if (c.website) {
+              if (c.website.startsWith('/')) {
+                return (
+                  <Link key={c.id || idx} href={c.website} className="client-card">
+                    {cardContent}
+                  </Link>
+                );
+              }
               return (
                 <a
                   key={c.id || idx}
                   href={c.website}
-                  target={c.website.startsWith('http') ? '_blank' : '_self'}
-                  rel="noreferrer"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="client-card"
                 >
                   {cardContent}
@@ -292,15 +303,44 @@ export default function ClientsSection() {
 
         {/* ─── Mobile View: Clean 2x2 Compact Block Grid ─── */}
         <div className="clients-mobile-grid">
-          {clients.map((c, idx) => (
-            <div key={c.id || idx} className="mobile-client-tile">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
-                <span className="mobile-client-industry">{c.industry || 'CLIENT'}</span>
-                <h3 className="mobile-client-name">{c.name}</h3>
+          {clients.map((c, idx) => {
+            const mobileContent = (
+              <>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                  <span className="mobile-client-industry">{c.industry || 'CLIENT'}</span>
+                  <h3 className="mobile-client-name">{c.name}</h3>
+                </div>
+                {c.description && <p className="mobile-client-desc">{c.description}</p>}
+              </>
+            );
+
+            if (c.website) {
+              if (c.website.startsWith('/')) {
+                return (
+                  <Link key={c.id || idx} href={c.website} className="mobile-client-tile">
+                    {mobileContent}
+                  </Link>
+                );
+              }
+              return (
+                <a
+                  key={c.id || idx}
+                  href={c.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mobile-client-tile"
+                >
+                  {mobileContent}
+                </a>
+              );
+            }
+
+            return (
+              <div key={c.id || idx} className="mobile-client-tile">
+                {mobileContent}
               </div>
-              {c.description && <p className="mobile-client-desc">{c.description}</p>}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
