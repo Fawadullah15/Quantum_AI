@@ -8,6 +8,7 @@ import { NovaButton, GalaxyButton, ButtonStyles } from '@/components/ui/Buttons'
 import ChallengesSection from '@/components/sections/ChallengesSection';
 import SolutionsSection from '@/components/sections/SolutionsSection';
 import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
+import ProcessSection from '@/components/sections/ProcessSection';
 
 const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr: false });
 const GlobalMapSection = dynamic(() => import('@/components/sections/GlobalMapSection'), { ssr: false });
@@ -390,131 +391,9 @@ export default function HomePage() {
         <CaseStudiesSection />
 
         {/* ═══════════════════════════════════════════════════════════
-            HOW WE WORK / DELIVERY PROCESS SECTION (Compact Rows - No Broken Words)
+            HOW WE WORK / DELIVERY PROCESS (Desktop: Interactive Hover Steps / Mobile: 2-Column Process Grid)
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.35)', borderTop: '1px solid rgba(22, 119, 255, 0.1)', borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
-          <style>{`
-            .process-list-container {
-              display: flex;
-              flex-direction: column;
-              gap: 0.65rem;
-              width: 100%;
-            }
-            .process-horizontal-card {
-              background-color: rgba(6, 21, 43, 0.65);
-              border: 1px solid rgba(22, 119, 255, 0.14);
-              border-radius: 10px;
-              padding: 0.85rem clamp(1rem, 2.5vw, 1.75rem);
-              display: grid;
-              grid-template-columns: minmax(180px, 220px) 1fr;
-              align-items: center;
-              gap: 1.5rem;
-              transition: border-color 0.2s, transform 0.2s, background-color 0.2s;
-              box-sizing: border-box;
-              width: 100%;
-            }
-            .process-horizontal-card:hover {
-              background-color: rgba(8, 28, 58, 0.8);
-              border-color: rgba(56, 189, 248, 0.4);
-              transform: translateY(-1px);
-            }
-            .process-card-left {
-              display: flex;
-              align-items: center;
-              gap: 0.85rem;
-            }
-            .process-step-label {
-              font-family: var(--font-mono);
-              font-size: 0.72rem;
-              color: #1677FF;
-              font-weight: 600;
-              letter-spacing: 0.1em;
-            }
-            .process-card-title {
-              font-size: 1.05rem;
-              font-weight: 600;
-              color: #F8FAFF;
-              letter-spacing: 0.02em;
-              margin: 0;
-              text-transform: uppercase;
-              line-height: 1.3;
-            }
-            .process-card-desc {
-              color: #94A3B8;
-              font-size: 0.875rem;
-              line-height: 1.5;
-              margin: 0;
-              font-weight: 300;
-            }
-
-            @media (max-width: 860px) {
-              .process-horizontal-card {
-                grid-template-columns: 1fr;
-                gap: 0.35rem;
-                padding: 0.85rem 1.1rem;
-              }
-              .process-card-title {
-                font-size: 0.95rem;
-              }
-              .process-card-desc {
-                font-size: 0.8125rem;
-                line-height: 1.45;
-              }
-            }
-          `}</style>
-          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <p style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: '0.72rem',
-              letterSpacing: '0.25em',
-              textTransform: 'uppercase',
-              color: '#1677FF',
-              marginBottom: '0.5rem',
-              fontWeight: 600
-            }}>
-              HOW WE WORK
-            </p>
-            <h2 style={{
-              fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
-              fontWeight: 700,
-              lineHeight: 1.15,
-              letterSpacing: '-0.025em',
-              color: '#F8FAFF',
-              marginBottom: '0.5rem',
-              textTransform: 'uppercase'
-            }}>
-              A Clear, Structured Process.
-            </h2>
-            <p style={{
-              fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
-              color: '#94A3B8',
-              lineHeight: 1.6,
-              marginBottom: 'clamp(1.5rem, 3vh, 2.25rem)',
-              maxWidth: 600,
-              fontWeight: 300
-            }}>
-              We eliminate uncertainty from development through clear, iterative milestones from discovery to production launch.
-            </p>
-
-            <div className="process-list-container">
-              {[
-                { step: '01', name: 'UNDERSTAND', desc: 'Study the business problem, operational context, and core requirements.' },
-                { step: '02', name: 'DEFINE', desc: 'Scope the technical architecture, data workflows, user roles, and success milestones.' },
-                { step: '03', name: 'DESIGN', desc: 'Plan the product interface, system data models, and API interfaces for maximum clarity.' },
-                { step: '04', name: 'BUILD', desc: 'Develop, test, and refine the system using production-grade frameworks and rigorous validation.' },
-                { step: '05', name: 'DEPLOY', desc: 'Launch, monitor, document, and support the solution in secure cloud environments.' },
-              ].map((item, i) => (
-                <div key={i} className="process-horizontal-card">
-                  <div className="process-card-left">
-                    <span className="process-step-label">{item.step}</span>
-                    <h3 className="process-card-title">{item.name}</h3>
-                  </div>
-                  <p className="process-card-desc">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ProcessSection />
 
         {/* ═══════════════════════════════════════════════════════════
             WHY QUANTUM AI / PRINCIPLES
