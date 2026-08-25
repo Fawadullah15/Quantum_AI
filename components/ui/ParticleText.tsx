@@ -209,7 +209,11 @@ export default function ParticleText({
       particlesRef.current = newParticles;
     };
 
+    let isVisible = true;
+
     const animate = () => {
+      if (!isVisible) return;
+
       ctx.clearRect(0, 0, cw, ch);
       
       const { x: mx, y: my } = mouseRef.current;
@@ -226,14 +230,36 @@ export default function ParticleText({
     init();
     animate();
 
+    // Pause animation when hero is outside the viewport
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const currentlyVisible = entry.isIntersecting;
+        if (currentlyVisible && !isVisible) {
+          isVisible = true;
+          cancelAnimationFrame(animationRef.current);
+          animate();
+        } else if (!currentlyVisible && isVisible) {
+          isVisible = false;
+          cancelAnimationFrame(animationRef.current);
+        }
+      },
+      { threshold: 0.05 }
+    );
+
+    if (container) {
+      observer.observe(container);
+    }
+
     const handleResize = () => {
       cancelAnimationFrame(animationRef.current);
       init();
-      animate();
+      if (isVisible) {
+        animate();
+      }
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!container) return;
+      if (!container || !isVisible) return;
       const rect = container.getBoundingClientRect();
       mouseRef.current.x = e.clientX - rect.left;
       mouseRef.current.y = e.clientY - rect.top;
@@ -245,13 +271,14 @@ export default function ParticleText({
     };
 
     window.addEventListener('resize', handleResize);
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
     container.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
       container?.removeEventListener('mouseleave', handleMouseLeave);
+      observer.disconnect();
       cancelAnimationFrame(animationRef.current);
     };
   }, [text, lines, fontSize, fontFamily, fontWeight, textColor, particleDensity, particleSize, friction, ease, mouseRadius, mouseRepelForce]);
