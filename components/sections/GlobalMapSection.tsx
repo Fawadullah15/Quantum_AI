@@ -134,21 +134,21 @@ export default function GlobalMapSection() {
     <section
       style={{
         position: 'relative',
-        padding: 'clamp(5rem, 12vh, 10rem) clamp(1.25rem, 6vw, 6rem)',
+        padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)',
         background: 'linear-gradient(180deg, #020817 0%, #030D1E 50%, #020817 100%)',
         overflow: 'hidden',
       }}
       aria-labelledby="map-heading"
     >
       {/* Header */}
-      <div style={{ maxWidth: 720, margin: '0 auto 4rem', textAlign: 'center' }}>
+      <div style={{ maxWidth: 720, margin: '0 auto clamp(1.5rem, 3vh, 2.25rem)', textAlign: 'center' }}>
         <p style={{
           fontFamily: 'var(--font-mono)',
-          fontSize: '0.75rem',
-          letterSpacing: '0.3em',
+          fontSize: '0.72rem',
+          letterSpacing: '0.25em',
           textTransform: 'uppercase',
           color: '#1677FF',
-          marginBottom: '1.25rem',
+          marginBottom: '0.4rem',
           maxWidth: 'none',
           fontWeight: 600
         }}>
@@ -157,21 +157,21 @@ export default function GlobalMapSection() {
         <h2
           id="map-heading"
           style={{
-            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+            fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
             fontWeight: 700,
-            lineHeight: 1.1,
-            letterSpacing: '-0.03em',
+            lineHeight: 1.15,
+            letterSpacing: '-0.025em',
             color: '#F8FAFF',
-            marginBottom: '1.5rem',
+            marginBottom: '0.5rem',
             textTransform: 'uppercase',
           }}
         >
           Built for a connected world.
         </h2>
         <p style={{
-          fontSize: 'clamp(1rem, 2vw, 1.15rem)',
+          fontSize: 'clamp(0.85rem, 1.2vw, 0.95rem)',
           color: '#94A3B8',
-          lineHeight: 1.7,
+          lineHeight: 1.6,
           maxWidth: 580,
           margin: '0 auto',
           fontWeight: 300,

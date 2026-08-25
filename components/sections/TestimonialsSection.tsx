@@ -138,7 +138,7 @@ export default function TestimonialsSection({
     <section
       id="testimonials-section"
       style={{
-        padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)',
+        padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)',
         pointerEvents: 'auto',
         backgroundColor: 'rgba(6, 21, 43, 0.25)',
         borderTop: '1px solid rgba(22, 119, 255, 0.08)',
@@ -152,7 +152,7 @@ export default function TestimonialsSection({
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'flex-end',
-            marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)',
+            marginBottom: 'clamp(1.25rem, 2.5vh, 2rem)',
             flexWrap: 'wrap',
             gap: '1.25rem',
           }}
@@ -165,7 +165,7 @@ export default function TestimonialsSection({
                 letterSpacing: '0.25em',
                 textTransform: 'uppercase',
                 color: '#1677FF',
-                marginBottom: '0.5rem',
+                marginBottom: '0.4rem',
                 fontWeight: 600,
               }}
             >
@@ -173,7 +173,7 @@ export default function TestimonialsSection({
             </p>
             <h2
               style={{
-                fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
+                fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
                 fontWeight: 700,
                 lineHeight: 1.15,
                 letterSpacing: '-0.025em',
@@ -186,10 +186,10 @@ export default function TestimonialsSection({
             </h2>
             <p
               style={{
-                fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
+                fontSize: 'clamp(0.85rem, 1.2vw, 0.95rem)',
                 color: '#94A3B8',
                 lineHeight: 1.6,
-                marginTop: '0.4rem',
+                marginTop: '0.35rem',
                 marginBottom: 0,
                 maxWidth: 600,
                 fontWeight: 300,

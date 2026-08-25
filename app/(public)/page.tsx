@@ -325,10 +325,10 @@ export default function HomePage() {
         ═══════════════════════════════════════════════════════════ */}
         <section
           style={{
-            minHeight: '90vh',
+            minHeight: '85vh',
             display: 'flex',
             alignItems: 'center',
-            padding: 'clamp(5rem, 10vh, 7.5rem) clamp(1.25rem, 5vw, 5rem) clamp(3rem, 6vh, 4.5rem)',
+            padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1.25rem, 5vw, 5rem) clamp(2rem, 4vh, 3rem)',
             position: 'relative',
           }}
         >
@@ -339,9 +339,9 @@ export default function HomePage() {
 
             {/* ParticleText visual headline */}
             <div style={{
-              height: 'clamp(200px, 32vw, 320px)',
+              height: 'clamp(190px, 30vw, 300px)',
               width: 'clamp(280px, 90vw, 840px)',
-              marginBottom: '1.5rem',
+              marginBottom: '1.25rem',
               filter: 'drop-shadow(0 4px 24px rgba(2, 8, 23, 0.95))',
             }}>
               <ParticleText
@@ -360,10 +360,10 @@ export default function HomePage() {
 
             {/* Supporting copy */}
             <p style={{
-              fontSize: 'clamp(0.95rem, 1.4vw, 1.15rem)',
+              fontSize: 'clamp(0.9rem, 1.3vw, 1.05rem)',
               color: '#94A3B8',
-              lineHeight: 1.65,
-              marginBottom: '2rem',
+              lineHeight: 1.6,
+              marginBottom: '1.75rem',
               maxWidth: 580,
               fontWeight: 300,
             }}>
@@ -371,7 +371,7 @@ export default function HomePage() {
             </p>
 
             {/* CTAs */}
-            <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
               <NovaButton href="/contact">START A PROJECT</NovaButton>
               <GalaxyButton href="/work">EXPLORE OUR WORK</GalaxyButton>
             </div>
@@ -418,7 +418,7 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             LEADERSHIP SECTION
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.2)' }}>
+        <section style={{ padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.2)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
@@ -426,26 +426,26 @@ export default function HomePage() {
               letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '0.5rem',
+              marginBottom: '0.4rem',
               fontWeight: 600
             }}>
               LEADERSHIP
             </p>
             <h2 style={{
-              fontSize: 'clamp(1.5rem, 2.8vw, 2.25rem)',
+              fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
               fontWeight: 700,
               color: '#F8FAFF',
-              marginBottom: '0.5rem',
+              marginBottom: '0.4rem',
               letterSpacing: '-0.025em',
               textTransform: 'uppercase'
             }}>
               The people behind Quantum AI.
             </h2>
             <p style={{
-              fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
+              fontSize: 'clamp(0.85rem, 1.2vw, 0.95rem)',
               color: '#94A3B8',
               lineHeight: 1.6,
-              marginBottom: 'clamp(1.5rem, 3vh, 2.25rem)',
+              marginBottom: 'clamp(1.25rem, 2.5vh, 2rem)',
               maxWidth: 560,
               fontWeight: 300
             }}>
@@ -552,7 +552,7 @@ export default function HomePage() {
             </div>
 
             {/* Team Button */}
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2.5rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1.75rem' }}>
               <NovaButton href="/leadership">
                 MEET THE FULL TEAM →
               </NovaButton>
@@ -573,7 +573,7 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             CONTACT SECTION
         ═══════════════════════════════════════════════════════════ */}
-        <section id="contact-form" style={{ padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
+        <section id="contact-form" style={{ padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
@@ -581,7 +581,7 @@ export default function HomePage() {
               letterSpacing: '0.25em',
               textTransform: 'uppercase',
               color: '#1677FF',
-              marginBottom: '0.5rem',
+              marginBottom: '0.4rem',
               fontWeight: 600
             }}>
               CONTACT
@@ -590,17 +590,17 @@ export default function HomePage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'clamp(2rem, 4vw, 4rem)', alignItems: 'start' }}>
               <div>
                 <h2 style={{
-                  fontSize: 'clamp(1.75rem, 3.2vw, 2.6rem)',
+                  fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
                   fontWeight: 700,
-                  lineHeight: 1.1,
-                  letterSpacing: '-0.03em',
+                  lineHeight: 1.15,
+                  letterSpacing: '-0.025em',
                   color: '#F8FAFF',
-                  marginBottom: '0.75rem',
+                  marginBottom: '0.5rem',
                   textTransform: 'uppercase'
                 }}>
                   Let's build something useful.
                 </h2>
-                <p style={{ fontSize: '0.95rem', color: '#94A3B8', lineHeight: 1.6, marginBottom: '1.75rem', fontWeight: 300 }}>
+                <p style={{ fontSize: '0.85rem', color: '#94A3B8', lineHeight: 1.6, marginBottom: '1.25rem', fontWeight: 300 }}>
                   Tell us what you are building, what problem you are solving, or what you want to improve.
                 </p>
                 
