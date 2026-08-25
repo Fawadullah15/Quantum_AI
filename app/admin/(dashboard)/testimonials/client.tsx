@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
-import { createTestimonial, updateTestimonial, deleteTestimonial } from './actions';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export interface TestimonialItem {
   id: string;
@@ -15,19 +15,21 @@ export interface TestimonialItem {
   order: number;
 }
 
-export default function TestimonialsClient({
+export default function TestimonialsAdminClient({
   testimonials = [],
 }: {
   testimonials: TestimonialItem[];
 }) {
+  const router = useRouter();
   const [items, setItems] = useState<TestimonialItem[]>(testimonials);
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'PENDING' | 'ACTIVE'>('ALL');
 
+  // Form State
   const [formData, setFormData] = useState({
     name: '',
     company: '',
@@ -36,19 +38,19 @@ export default function TestimonialsClient({
     rating: 5,
     photo: '',
     published: true,
-    order: 0,
+    order: 1,
   });
 
   const handleEdit = (t: TestimonialItem) => {
     setFormData({
-      name: t.name || '',
+      name: t.name,
       company: t.company || '',
       role: t.role || '',
-      content: t.content || '',
+      content: t.content,
       rating: t.rating || 5,
       photo: t.photo || '',
-      published: t.published ?? true,
-      order: t.order || 0,
+      published: t.published,
+      order: t.order || 1,
     });
     setCurrentId(t.id);
     setIsEditing(true);
@@ -101,19 +103,19 @@ export default function TestimonialsClient({
 
   const handleTogglePublish = async (t: TestimonialItem) => {
     try {
-      await updateTestimonial(t.id, {
-        name: t.name,
-        company: t.company || '',
-        role: t.role || '',
-        content: t.content,
-        rating: t.rating || 5,
-        photo: t.photo || '',
-        published: !t.published,
-        order: t.order,
+      const nextState = !t.published;
+      const res = await fetch(`/api/testimonials/${t.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ published: nextState }),
       });
+
+      if (!res.ok) throw new Error('Status update failed');
+
       setItems((prev) =>
-        prev.map((item) => (item.id === t.id ? { ...item, published: !t.published } : item))
+        prev.map((item) => (item.id === t.id ? { ...item, published: nextState } : item))
       );
+      router.refresh();
     } catch (error) {
       console.error('Failed to toggle status:', error);
       alert('An error occurred while updating status.');
@@ -130,16 +132,29 @@ export default function TestimonialsClient({
     try {
       setIsSaving(true);
       if (currentId) {
-        const updated = await updateTestimonial(currentId, formData);
+        const res = await fetch(`/api/testimonials/${currentId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        if (!res.ok) throw new Error('Update failed');
+        const updated = await res.json();
         setItems((prev) =>
           prev.map((item) => (item.id === currentId ? (updated as TestimonialItem) : item))
         );
       } else {
-        const created = await createTestimonial(formData);
+        const res = await fetch('/api/testimonials', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        if (!res.ok) throw new Error('Create failed');
+        const created = await res.json();
         setItems((prev) => [...prev, created as TestimonialItem]);
       }
       setIsEditing(false);
       setCurrentId(null);
+      router.refresh();
     } catch (error) {
       console.error('Failed to save testimonial:', error);
       alert('An error occurred while saving.');
@@ -151,8 +166,12 @@ export default function TestimonialsClient({
   const handleDelete = async (id: string, name: string) => {
     if (confirm(`Are you sure you want to delete the testimonial from "${name}"?`)) {
       try {
-        await deleteTestimonial(id);
+        const res = await fetch(`/api/testimonials/${id}`, {
+          method: 'DELETE',
+        });
+        if (!res.ok) throw new Error('Delete failed');
         setItems((prev) => prev.filter((item) => item.id !== id));
+        router.refresh();
       } catch (error) {
         console.error('Failed to delete testimonial:', error);
         alert('An error occurred while deleting.');
@@ -160,13 +179,25 @@ export default function TestimonialsClient({
     }
   };
 
-  const filteredItems = items.filter(
-    (item) =>
+  const pendingCount = items.filter((item) => !item.published).length;
+  const activeCount = items.filter((item) => item.published).length;
+
+  const filteredItems = items.filter((item) => {
+    const matchesSearch =
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       (item.company && item.company.toLowerCase().includes(searchQuery.toLowerCase())) ||
       (item.role && item.role.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      item.content.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      item.content.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === 'ALL'
+        ? true
+        : statusFilter === 'PENDING'
+        ? !item.published
+        : item.published;
+
+    return matchesSearch && matchesStatus;
+  });
 
   const inputStyle: React.CSSProperties = {
     width: '100%',
@@ -195,6 +226,54 @@ export default function TestimonialsClient({
     <div style={{ color: '#F8FAFC', width: '100%' }}>
       {!isEditing ? (
         <>
+          {/* Pending Reviews Notice Banner */}
+          {pendingCount > 0 && (
+            <div
+              style={{
+                backgroundColor: 'rgba(245, 158, 11, 0.12)',
+                border: '1px solid rgba(245, 158, 11, 0.35)',
+                borderRadius: '8px',
+                padding: '0.85rem 1.25rem',
+                marginBottom: '1.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexWrap: 'wrap',
+                gap: '0.75rem',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <span style={{ fontSize: '1.15rem' }}>⚠️</span>
+                <div>
+                  <div style={{ fontWeight: 600, color: '#FBBF24', fontSize: '0.88rem' }}>
+                    {pendingCount} New Client Review{pendingCount > 1 ? 's' : ''} Awaiting Approval
+                  </div>
+                  <div style={{ color: '#94A3B8', fontSize: '0.78rem' }}>
+                    Submitted via public &quot;+ Share Your Experience&quot; form. Click &quot;Approve &amp; Publish&quot; to show on the live slider.
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setStatusFilter('PENDING')}
+                style={{
+                  backgroundColor: 'rgba(245, 158, 11, 0.2)',
+                  border: '1px solid rgba(245, 158, 11, 0.4)',
+                  color: '#FBBF24',
+                  padding: '0.35rem 0.75rem',
+                  borderRadius: '6px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  fontFamily: 'var(--font-mono, monospace)',
+                  cursor: 'pointer',
+                }}
+              >
+                View Pending ({pendingCount})
+              </button>
+            </div>
+          )}
+
           {/* Top Control Bar */}
           <div
             style={{
@@ -203,10 +282,11 @@ export default function TestimonialsClient({
               justifyContent: 'space-between',
               alignItems: 'center',
               gap: '1rem',
-              marginBottom: '1.75rem',
+              marginBottom: '1.5rem',
             }}
           >
-            <div style={{ position: 'relative', minWidth: '260px', flex: '1', maxWidth: '400px' }}>
+            {/* Search Input */}
+            <div style={{ position: 'relative', minWidth: '240px', flex: '1', maxWidth: '360px' }}>
               <input
                 type="text"
                 placeholder="Search by client, company, or quote..."
@@ -226,27 +306,87 @@ export default function TestimonialsClient({
               />
             </div>
 
-            <button
-              onClick={handleCreate}
-              style={{
-                backgroundColor: '#1677FF',
-                color: '#FFFFFF',
-                padding: '0.65rem 1.35rem',
-                borderRadius: '6px',
-                fontWeight: 600,
-                fontSize: '0.85rem',
-                border: 'none',
-                cursor: 'pointer',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                fontFamily: 'var(--font-mono, monospace)',
-                letterSpacing: '0.04em',
-                boxShadow: '0 4px 14px rgba(22, 119, 255, 0.35)',
-              }}
-            >
-              <span>+</span> ADD TESTIMONIAL
-            </button>
+            {/* Filter Tabs & Add Button */}
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <div style={{ display: 'flex', gap: '0.3rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter('ALL')}
+                  style={{
+                    backgroundColor: statusFilter === 'ALL' ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
+                    border: statusFilter === 'ALL' ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
+                    color: statusFilter === 'ALL' ? '#FFFFFF' : '#94A3B8',
+                    padding: '0.45rem 0.75rem',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
+                  All ({items.length})
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter('PENDING')}
+                  style={{
+                    backgroundColor: statusFilter === 'PENDING' ? '#F59E0B' : 'rgba(6, 21, 43, 0.65)',
+                    border: statusFilter === 'PENDING' ? '1px solid #F59E0B' : '1px solid rgba(245, 158, 11, 0.25)',
+                    color: statusFilter === 'PENDING' ? '#000000' : '#FBBF24',
+                    padding: '0.45rem 0.75rem',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
+                  Pending ({pendingCount})
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setStatusFilter('ACTIVE')}
+                  style={{
+                    backgroundColor: statusFilter === 'ACTIVE' ? '#10B981' : 'rgba(6, 21, 43, 0.65)',
+                    border: statusFilter === 'ACTIVE' ? '1px solid #10B981' : '1px solid rgba(16, 185, 129, 0.25)',
+                    color: statusFilter === 'ACTIVE' ? '#000000' : '#34D399',
+                    padding: '0.45rem 0.75rem',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
+                  Active ({activeCount})
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleCreate}
+                style={{
+                  backgroundColor: '#1677FF',
+                  color: '#FFFFFF',
+                  padding: '0.55rem 1.15rem',
+                  borderRadius: '6px',
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  letterSpacing: '0.04em',
+                  boxShadow: '0 4px 14px rgba(22, 119, 255, 0.35)',
+                }}
+              >
+                <span>+</span> ADD TESTIMONIAL
+              </button>
+            </div>
           </div>
 
           {/* Testimonial Cards Grid */}
@@ -268,6 +408,7 @@ export default function TestimonialsClient({
                 Add client reviews to showcase in the continuous horizontal marquee on the landing page.
               </p>
               <button
+                type="button"
                 onClick={handleCreate}
                 style={{
                   backgroundColor: '#1677FF',
@@ -297,7 +438,7 @@ export default function TestimonialsClient({
                   key={t.id}
                   style={{
                     backgroundColor: 'rgba(6, 21, 43, 0.75)',
-                    border: '1px solid rgba(22, 119, 255, 0.18)',
+                    border: !t.published ? '1px solid rgba(245, 158, 11, 0.4)' : '1px solid rgba(22, 119, 255, 0.18)',
                     borderRadius: '12px',
                     padding: '1.35rem',
                     display: 'flex',
@@ -306,6 +447,7 @@ export default function TestimonialsClient({
                     gap: '0.85rem',
                     boxSizing: 'border-box',
                     transition: 'border-color 0.2s',
+                    boxShadow: !t.published ? '0 0 16px rgba(245, 158, 11, 0.15)' : 'none',
                   }}
                 >
                   <div>
@@ -363,13 +505,13 @@ export default function TestimonialsClient({
                           borderRadius: '4px',
                           fontWeight: 600,
                           letterSpacing: '0.08em',
-                          backgroundColor: t.published ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.12)',
+                          backgroundColor: t.published ? 'rgba(16, 185, 129, 0.12)' : 'rgba(245, 158, 11, 0.15)',
                           color: t.published ? '#34D399' : '#FBBF24',
-                          border: t.published ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(245, 158, 11, 0.3)',
+                          border: t.published ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(245, 158, 11, 0.4)',
                           whiteSpace: 'nowrap',
                         }}
                       >
-                        {t.published ? 'ACTIVE' : 'INACTIVE'}
+                        {t.published ? 'LIVE / ACTIVE' : 'PENDING REVIEW'}
                       </span>
                     </div>
 
@@ -411,23 +553,26 @@ export default function TestimonialsClient({
                     }}
                   >
                     <button
+                      type="button"
                       onClick={() => handleTogglePublish(t)}
                       style={{
-                        background: 'transparent',
-                        border: '1px solid rgba(148, 163, 184, 0.25)',
-                        color: t.published ? '#94A3B8' : '#34D399',
+                        backgroundColor: !t.published ? 'rgba(16, 185, 129, 0.2)' : 'transparent',
+                        border: !t.published ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid rgba(148, 163, 184, 0.25)',
+                        color: !t.published ? '#34D399' : '#94A3B8',
                         borderRadius: '4px',
-                        padding: '0.25rem 0.55rem',
+                        padding: '0.3rem 0.65rem',
                         cursor: 'pointer',
                         fontSize: '0.72rem',
+                        fontWeight: 600,
                         fontFamily: 'var(--font-mono, monospace)',
                       }}
                     >
-                      {t.published ? 'Deactivate' : 'Activate'}
+                      {!t.published ? '✓ Approve & Publish' : 'Deactivate'}
                     </button>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <button
+                        type="button"
                         onClick={() => handleEdit(t)}
                         style={{
                           backgroundColor: 'rgba(22, 119, 255, 0.15)',
@@ -444,6 +589,7 @@ export default function TestimonialsClient({
                         Edit
                       </button>
                       <button
+                        type="button"
                         onClick={() => handleDelete(t.id, t.name)}
                         style={{
                           backgroundColor: 'rgba(239, 68, 68, 0.12)',
@@ -452,7 +598,6 @@ export default function TestimonialsClient({
                           borderRadius: '4px',
                           padding: '0.25rem 0.65rem',
                           cursor: 'pointer',
-                          fontWeight: 600,
                           fontSize: '0.72rem',
                           fontFamily: 'var(--font-mono, monospace)',
                         }}
@@ -467,42 +612,25 @@ export default function TestimonialsClient({
           )}
         </>
       ) : (
-        /* Create or Edit Form / Modal */
+        /* Edit / Create Form View */
         <div
           style={{
-            backgroundColor: 'rgba(6, 21, 43, 0.9)',
+            backgroundColor: 'rgba(6, 21, 43, 0.85)',
             border: '1px solid rgba(22, 119, 255, 0.25)',
-            borderRadius: '14px',
-            padding: '2rem',
-            maxWidth: '680px',
+            borderRadius: '12px',
+            padding: 'clamp(1.5rem, 3vw, 2.5rem)',
+            maxWidth: '650px',
             margin: '0 auto',
-            boxSizing: 'border-box',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
           }}
         >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              borderBottom: '1px solid rgba(22, 119, 255, 0.15)',
-              paddingBottom: '0.85rem',
-              marginBottom: '1.25rem',
-            }}
-          >
-            <div>
-              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#1677FF', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-                CLIENT REPUTATION MANAGEMENT
-              </div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
-                {currentId ? `Edit: ${formData.name}` : 'Add New Client Testimonial'}
-              </h2>
-            </div>
-
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', paddingBottom: '0.75rem' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
+              {currentId ? 'Edit Testimonial' : 'Create New Testimonial'}
+            </h2>
             <button
-              onClick={() => {
-                setIsEditing(false);
-                setCurrentId(null);
-              }}
+              type="button"
+              onClick={() => setIsEditing(false)}
               style={{
                 background: 'transparent',
                 border: 'none',
@@ -517,7 +645,7 @@ export default function TestimonialsClient({
 
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
             <div>
-              <label style={labelStyle}>Client Name *</label>
+              <label style={labelStyle}>Client / Author Full Name *</label>
               <input
                 type="text"
                 required
@@ -530,10 +658,10 @@ export default function TestimonialsClient({
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div>
-                <label style={labelStyle}>Position / Title</label>
+                <label style={labelStyle}>Role / Job Title</label>
                 <input
                   type="text"
-                  placeholder="e.g. Director of Operations"
+                  placeholder="e.g. Director of Academic Operations"
                   value={formData.role}
                   onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                   style={inputStyle}
@@ -552,26 +680,54 @@ export default function TestimonialsClient({
               </div>
             </div>
 
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div>
+                <label style={labelStyle}>Star Rating</label>
+                <select
+                  value={formData.rating}
+                  onChange={(e) => setFormData({ ...formData, rating: Number(e.target.value) || 5 })}
+                  style={inputStyle}
+                >
+                  <option value={5}>★★★★★ (5 Stars)</option>
+                  <option value={4}>★★★★☆ (4 Stars)</option>
+                  <option value={3}>★★★☆☆ (3 Stars)</option>
+                  <option value={2}>★★☆☆☆ (2 Stars)</option>
+                  <option value={1}>★☆☆☆☆ (1 Star)</option>
+                </select>
+              </div>
+
+              <div>
+                <label style={labelStyle}>Display Order</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={formData.order}
+                  onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 1 })}
+                  style={inputStyle}
+                />
+              </div>
+            </div>
+
             <div>
-              <label style={labelStyle}>Testimonial Quote *</label>
+              <label style={labelStyle}>Testimonial Quote / Experience *</label>
               <textarea
                 rows={4}
                 required
-                placeholder="Enter client experience or feedback..."
+                placeholder="Enter detailed testimonial quote describing the impact of Quantum AI's systems..."
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 style={{ ...inputStyle, resize: 'vertical' }}
               />
             </div>
 
-            {/* Profile Photo Upload */}
+            {/* Photo Upload Section */}
             <div>
-              <label style={labelStyle}>Profile Photo (Optional)</label>
-              <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <label style={labelStyle}>Author Photo / Avatar</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                 <div
                   style={{
-                    width: '60px',
-                    height: '60px',
+                    width: '48px',
+                    height: '48px',
                     borderRadius: '50%',
                     backgroundColor: '#030712',
                     border: '1px solid rgba(56, 189, 248, 0.3)',
@@ -583,106 +739,48 @@ export default function TestimonialsClient({
                   }}
                 >
                   {formData.photo ? (
-                    <img src={formData.photo} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img src={formData.photo} alt="Avatar preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
                     <span style={{ fontSize: '0.65rem', color: '#64748B' }}>NO PHOTO</span>
                   )}
                 </div>
 
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button
-                      type="button"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={isUploading}
-                      style={{
-                        backgroundColor: 'rgba(22, 119, 255, 0.2)',
-                        border: '1px solid rgba(22, 119, 255, 0.4)',
-                        color: '#38BDF8',
-                        padding: '0.5rem 1rem',
-                        borderRadius: '6px',
-                        cursor: 'pointer',
-                        fontSize: '0.8rem',
-                        fontWeight: 600,
-                        fontFamily: 'var(--font-mono, monospace)',
-                      }}
-                    >
-                      {isUploading ? 'Uploading...' : '📁 Upload Photo File'}
-                    </button>
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileUpload}
-                      style={{ display: 'none' }}
-                    />
-                  </div>
+                <div style={{ flex: 1 }}>
                   <input
-                    type="text"
-                    placeholder="Or enter image URL: /uploads/client.png"
-                    value={formData.photo}
-                    onChange={(e) => setFormData({ ...formData, photo: e.target.value })}
-                    style={{ ...inputStyle, fontSize: '0.78rem', padding: '0.45rem 0.65rem' }}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    disabled={isUploading}
+                    style={{ fontSize: '0.8rem', color: '#94A3B8' }}
                   />
+                  {isUploading && (
+                    <div style={{ fontSize: '0.72rem', color: '#38BDF8', marginTop: '0.25rem' }}>
+                      Uploading image...
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-              <div>
-                <label style={labelStyle}>Rating (1 to 5 Stars)</label>
-                <select
-                  value={formData.rating}
-                  onChange={(e) => setFormData({ ...formData, rating: Number(e.target.value) || 5 })}
-                  style={inputStyle}
-                >
-                  <option value={5} style={{ backgroundColor: '#030712' }}>★★★★★ (5 Stars)</option>
-                  <option value={4} style={{ backgroundColor: '#030712' }}>★★★★☆ (4 Stars)</option>
-                  <option value={3} style={{ backgroundColor: '#030712' }}>★★★☆☆ (3 Stars)</option>
-                  <option value={2} style={{ backgroundColor: '#030712' }}>★★☆☆☆ (2 Stars)</option>
-                  <option value={1} style={{ backgroundColor: '#030712' }}>★☆☆☆☆ (1 Star)</option>
-                </select>
-              </div>
-
-              <div>
-                <label style={labelStyle}>Display Order</label>
-                <input
-                  type="number"
-                  placeholder="1, 2, 3..."
-                  value={formData.order}
-                  onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) || 0 })}
-                  style={inputStyle}
-                />
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.25rem' }}>
-              <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.85rem' }}>
-                <input
-                  type="checkbox"
-                  checked={formData.published}
-                  onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                />
-                <span>Active (Display on public website)</span>
+            {/* Published Toggle */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginTop: '0.5rem' }}>
+              <input
+                type="checkbox"
+                id="testimonialPublished"
+                checked={formData.published}
+                onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+              />
+              <label htmlFor="testimonialPublished" style={{ color: '#F8FAFC', fontSize: '0.85rem', cursor: 'pointer', fontWeight: 500 }}>
+                Publish immediately to live public continuous marquee slider
               </label>
             </div>
 
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                gap: '0.75rem',
-                marginTop: '1rem',
-                borderTop: '1px solid rgba(22, 119, 255, 0.15)',
-                paddingTop: '1rem',
-              }}
-            >
+            {/* Form Actions */}
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '1rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)', paddingTop: '1.25rem' }}>
               <button
                 type="button"
-                onClick={() => {
-                  setIsEditing(false);
-                  setCurrentId(null);
-                }}
+                onClick={() => setIsEditing(false)}
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
@@ -711,10 +809,9 @@ export default function TestimonialsClient({
                   fontSize: '0.85rem',
                   opacity: isSaving ? 0.7 : 1,
                   fontFamily: 'var(--font-mono, monospace)',
-                  letterSpacing: '0.04em',
                 }}
               >
-                {isSaving ? 'Saving...' : currentId ? 'Save Changes' : 'Save Testimonial'}
+                {isSaving ? 'Saving...' : currentId ? 'Update Testimonial' : 'Create Testimonial'}
               </button>
             </div>
           </form>
