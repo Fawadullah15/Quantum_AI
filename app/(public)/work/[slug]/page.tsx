@@ -40,14 +40,14 @@ export default async function CaseStudyPage({ params }: Props) {
   const technologies = typeof study.technologies === 'string' ? study.technologies.split(',') : [];
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 80px) + 3rem)', paddingBottom: '6rem', paddingInline: 'clamp(1.25rem, 5vw, 4rem)', maxWidth: '1100px', margin: '0 auto', minHeight: '100vh' }}>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2.5rem)', paddingBottom: '5rem', paddingInline: 'clamp(1.25rem, 5vw, 4rem)', maxWidth: '1000px', margin: '0 auto', minHeight: '100vh' }}>
       {/* Breadcrumb back link */}
-      <div style={{ marginBottom: '2rem' }}>
+      <div style={{ marginBottom: '1.5rem' }}>
         <Link
           href="/work"
           style={{
             fontFamily: 'var(--font-mono, monospace)',
-            fontSize: '0.75rem',
+            fontSize: '0.72rem',
             color: '#38BDF8',
             textDecoration: 'none',
             letterSpacing: '0.1em',
@@ -62,8 +62,8 @@ export default async function CaseStudyPage({ params }: Props) {
         </Link>
       </div>
 
-      <header style={{ marginBottom: '3rem' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', marginBottom: '1.25rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+      <header style={{ marginBottom: '2.5rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', marginBottom: '1rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
           {study.client && (
             <>
               <span>CLIENT: {study.client}</span>
@@ -74,56 +74,56 @@ export default async function CaseStudyPage({ params }: Props) {
           <span style={{ opacity: 0.4 }}>/</span>
           <span>YEAR: {study.year}</span>
         </div>
-        <h1 style={{ fontSize: 'clamp(2.25rem, 5.5vw, 4.5rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', lineHeight: 1.05, color: '#F8FAFC', margin: 0 }}>
+        <h1 style={{ fontSize: 'clamp(1.85rem, 4.5vw, 3rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', lineHeight: 1.1, color: '#F8FAFC', margin: 0 }}>
           {study.title}
         </h1>
       </header>
 
       {study.heroImage && (
-        <div style={{ width: '100%', aspectRatio: '16/9', backgroundColor: '#020714', borderRadius: '16px', border: '1px solid rgba(56, 189, 248, 0.25)', marginBottom: '4rem', overflow: 'hidden', boxShadow: '0 20px 50px -10px rgba(0, 0, 0, 0.8)' }}>
+        <div style={{ width: '100%', aspectRatio: '16/9', backgroundColor: '#020714', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.25)', marginBottom: '2.5rem', overflow: 'hidden', boxShadow: '0 20px 50px -10px rgba(0, 0, 0, 0.8)' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={study.heroImage} alt={study.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '3rem' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
           {/* Section: Problem / Challenge */}
-          <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '14px', padding: 'clamp(1.75rem, 4vw, 2.75rem)' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 600 }}>
+          <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '12px', padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
+            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
               01 // THE CHALLENGE
             </div>
-            <h2 style={{ fontSize: 'clamp(1.35rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 1rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
-              Problem & Operational Friction
+            <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.75rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
+              Problem &amp; Operational Friction
             </h2>
-            <p style={{ color: '#94A3B8', lineHeight: 1.8, fontSize: '1.05rem', margin: 0, fontWeight: 300 }}>
+            <p style={{ color: '#94A3B8', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
               {study.problem}
             </p>
           </section>
 
           {/* Section: Solution / What We Built */}
-          <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '14px', padding: 'clamp(1.75rem, 4vw, 2.75rem)' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 600 }}>
+          <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '12px', padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
+            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
               02 // WHAT WE BUILT
             </div>
-            <h2 style={{ fontSize: 'clamp(1.35rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 1rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
-              System Architecture & Solution
+            <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.75rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
+              System Architecture &amp; Solution
             </h2>
-            <p style={{ color: '#94A3B8', lineHeight: 1.8, fontSize: '1.05rem', margin: 0, fontWeight: 300 }}>
+            <p style={{ color: '#94A3B8', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
               {study.solution}
             </p>
           </section>
 
           {/* Section: Implementation / How It Works */}
           {study.implementation && (
-            <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '14px', padding: 'clamp(1.75rem, 4vw, 2.75rem)' }}>
-              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 600 }}>
+            <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '12px', padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
+              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
                 03 // HOW IT WORKS
               </div>
-              <h2 style={{ fontSize: 'clamp(1.35rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 1rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
-                Engineering & Workflow Integration
+              <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.75rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
+                Engineering &amp; Workflow Integration
               </h2>
-              <p style={{ color: '#94A3B8', lineHeight: 1.8, fontSize: '1.05rem', margin: 0, fontWeight: 300 }}>
+              <p style={{ color: '#94A3B8', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
                 {study.implementation}
               </p>
             </section>
@@ -131,14 +131,14 @@ export default async function CaseStudyPage({ params }: Props) {
 
           {/* Section: Results / Business Value */}
           {study.results && (
-            <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '14px', padding: 'clamp(1.75rem, 4vw, 2.75rem)' }}>
-              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 600 }}>
-                04 // RESULT & IMPACT
+            <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '12px', padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
+              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
+                04 // RESULT &amp; IMPACT
               </div>
-              <h2 style={{ fontSize: 'clamp(1.35rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 1rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
+              <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.75rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
                 Operational Outcomes
               </h2>
-              <p style={{ color: '#94A3B8', lineHeight: 1.8, fontSize: '1.05rem', margin: 0, fontWeight: 300 }}>
+              <p style={{ color: '#94A3B8', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
                 {study.results}
               </p>
             </section>
@@ -146,15 +146,15 @@ export default async function CaseStudyPage({ params }: Props) {
         </div>
 
         {/* Technologies & Metrics Bar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', backgroundColor: '#040E24', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '14px', padding: '2rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', backgroundColor: '#040E24', border: '1px solid rgba(56, 189, 248, 0.25)', borderRadius: '12px', padding: '1.5rem' }}>
           {technologies.length > 0 && (
             <div>
-              <h3 style={{ fontWeight: 700, marginBottom: '1rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8rem', textTransform: 'uppercase', color: '#38BDF8', letterSpacing: '0.15em' }}>
-                Technologies & Tools Used
+              <h3 style={{ fontWeight: 700, marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', textTransform: 'uppercase', color: '#38BDF8', letterSpacing: '0.15em' }}>
+                Technologies &amp; Tools Used
               </h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.6rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                 {technologies.map((tech: string) => (
-                  <span key={tech} style={{ padding: '0.35rem 0.85rem', background: 'rgba(22, 119, 255, 0.12)', border: '1px solid rgba(56, 189, 248, 0.25)', fontSize: '0.8rem', fontFamily: 'var(--font-mono, monospace)', borderRadius: '6px', color: '#F8FAFC' }}>
+                  <span key={tech} style={{ padding: '0.25rem 0.65rem', background: 'rgba(22, 119, 255, 0.12)', border: '1px solid rgba(56, 189, 248, 0.25)', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', borderRadius: '4px', color: '#F8FAFC' }}>
                     {tech.trim()}
                   </span>
                 ))}
@@ -164,14 +164,14 @@ export default async function CaseStudyPage({ params }: Props) {
 
           {study.metrics && study.metrics.length > 0 && (
             <div>
-              <h3 style={{ fontWeight: 700, marginBottom: '1rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8rem', textTransform: 'uppercase', color: '#38BDF8', letterSpacing: '0.15em' }}>
-                Key Metrics & Benchmarks
+              <h3 style={{ fontWeight: 700, marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', textTransform: 'uppercase', color: '#38BDF8', letterSpacing: '0.15em' }}>
+                Key Metrics &amp; Benchmarks
               </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
                 {study.metrics.map((metric, i) => (
-                  <div key={i} style={{ padding: '1rem', backgroundColor: 'rgba(6, 21, 43, 0.8)', borderRadius: '8px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
-                    <div style={{ fontSize: '1.85rem', fontWeight: 700, color: '#38BDF8', fontFamily: 'var(--font-mono, monospace)' }}>{metric.value}</div>
-                    <div style={{ fontSize: '0.85rem', color: '#94A3B8', marginTop: '0.25rem' }}>{metric.label}</div>
+                  <div key={i} style={{ padding: '0.85rem', backgroundColor: 'rgba(6, 21, 43, 0.8)', borderRadius: '8px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#38BDF8', fontFamily: 'var(--font-mono, monospace)' }}>{metric.value}</div>
+                    <div style={{ fontSize: '0.8rem', color: '#94A3B8', marginTop: '0.2rem' }}>{metric.label}</div>
                   </div>
                 ))}
               </div>
@@ -181,28 +181,28 @@ export default async function CaseStudyPage({ params }: Props) {
       </div>
 
       {/* CTA Box */}
-      <section style={{ textAlign: 'center', paddingTop: '5rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)', marginTop: '5rem' }}>
-        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 600 }}>
+      <section style={{ textAlign: 'center', paddingTop: '3.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)', marginTop: '3.5rem' }}>
+        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.65rem', fontWeight: 600 }}>
           START YOUR PROJECT
         </div>
-        <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 700, color: '#F8FAFC', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
+        <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.35rem)', fontWeight: 700, color: '#F8FAFC', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
           Ready to Build Something Similar?
         </h2>
-        <p style={{ color: '#94A3B8', fontSize: '1.1rem', maxWidth: '560px', margin: '0 auto 2.5rem', lineHeight: 1.6, fontWeight: 300 }}>
-          Let's discuss your system requirements, operational friction, and architecture scope.
+        <p style={{ color: '#94A3B8', fontSize: '0.95rem', maxWidth: '540px', margin: '0 auto 2rem', lineHeight: 1.6, fontWeight: 300 }}>
+          Let&apos;s discuss your system requirements, operational friction, and architecture scope.
         </p>
         <Link
           href="/contact"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            padding: '1.1rem 2.75rem',
+            padding: '0.8rem 2rem',
             background: 'linear-gradient(135deg, #1677FF, #0050B3)',
             color: '#FFFFFF',
             fontWeight: 700,
             fontFamily: 'var(--font-mono, monospace)',
-            fontSize: '0.875rem',
-            letterSpacing: '0.12em',
+            fontSize: '0.8125rem',
+            letterSpacing: '0.1em',
             borderRadius: '8px',
             textDecoration: 'none',
             boxShadow: '0 8px 24px -4px rgba(22, 119, 255, 0.5)',

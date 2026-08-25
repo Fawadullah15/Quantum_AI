@@ -318,10 +318,10 @@ export default function HomePage() {
         ═══════════════════════════════════════════════════════════ */}
         <section
           style={{
-            minHeight: '100vh',
+            minHeight: '90vh',
             display: 'flex',
             alignItems: 'center',
-            padding: 'clamp(7rem, 12vh, 10rem) clamp(1.25rem, 6vw, 6rem) clamp(4rem, 8vh, 6rem)',
+            padding: 'clamp(5rem, 10vh, 7.5rem) clamp(1.25rem, 5vw, 5rem) clamp(3rem, 6vh, 4.5rem)',
             position: 'relative',
           }}
         >
@@ -332,9 +332,9 @@ export default function HomePage() {
 
             {/* ParticleText visual headline */}
             <div style={{
-              height: 'clamp(220px, 35vw, 340px)',
-              width: 'clamp(280px, 92vw, 860px)',
-              marginBottom: '2rem',
+              height: 'clamp(200px, 32vw, 320px)',
+              width: 'clamp(280px, 90vw, 840px)',
+              marginBottom: '1.5rem',
               filter: 'drop-shadow(0 4px 24px rgba(2, 8, 23, 0.95))',
             }}>
               <ParticleText
@@ -353,10 +353,10 @@ export default function HomePage() {
 
             {/* Supporting copy */}
             <p style={{
-              fontSize: 'clamp(1.05rem, 1.8vw, 1.35rem)',
+              fontSize: 'clamp(0.95rem, 1.4vw, 1.15rem)',
               color: '#94A3B8',
-              lineHeight: 1.7,
-              marginBottom: '3rem',
+              lineHeight: 1.65,
+              marginBottom: '2rem',
               maxWidth: 580,
               fontWeight: 300,
             }}>

@@ -64,8 +64,8 @@ export default async function TechnologyPage() {
   }, {} as Record<string, any[]>);
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 80px) + 2rem)', paddingBottom: '5rem', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container section">
-      <div style={{ maxWidth: 'var(--max-width, 1200px)', margin: '0 auto' }}>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2.5rem)', paddingBottom: '5rem', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container">
+      <div style={{ maxWidth: 'var(--max-width, 1000px)', margin: '0 auto' }}>
         <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
           <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.02 / ARCHITECTURE</div>
           <h1 style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
@@ -73,36 +73,36 @@ export default async function TechnologyPage() {
           </h1>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-40, 3.5rem)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '2.25rem' }}>
           {Object.entries(grouped).map(([category, techs], groupIndex) => (
-            <div key={category} style={{ borderTop: '1px solid var(--color-border, rgba(255,255,255,0.1))', paddingTop: 'var(--space-12, 2rem)' }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 'var(--space-12, 2.5rem)' }}>
+            <div key={category} style={{ borderTop: '1px solid var(--color-border, rgba(30,58,138,0.22))', paddingTop: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
                 <div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-border-2, rgba(255,255,255,0.2))', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.5rem' }}>
+                  <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'rgba(56, 189, 248, 0.4)', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
                     {String(groupIndex + 1).padStart(2, '0')}
                   </div>
-                  <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2.25rem)', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
+                  <h2 style={{ fontSize: 'clamp(1.15rem, 2.2vw, 1.5rem)', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
                     {category}
                   </h2>
                 </div>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8, 1.5rem)', gridColumn: 'span 2' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', gridColumn: 'span 2' }}>
                   {techs.map(tech => (
-                    <div key={tech.id || tech.slug} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', borderBottom: '1px solid var(--color-border-2, rgba(255,255,255,0.08))', paddingBottom: 'var(--space-8, 1.5rem)' }}>
+                    <div key={tech.id || tech.slug} style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', borderBottom: '1px solid var(--color-border-2, rgba(30,58,138,0.2))', paddingBottom: '1.25rem' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                         <Link href={`/technologies/${tech.slug}`} style={{ textDecoration: 'none' }}>
-                          <h3 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#F8FAFC', textTransform: 'uppercase', margin: 0, transition: 'color 0.2s' }}>
+                          <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', textTransform: 'uppercase', margin: 0, transition: 'color 0.2s' }}>
                             {tech.name} ↗
                           </h3>
                         </Link>
-                        {tech.icon && <span style={{ fontSize: '1.25rem' }}>{tech.icon}</span>}
+                        {tech.icon && <span style={{ fontSize: '1.1rem' }}>{tech.icon}</span>}
                       </div>
-                      <p style={{ color: 'var(--color-text-secondary, #94A3B8)', fontSize: '0.95rem', lineHeight: 1.6, margin: 0 }}>
-                        {tech.shortDescription}
+                      <p style={{ color: 'var(--color-text-secondary, #94A3B8)', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
+                        {tech.shortDescription || tech.description}
                       </p>
                       {tech.usage && (
-                        <div style={{ marginTop: '0.5rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#1677FF', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                          USAGE: {tech.usage}
+                        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.1em', marginTop: '0.25rem' }}>
+                          DEPLOYMENT // {tech.usage}
                         </div>
                       )}
                     </div>

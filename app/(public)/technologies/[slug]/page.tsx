@@ -161,50 +161,50 @@ export default async function TechnologyDetailPage({ params }: Props) {
   const isExternalCta = ctaLink.startsWith('http://') || ctaLink.startsWith('https://');
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 80px) * 1.8)', paddingBottom: '6rem', minHeight: '100vh' }}>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2.5rem)', paddingBottom: '5rem', minHeight: '100vh' }}>
       {/* Hero Image if present */}
       {tech.heroImage && (
         <div style={{
           position: 'relative',
           width: '100%',
-          height: '340px',
+          height: '280px',
           background: `linear-gradient(to bottom, rgba(2, 8, 23, 0.4), rgba(2, 8, 23, 0.95)), url(${tech.heroImage}) center/cover`,
-          marginBottom: '3.5rem',
+          marginBottom: '2.5rem',
           borderBottom: '1px solid rgba(22, 119, 255, 0.15)'
         }} />
       )}
 
-      <div className="container section" style={{ maxWidth: '1100px', margin: '0 auto', paddingInline: 'clamp(1.25rem, 5vw, 3rem)' }}>
+      <div className="container" style={{ maxWidth: '1000px', margin: '0 auto', paddingInline: 'clamp(1.25rem, 5vw, 3rem)' }}>
         {/* Breadcrumb Navigation */}
         <Link href="/technology" style={{
           display: 'inline-flex',
           alignItems: 'center',
-          gap: '0.5rem',
+          gap: '0.4rem',
           color: '#64748B',
           textDecoration: 'none',
           fontFamily: 'var(--font-mono, monospace)',
-          fontSize: '0.8125rem',
+          fontSize: '0.75rem',
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
-          marginBottom: '2.5rem',
+          marginBottom: '1.5rem',
           transition: 'color 0.2s',
         }}>
           ← ALL TECHNOLOGIES
         </Link>
 
         {/* Hero Header */}
-        <div style={{ marginBottom: '3.5rem' }}>
+        <div style={{ marginBottom: '2.5rem' }}>
           <div style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
             fontFamily: 'var(--font-mono, monospace)',
-            fontSize: '0.75rem',
-            letterSpacing: '0.25em',
+            fontSize: '0.72rem',
+            letterSpacing: '0.2em',
             color: '#38BDF8',
             textTransform: 'uppercase',
-            marginBottom: '1rem',
-            padding: '0.25rem 0.75rem',
+            marginBottom: '0.75rem',
+            padding: '0.2rem 0.65rem',
             backgroundColor: 'rgba(56, 189, 248, 0.08)',
             border: '1px solid rgba(56, 189, 248, 0.2)',
             borderRadius: '999px',
@@ -213,23 +213,24 @@ export default async function TechnologyDetailPage({ params }: Props) {
           </div>
 
           <h1 style={{
-            fontSize: 'clamp(2.5rem, 6vw, 4.25rem)',
+            fontSize: 'clamp(1.85rem, 4.5vw, 3rem)',
             fontWeight: 700,
-            lineHeight: 1.05,
+            lineHeight: 1.1,
             letterSpacing: '-0.03em',
             color: '#F8FAFF',
-            marginBottom: '1.5rem',
+            marginBottom: '1rem',
             textTransform: 'uppercase',
           }}>
             {tech.heroTitle || tech.name}
           </h1>
 
           <p style={{
-            fontSize: 'clamp(1.1rem, 2vw, 1.3rem)',
+            fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)',
             color: '#94A3B8',
-            lineHeight: 1.7,
-            maxWidth: '750px',
+            lineHeight: 1.65,
+            maxWidth: '700px',
             fontWeight: 300,
+            margin: 0,
           }}>
             {tech.heroDescription || tech.shortDescription}
           </p>
@@ -238,13 +239,13 @@ export default async function TechnologyDetailPage({ params }: Props) {
         {/* Content Section */}
         {tech.content && (
           <div style={{
-            marginBottom: '4rem',
-            fontSize: '1.125rem',
-            lineHeight: 1.8,
+            marginBottom: '3rem',
+            fontSize: '0.95rem',
+            lineHeight: 1.75,
             color: '#CBD5E1',
-            maxWidth: '820px',
+            maxWidth: '780px',
             borderLeft: '2px solid rgba(22, 119, 255, 0.4)',
-            paddingLeft: '1.5rem',
+            paddingLeft: '1.25rem',
           }}>
             <div dangerouslySetInnerHTML={{ __html: tech.content }} />
           </div>
@@ -252,45 +253,45 @@ export default async function TechnologyDetailPage({ params }: Props) {
 
         {/* Key Capabilities / Features */}
         {features.length > 0 && (
-          <section style={{ marginBottom: '4.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', letterSpacing: '0.25em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+          <section style={{ marginBottom: '3.5rem' }}>
+            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.2em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
               SYS.CAPABILITIES
             </div>
             <h2 style={{
-              fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
+              fontSize: 'clamp(1.25rem, 2.5vw, 1.6rem)',
               fontWeight: 700,
               color: '#F8FAFF',
-              marginBottom: '2rem',
+              marginBottom: '1.5rem',
               textTransform: 'uppercase',
               letterSpacing: '-0.02em',
             }}>
-              Core Architecture & Features
+              Core Architecture &amp; Features
             </h2>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '1.25rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: '1rem',
             }}>
               {features.map((feature: any, index: number) => (
                 <div key={index} style={{
-                  padding: '1.75rem',
+                  padding: '1.25rem',
                   background: 'rgba(6, 21, 43, 0.65)',
                   border: '1px solid rgba(22, 119, 255, 0.15)',
-                  borderRadius: '12px',
+                  borderRadius: '10px',
                   boxShadow: '0 4px 20px -4px rgba(0,0,0,0.5)',
                 }}>
-                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', marginBottom: '0.75rem', fontWeight: 600 }}>
+                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', marginBottom: '0.5rem', fontWeight: 600 }}>
                     {String(index + 1).padStart(2, '0')} // FEATURE
                   </div>
                   <h3 style={{
-                    fontSize: '1.15rem',
+                    fontSize: '1.05rem',
                     fontWeight: 600,
-                    color: '#F8FAFF',
-                    marginBottom: '0.6rem',
+                    color: '#F8FAFC',
+                    marginBottom: '0.4rem',
                   }}>
                     {feature.title}
                   </h3>
-                  <p style={{ fontSize: '0.9375rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+                  <p style={{ fontSize: '0.875rem', color: '#94A3B8', lineHeight: 1.55, margin: 0 }}>
                     {feature.description}
                   </p>
                 </div>
@@ -301,38 +302,38 @@ export default async function TechnologyDetailPage({ params }: Props) {
 
         {/* Use Cases */}
         {useCases.length > 0 && (
-          <section style={{ marginBottom: '4.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', letterSpacing: '0.25em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
+          <section style={{ marginBottom: '3.5rem' }}>
+            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.2em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
               SYS.DEPLOYMENTS
             </div>
             <h2 style={{
-              fontSize: 'clamp(1.75rem, 4vw, 2.25rem)',
+              fontSize: 'clamp(1.25rem, 2.5vw, 1.6rem)',
               fontWeight: 700,
               color: '#F8FAFF',
-              marginBottom: '2rem',
+              marginBottom: '1.5rem',
               textTransform: 'uppercase',
               letterSpacing: '-0.02em',
             }}>
               Enterprise Use Cases
             </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               {useCases.map((useCase: any, index: number) => (
                 <div key={index} style={{
-                  padding: '1.75rem',
+                  padding: '1.25rem',
                   background: 'rgba(6, 21, 43, 0.5)',
                   border: '1px solid rgba(22, 119, 255, 0.12)',
-                  borderLeft: '4px solid #1677FF',
-                  borderRadius: '0 12px 12px 0',
+                  borderLeft: '3px solid #1677FF',
+                  borderRadius: '0 10px 10px 0',
                 }}>
                   <h3 style={{
-                    fontSize: '1.15rem',
+                    fontSize: '1.05rem',
                     fontWeight: 600,
-                    color: '#F8FAFF',
-                    marginBottom: '0.5rem',
+                    color: '#F8FAFC',
+                    marginBottom: '0.35rem',
                   }}>
                     {useCase.title}
                   </h3>
-                  <p style={{ fontSize: '0.9375rem', color: '#94A3B8', lineHeight: 1.6, margin: 0 }}>
+                  <p style={{ fontSize: '0.875rem', color: '#94A3B8', lineHeight: 1.55, margin: 0 }}>
                     {useCase.description}
                   </p>
                 </div>

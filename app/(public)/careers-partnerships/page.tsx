@@ -47,60 +47,60 @@ export default function CareersPartnershipsPage() {
   return (
     <div
       style={{
-        paddingTop: 'calc(var(--nav-height, 80px) * 1.8)',
-        paddingBottom: '6rem',
+        paddingTop: 'calc(var(--nav-height, 72px) + 2.5rem)',
+        paddingBottom: '5rem',
         paddingInline: 'clamp(1.25rem, 5vw, 4rem)',
         minHeight: '100vh',
       }}
     >
-      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
         {/* Header Eyebrow & Headline */}
-        <div style={{ marginBottom: '3.5rem', textAlign: 'left' }}>
+        <div style={{ marginBottom: '2.5rem', textAlign: 'left' }}>
           <div
             style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.5rem',
               fontFamily: 'var(--font-mono, monospace)',
-              fontSize: '0.75rem',
-              letterSpacing: '0.25em',
+              fontSize: '0.72rem',
+              letterSpacing: '0.2em',
               color: '#38BDF8',
               textTransform: 'uppercase',
-              marginBottom: '1rem',
-              padding: '0.25rem 0.75rem',
+              marginBottom: '0.75rem',
+              padding: '0.2rem 0.65rem',
               backgroundColor: 'rgba(56, 189, 248, 0.08)',
               border: '1px solid rgba(56, 189, 248, 0.2)',
               borderRadius: '999px',
             }}
           >
-            <span>●</span> SYS.OPPORTUNITIES // COLLABORATION & TALENT
+            <span>●</span> SYS.OPPORTUNITIES // COLLABORATION &amp; TALENT
           </div>
 
           <h1
             style={{
-              fontSize: 'clamp(2.75rem, 7vw, 5.5rem)',
+              fontSize: 'clamp(2rem, 5vw, 3.5rem)',
               fontWeight: 700,
-              lineHeight: 0.95,
-              letterSpacing: '-0.04em',
+              lineHeight: 1.05,
+              letterSpacing: '-0.035em',
               color: '#F8FAFC',
               textTransform: 'uppercase',
-              marginBottom: '1.5rem',
+              marginBottom: '1rem',
             }}
           >
-            CAREERS &<br />PARTNERSHIPS.
+            CAREERS &amp;<br />PARTNERSHIPS.
           </h1>
 
           <p
             style={{
-              fontSize: 'clamp(1.1rem, 2vw, 1.35rem)',
+              fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)',
               color: '#94A3B8',
-              lineHeight: 1.7,
-              maxWidth: '780px',
+              lineHeight: 1.65,
+              maxWidth: '680px',
               fontWeight: 300,
               margin: 0,
             }}
           >
-            <strong>Let's Build Something Intelligent Together.</strong> Quantum AI welcomes business partnerships, enterprise alliances, talented engineers, researchers, interns, and freelancers interested in shaping high-impact AI systems.
+            Join our engineering network or partner with Quantum AI to build and deploy advanced intelligent software systems.
           </p>
         </div>
 
