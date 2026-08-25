@@ -260,3 +260,33 @@ export function getFAQSchema(faqs: { question: string; answer: string }[]) {
     })),
   };
 }
+
+/**
+ * Service Structured Data (JSON-LD)
+ */
+export function getServiceSchema(service: {
+  name: string;
+  slug: string;
+  description: string;
+  category?: string;
+}) {
+  const url = `${SITE_URL}/services/${service.slug}`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.name,
+    description: service.description,
+    url,
+    provider: {
+      '@type': 'Organization',
+      name: 'Quantum AI',
+      url: SITE_URL,
+    },
+    serviceType: service.category || 'Software Engineering',
+    areaServed: {
+      '@type': 'Country',
+      name: 'Worldwide',
+    },
+  };
+}
