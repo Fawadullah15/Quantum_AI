@@ -257,35 +257,37 @@ export default function TrustSection() {
         <p
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: '0.72rem',
-            letterSpacing: '0.25em',
+            fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
+            letterSpacing: '0.22em',
             textTransform: 'uppercase',
             color: '#1677FF',
-            marginBottom: '0.4rem',
+            marginBottom: '0.5rem',
             fontWeight: 600,
           }}
         >
           TRUST & SECURITY
         </p>
         <h2
+          className="section-heading"
           style={{
-            fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
+            fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
             fontWeight: 700,
-            lineHeight: 1.15,
-            letterSpacing: '-0.025em',
+            lineHeight: 1.02,
+            letterSpacing: '-0.035em',
             color: '#F8FAFF',
-            marginBottom: '0.4rem',
+            marginBottom: '0.65rem',
             textTransform: 'uppercase',
           }}
         >
           Engineered for Reliability and Security.
         </h2>
         <p
+          className="section-desc"
           style={{
-            fontSize: 'clamp(0.82rem, 1.2vw, 0.95rem)',
+            fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
             color: '#94A3B8',
-            lineHeight: 1.55,
-            marginBottom: 'clamp(1rem, 2vh, 1.75rem)',
+            lineHeight: 1.6,
+            marginBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
             maxWidth: 620,
             fontWeight: 300,
           }}
