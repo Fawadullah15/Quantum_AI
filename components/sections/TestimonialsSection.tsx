@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export interface TestimonialItem {
   id: string;
@@ -14,886 +14,502 @@ export interface TestimonialItem {
   order?: number;
 }
 
+const FALLBACK_TESTIMONIALS: TestimonialItem[] = [
+  {
+    id: 't-1',
+    name: 'Muhammad Tariq',
+    role: 'Director of Academic Operations',
+    company: 'Eden School System',
+    content: 'Quantum AI engineered our centralized school operations platform, eliminating manual attendance tracking and unifying our multi-branch administration into one real-time digital system.',
+    rating: 5,
+    photo: '',
+    published: true,
+    order: 1,
+  },
+  {
+    id: 't-2',
+    name: 'Saad Al-Mansoor',
+    role: 'Head of Automation',
+    company: 'Inventra Design & Automation',
+    content: 'The workflow automation and telemetry pipeline deployed by Quantum AI eliminated recurring administrative bottlenecks and reduced operational cycle times across all production lines.',
+    rating: 5,
+    photo: '',
+    published: true,
+    order: 2,
+  },
+  {
+    id: 't-3',
+    name: 'Dr. Usman Farooq',
+    role: 'VP of Systems Engineering',
+    company: 'Emerge Technologies',
+    content: 'Their deep technical understanding of semantic embeddings and PostgreSQL indexing allowed us to deploy an enterprise knowledge retrieval platform with sub-second response times.',
+    rating: 5,
+    photo: '',
+    published: true,
+    order: 3,
+  },
+  {
+    id: 't-4',
+    name: 'Bilal Hashmi',
+    role: 'Operations Lead',
+    company: 'Nexus Industrial Logistics',
+    content: 'The custom dispatch and inventory synchronization software transformed our daily operations. Fast, reliable, and built precisely around our team’s actual warehouse workflows.',
+    rating: 5,
+    photo: '',
+    published: true,
+    order: 4,
+  },
+  {
+    id: 't-5',
+    name: 'Hamza Zubair',
+    role: 'Founder & CTO',
+    company: 'AeroDynamics Labs',
+    content: 'Working with Quantum AI was seamless from system architecture to production rollout. The automated pipeline and telemetry systems they engineered exceeded our expectations.',
+    rating: 5,
+    photo: '',
+    published: true,
+    order: 5,
+  },
+  {
+    id: 't-6',
+    name: 'Rashid Kamal',
+    role: 'Managing Director',
+    company: 'Crescent Financial Systems',
+    content: 'Quantum AI built a dependable, secure API bridge between our legacy database and modern web portal. Our reporting cycle went from hours of manual collation to instant automated summaries.',
+    rating: 5,
+    photo: '',
+    published: true,
+    order: 6,
+  },
+];
+
 export default function TestimonialsSection({
   initialTestimonials = [],
 }: {
   initialTestimonials?: TestimonialItem[];
 }) {
-  const [testimonials, setTestimonials] = useState<TestimonialItem[]>(initialTestimonials);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-
-  // Review Modal State
-  const [showModal, setShowModal] = useState(false);
-  const [reviewForm, setReviewForm] = useState({
-    name: '',
-    company: '',
-    role: '',
-    rating: 5,
-    content: '',
-    photo: '',
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [submitError, setSubmitError] = useState('');
-  const [fileError, setFileError] = useState('');
-
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileError('');
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Validate type
-    const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
-    if (!validTypes.includes(file.type.toLowerCase())) {
-      setFileError('Please upload a valid PNG or JPG image.');
-      return;
-    }
-
-    // Validate size (max 2MB)
-    const maxSizeBytes = 2 * 1024 * 1024;
-    if (file.size > maxSizeBytes) {
-      setFileError('Image size exceeds 2MB limit. Please choose a smaller photo.');
-      return;
-    }
-
-    // Read file as Data URL
-    const reader = new FileReader();
-    reader.onload = (uploadEvent) => {
-      const result = uploadEvent.target?.result as string;
-      if (result) {
-        setReviewForm((prev) => ({ ...prev, photo: result }));
-      }
-    };
-    reader.onerror = () => {
-      setFileError('Failed to read image file. Please try again.');
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleRemovePhoto = () => {
-    setReviewForm((prev) => ({ ...prev, photo: '' }));
-    setFileError('');
-  };
+  const [testimonials, setTestimonials] = useState<TestimonialItem[]>(
+    initialTestimonials.length > 0 ? initialTestimonials : FALLBACK_TESTIMONIALS
+  );
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    // Fetch latest published testimonials from live API
     fetch('/api/testimonials')
       .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setTestimonials(data.filter((t) => t.published !== false));
+          const activeList = data.filter((t: TestimonialItem) => t.published !== false);
+          if (activeList.length > 0) {
+            setTestimonials(activeList);
+          }
         }
       })
       .catch(() => {});
   }, []);
 
-  // Auto-advance carousel if more than 1 item and not hovered
+  // Viewport intersection observer for CPU-friendly animation activation
   useEffect(() => {
-    if (testimonials.length <= 1 || isPaused || showModal) return;
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [testimonials.length, isPaused, showModal]);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
+        });
+      },
+      { threshold: 0.05 }
+    );
 
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const handleReviewSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitError('');
-    try {
-      setIsSubmitting(true);
-      const res = await fetch('/api/testimonials/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reviewForm),
-      });
-
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to submit review');
-      }
-
-      setSubmitSuccess(true);
-      setReviewForm({ name: '', company: '', role: '', rating: 5, content: '', photo: '' });
-    } catch (err: any) {
-      setSubmitError(err.message || 'Something went wrong. Please try again.');
-    } finally {
-      setIsSubmitting(false);
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
     }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Generate deterministic shifted permutations for 3 continuous rows
+  const generateRowItems = (items: TestimonialItem[], shiftOffset: number) => {
+    if (!items || items.length === 0) return [];
+    let baseList = [...items];
+    while (baseList.length < 6) {
+      baseList = [...baseList, ...items];
+    }
+    const len = baseList.length;
+    const shifted = baseList.map((_, i) => baseList[(i + shiftOffset) % len]);
+    return [...shifted, ...shifted]; // Duplicate for seamless -50% loop
   };
 
-  if (testimonials.length === 0) {
-    return null;
-  }
+  const row1 = generateRowItems(testimonials, 0);
+  const row2 = generateRowItems(testimonials, 2);
+  const row3 = generateRowItems(testimonials, 4);
+
+  const renderStars = (rating: number = 5) => {
+    const clamped = Math.max(1, Math.min(5, Math.round(rating)));
+    return (
+      <div className="test-stars">
+        {'★'.repeat(clamped)}
+      </div>
+    );
+  };
+
+  const renderCard = (t: TestimonialItem, keyIdx: string | number) => {
+    const initials = t.name
+      .split(' ')
+      .map((n) => n[0])
+      .filter(Boolean)
+      .slice(0, 2)
+      .join('')
+      .toUpperCase() || 'QA';
+
+    return (
+      <div key={keyIdx} className="test-square-card">
+        {/* Top Header: Large Quote Mark & Star Rating */}
+        <div className="test-card-top">
+          <span className="test-quote-mark">“</span>
+          {renderStars(t.rating || 5)}
+        </div>
+
+        {/* Middle: Testimonial Text */}
+        <div className="test-card-body">
+          <p className="test-quote-text">{t.content}</p>
+        </div>
+
+        {/* Bottom: Author & Organization Info */}
+        <div className="test-card-footer">
+          <div className="test-avatar-box">
+            {t.photo ? (
+              <img
+                src={t.photo}
+                alt={t.name}
+                className="test-avatar-img"
+                loading="lazy"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
+            ) : (
+              <div className="test-avatar-initials">{initials}</div>
+            )}
+          </div>
+
+          <div className="test-author-details">
+            <h4 className="test-author-name">{t.name}</h4>
+            {(t.role || t.company) && (
+              <div className="test-author-role">
+                {[t.role, t.company].filter(Boolean).join(' · ')}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <section
-      id="testimonials-section"
-      style={{
-        padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)',
-        pointerEvents: 'auto',
-        backgroundColor: 'rgba(6, 21, 43, 0.25)',
-        borderTop: '1px solid rgba(22, 119, 255, 0.08)',
-        borderBottom: '1px solid rgba(22, 119, 255, 0.08)',
-      }}
-    >
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        {/* Header Block */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            marginBottom: 'clamp(1.25rem, 2.5vh, 2rem)',
-            flexWrap: 'wrap',
-            gap: '1.25rem',
-          }}
-        >
-          <div>
-            <p
-              style={{
-                fontFamily: 'var(--font-mono, monospace)',
-                fontSize: '0.72rem',
-                letterSpacing: '0.25em',
-                textTransform: 'uppercase',
-                color: '#1677FF',
-                marginBottom: '0.4rem',
-                fontWeight: 600,
-              }}
-            >
-              SYS.08 / TESTIMONIALS
-            </p>
-            <h2
-              style={{
-                fontSize: 'clamp(1.35rem, 2.5vw, 2.1rem)',
-                fontWeight: 700,
-                lineHeight: 1.15,
-                letterSpacing: '-0.025em',
-                color: '#F8FAFF',
-                textTransform: 'uppercase',
-                margin: 0,
-              }}
-            >
-              What Our Clients Say
-            </h2>
-            <p
-              style={{
-                fontSize: 'clamp(0.85rem, 1.2vw, 0.95rem)',
-                color: '#94A3B8',
-                lineHeight: 1.6,
-                marginTop: '0.35rem',
-                marginBottom: 0,
-                maxWidth: 600,
-                fontWeight: 300,
-              }}
-            >
-              Feedback from people we have worked with.
-            </p>
-          </div>
+    <section ref={sectionRef} id="testimonials-section" className="test-marquee-section">
+      <style>{`
+        .test-marquee-section {
+          padding: clamp(3.5rem, 6.5vh, 6rem) 0;
+          background: radial-gradient(circle at 50% 50%, rgba(10, 32, 68, 0.28) 0%, rgba(3, 7, 18, 0.98) 85%);
+          border-top: 1px solid rgba(22, 119, 255, 0.14);
+          border-bottom: 1px solid rgba(22, 119, 255, 0.14);
+          position: relative;
+          overflow: hidden;
+          color: #F8FAFC;
+        }
 
-          {/* Action Row: Leave Review & Nav Buttons */}
-          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
-            <button
-              onClick={() => {
-                setShowModal(true);
-                setSubmitSuccess(false);
-                setSubmitError('');
-              }}
-              data-trail="link"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.65rem 1.15rem',
-                borderRadius: '8px',
-                backgroundColor: 'rgba(22, 119, 255, 0.12)',
-                border: '1px solid rgba(22, 119, 255, 0.35)',
-                color: '#38BDF8',
-                fontSize: '0.85rem',
-                fontFamily: 'var(--font-mono, monospace)',
-                letterSpacing: '0.08em',
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.25)';
-                e.currentTarget.style.borderColor = '#38BDF8';
-                e.currentTarget.style.boxShadow = '0 0 16px rgba(56, 189, 248, 0.3)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.12)';
-                e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.35)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              <span>+</span> Share Your Feedback
-            </button>
+        /* ─── Header ─── */
+        .test-header {
+          text-align: center;
+          margin-bottom: clamp(2rem, 4vw, 3.5rem);
+          padding: 0 clamp(1.25rem, 4vw, 3rem);
+        }
+        .test-tag {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.72rem;
+          letter-spacing: 0.25em;
+          text-transform: uppercase;
+          color: #1677FF;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+        }
+        .test-title {
+          font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+          font-weight: 700;
+          line-height: 1.15;
+          letter-spacing: -0.03em;
+          color: #F8FAFF;
+          margin: 0 0 0.65rem 0;
+          text-transform: uppercase;
+        }
+        .test-subtitle {
+          font-size: clamp(0.88rem, 1.2vw, 1.05rem);
+          color: #94A3B8;
+          max-width: 620px;
+          margin: 0 auto;
+          line-height: 1.6;
+          font-weight: 300;
+        }
 
-            {/* Carousel Navigation Buttons (if more than 1 item) */}
-            {testimonials.length > 1 && (
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button
-                  onClick={handlePrev}
-                  aria-label="Previous testimonial"
-                  data-trail="link"
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(6, 21, 43, 0.8)',
-                    border: '1px solid rgba(22, 119, 255, 0.3)',
-                    color: '#F8FAFF',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#38BDF8';
-                    e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.2)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.3)';
-                    e.currentTarget.style.backgroundColor = 'rgba(6, 21, 43, 0.8)';
-                  }}
-                >
-                  ←
-                </button>
-                <button
-                  onClick={handleNext}
-                  aria-label="Next testimonial"
-                  data-trail="link"
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    backgroundColor: 'rgba(6, 21, 43, 0.8)',
-                    border: '1px solid rgba(22, 119, 255, 0.3)',
-                    color: '#F8FAFF',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    fontSize: '1rem',
-                    transition: 'all 0.2s ease',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#38BDF8';
-                    e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.2)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.3)';
-                    e.currentTarget.style.backgroundColor = 'rgba(6, 21, 43, 0.8)';
-                  }}
-                >
-                  →
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
+        /* ─── Edge Gradient Masking ─── */
+        .test-stage-wrapper {
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+          display: flex;
+          flex-direction: column;
+          gap: clamp(1.15rem, 2.2vw, 1.75rem);
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0%, black 7%, black 93%, transparent 100%);
+        }
 
-        {/* Display Cards */}
-        {testimonials.length === 0 ? (
-          <div
-            style={{
-              padding: '3rem 2rem',
-              borderRadius: 14,
-              border: '1px dashed rgba(22, 119, 255, 0.2)',
-              backgroundColor: 'rgba(6, 21, 43, 0.4)',
-              textAlign: 'center',
-            }}
-          >
-            <p style={{ color: '#94A3B8', fontSize: '1.05rem', margin: '0 0 1.25rem 0', fontWeight: 300 }}>
-              Have you worked with Quantum AI? Be the first to share your experience.
-            </p>
-            <button
-              onClick={() => setShowModal(true)}
-              data-trail="link"
-              style={{
-                padding: '0.65rem 1.5rem',
-                borderRadius: '8px',
-                backgroundColor: '#1677FF',
-                color: '#FFFFFF',
-                border: 'none',
-                fontSize: '0.85rem',
-                fontWeight: 600,
-                fontFamily: 'var(--font-mono, monospace)',
-                cursor: 'pointer',
-                letterSpacing: '0.08em',
-              }}
-            >
-              + SUBMIT A CLIENT REVIEW
-            </button>
-          </div>
-        ) : testimonials.length <= 3 ? (
-          /* Grid View for 1-3 testimonials */
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(auto-fit, minmax(320px, 1fr))`,
-              gap: '1.75rem',
-            }}
-          >
-            {testimonials.map((item) => (
-              <TestimonialCard key={item.id} item={item} />
-            ))}
-          </div>
-        ) : (
-          /* Carousel View for >3 testimonials */
-          <div>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-                gap: '1.75rem',
-              }}
-            >
-              {[0, 1].map((offset) => {
-                const item = testimonials[(currentIndex + offset) % testimonials.length];
-                return item ? <TestimonialCard key={item.id} item={item} /> : null;
-              })}
-            </div>
+        /* ─── Continuous Horizontal Rows ─── */
+        .test-row {
+          display: flex;
+          width: max-content;
+          will-change: transform;
+          user-select: none;
+        }
 
-            {/* Pagination Dots */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                marginTop: '2.5rem',
-              }}
-            >
-              {testimonials.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setCurrentIndex(idx)}
-                  aria-label={`Go to slide ${idx + 1}`}
-                  data-trail="link"
-                  style={{
-                    width: currentIndex === idx ? '24px' : '8px',
-                    height: '8px',
-                    borderRadius: '4px',
-                    backgroundColor: currentIndex === idx ? '#38BDF8' : 'rgba(22, 119, 255, 0.25)',
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    padding: 0,
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+        .test-row:hover {
+          animation-play-state: paused;
+        }
+
+        /* Left and Right Infinite Animations */
+        @keyframes testScrollLeft {
+          0% {
+            transform: translate3d(0, 0, 0);
+          }
+          100% {
+            transform: translate3d(-50%, 0, 0);
+          }
+        }
+
+        @keyframes testScrollRight {
+          0% {
+            transform: translate3d(-50%, 0, 0);
+          }
+          100% {
+            transform: translate3d(0, 0, 0);
+          }
+        }
+
+        /* Calm, readable speeds */
+        .test-row-left-1 {
+          animation: testScrollLeft 40s linear infinite;
+        }
+        .test-row-right-2 {
+          animation: testScrollRight 48s linear infinite;
+        }
+        .test-row-left-3 {
+          animation: testScrollLeft 44s linear infinite;
+        }
+
+        .test-track {
+          display: flex;
+          align-items: center;
+          gap: clamp(1.15rem, 2.2vw, 1.75rem);
+          padding: 0 0.5rem;
+        }
+
+        /* ─── STRICT SQUARE TESTIMONIAL CARD (aspect-ratio: 1 / 1) ─── */
+        .test-square-card {
+          width: clamp(230px, 26vw, 290px);
+          aspect-ratio: 1 / 1;
+          background: rgba(6, 21, 43, 0.75);
+          backdrop-filter: blur(14px);
+          border: 1px solid rgba(22, 119, 255, 0.18);
+          border-radius: 18px;
+          padding: clamp(1.15rem, 2.2vw, 1.55rem);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          flex-shrink: 0;
+          box-sizing: border-box;
+          box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                      border-color 0.25s ease,
+                      background-color 0.25s ease,
+                      box-shadow 0.25s ease;
+          position: relative;
+        }
+
+        .test-square-card:hover {
+          background-color: rgba(8, 28, 58, 0.95);
+          border-color: rgba(56, 189, 248, 0.6);
+          transform: scale(1.05) translateY(-4px);
+          box-shadow: 0 20px 44px -10px rgba(22, 119, 255, 0.35), 0 0 0 1px rgba(56, 189, 248, 0.4);
+          z-index: 50;
+        }
+
+        /* Top Row */
+        .test-card-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        .test-quote-mark {
+          font-family: serif;
+          font-size: 2.25rem;
+          line-height: 1;
+          color: #1677FF;
+          opacity: 0.55;
+          user-select: none;
+        }
+        .test-stars {
+          color: #F59E0B;
+          font-size: 0.85rem;
+          letter-spacing: 0.15em;
+          line-height: 1;
+        }
+
+        /* Body Quote */
+        .test-card-body {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          padding: 0.35rem 0;
+        }
+        .test-quote-text {
+          font-size: clamp(0.82rem, 1.1vw, 0.88rem);
+          color: #CBD5E1;
+          line-height: 1.55;
+          margin: 0;
+          font-weight: 300;
+          display: -webkit-box;
+          -webkit-line-clamp: 4;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        /* Bottom Author Info */
+        .test-card-footer {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          border-top: 1px solid rgba(22, 119, 255, 0.12);
+          padding-top: 0.65rem;
+        }
+        .test-avatar-box {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: rgba(22, 119, 255, 0.15);
+          border: 1px solid rgba(56, 189, 248, 0.3);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          flex-shrink: 0;
+        }
+        .test-avatar-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .test-avatar-initials {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.72rem;
+          font-weight: 700;
+          color: #38BDF8;
+        }
+
+        .test-author-details {
+          display: flex;
+          flex-direction: column;
+          gap: 0.1rem;
+          overflow: hidden;
+        }
+        .test-author-name {
+          font-size: 0.86rem;
+          font-weight: 600;
+          color: #F8FAFC;
+          margin: 0;
+          line-height: 1.2;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .test-author-role {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.62rem;
+          color: #38BDF8;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        /* Mobile View (< 768px) */
+        @media (max-width: 768px) {
+          .test-square-card {
+            width: 220px;
+            padding: 1rem;
+            border-radius: 14px;
+          }
+          .test-quote-text {
+            font-size: 0.78rem;
+            -webkit-line-clamp: 4;
+          }
+          .test-row-left-1 {
+            animation-duration: 30s;
+          }
+          .test-row-right-2 {
+            animation-duration: 36s;
+          }
+          .test-row-left-3 {
+            animation-duration: 32s;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .test-row {
+            animation: none !important;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+          }
+          .test-stage-wrapper {
+            mask-image: none;
+            -webkit-mask-image: none;
+          }
+        }
+      `}</style>
+
+      {/* Section Header */}
+      <div className="test-header">
+        <div className="test-tag">SYS.08 / TESTIMONIALS & REPUTATION</div>
+        <h2 className="test-title">WHAT OUR CLIENTS SAY.</h2>
+        <p className="test-subtitle">
+          Real experiences from the people and organizations we&apos;ve worked with.
+        </p>
       </div>
 
-      {/* Review Submission Modal */}
-      {showModal && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 10000,
-            backgroundColor: 'rgba(2, 6, 23, 0.85)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '1.25rem',
-          }}
-          onClick={() => setShowModal(false)}
-        >
-          <div
-            style={{
-              backgroundColor: '#071224',
-              border: '1px solid rgba(56, 189, 248, 0.35)',
-              borderRadius: 16,
-              padding: 'clamp(1.5rem, 4vw, 2.5rem)',
-              maxWidth: 580,
-              width: '100%',
-              maxHeight: '90vh',
-              overflowY: 'auto',
-              boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.9), 0 0 30px rgba(22, 119, 255, 0.2)',
-              position: 'relative',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Close Button */}
-            <button
-              onClick={() => setShowModal(false)}
-              aria-label="Close modal"
-              style={{
-                position: 'absolute',
-                top: '1.25rem',
-                right: '1.25rem',
-                background: 'transparent',
-                border: 'none',
-                color: '#94A3B8',
-                fontSize: '1.5rem',
-                cursor: 'pointer',
-                padding: '0.25rem',
-                lineHeight: 1,
-              }}
-            >
-              ✕
-            </button>
-
-            {submitSuccess ? (
-              <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
-                <div style={{ fontSize: '2.5rem', color: '#38BDF8', marginBottom: '1rem' }}>✓</div>
-                <h3 style={{ fontSize: '1.5rem', color: '#F8FAFF', marginBottom: '0.75rem', fontWeight: 700 }}>
-                  Feedback Submitted
-                </h3>
-                <p style={{ color: '#94A3B8', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '1.75rem' }}>
-                  Thank you for your review! It has been directly sent to our administration team for verification and will appear on the site once approved.
-                </p>
-                <button
-                  onClick={() => setShowModal(false)}
-                  style={{
-                    padding: '0.65rem 1.75rem',
-                    backgroundColor: '#1677FF',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    borderRadius: 8,
-                    fontWeight: 600,
-                    fontFamily: 'var(--font-mono, monospace)',
-                    letterSpacing: '0.08em',
-                    cursor: 'pointer',
-                  }}
-                >
-                  CLOSE
-                </button>
-              </div>
-            ) : (
-              <div>
-                <div style={{ marginBottom: '1.5rem' }}>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-mono, monospace)',
-                      fontSize: '0.65rem',
-                      color: '#1677FF',
-                      letterSpacing: '0.2em',
-                      textTransform: 'uppercase',
-                      display: 'block',
-                      marginBottom: '0.35rem',
-                    }}
-                  >
-                    PARTNER FEEDBACK
-                  </span>
-                  <h3 style={{ fontSize: '1.5rem', color: '#F8FAFF', fontWeight: 700, margin: 0 }}>
-                    Share Your Experience
-                  </h3>
-                  <p style={{ color: '#94A3B8', fontSize: '0.88rem', marginTop: '0.35rem', marginBottom: 0 }}>
-                    Your testimonial will be reviewed by our team and published on the website.
-                  </p>
-                </div>
-
-                {submitError && (
-                  <div
-                    style={{
-                      padding: '0.75rem 1rem',
-                      borderRadius: 8,
-                      backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                      border: '1px solid rgba(239, 68, 68, 0.3)',
-                      color: '#F87171',
-                      fontSize: '0.85rem',
-                      marginBottom: '1.25rem',
-                    }}
-                  >
-                    {submitError}
-                  </div>
-                )}
-
-                <form onSubmit={handleReviewSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.1rem' }}>
-                  {/* Rating Selector */}
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.4rem' }}>
-                      RATING *
-                    </label>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          type="button"
-                          onClick={() => setReviewForm({ ...reviewForm, rating: star })}
-                          style={{
-                            background: 'transparent',
-                            border: 'none',
-                            fontSize: '1.6rem',
-                            color: star <= reviewForm.rating ? '#38BDF8' : '#334155',
-                            cursor: 'pointer',
-                            padding: 0,
-                            transition: 'transform 0.15s ease',
-                          }}
-                          onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.2)'; }}
-                          onMouseLeave={(e) => { e.currentTarget.style.transform = 'scale(1)'; }}
-                        >
-                          ★
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Name & Company */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
-                        YOUR NAME *
-                      </label>
-                      <input
-                        required
-                        type="text"
-                        value={reviewForm.name}
-                        onChange={(e) => setReviewForm({ ...reviewForm, name: e.target.value })}
-                        placeholder="e.g. Sarah Jenkins"
-                        style={{
-                          width: '100%',
-                          padding: '0.65rem 0.85rem',
-                          backgroundColor: '#040B17',
-                          border: '1px solid rgba(30, 58, 138, 0.4)',
-                          borderRadius: 8,
-                          color: '#F8FAFF',
-                          fontSize: '0.9rem',
-                          outline: 'none',
-                          boxSizing: 'border-box',
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
-                        COMPANY / ORG
-                      </label>
-                      <input
-                        type="text"
-                        value={reviewForm.company}
-                        onChange={(e) => setReviewForm({ ...reviewForm, company: e.target.value })}
-                        placeholder="e.g. Nexus Tech"
-                        style={{
-                          width: '100%',
-                          padding: '0.65rem 0.85rem',
-                          backgroundColor: '#040B17',
-                          border: '1px solid rgba(30, 58, 138, 0.4)',
-                          borderRadius: 8,
-                          color: '#F8FAFF',
-                          fontSize: '0.9rem',
-                          outline: 'none',
-                          boxSizing: 'border-box',
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Role & Photo */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1rem' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
-                        ROLE / TITLE
-                      </label>
-                      <input
-                        type="text"
-                        value={reviewForm.role}
-                        onChange={(e) => setReviewForm({ ...reviewForm, role: e.target.value })}
-                        placeholder="e.g. Chief Product Officer"
-                        style={{
-                          width: '100%',
-                          padding: '0.65rem 0.85rem',
-                          backgroundColor: '#040B17',
-                          border: '1px solid rgba(30, 58, 138, 0.4)',
-                          borderRadius: 8,
-                          color: '#F8FAFF',
-                          fontSize: '0.9rem',
-                          outline: 'none',
-                          boxSizing: 'border-box',
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
-                        PHOTO (PNG / JPG, MAX 2MB)
-                      </label>
-                      {reviewForm.photo ? (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.4rem 0.65rem', backgroundColor: '#040B17', border: '1px solid rgba(56, 189, 248, 0.35)', borderRadius: 8, boxSizing: 'border-box' }}>
-                          <img
-                            src={reviewForm.photo}
-                            alt="Preview"
-                            style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #38BDF8', flexShrink: 0 }}
-                          />
-                          <span style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'var(--font-mono, monospace)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
-                            Photo selected
-                          </span>
-                          <button
-                            type="button"
-                            onClick={handleRemovePhoto}
-                            style={{
-                              backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                              border: '1px solid rgba(239, 68, 68, 0.4)',
-                              color: '#F87171',
-                              borderRadius: 4,
-                              padding: '0.2rem 0.5rem',
-                              fontSize: '0.68rem',
-                              cursor: 'pointer',
-                              fontFamily: 'var(--font-mono, monospace)'
-                            }}
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      ) : (
-                        <div>
-                          <input
-                            type="file"
-                            id="testimonial-photo-input"
-                            accept="image/png, image/jpeg, image/jpg, image/webp"
-                            onChange={handlePhotoUpload}
-                            style={{ display: 'none' }}
-                          />
-                          <label
-                            htmlFor="testimonial-photo-input"
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              gap: '0.45rem',
-                              width: '100%',
-                              padding: '0.65rem 0.85rem',
-                              backgroundColor: '#040B17',
-                              border: '1px dashed rgba(56, 189, 248, 0.4)',
-                              borderRadius: 8,
-                              color: '#38BDF8',
-                              fontSize: '0.78rem',
-                              fontFamily: 'var(--font-mono, monospace)',
-                              cursor: 'pointer',
-                              boxSizing: 'border-box',
-                              transition: 'border-color 0.2s',
-                              textAlign: 'center'
-                            }}
-                          >
-                            <span>📷</span> Upload Photo (PNG / JPG)
-                          </label>
-                        </div>
-                      )}
-                      {fileError && (
-                        <p style={{ color: '#EF4444', fontSize: '0.7rem', marginTop: '0.35rem', margin: 0, fontFamily: 'var(--font-mono, monospace)' }}>
-                          {fileError}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Testimonial Content */}
-                  <div>
-                    <label style={{ display: 'block', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
-                      YOUR REVIEW / TESTIMONIAL *
-                    </label>
-                    <textarea
-                      required
-                      rows={4}
-                      value={reviewForm.content}
-                      onChange={(e) => setReviewForm({ ...reviewForm, content: e.target.value })}
-                      placeholder="Share your experience working with Quantum AI, the systems built, and the outcomes delivered..."
-                      style={{
-                        width: '100%',
-                        padding: '0.75rem 0.85rem',
-                        backgroundColor: '#040B17',
-                        border: '1px solid rgba(30, 58, 138, 0.4)',
-                        borderRadius: 8,
-                        color: '#F8FAFF',
-                        fontSize: '0.9rem',
-                        outline: 'none',
-                        resize: 'vertical',
-                        lineHeight: 1.5,
-                        boxSizing: 'border-box',
-                      }}
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    style={{
-                      marginTop: '0.5rem',
-                      padding: '0.85rem',
-                      backgroundColor: '#1677FF',
-                      color: '#FFFFFF',
-                      border: 'none',
-                      borderRadius: 8,
-                      fontSize: '0.85rem',
-                      fontWeight: 700,
-                      fontFamily: 'var(--font-mono, monospace)',
-                      letterSpacing: '0.12em',
-                      textTransform: 'uppercase',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.2s',
-                    }}
-                  >
-                    {isSubmitting ? 'SUBMITTING REVIEW...' : 'SUBMIT REVIEW FOR APPROVAL'}
-                  </button>
-                </form>
-              </div>
-            )}
+      {/* 3-Row Continuous Square Testimonial Marquee */}
+      <div className="test-stage-wrapper">
+        {/* ROW 1: Glides Left */}
+        <div className={`test-row test-row-left-1 ${!isVisible ? 'paused' : ''}`}>
+          <div className="test-track">
+            {row1.map((t, idx) => renderCard(t, `r1-${idx}`))}
           </div>
         </div>
-      )}
+
+        {/* ROW 2: Glides Right */}
+        <div className={`test-row test-row-right-2 ${!isVisible ? 'paused' : ''}`}>
+          <div className="test-track">
+            {row2.map((t, idx) => renderCard(t, `r2-${idx}`))}
+          </div>
+        </div>
+
+        {/* ROW 3: Glides Left */}
+        <div className={`test-row test-row-left-3 ${!isVisible ? 'paused' : ''}`}>
+          <div className="test-track">
+            {row3.map((t, idx) => renderCard(t, `r3-${idx}`))}
+          </div>
+        </div>
+      </div>
     </section>
-  );
-}
-
-function TestimonialCard({ item }: { item: TestimonialItem }) {
-  const rating = item.rating || 5;
-
-  return (
-    <div
-      style={{
-        backgroundColor: 'rgba(6, 21, 43, 0.65)',
-        border: '1px solid rgba(22, 119, 255, 0.15)',
-        borderRadius: 10,
-        padding: '1.1rem 1.4rem',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        position: 'relative',
-        overflow: 'hidden',
-        transition: 'transform 0.2s, border-color 0.2s, box-shadow 0.2s',
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
-        e.currentTarget.style.transform = 'translateY(-2px)';
-        e.currentTarget.style.boxShadow = '0 8px 24px -6px rgba(22, 119, 255, 0.25)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.15)';
-        e.currentTarget.style.transform = 'none';
-        e.currentTarget.style.boxShadow = 'none';
-      }}
-    >
-      {/* Top Meta: Rating & Watermark */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '0.85rem',
-        }}
-      >
-        <div style={{ display: 'flex', gap: '0.2rem', color: '#38BDF8', fontSize: '0.8rem' }}>
-          {Array.from({ length: 5 }).map((_, i) => (
-            <span key={i} style={{ opacity: i < rating ? 1 : 0.2 }}>
-              ★
-            </span>
-          ))}
-        </div>
-        <span
-          style={{
-            fontFamily: 'var(--font-mono, monospace)',
-            fontSize: '0.6rem',
-            color: '#1677FF',
-            letterSpacing: '0.15em',
-            textTransform: 'uppercase',
-            fontWeight: 600,
-          }}
-        >
-          VERIFIED PARTNER
-        </span>
-      </div>
-
-      {/* Quote Content */}
-      <p
-        style={{
-          color: '#F1F5F9',
-          fontSize: '0.9rem',
-          lineHeight: 1.55,
-          fontWeight: 300,
-          marginBottom: '1rem',
-          fontStyle: 'normal',
-        }}
-      >
-        &ldquo;{item.content}&rdquo;
-      </p>
-
-      {/* Author Details */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.75rem',
-          paddingTop: '0.75rem',
-          borderTop: '1px solid rgba(22, 119, 255, 0.08)',
-        }}
-      >
-        {item.photo ? (
-          <img
-            src={item.photo}
-            alt={item.name}
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: '50%',
-              objectFit: 'cover',
-              border: '1.5px solid rgba(56, 189, 248, 0.4)',
-            }}
-          />
-        ) : (
-          <div
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #1E3A8A 0%, #0284C7 100%)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#F8FAFF',
-              fontWeight: 700,
-              fontSize: '0.95rem',
-              fontFamily: 'var(--font-mono, monospace)',
-              border: '1.5px solid rgba(56, 189, 248, 0.3)',
-            }}
-          >
-            {item.name.charAt(0).toUpperCase()}
-          </div>
-        )}
-        <div>
-          <h3
-            style={{
-              fontSize: '0.95rem',
-              fontWeight: 600,
-              color: '#F8FAFF',
-              margin: '0 0 0.15rem 0',
-              letterSpacing: '-0.01em',
-            }}
-          >
-            {item.name}
-          </h3>
-          <div
-            style={{
-              fontSize: '0.78rem',
-              color: '#94A3B8',
-              fontFamily: 'var(--font-mono, monospace)',
-            }}
-          >
-            {item.role ? `${item.role}` : ''}
-            {item.role && item.company ? ' · ' : ''}
-            {item.company ? (
-              <span style={{ color: '#55D6FF' }}>{item.company}</span>
-            ) : (
-              ''
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }
