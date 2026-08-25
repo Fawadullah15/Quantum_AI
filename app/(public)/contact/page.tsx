@@ -16,9 +16,12 @@ function Field({
   placeholder?: string;
 }) {
   const [focused, setFocused] = useState(false);
+  const fieldId = `contact-field-${name}`;
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', width: '100%' }}>
       <label
+        htmlFor={fieldId}
         style={{
           fontFamily: 'var(--font-mono, monospace)',
           fontSize: '0.6875rem',
@@ -32,9 +35,11 @@ function Field({
         {label} {required && <span style={{ color: '#38BDF8' }}>*</span>}
       </label>
       <input
+        id={fieldId}
         name={name}
         type={type}
         required={required}
+        aria-required={required}
         placeholder={placeholder}
         style={{
           backgroundColor: '#081735',
@@ -471,6 +476,7 @@ export default function ContactPage() {
                 <Field label="ORGANIZATION / COMPANY" name="company" placeholder="Organization name" />
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', width: '100%' }}>
                   <label
+                    htmlFor="contact-project-type"
                     style={{
                       fontFamily: 'var(--font-mono, monospace)',
                       fontSize: '0.6875rem',
@@ -483,6 +489,7 @@ export default function ContactPage() {
                     PROJECT TYPE
                   </label>
                   <select
+                    id="contact-project-type"
                     name="projectType"
                     style={{
                       backgroundColor: '#081735',
@@ -510,6 +517,7 @@ export default function ContactPage() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', width: '100%' }}>
                 <label
+                  htmlFor="contact-message"
                   style={{
                     fontFamily: 'var(--font-mono, monospace)',
                     fontSize: '0.6875rem',
@@ -523,8 +531,10 @@ export default function ContactPage() {
                   PROJECT OVERVIEW & REQUIREMENTS <span style={{ color: '#38BDF8' }}>*</span>
                 </label>
                 <textarea
+                  id="contact-message"
                   name="message"
                   required
+                  aria-required="true"
                   rows={5}
                   placeholder="Describe your technical objectives, timeline, scope, or current operational bottleneck..."
                   style={{

@@ -123,7 +123,8 @@ export default function Footer({
                   <a
                     href={socials.github}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
+                    aria-label="Quantum AI GitHub Repository"
                     style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = '#38BDF8')}
                     onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
@@ -136,7 +137,8 @@ export default function Footer({
                   <a
                     href={socials.linkedin}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
+                    aria-label="Quantum AI LinkedIn Company Page"
                     style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = '#38BDF8')}
                     onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
@@ -149,7 +151,8 @@ export default function Footer({
                   <a
                     href={socials.twitter}
                     target="_blank"
-                    rel="noreferrer"
+                    rel="noopener noreferrer"
+                    aria-label="Quantum AI Twitter / X Profile"
                     style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = '#38BDF8')}
                     onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}

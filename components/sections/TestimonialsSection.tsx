@@ -706,11 +706,21 @@ export default function TestimonialsSection({
         </div>
       </div>
 
-      {/* Full Testimonial Reader Modal (Portaled to body for zero clipping) */}
+      {/* Read Full Testimonial Modal (Portaled to body for zero clipping) */}
       {mounted && activeReadingItem && createPortal(
         <div className="test-modal-backdrop" onClick={() => setActiveReadingItem(null)}>
-          <div className="test-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button className="test-modal-close" onClick={() => setActiveReadingItem(null)}>
+          <div
+            className="test-modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Testimonial from ${activeReadingItem.name}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="test-modal-close"
+              aria-label="Close testimonial details"
+              onClick={() => setActiveReadingItem(null)}
+            >
               ✕
             </button>
 
@@ -766,8 +776,18 @@ export default function TestimonialsSection({
       {/* Submit Testimonial Modal (Portaled to body for zero clipping) */}
       {mounted && showSubmitModal && createPortal(
         <div className="test-modal-backdrop" onClick={handleCloseSubmitModal}>
-          <div className="test-modal-card" onClick={(e) => e.stopPropagation()}>
-            <button className="test-modal-close" onClick={handleCloseSubmitModal}>
+          <div
+            className="test-modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Submit Client Testimonial"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="test-modal-close"
+              aria-label="Close testimonial modal"
+              onClick={handleCloseSubmitModal}
+            >
               ✕
             </button>
 
