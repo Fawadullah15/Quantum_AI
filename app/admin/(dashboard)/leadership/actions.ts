@@ -130,6 +130,7 @@ export async function updateLeadershipMember(
 export async function reorderLeadershipMembers(orderedIds: string[]) {
   await checkAuth();
 
+  // Use a transaction to swap all displayOrder values atomically
   await prisma.$transaction(
     orderedIds.map((id, index) =>
       prisma.leadership.update({
@@ -139,11 +140,22 @@ export async function reorderLeadershipMembers(orderedIds: string[]) {
     )
   );
 
+  // Revalidate all affected paths
   revalidatePath('/admin/leadership');
   revalidatePath('/leadership');
   revalidatePath('/team');
   revalidatePath('/about');
   revalidatePath('/');
+
+  // Also revalidate individual member detail pages
+  const members = await prisma.leadership.findMany({
+    where: { id: { in: orderedIds } },
+    select: { slug: true },
+  });
+  for (const m of members) {
+    revalidatePath(`/leadership/${m.slug}`);
+  }
+
   return { success: true };
 }
 

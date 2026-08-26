@@ -42,6 +42,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isReordering, setIsReordering] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL');
@@ -167,12 +168,18 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
   };
 
   const handleMoveOrder = async (memberId: string, direction: 'UP' | 'DOWN') => {
+    if (isReordering) return; // Prevent rapid repeated clicks
+
     const currentIndex = members.findIndex((m) => m.id === memberId);
     if (currentIndex === -1) return;
 
     const targetIndex = direction === 'UP' ? currentIndex - 1 : currentIndex + 1;
     if (targetIndex < 0 || targetIndex >= members.length) return;
 
+    setIsReordering(true);
+
+    // Optimistic UI: swap positions immediately
+    const previousMembers = [...members];
     const newItems = [...members];
     const [movedItem] = newItems.splice(currentIndex, 1);
     newItems.splice(targetIndex, 0, movedItem);
@@ -186,11 +193,18 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
 
     try {
       await reorderLeadershipMembers(reorderedItems.map((item) => item.id));
-      toast.success('Leadership order updated successfully!', 'Reordered');
+      toast.success(
+        `"${movedItem.name}" moved ${direction === 'UP' ? 'up' : 'down'} to position ${targetIndex + 1}.`,
+        'Order Updated'
+      );
       router.refresh();
     } catch (err) {
-      console.error(err);
-      toast.error('Failed to save order.', 'Error');
+      console.error('Reorder error:', err);
+      // Rollback on failure
+      setMembers(previousMembers);
+      toast.error('Failed to save new order. Changes reverted.', 'Reorder Error');
+    } finally {
+      setIsReordering(false);
     }
   };
 
@@ -499,19 +513,22 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                             const isFirst = memberIdx <= 0;
                             const isLast = memberIdx === -1 || memberIdx >= members.length - 1;
                             const orderNumber = memberIdx !== -1 ? memberIdx + 1 : index + 1;
+                            const upDisabled = isFirst || isReordering;
+                            const downDisabled = isLast || isReordering;
 
                             return (
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', opacity: isReordering ? 0.6 : 1, transition: 'opacity 0.15s' }}>
                                 <button
                                   type="button"
+                                  aria-label={`Move ${member.name} up`}
                                   title="Move up"
-                                  disabled={isFirst}
+                                  disabled={upDisabled}
                                   onClick={() => handleMoveOrder(member.id, 'UP')}
                                   style={{
                                     background: 'transparent',
                                     border: 'none',
-                                    color: isFirst ? 'rgba(148, 163, 184, 0.25)' : '#38BDF8',
-                                    cursor: isFirst ? 'not-allowed' : 'pointer',
+                                    color: upDisabled ? 'rgba(148, 163, 184, 0.25)' : '#38BDF8',
+                                    cursor: upDisabled ? 'not-allowed' : 'pointer',
                                     fontSize: '0.95rem',
                                     padding: '0.15rem 0.25rem',
                                     borderRadius: '3px',
@@ -528,14 +545,15 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                                 </span>
                                 <button
                                   type="button"
+                                  aria-label={`Move ${member.name} down`}
                                   title="Move down"
-                                  disabled={isLast}
+                                  disabled={downDisabled}
                                   onClick={() => handleMoveOrder(member.id, 'DOWN')}
                                   style={{
                                     background: 'transparent',
                                     border: 'none',
-                                    color: isLast ? 'rgba(148, 163, 184, 0.25)' : '#38BDF8',
-                                    cursor: isLast ? 'not-allowed' : 'pointer',
+                                    color: downDisabled ? 'rgba(148, 163, 184, 0.25)' : '#38BDF8',
+                                    cursor: downDisabled ? 'not-allowed' : 'pointer',
                                     fontSize: '0.95rem',
                                     padding: '0.15rem 0.25rem',
                                     borderRadius: '3px',
