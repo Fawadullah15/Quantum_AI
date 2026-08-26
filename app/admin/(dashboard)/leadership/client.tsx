@@ -812,6 +812,17 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                 </div>
 
                 <div>
+                  <label style={labelStyle}>Public Reference ID</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. QA-001"
+                    value={formData.publicId}
+                    onChange={(e) => setFormData({ ...formData, publicId: e.target.value })}
+                    style={inputStyle}
+                  />
+                </div>
+
+                <div>
                   <label style={labelStyle}>Department</label>
                   <select
                     value={formData.department}

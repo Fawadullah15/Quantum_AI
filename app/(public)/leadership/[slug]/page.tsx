@@ -24,25 +24,9 @@ interface LeaderItem {
 }
 
 const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
-  "fawadullah-imraj": {
-    id: "f-fawadullah",
-    publicId: "QA-001",
-    slug: "fawadullah-imraj",
-    name: "Fawadullah Imraj",
-    position: "Co-Founder & Chief Executive Officer",
-    department: "Executive Leadership",
-    shortBio: "Co-Founder and CEO of Quantum AI, directing AI-powered software systems, workflow automation architectures, and enterprise digital solutions.",
-    fullBio: "Fawadullah Imraj is the Founder and CEO of Quantum AI. He focuses on building practical software powered by AI for education, businesses, and enterprise organizations. His engineering work covers neural systems, workflow automation pipelines, high-concurrency web applications, and custom software architectures engineered to eliminate operational friction and solve real-world problems.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
-    linkedin: "https://www.linkedin.com/in/fawadullahimraj/",
-    email: "fawadullah9911@gmail.com",
-    location: "Pakistan",
-    displayOrder: 1,
-    isActive: true,
-  },
   "fahad-khan": {
     id: "f-fahad",
-    publicId: "QA-002",
+    publicId: "QA-001",
     slug: "fahad-khan",
     name: "Fahad Khan",
     position: "Co-Founder & Executive Chairman",
@@ -53,6 +37,22 @@ const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
     linkedin: "https://www.linkedin.com/in/fahad-khan-650a783a4/",
     email: "fahad.off.707@gmail.com",
     location: "Peshawar",
+    displayOrder: 1,
+    isActive: true,
+  },
+  "fawadullah-imraj": {
+    id: "f-fawadullah",
+    publicId: "QA-002",
+    slug: "fawadullah-imraj",
+    name: "Fawadullah Imraj",
+    position: "Co-Founder & Chief Executive Officer",
+    department: "Executive Leadership",
+    shortBio: "Co-Founder and CEO of Quantum AI, directing AI-powered software systems, workflow automation architectures, and enterprise digital solutions.",
+    fullBio: "Fawadullah Imraj is the Founder and CEO of Quantum AI. He focuses on building practical software powered by AI for education, businesses, and enterprise organizations. His engineering work covers neural systems, workflow automation pipelines, high-concurrency web applications, and custom software architectures engineered to eliminate operational friction and solve real-world problems.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
+    linkedin: "https://www.linkedin.com/in/fawadullahimraj/",
+    email: "fawadullah9911@gmail.com",
+    location: "Pakistan",
     displayOrder: 2,
     isActive: true,
   },
@@ -341,11 +341,9 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
               );
             })()}
 
-            {m.publicId && (
-              <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#64748B", letterSpacing: "0.15em", marginBottom: "0.85rem" }}>
-                ID // {m.publicId}
-              </div>
-            )}
+            <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#64748B", letterSpacing: "0.15em", marginBottom: "0.85rem" }}>
+              ID // {m.slug.includes("fahad") || m.position.toLowerCase().includes("chairman") ? "QA-001" : m.slug.includes("fawad") || m.position.toLowerCase().includes("ceo") ? "QA-002" : (m.publicId || "QA-LEAD")}
+            </div>
 
             <div className="prof-social-list">
               {m.linkedin && (

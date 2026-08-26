@@ -549,7 +549,7 @@ export default function HomePage() {
                       QUANTUM AI
                     </span>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#64748B' }}>
-                      {person.publicId || 'QA-LEAD'}
+                      {person.slug?.includes('fahad') || person.position?.toLowerCase().includes('chairman') ? 'QA-001' : person.slug?.includes('fawad') || person.position?.toLowerCase().includes('ceo') ? 'QA-002' : (person.publicId || 'QA-LEAD')}
                     </span>
                   </div>
 
