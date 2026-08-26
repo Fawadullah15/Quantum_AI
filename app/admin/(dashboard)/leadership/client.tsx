@@ -89,10 +89,16 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
   };
 
   const handleEdit = (m: Leadership) => {
+    const defaultPublicId = m.slug?.includes('fahad') || m.position?.toLowerCase().includes('chairman')
+      ? 'QA-001'
+      : m.slug?.includes('fawad') || m.position?.toLowerCase().includes('ceo')
+      ? 'QA-002'
+      : (m.publicId || '');
+
     setFormData({
       name: m.name || '',
       slug: m.slug || '',
-      publicId: m.publicId || '',
+      publicId: defaultPublicId,
       position: m.position || '',
       department: m.department || 'Software Development',
       shortBio: m.shortBio || '',
@@ -601,7 +607,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                                     borderRadius: '3px',
                                   }}
                                 >
-                                  {member.publicId}
+                                  {member.slug?.includes('fahad') || member.position?.toLowerCase().includes('chairman') ? 'QA-001' : member.slug?.includes('fawad') || member.position?.toLowerCase().includes('ceo') ? 'QA-002' : (member.publicId || 'QA-LEAD')}
                                 </span>
                               </div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.15rem' }}>

@@ -678,7 +678,11 @@ export default async function LeadershipPage() {
               <Link key={leader.id} href={`/leadership/${leader.slug}`} className="exec-card principal-card">
                 <div className="exec-photo-wrapper principal-photo-wrapper">
                   <div className="exec-corner-badge">
-                    {leader.publicId || (leader.position.toLowerCase().includes("chairman") || leader.slug.includes("fahad") ? "QA-001" : "QA-002")} // {leader.position.toLowerCase().includes("chairman")
+                    {leader.slug.includes("fahad") || leader.position.toLowerCase().includes("chairman")
+                      ? "QA-001"
+                      : leader.slug.includes("fawad") || leader.position.toLowerCase().includes("ceo")
+                      ? "QA-002"
+                      : (leader.publicId || "QA-LEAD")} // {leader.position.toLowerCase().includes("chairman")
                       ? "EXECUTIVE CHAIRMAN"
                       : "CHIEF EXECUTIVE OFFICER"}
                   </div>
