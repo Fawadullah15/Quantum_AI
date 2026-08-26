@@ -355,12 +355,18 @@ export default async function LeadershipPage() {
 
         /* Card Footer Action */
         .exec-footer {
-          padding: 0.95rem 1.45rem;
+          padding: 0.85rem 1.25rem;
           border-top: 1px solid rgba(22, 119, 255, 0.12);
           display: flex;
           justify-content: space-between;
           align-items: center;
+          gap: 0.5rem;
           font-family: var(--font-mono, monospace);
+          background: rgba(3, 7, 18, 0.35);
+          margin-top: auto;
+          box-sizing: border-box;
+          min-width: 0;
+          overflow: hidden;
         }
         .exec-social-link {
           display: inline-flex;
@@ -370,6 +376,11 @@ export default async function LeadershipPage() {
           color: #64748B;
           text-decoration: none;
           transition: color 0.2s;
+          flex-shrink: 0;
+          min-width: 0;
+        }
+        .exec-social-link svg {
+          flex-shrink: 0;
         }
         .exec-social-link:hover {
           color: #38BDF8;
@@ -378,13 +389,18 @@ export default async function LeadershipPage() {
           font-size: 0.72rem;
           color: #1677FF;
           font-weight: 600;
-          letter-spacing: 0.08em;
+          letter-spacing: 0.06em;
           text-transform: uppercase;
           display: inline-flex;
           align-items: center;
-          gap: 0.35rem;
+          gap: 0.25rem;
           transition: color 0.2s, transform 0.2s;
           margin-left: auto;
+          flex-shrink: 0;
+          white-space: nowrap;
+        }
+        .exec-action-short {
+          display: none;
         }
         .exec-card:hover .exec-action-text {
           color: #38BDF8;
@@ -537,11 +553,47 @@ export default async function LeadershipPage() {
             -webkit-line-clamp: 2 !important;
           }
           .exec-footer {
-            padding: 0.45rem 0.65rem !important;
+            padding: 0.45rem 0.55rem !important;
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            gap: 0.25rem !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+            background: rgba(3, 7, 18, 0.4) !important;
           }
-          .exec-social-link,
+          .exec-social-link {
+            font-size: 0.62rem !important;
+            color: #38BDF8 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.2rem !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+          }
+          .exec-social-link svg {
+            width: 11px !important;
+            height: 11px !important;
+          }
           .exec-action-text {
-            font-size: 0.6rem !important;
+            font-size: 0.62rem !important;
+            letter-spacing: 0.04em !important;
+            color: #1677FF !important;
+            white-space: nowrap !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.15rem !important;
+            flex-shrink: 0 !important;
+            margin-left: auto !important;
+          }
+          .exec-action-full {
+            display: none !important;
+          }
+          .exec-action-short {
+            display: inline !important;
           }
           .ldr-philosophy-box {
             padding: clamp(1.25rem, 4vw, 2rem) !important;
@@ -584,7 +636,17 @@ export default async function LeadershipPage() {
             font-size: 0.65rem !important;
           }
           .exec-footer {
-            padding: 0.35rem 0.5rem !important;
+            padding: 0.35rem 0.45rem !important;
+          }
+          .exec-social-link {
+            font-size: 0.56rem !important;
+          }
+          .exec-social-link svg {
+            width: 10px !important;
+            height: 10px !important;
+          }
+          .exec-action-text {
+            font-size: 0.56rem !important;
           }
         }
       `}</style>
@@ -651,13 +713,15 @@ export default async function LeadershipPage() {
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                       </svg>
-                      LinkedIn
+                      <span>LinkedIn</span>
                     </span>
                   ) : (
                     <span style={{ fontSize: "0.68rem", color: "#64748B" }}>QUANTUM AI</span>
                   )}
                   <span className="exec-action-text">
-                    VIEW PROFILE <span>→</span>
+                    <span className="exec-action-full">VIEW PROFILE</span>
+                    <span className="exec-action-short">PROFILE</span>
+                    <span>→</span>
                   </span>
                 </div>
               </Link>
@@ -716,13 +780,15 @@ export default async function LeadershipPage() {
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                         </svg>
-                        LinkedIn
+                        <span>LinkedIn</span>
                       </span>
                     ) : (
                       <span style={{ fontSize: "0.68rem", color: "#64748B" }}>QUANTUM AI</span>
                     )}
                     <span className="exec-action-text">
-                      VIEW PROFILE <span>→</span>
+                      <span className="exec-action-full">VIEW PROFILE</span>
+                      <span className="exec-action-short">PROFILE</span>
+                      <span>→</span>
                     </span>
                   </div>
                 </Link>
