@@ -56,7 +56,7 @@ export async function createLeadershipMember(data: {
       linkedin: data.linkedin?.trim() || null,
       website: data.website?.trim() || null,
       location: data.location?.trim() || 'Pakistan',
-      displayOrder: Number(data.displayOrder) || count,
+      displayOrder: Number(data.displayOrder) || count + 1,
       isActive: data.isActive ?? true,
     },
   });

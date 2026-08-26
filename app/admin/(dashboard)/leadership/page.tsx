@@ -2,6 +2,7 @@ import prisma from '@/lib/db';
 import LeadershipClient from './client';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export const metadata = {
   title: 'Leadership & Team Management | Quantum Admin',

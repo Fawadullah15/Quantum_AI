@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createPageMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata = createPageMetadata({
   title: "Leadership & Engineering Team — Quantum AI",
@@ -103,34 +104,28 @@ export default async function LeadershipPage() {
 
   const members: LeaderItem[] = dbMembers && dbMembers.length > 0 ? dbMembers : FALLBACK_MEMBERS;
 
-  // ─── STRICT HIERARCHY LOGIC: CEO + CHAIRMAN AS TWO EQUAL PILLARS ───
-  const isCeo = (m: LeaderItem) =>
-    m.slug.includes("fawad") ||
+  // ─── PARTITION LEADERS ACCORDING TO DISPLAY ORDER & ROLES ───
+  const isExecutive = (m: LeaderItem) =>
+    (m.department && m.department.toLowerCase().includes("executive")) ||
     m.position.toLowerCase().includes("ceo") ||
-    m.position.toLowerCase().includes("chief executive");
-
-  const isChairman = (m: LeaderItem) =>
-    m.slug.includes("fahad") ||
+    m.position.toLowerCase().includes("chief executive") ||
     m.position.toLowerCase().includes("chairman") ||
     m.position.toLowerCase().includes("chairperson");
 
-  const ceo = members.find(isCeo);
-  const chairman = members.find(isChairman);
+  const executiveLeaders = members.filter(isExecutive);
 
-  // Collect the principal duo (CEO + Chairman)
-  const principalLeaders: LeaderItem[] = [];
-  if (ceo) principalLeaders.push(ceo);
-  if (chairman && chairman.id !== ceo?.id) principalLeaders.push(chairman);
-
-  // If neither matches by string, take first two as principal
-  if (principalLeaders.length === 0 && members.length >= 2) {
-    principalLeaders.push(members[0], members[1]);
-  }
+  // If there are executive leaders, pick top 2 in their exact displayOrder; otherwise pick top 2 members
+  const principalCandidates = executiveLeaders.length >= 2 ? executiveLeaders.slice(0, 2) : members.slice(0, 2);
+  const principalLeaders = [...principalCandidates].sort(
+    (a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0)
+  );
 
   const principalIds = new Set(principalLeaders.map((p) => p.id));
 
-  // Executive Team (the remaining leaders)
-  const executiveTeam = members.filter((m) => !principalIds.has(m.id));
+  // Executive Team (the remaining leaders in exact displayOrder)
+  const executiveTeam = members
+    .filter((m) => !principalIds.has(m.id))
+    .sort((a, b) => (a.displayOrder ?? 0) - (b.displayOrder ?? 0));
 
   return (
     <div className="ldr-page">
@@ -618,7 +613,9 @@ export default async function LeadershipPage() {
                   <div className="exec-corner-badge">
                     {leader.position.toLowerCase().includes("chairman")
                       ? "EXECUTIVE CHAIRMAN"
-                      : "CHIEF EXECUTIVE OFFICER"}
+                      : leader.position.toLowerCase().includes("ceo") || leader.position.toLowerCase().includes("chief executive")
+                      ? "CHIEF EXECUTIVE OFFICER"
+                      : (leader.department || leader.position).toUpperCase()}
                   </div>
                   {leader.photo ? (
                     <img
