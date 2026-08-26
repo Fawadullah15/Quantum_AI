@@ -29,21 +29,8 @@ interface LeaderItem {
 
 const FALLBACK_MEMBERS: LeaderItem[] = [
   {
-    id: "f-fawadullah",
-    publicId: "QA-001",
-    slug: "fawadullah-imraj",
-    name: "Fawadullah Imraj",
-    position: "Co-Founder & Chief Executive Officer",
-    department: "Executive Leadership",
-    shortBio: "Co-Founder and CEO of Quantum AI, directing AI-powered software systems, workflow automation architectures, and enterprise digital solutions.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
-    linkedin: "https://www.linkedin.com/in/fawadullahimraj/",
-    location: "Pakistan",
-    displayOrder: 1,
-  },
-  {
     id: "f-fahad",
-    publicId: "QA-002",
+    publicId: "QA-001",
     slug: "fahad-khan",
     name: "Fahad Khan",
     position: "Co-Founder & Executive Chairman",
@@ -52,6 +39,19 @@ const FALLBACK_MEMBERS: LeaderItem[] = [
     photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787236158396-98299.jpg",
     linkedin: "https://www.linkedin.com/in/fahad-khan-650a783a4/",
     location: "Peshawar",
+    displayOrder: 1,
+  },
+  {
+    id: "f-fawadullah",
+    publicId: "QA-002",
+    slug: "fawadullah-imraj",
+    name: "Fawadullah Imraj",
+    position: "Co-Founder & Chief Executive Officer",
+    department: "Executive Leadership",
+    shortBio: "Co-Founder and CEO of Quantum AI, directing AI-powered software systems, workflow automation architectures, and enterprise digital solutions.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
+    linkedin: "https://www.linkedin.com/in/fawadullahimraj/",
+    location: "Pakistan",
     displayOrder: 2,
   },
   {
@@ -103,24 +103,24 @@ export default async function LeadershipPage() {
 
   const members: LeaderItem[] = dbMembers && dbMembers.length > 0 ? dbMembers : FALLBACK_MEMBERS;
 
-  // ─── STRICT HIERARCHY LOGIC: CEO + CHAIRMAN AS TWO EQUAL PILLARS ───
-  const isCeo = (m: LeaderItem) =>
-    m.slug.includes("fawad") ||
-    m.position.toLowerCase().includes("ceo") ||
-    m.position.toLowerCase().includes("chief executive");
-
+  // ─── STRICT HIERARCHY LOGIC: EXECUTIVE CHAIRMAN + CEO AS TWO EQUAL PILLARS (CHAIRMAN FIRST) ───
   const isChairman = (m: LeaderItem) =>
     m.slug.includes("fahad") ||
     m.position.toLowerCase().includes("chairman") ||
     m.position.toLowerCase().includes("chairperson");
 
-  const ceo = members.find(isCeo);
-  const chairman = members.find(isChairman);
+  const isCeo = (m: LeaderItem) =>
+    m.slug.includes("fawad") ||
+    m.position.toLowerCase().includes("ceo") ||
+    m.position.toLowerCase().includes("chief executive");
 
-  // Collect the principal duo (CEO + Chairman)
+  const chairman = members.find(isChairman);
+  const ceo = members.find(isCeo);
+
+  // Collect the principal duo (Executive Chairman first, CEO second)
   const principalLeaders: LeaderItem[] = [];
-  if (ceo) principalLeaders.push(ceo);
-  if (chairman && chairman.id !== ceo?.id) principalLeaders.push(chairman);
+  if (chairman) principalLeaders.push(chairman);
+  if (ceo && ceo.id !== chairman?.id) principalLeaders.push(ceo);
 
   // If neither matches by string, take first two as principal
   if (principalLeaders.length === 0 && members.length >= 2) {

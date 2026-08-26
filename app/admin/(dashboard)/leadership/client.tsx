@@ -12,8 +12,8 @@ import { createLeadershipMember, updateLeadershipMember, deleteLeadershipMember,
 import type { Leadership } from '@prisma/client';
 
 const ROLE_PRESETS = [
-  'Co-Founder & Chief Executive Officer',
   'Co-Founder & Executive Chairman',
+  'Co-Founder & Chief Executive Officer',
   'Chief Technology Officer',
   'Lead Software Engineer',
   'Senior AI Systems Engineer',
