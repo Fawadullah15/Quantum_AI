@@ -38,21 +38,21 @@ export default function HomePage() {
   // Leadership state synced with database / admin panel
   const [leaders, setLeaders] = useState<any[]>([
     {
-      id: '2',
-      name: 'Fahad Khan',
-      position: 'Co-Founder & Executive Chairman',
-      shortBio: 'Co-Founder and Executive Chairman of Quantum AI, supporting strategic direction, technical vision, and long-term growth.',
-      photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049467020-Screenshot_2026-08-18_153738.png',
-      slug: 'fahad-khan',
-      publicId: 'QA-001'
-    },
-    {
       id: '1',
       name: 'Fawadullah Imraj',
       position: 'Co-Founder & CEO',
       shortBio: 'Co-Founder and CEO of Quantum AI, building AI-powered software and digital solutions for schools, colleges, and businesses.',
       photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049252241-Screenshot_2025-02-11_170816.png',
       slug: 'fawadullah-imraj',
+      publicId: 'QA-001'
+    },
+    {
+      id: '2',
+      name: 'Fahad Khan',
+      position: 'Co-Founder & Executive Chairman',
+      shortBio: 'Co-Founder and Executive Chairman of Quantum AI, supporting strategic direction, technical vision, and long-term growth.',
+      photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049467020-Screenshot_2026-08-18_153738.png',
+      slug: 'fahad-khan',
       publicId: 'QA-002'
     }
   ]);
@@ -134,21 +134,7 @@ export default function HomePage() {
       .then(res => res.ok ? res.json() : [])
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
-          const activeList = data.filter((m: any) => m.isActive !== false);
-          const sorted = [...activeList].sort((a: any, b: any) => {
-            const isChairmanA = (a.position && a.position.toLowerCase().includes('chairman')) || (a.slug && a.slug.includes('fahad'));
-            const isChairmanB = (b.position && b.position.toLowerCase().includes('chairman')) || (b.slug && b.slug.includes('fahad'));
-            if (isChairmanA && !isChairmanB) return -1;
-            if (!isChairmanA && isChairmanB) return 1;
-
-            const isCeoA = (a.position && (a.position.toLowerCase().includes('ceo') || a.position.toLowerCase().includes('chief executive'))) || (a.slug && a.slug.includes('fawad'));
-            const isCeoB = (b.position && (b.position.toLowerCase().includes('ceo') || b.position.toLowerCase().includes('chief executive'))) || (b.slug && b.slug.includes('fawad'));
-            if (isCeoA && !isCeoB) return -1;
-            if (!isCeoA && isCeoB) return 1;
-
-            return (a.displayOrder || 0) - (b.displayOrder || 0);
-          });
-          setLeaders(sorted);
+          setLeaders(data.filter((m: any) => m.isActive !== false));
         }
       })
       .catch(() => {});
@@ -549,7 +535,7 @@ export default function HomePage() {
                       QUANTUM AI
                     </span>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#64748B' }}>
-                      {person.slug?.includes('fahad') || person.position?.toLowerCase().includes('chairman') ? 'QA-001' : person.slug?.includes('fawad') || person.position?.toLowerCase().includes('ceo') ? 'QA-002' : (person.publicId || 'QA-LEAD')}
+                      {person.publicId || 'QA-LEAD'}
                     </span>
                   </div>
 

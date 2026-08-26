@@ -24,25 +24,9 @@ interface LeaderItem {
 }
 
 const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
-  "fahad-khan": {
-    id: "f-fahad",
-    publicId: "QA-001",
-    slug: "fahad-khan",
-    name: "Fahad Khan",
-    position: "Co-Founder & Executive Chairman",
-    department: "Executive Leadership",
-    shortBio: "Co-Founder and Executive Chairman of Quantum AI, guiding strategic direction, engineering vision, and long-term organizational growth.",
-    fullBio: "Fahad Khan is the Executive Chairman of Quantum AI. He contributes to the company's strategic direction, technical vision, major decisions, and long-term growth. With a background in mechatronics engineering and AI systems, he brings deep technical knowledge and leadership to Quantum AI's system architecture, research direction, and institutional governance.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787236158396-98299.jpg",
-    linkedin: "https://www.linkedin.com/in/fahad-khan-650a783a4/",
-    email: "fahad.off.707@gmail.com",
-    location: "Peshawar",
-    displayOrder: 1,
-    isActive: true,
-  },
   "fawadullah-imraj": {
     id: "f-fawadullah",
-    publicId: "QA-002",
+    publicId: "QA-001",
     slug: "fawadullah-imraj",
     name: "Fawadullah Imraj",
     position: "Co-Founder & Chief Executive Officer",
@@ -53,6 +37,22 @@ const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
     linkedin: "https://www.linkedin.com/in/fawadullahimraj/",
     email: "fawadullah9911@gmail.com",
     location: "Pakistan",
+    displayOrder: 1,
+    isActive: true,
+  },
+  "fahad-khan": {
+    id: "f-fahad",
+    publicId: "QA-002",
+    slug: "fahad-khan",
+    name: "Fahad Khan",
+    position: "Co-Founder & Executive Chairman",
+    department: "Executive Leadership",
+    shortBio: "Co-Founder and Executive Chairman of Quantum AI, guiding strategic direction, engineering vision, and long-term organizational growth.",
+    fullBio: "Fahad Khan is the Executive Chairman of Quantum AI. He contributes to the company's strategic direction, technical vision, major decisions, and long-term growth. With a background in mechatronics engineering and AI systems, he brings deep technical knowledge and leadership to Quantum AI's system architecture, research direction, and institutional governance.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787236158396-98299.jpg",
+    linkedin: "https://www.linkedin.com/in/fahad-khan-650a783a4/",
+    email: "fahad.off.707@gmail.com",
+    location: "Peshawar",
     displayOrder: 2,
     isActive: true,
   },
@@ -341,9 +341,11 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
               );
             })()}
 
-            <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#64748B", letterSpacing: "0.15em", marginBottom: "0.85rem" }}>
-              ID // {m.slug.includes("fahad") || m.position.toLowerCase().includes("chairman") ? "QA-001" : m.slug.includes("fawad") || m.position.toLowerCase().includes("ceo") ? "QA-002" : (m.publicId || "QA-LEAD")}
-            </div>
+            {m.publicId && (
+              <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#64748B", letterSpacing: "0.15em", marginBottom: "0.85rem" }}>
+                ID // {m.publicId}
+              </div>
+            )}
 
             <div className="prof-social-list">
               {m.linkedin && (

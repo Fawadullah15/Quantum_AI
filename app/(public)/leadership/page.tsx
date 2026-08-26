@@ -29,21 +29,8 @@ interface LeaderItem {
 
 const FALLBACK_MEMBERS: LeaderItem[] = [
   {
-    id: "f-fahad",
-    publicId: "QA-001",
-    slug: "fahad-khan",
-    name: "Fahad Khan",
-    position: "Co-Founder & Executive Chairman",
-    department: "Executive Leadership",
-    shortBio: "Co-Founder and Executive Chairman of Quantum AI, guiding strategic direction, engineering vision, and long-term organizational growth.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787236158396-98299.jpg",
-    linkedin: "https://www.linkedin.com/in/fahad-khan-650a783a4/",
-    location: "Peshawar",
-    displayOrder: 1,
-  },
-  {
     id: "f-fawadullah",
-    publicId: "QA-002",
+    publicId: "QA-001",
     slug: "fawadullah-imraj",
     name: "Fawadullah Imraj",
     position: "Co-Founder & Chief Executive Officer",
@@ -52,6 +39,19 @@ const FALLBACK_MEMBERS: LeaderItem[] = [
     photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
     linkedin: "https://www.linkedin.com/in/fawadullahimraj/",
     location: "Pakistan",
+    displayOrder: 1,
+  },
+  {
+    id: "f-fahad",
+    publicId: "QA-002",
+    slug: "fahad-khan",
+    name: "Fahad Khan",
+    position: "Co-Founder & Executive Chairman",
+    department: "Executive Leadership",
+    shortBio: "Co-Founder and Executive Chairman of Quantum AI, guiding strategic direction, engineering vision, and long-term organizational growth.",
+    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787236158396-98299.jpg",
+    linkedin: "https://www.linkedin.com/in/fahad-khan-650a783a4/",
+    location: "Peshawar",
     displayOrder: 2,
   },
   {
@@ -103,24 +103,24 @@ export default async function LeadershipPage() {
 
   const members: LeaderItem[] = dbMembers && dbMembers.length > 0 ? dbMembers : FALLBACK_MEMBERS;
 
-  // ─── STRICT HIERARCHY LOGIC: EXECUTIVE CHAIRMAN + CEO AS TWO EQUAL PILLARS (CHAIRMAN FIRST) ───
-  const isChairman = (m: LeaderItem) =>
-    m.slug.includes("fahad") ||
-    m.position.toLowerCase().includes("chairman") ||
-    m.position.toLowerCase().includes("chairperson");
-
+  // ─── STRICT HIERARCHY LOGIC: CEO + CHAIRMAN AS TWO EQUAL PILLARS ───
   const isCeo = (m: LeaderItem) =>
     m.slug.includes("fawad") ||
     m.position.toLowerCase().includes("ceo") ||
     m.position.toLowerCase().includes("chief executive");
 
-  const chairman = members.find(isChairman);
-  const ceo = members.find(isCeo);
+  const isChairman = (m: LeaderItem) =>
+    m.slug.includes("fahad") ||
+    m.position.toLowerCase().includes("chairman") ||
+    m.position.toLowerCase().includes("chairperson");
 
-  // Collect the principal duo (Executive Chairman first, CEO second)
+  const ceo = members.find(isCeo);
+  const chairman = members.find(isChairman);
+
+  // Collect the principal duo (CEO + Chairman)
   const principalLeaders: LeaderItem[] = [];
-  if (chairman) principalLeaders.push(chairman);
-  if (ceo && ceo.id !== chairman?.id) principalLeaders.push(ceo);
+  if (ceo) principalLeaders.push(ceo);
+  if (chairman && chairman.id !== ceo?.id) principalLeaders.push(chairman);
 
   // If neither matches by string, take first two as principal
   if (principalLeaders.length === 0 && members.length >= 2) {
@@ -355,18 +355,12 @@ export default async function LeadershipPage() {
 
         /* Card Footer Action */
         .exec-footer {
-          padding: 0.85rem 1.25rem;
+          padding: 0.95rem 1.45rem;
           border-top: 1px solid rgba(22, 119, 255, 0.12);
           display: flex;
           justify-content: space-between;
           align-items: center;
-          gap: 0.5rem;
           font-family: var(--font-mono, monospace);
-          background: rgba(3, 7, 18, 0.35);
-          margin-top: auto;
-          box-sizing: border-box;
-          min-width: 0;
-          overflow: hidden;
         }
         .exec-social-link {
           display: inline-flex;
@@ -376,11 +370,6 @@ export default async function LeadershipPage() {
           color: #64748B;
           text-decoration: none;
           transition: color 0.2s;
-          flex-shrink: 0;
-          min-width: 0;
-        }
-        .exec-social-link svg {
-          flex-shrink: 0;
         }
         .exec-social-link:hover {
           color: #38BDF8;
@@ -389,18 +378,13 @@ export default async function LeadershipPage() {
           font-size: 0.72rem;
           color: #1677FF;
           font-weight: 600;
-          letter-spacing: 0.06em;
+          letter-spacing: 0.08em;
           text-transform: uppercase;
           display: inline-flex;
           align-items: center;
-          gap: 0.25rem;
+          gap: 0.35rem;
           transition: color 0.2s, transform 0.2s;
           margin-left: auto;
-          flex-shrink: 0;
-          white-space: nowrap;
-        }
-        .exec-action-short {
-          display: none;
         }
         .exec-card:hover .exec-action-text {
           color: #38BDF8;
@@ -553,47 +537,11 @@ export default async function LeadershipPage() {
             -webkit-line-clamp: 2 !important;
           }
           .exec-footer {
-            padding: 0.45rem 0.55rem !important;
-            display: flex !important;
-            flex-direction: row !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-            gap: 0.25rem !important;
-            width: 100% !important;
-            box-sizing: border-box !important;
-            min-width: 0 !important;
-            overflow: hidden !important;
-            background: rgba(3, 7, 18, 0.4) !important;
+            padding: 0.45rem 0.65rem !important;
           }
-          .exec-social-link {
-            font-size: 0.62rem !important;
-            color: #38BDF8 !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 0.2rem !important;
-            white-space: nowrap !important;
-            flex-shrink: 0 !important;
-          }
-          .exec-social-link svg {
-            width: 11px !important;
-            height: 11px !important;
-          }
+          .exec-social-link,
           .exec-action-text {
-            font-size: 0.62rem !important;
-            letter-spacing: 0.04em !important;
-            color: #1677FF !important;
-            white-space: nowrap !important;
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 0.15rem !important;
-            flex-shrink: 0 !important;
-            margin-left: auto !important;
-          }
-          .exec-action-full {
-            display: none !important;
-          }
-          .exec-action-short {
-            display: inline !important;
+            font-size: 0.6rem !important;
           }
           .ldr-philosophy-box {
             padding: clamp(1.25rem, 4vw, 2rem) !important;
@@ -636,17 +584,7 @@ export default async function LeadershipPage() {
             font-size: 0.65rem !important;
           }
           .exec-footer {
-            padding: 0.35rem 0.45rem !important;
-          }
-          .exec-social-link {
-            font-size: 0.56rem !important;
-          }
-          .exec-social-link svg {
-            width: 10px !important;
-            height: 10px !important;
-          }
-          .exec-action-text {
-            font-size: 0.56rem !important;
+            padding: 0.35rem 0.5rem !important;
           }
         }
       `}</style>
@@ -713,15 +651,13 @@ export default async function LeadershipPage() {
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                       </svg>
-                      <span>LinkedIn</span>
+                      LinkedIn
                     </span>
                   ) : (
                     <span style={{ fontSize: "0.68rem", color: "#64748B" }}>QUANTUM AI</span>
                   )}
                   <span className="exec-action-text">
-                    <span className="exec-action-full">VIEW PROFILE</span>
-                    <span className="exec-action-short">PROFILE</span>
-                    <span>→</span>
+                    VIEW PROFILE <span>→</span>
                   </span>
                 </div>
               </Link>
@@ -780,15 +716,13 @@ export default async function LeadershipPage() {
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                         </svg>
-                        <span>LinkedIn</span>
+                        LinkedIn
                       </span>
                     ) : (
                       <span style={{ fontSize: "0.68rem", color: "#64748B" }}>QUANTUM AI</span>
                     )}
                     <span className="exec-action-text">
-                      <span className="exec-action-full">VIEW PROFILE</span>
-                      <span className="exec-action-short">PROFILE</span>
-                      <span>→</span>
+                      VIEW PROFILE <span>→</span>
                     </span>
                   </div>
                 </Link>

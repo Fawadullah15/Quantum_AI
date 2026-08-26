@@ -12,8 +12,8 @@ import { createLeadershipMember, updateLeadershipMember, deleteLeadershipMember,
 import type { Leadership } from '@prisma/client';
 
 const ROLE_PRESETS = [
-  'Co-Founder & Executive Chairman',
   'Co-Founder & Chief Executive Officer',
+  'Co-Founder & Executive Chairman',
   'Chief Technology Officer',
   'Lead Software Engineer',
   'Senior AI Systems Engineer',
@@ -89,16 +89,10 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
   };
 
   const handleEdit = (m: Leadership) => {
-    const defaultPublicId = m.slug?.includes('fahad') || m.position?.toLowerCase().includes('chairman')
-      ? 'QA-001'
-      : m.slug?.includes('fawad') || m.position?.toLowerCase().includes('ceo')
-      ? 'QA-002'
-      : (m.publicId || '');
-
     setFormData({
       name: m.name || '',
       slug: m.slug || '',
-      publicId: defaultPublicId,
+      publicId: m.publicId || '',
       position: m.position || '',
       department: m.department || 'Software Development',
       shortBio: m.shortBio || '',
@@ -607,7 +601,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                                     borderRadius: '3px',
                                   }}
                                 >
-                                  {member.slug?.includes('fahad') || member.position?.toLowerCase().includes('chairman') ? 'QA-001' : member.slug?.includes('fawad') || member.position?.toLowerCase().includes('ceo') ? 'QA-002' : (member.publicId || 'QA-LEAD')}
+                                  {member.publicId}
                                 </span>
                               </div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.15rem' }}>
@@ -815,17 +809,6 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                       <option key={r} value={r} />
                     ))}
                   </datalist>
-                </div>
-
-                <div>
-                  <label style={labelStyle}>Public Reference ID</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. QA-001"
-                    value={formData.publicId}
-                    onChange={(e) => setFormData({ ...formData, publicId: e.target.value })}
-                    style={inputStyle}
-                  />
                 </div>
 
                 <div>
