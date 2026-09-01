@@ -1,7 +1,6 @@
 import prisma from '@/lib/db';
 import Link from 'next/link';
 import { createPageMetadata } from '@/lib/seo';
-import WorkDesktopClient from './components/WorkDesktopClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -56,11 +55,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
       });
 
   return (
-    <>
-      <div className="hidden lg:block">
-        <WorkDesktopClient caseStudies={filteredCaseStudies} categories={categories} activeCategory={activeCategory} />
-      </div>
-      <div className="block lg:hidden" style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '5rem', paddingInline: 'clamp(1rem, 4vw, 3rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '5rem', paddingInline: 'clamp(1rem, 4vw, 3rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
       <style>{`
         .work-page-container {
           max-width: 1160px;
@@ -227,13 +222,8 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         }
 
         @media (max-width: 767px) {
-          .works-grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.5rem;
-          }
           .work-card {
-            padding: 0.75rem;
+            padding: 1rem;
             gap: 0.6rem;
             border-radius: 10px;
           }
@@ -248,11 +238,6 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           .work-tech-tag {
             font-size: 0.65rem !important;
             padding: 0.15rem 0.45rem !important;
-          }
-          .work-action-row {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
           }
         }
       `}</style>
@@ -411,6 +396,5 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         )}
       </div>
     </div>
-    </>
   );
 }
