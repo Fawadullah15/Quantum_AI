@@ -1,6 +1,7 @@
 import prisma from '@/lib/db';
 import Link from 'next/link';
 import { createPageMetadata } from '@/lib/seo';
+import WorkDesktopClient from './components/WorkDesktopClient';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,7 +56,11 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
       });
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '5rem', paddingInline: 'clamp(1rem, 4vw, 3rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
+    <>
+      <div className="hidden lg:block">
+        <WorkDesktopClient caseStudies={filteredCaseStudies} categories={categories} activeCategory={activeCategory} />
+      </div>
+      <div className="block lg:hidden" style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '5rem', paddingInline: 'clamp(1rem, 4vw, 3rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
       <style>{`
         .work-page-container {
           max-width: 1160px;
@@ -406,5 +411,6 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         )}
       </div>
     </div>
+    </>
   );
 }
