@@ -25,20 +25,20 @@ interface LeaderItem {
 }
 
 const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
-  "fawadullah-imraj": {
-    id: "f-fawadullah",
+  "muhammad-murtaza": {
+    id: "f-murtaza",
     publicId: "QA-001",
-    slug: "fawadullah-imraj",
-    name: "Fawadullah Imraj",
+    slug: "muhammad-murtaza",
+    name: "Muhammad Murtaza",
     position: "Co-Founder & Chief Executive Officer",
     department: "Executive Leadership",
     shortBio: "Co-Founder and CEO of Quantum AI, directing AI-powered software systems, workflow automation architectures, and enterprise digital solutions.",
-    fullBio: "Fawadullah Imraj is the Founder and CEO of Quantum AI. He focuses on building practical software powered by AI for education, businesses, and enterprise organizations. His engineering work covers neural systems, workflow automation pipelines, high-concurrency web applications, and custom software architectures engineered to eliminate operational friction and solve real-world problems.",
+    fullBio: "Muhammad Murtaza is the Founder and CEO of Quantum AI. He focuses on building practical software powered by AI for education, businesses, and enterprise organizations. His engineering work covers neural systems, workflow automation pipelines, high-concurrency web applications, and custom software architectures engineered to eliminate operational friction and solve real-world problems.",
     photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
-    linkedin: "https://www.linkedin.com/in/fawadullahimraj/",
-    github: "https://github.com/fawadullah15",
-    email: "fawadullah9911@gmail.com",
-    location: "Pakistan",
+    linkedin: "https://www.linkedin.com/company/quantumai",
+    github: "https://github.com/quantumai",
+    email: "contact@quantumai.dev",
+    location: "Global / Hybrid",
     displayOrder: 1,
     isActive: true,
   },
@@ -322,10 +322,10 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
           <div>
             {(() => {
               const isPrincipal =
-                m.slug.includes("fawad") ||
-                m.slug.includes("fahad") ||
                 m.position.toLowerCase().includes("ceo") ||
-                m.position.toLowerCase().includes("chairman");
+                m.position.toLowerCase().includes("chairman") ||
+                m.position.toLowerCase().includes("chief executive") ||
+                (m.department && m.department.toLowerCase().includes("executive"));
 
               return (
                 <div className={`prof-photo-box ${isPrincipal ? 'is-principal-profile' : ''}`}>

@@ -1,4 +1,4 @@
-﻿export interface CompanyPrinciple {
+export interface CompanyPrinciple {
   number: string;
   title: string;
   description: string;
@@ -29,7 +29,7 @@ export const companyData: CompanyInfo = {
   tagline: 'We turn complex problems into intelligent, useful systems.',
   shortDescription: 'We combine artificial intelligence, thoughtful systems engineering, and custom software to build technology that solves real operational bottlenecks.',
   email: 'hello@quantumai.dev',
-  routingEmail: 'fawadimraj@gmail.com',
+  routingEmail: 'contact@quantumai.dev',
   location: 'Global / Remote Operations',
   foundedYear: 2023,
   stats: [

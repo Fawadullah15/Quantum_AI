@@ -69,7 +69,7 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
 
   // Contact
   company_email: 'hello@quantumai.dev',
-  company_routing_email: 'fawadimraj@gmail.com',
+  company_routing_email: 'contact@quantumai.dev',
   company_phone: '',
   company_location: 'San Francisco & Islamabad',
   response_time_text: 'We review all technical inquiries within 24 hours and respond with architectural scope and feasibility analysis.',
@@ -77,7 +77,7 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
   // Social Links
   company_linkedin: 'https://linkedin.com/company/quantumai',
   company_twitter: 'https://x.com/quantumai',
-  company_github: 'https://github.com/Fawadullah15/Quantum_AI',
+  company_github: 'https://github.com/quantumai',
   company_instagram: '',
   company_youtube: '',
   company_facebook: '',

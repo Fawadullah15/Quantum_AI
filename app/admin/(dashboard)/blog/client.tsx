@@ -668,7 +668,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                   <label style={labelStyle}>Author Name</label>
                   <input
                     type="text"
-                    placeholder="e.g. Fawadullah Imraj or Quantum AI Research"
+                    placeholder="e.g. Quantum AI Research or Editorial Team"
                     value={formData.author}
                     onChange={(e) => setFormData({ ...formData, author: e.target.value })}
                     style={inputStyle}

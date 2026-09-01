@@ -7,7 +7,7 @@ interface EmailPayload {
   text?: string;
 }
 
-export const ADMIN_NOTIFICATION_EMAIL = process.env.COMPANY_NOTIFICATION_EMAIL || 'fawadimraj@gmail.com';
+export const ADMIN_NOTIFICATION_EMAIL = process.env.COMPANY_NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || 'admin@quantumai.dev';
 
 export async function sendEmail({ to, subject, html, text }: EmailPayload): Promise<boolean> {
   const fromEmail = process.env.EMAIL_FROM || 'notifications@quantumai.dev';

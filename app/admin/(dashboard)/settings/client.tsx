@@ -815,7 +815,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                     type="email"
                     value={formData.company_routing_email}
                     onChange={(e) => handleChange('company_routing_email', e.target.value)}
-                    placeholder="fawadimraj@gmail.com"
+                    placeholder="contact@quantumai.dev"
                     style={{ ...inputStyle, borderColor: errors.company_routing_email ? '#EF4444' : undefined }}
                   />
                   {errors.company_routing_email && <p style={errorTextStyle}>{errors.company_routing_email}</p>}
@@ -952,7 +952,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                       type="url"
                       value={formData.company_github}
                       onChange={(e) => handleChange('company_github', e.target.value)}
-                      placeholder="https://github.com/Fawadullah15/Quantum_AI"
+                      placeholder="https://github.com/quantumai"
                       style={{ ...inputStyle, borderColor: errors.company_github ? '#EF4444' : undefined }}
                     />
                     {formData.company_github && (

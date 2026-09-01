@@ -71,7 +71,7 @@ model TeamMember {
 model Leadership {
   id           String   @id @default(cuid())
   publicId     String   @unique // e.g. "QA-001"
-  slug         String   @unique // e.g. "fawadullah-imraj"
+  slug         String   @unique // e.g. "muhammad-murtaza"
   name         String
   // Position: CEO | CTO | CHAIRMAN | COO | CFO | DIRECTOR | LEAD_ENGINEER | RESEARCHER | ADVISOR | OTHER
   position     String

@@ -115,7 +115,7 @@ export function getOrganizationSchema(settings?: {
   ].filter(Boolean) as string[];
 
   if (sameAs.length === 0) {
-    sameAs.push('https://github.com/Fawadullah15/Quantum_AI');
+    sameAs.push('https://github.com/quantumai');
   }
 
   const logoUrl = settings?.site_logo

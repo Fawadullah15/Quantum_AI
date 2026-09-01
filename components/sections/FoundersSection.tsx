@@ -17,7 +17,7 @@ interface FoundersSectionProps {
 
 const DEFAULT_FOUNDERS: FounderData[] = [
   {
-    name: 'Fawadullah Imraj',
+    name: 'Muhammad Murtaza',
     role: 'Co-Founder & CEO',
     bio: '[Placeholder — edit in admin panel]'
   },

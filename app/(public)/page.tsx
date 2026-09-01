@@ -39,11 +39,11 @@ export default function HomePage() {
   const [leaders, setLeaders] = useState<any[]>([
     {
       id: '1',
-      name: 'Fawadullah Imraj',
+      name: 'Muhammad Murtaza',
       position: 'Co-Founder & CEO',
-      shortBio: 'Co-Founder and CEO of Quantum AI, building AI-powered software and digital solutions for schools, colleges, and businesses.',
+      shortBio: 'Co-Founder and CEO of Quantum AI, building AI-powered software and digital solutions for enterprise and institutional clients.',
       photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049252241-Screenshot_2025-02-11_170816.png',
-      slug: 'fawadullah-imraj',
+      slug: 'muhammad-murtaza',
       publicId: 'QA-001'
     },
     {
@@ -498,7 +498,7 @@ export default function HomePage() {
               {leaders.slice(0, 2).map((person) => (
                 <Link
                   key={person.id || person.slug}
-                  href={`/leadership/${person.slug || 'fawadullah-imraj'}`}
+                  href={`/leadership/${person.slug || 'muhammad-murtaza'}`}
                   style={{
                     backgroundColor: 'rgba(6, 21, 43, 0.7)',
                     border: '1px solid rgba(22, 119, 255, 0.15)',

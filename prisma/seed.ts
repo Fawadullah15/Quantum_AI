@@ -42,7 +42,7 @@ async function main() {
   // 3. Seed Founders (use name as unique key via findFirst + upsert pattern)
   const founders = [
     {
-      name: 'Fawadullah Imraj',
+      name: 'Muhammad Murtaza',
       role: 'Co-Founder & CEO',
       bio: '[Placeholder — edit this biography in the admin panel. Describe your background, expertise, and vision for the company.]',
       order: 1,

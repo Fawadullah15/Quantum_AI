@@ -31,17 +31,17 @@ interface LeaderItem {
 
 const FALLBACK_MEMBERS: LeaderItem[] = [
   {
-    id: "f-fawadullah",
+    id: "f-murtaza",
     publicId: "QA-001",
-    slug: "fawadullah-imraj",
-    name: "Fawadullah Imraj",
+    slug: "muhammad-murtaza",
+    name: "Muhammad Murtaza",
     position: "Co-Founder & Chief Executive Officer",
     department: "Executive Leadership",
     shortBio: "Co-Founder and CEO of Quantum AI, directing AI-powered software systems, workflow automation architectures, and enterprise digital solutions.",
     photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
-    linkedin: "https://www.linkedin.com/in/fawadullahimraj/",
-    github: "https://github.com/fawadullah15",
-    location: "Pakistan",
+    linkedin: "https://www.linkedin.com/company/quantumai",
+    github: "https://github.com/quantumai",
+    location: "Global / Hybrid",
     displayOrder: 1,
   },
   {

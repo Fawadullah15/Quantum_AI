@@ -809,7 +809,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Fawadullah Imraj"
+                    placeholder="e.g. Muhammad Murtaza"
                     value={formData.name}
                     onChange={(e) => handleNameChange(e.target.value)}
                     style={inputStyle}
@@ -821,7 +821,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                   <input
                     type="text"
                     required
-                    placeholder="e.g. fawadullah-imraj"
+                    placeholder="e.g. muhammad-murtaza"
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                     style={inputStyle}

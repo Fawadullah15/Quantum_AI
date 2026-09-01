@@ -456,7 +456,7 @@ def create_quantum_pdf(output_path):
     story.append(Paragraph("<b>Build Verification & Health Status:</b>", body_style))
     story.append(Paragraph("• <code>npx tsc --noEmit</code>: <b>0 errors</b> (Strict TypeScript validation passed across all components, actions, and API routes).", bullet_style))
     story.append(Paragraph("• <code>npm run build</code>: <b>0 errors</b> (All 27 static and dynamic routes compiled, prerendered, and bundled into optimized production artifacts).", bullet_style))
-    story.append(Paragraph("• <b>Git Repository:</b> Pushed to branch <code>main</code> at <code>github.com/Fawadullah15/Quantum_AI</code>.", bullet_style))
+    story.append(Paragraph("• <b>Git Repository:</b> Pushed to branch <code>main</code> at <code>github.com/QuantumAI/Quantum_AI</code>.", bullet_style))
 
     doc.build(story, canvasmaker=NumberedCanvas)
     print(f"PDF generated successfully at: {output_path}")

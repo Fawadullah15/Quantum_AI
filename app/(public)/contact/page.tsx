@@ -468,8 +468,8 @@ export default function ContactPage() {
               )}
 
               <div className="contact-form-grid">
-                <Field label="YOUR NAME" name="name" required placeholder="Fawadullah" />
-                <Field label="WORK EMAIL" name="email" type="email" required placeholder="fawad@company.com" />
+                <Field label="YOUR NAME" name="name" required placeholder="Alex Rivers" />
+                <Field label="WORK EMAIL" name="email" type="email" required placeholder="alex@company.com" />
               </div>
 
               <div className="contact-form-grid">
