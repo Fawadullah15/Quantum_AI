@@ -87,7 +87,7 @@ const FeaturedProject = ({ study, setCursorVisible, setCursorText }: { study: an
         <div className="w-full lg:w-[35%] flex flex-col gap-6 z-10 relative order-2 lg:order-1">
           <div className="flex flex-col gap-2">
             <span className="font-mono text-xs text-[#64748B] tracking-[0.2em] uppercase">FEATURED PROJECT 01 / 01</span>
-            <span className="text-[#38BDF8] text-sm tracking-widest uppercase">{catLabel}</span>
+            <span className="text-[#38BDF8] text-sm tracking-widest uppercase">{catLabel}{study.year ? ` • ${study.year}` : ''}</span>
           </div>
           
           <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-[#F8FAFC] tracking-[-0.02em] leading-[1.1] transition-transform duration-500 group-hover:translate-x-1">
@@ -198,7 +198,7 @@ const ProjectCard = ({ study, index, total, setCursorVisible, setCursorText }: {
           <div className="flex items-center gap-4 text-[#64748B] font-mono text-xs tracking-[0.15em] uppercase">
             <span>{numStr} / {totalStr}</span>
             <span className="w-4 h-[1px] bg-white/10" />
-            <span className="text-[#38BDF8]">{catLabel}</span>
+            <span className="text-[#38BDF8]">{catLabel}{study.year ? ` • ${study.year}` : ''}</span>
           </div>
           
           <h3 className="text-2xl xl:text-3xl font-semibold text-[#F8FAFC] tracking-[-0.01em] group-hover:text-[#38BDF8] transition-colors duration-300">
@@ -286,10 +286,10 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
             transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-bold leading-[1.05] tracking-[-0.02em] text-[#F8FAFC] uppercase max-w-4xl"
           >
-            SELECTED<br />
-            DEVELOPMENT<br />
+            WORK THAT TURNS<br />
+            INTELLIGENCE<br />
             <span className="text-white/60">
-              & CASE STUDIES.
+              INTO IMPACT.
             </span>
           </motion.h1>
           
@@ -299,7 +299,7 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
             transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="text-lg lg:text-xl text-[#94A3B8] max-w-2xl leading-relaxed font-light mt-10"
           >
-            Production software platforms, enterprise automation engines, and custom AI systems delivered by Quantum AI.
+            Quantum AI builds AI systems, software products, and digital experiences for real organizations.
           </motion.p>
         </div>
       </section>
