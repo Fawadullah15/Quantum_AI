@@ -222,8 +222,13 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         }
 
         @media (max-width: 767px) {
+          .works-grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.5rem;
+          }
           .work-card {
-            padding: 1rem;
+            padding: 0.75rem;
             gap: 0.6rem;
             border-radius: 10px;
           }
@@ -238,6 +243,11 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           .work-tech-tag {
             font-size: 0.65rem !important;
             padding: 0.15rem 0.45rem !important;
+          }
+          .work-action-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
           }
         }
       `}</style>
