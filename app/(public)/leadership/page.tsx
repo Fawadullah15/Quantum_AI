@@ -611,90 +611,82 @@ export default async function LeadershipPage() {
           </div>
 
           <div className="ldr-principals-grid">
-            {principalLeaders.map((leader, idx) => (
-              <Link key={leader.id} href={`/leadership/${leader.slug}`} className="exec-card principal-card">
-                <div className="exec-photo-wrapper principal-photo-wrapper">
-                  <div className="exec-corner-badge">
-                    {leader.position.toLowerCase().includes("chairman")
-                      ? "EXECUTIVE CHAIRMAN"
-                      : leader.position.toLowerCase().includes("ceo") || leader.position.toLowerCase().includes("chief executive")
-                      ? "CHIEF EXECUTIVE OFFICER"
-                      : (leader.department || leader.position).toUpperCase()}
-                  </div>
-                  {leader.photo ? (
-                    <img
-                      src={leader.photo}
-                      alt={leader.name}
-                      className="exec-photo-img principal-photo-img"
-                    />
-                  ) : (
-                    <div className="exec-photo-fallback">
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                      </svg>
-                      <span>QUANTUM AI</span>
+            {principalLeaders.map((leader) => (
+              <div key={leader.id} className="exec-card principal-card">
+                <Link href={`/leadership/${leader.slug}`} style={{ textDecoration: "none", color: "inherit", display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                  <div className="exec-photo-wrapper principal-photo-wrapper">
+                    <div className="exec-corner-badge">
+                      {leader.position.toLowerCase().includes("chairman")
+                        ? "EXECUTIVE CHAIRMAN"
+                        : leader.position.toLowerCase().includes("ceo") || leader.position.toLowerCase().includes("chief executive")
+                        ? "CHIEF EXECUTIVE OFFICER"
+                        : (leader.department || leader.position).toUpperCase()}
                     </div>
-                  )}
-                </div>
-
-                <div className="exec-body">
-                  <div className="exec-position">
-                    {leader.position.replace(/_/g, " ").toUpperCase()}
+                    {leader.photo ? (
+                      <img
+                        src={leader.photo}
+                        alt={leader.name}
+                        className="exec-photo-img principal-photo-img"
+                      />
+                    ) : (
+                      <div className="exec-photo-fallback">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                          <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        <span>QUANTUM AI</span>
+                      </div>
+                    )}
                   </div>
-                  <h3 className="exec-name">{leader.name}</h3>
-                  <p className="exec-bio">{leader.shortBio}</p>
-                </div>
+
+                  <div className="exec-body">
+                    <div className="exec-position">
+                      {leader.position.replace(/_/g, " ").toUpperCase()}
+                    </div>
+                    <h3 className="exec-name">{leader.name}</h3>
+                    <p className="exec-bio">{leader.shortBio}</p>
+                  </div>
+                </Link>
 
                 <div className="exec-footer">
                   <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", flexWrap: "wrap" }}>
                     {leader.linkedin && (
-                      <span
-                        role="link"
-                        tabIndex={0}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          window.open(leader.linkedin!, "_blank", "noopener,noreferrer");
-                        }}
+                      <a
+                        href={leader.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         aria-label={`View ${leader.name}'s LinkedIn profile`}
                         className="exec-social-link"
-                        style={{ cursor: "pointer" }}
                       >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                         </svg>
                         LinkedIn
-                      </span>
+                      </a>
                     )}
                     {leader.github && (
-                      <span
-                        role="link"
-                        tabIndex={0}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          window.open(leader.github!, "_blank", "noopener,noreferrer");
-                        }}
+                      <a
+                        href={leader.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         aria-label={`View ${leader.name}'s GitHub profile`}
                         className="exec-social-link"
-                        style={{ cursor: "pointer" }}
                       >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                           <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
                         </svg>
                         GitHub
-                      </span>
+                      </a>
                     )}
                     {!leader.linkedin && !leader.github && (
                       <span style={{ fontSize: "0.68rem", color: "#64748B" }}>QUANTUM AI</span>
                     )}
                   </div>
-                  <span className="exec-action-text">
+                  <Link href={`/leadership/${leader.slug}`} className="exec-action-text">
                     VIEW PROFILE <span>→</span>
-                  </span>
+                  </Link>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </section>
@@ -711,88 +703,80 @@ export default async function LeadershipPage() {
             </div>
 
             <div className="ldr-exec-grid">
-              {executiveTeam.map((member, idx) => (
-                <Link key={member.id} href={`/leadership/${member.slug}`} className="exec-card">
-                  <div className="exec-photo-wrapper">
-                    {member.department && (
-                      <div className="exec-corner-badge">
-                        {member.department.trim()}
-                      </div>
-                    )}
-                    {member.photo ? (
-                      <img
-                        src={member.photo}
-                        alt={member.name}
-                        className="exec-photo-img"
-                      />
-                    ) : (
-                      <div className="exec-photo-fallback">
-                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                          <circle cx="12" cy="7" r="4" />
-                        </svg>
-                        <span>QUANTUM AI</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="exec-body">
-                    <div className="exec-position">
-                      {member.position.replace(/_/g, " ").toUpperCase()}
+              {executiveTeam.map((member) => (
+                <div key={member.id} className="exec-card">
+                  <Link href={`/leadership/${member.slug}`} style={{ textDecoration: "none", color: "inherit", display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                    <div className="exec-photo-wrapper">
+                      {member.department && (
+                        <div className="exec-corner-badge">
+                          {member.department.trim()}
+                        </div>
+                      )}
+                      {member.photo ? (
+                        <img
+                          src={member.photo}
+                          alt={member.name}
+                          className="exec-photo-img"
+                        />
+                      ) : (
+                        <div className="exec-photo-fallback">
+                          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                          </svg>
+                          <span>QUANTUM AI</span>
+                        </div>
+                      )}
                     </div>
-                    <h3 className="exec-name">{member.name}</h3>
-                    <p className="exec-bio">{member.shortBio}</p>
-                  </div>
+
+                    <div className="exec-body">
+                      <div className="exec-position">
+                        {member.position.replace(/_/g, " ").toUpperCase()}
+                      </div>
+                      <h3 className="exec-name">{member.name}</h3>
+                      <p className="exec-bio">{member.shortBio}</p>
+                    </div>
+                  </Link>
 
                   <div className="exec-footer">
                     <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", flexWrap: "wrap" }}>
                       {member.linkedin && (
-                        <span
-                          role="link"
-                          tabIndex={0}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            window.open(member.linkedin!, "_blank", "noopener,noreferrer");
-                          }}
+                        <a
+                          href={member.linkedin}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           aria-label={`View ${member.name}'s LinkedIn profile`}
                           className="exec-social-link"
-                          style={{ cursor: "pointer" }}
                         >
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                           </svg>
                           LinkedIn
-                        </span>
+                        </a>
                       )}
                       {member.github && (
-                        <span
-                          role="link"
-                          tabIndex={0}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            window.open(member.github!, "_blank", "noopener,noreferrer");
-                          }}
+                        <a
+                          href={member.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           aria-label={`View ${member.name}'s GitHub profile`}
                           className="exec-social-link"
-                          style={{ cursor: "pointer" }}
                         >
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                             <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
                           </svg>
                           GitHub
-                        </span>
+                        </a>
                       )}
                       {!member.linkedin && !member.github && (
                         <span style={{ fontSize: "0.68rem", color: "#64748B" }}>QUANTUM AI</span>
                       )}
                     </div>
-                    <span className="exec-action-text">
+                    <Link href={`/leadership/${member.slug}`} className="exec-action-text">
                       VIEW PROFILE <span>→</span>
-                    </span>
+                    </Link>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           </section>
