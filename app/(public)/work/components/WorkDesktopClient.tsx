@@ -78,7 +78,7 @@ const FeaturedProject = ({ study }: { study: any }) => {
         <div className="w-full lg:w-[35%] flex flex-col gap-6 z-10 relative order-2 lg:order-1">
           <div className="flex flex-col gap-2">
             <span className="font-mono text-xs text-[#64748B] tracking-[0.2em] uppercase">FEATURED PROJECT 01 / 01</span>
-            <span className="text-[#38BDF8] text-sm tracking-widest uppercase font-mono">{catLabel}{study.year ? ` • ${study.year}` : ''}</span>
+            <span className="text-[#38BDF8] text-sm tracking-widest uppercase font-mono">{catLabel}{study.year ? ` / ${study.year}` : ''}</span>
           </div>
           
           <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-[#F8FAFC] tracking-[-0.02em] leading-[1.1] transition-colors duration-500 group-hover:text-white">
@@ -121,7 +121,7 @@ const FeaturedProject = ({ study }: { study: any }) => {
                 fill
                 sizes="(max-width: 1024px) 100vw, 65vw"
                 priority
-                className="object-cover object-center"
+                className="object-cover object-top"
               />
             ) : (
               <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)] opacity-50" />
@@ -185,7 +185,7 @@ const ProjectCard = ({ study, index, total }: { study: any, index: number, total
                 alt={`Screenshot of ${study.title}`} 
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover object-center"
+                className="object-cover object-top"
               />
             ) : (
               <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,#000_20%,transparent_100%)] opacity-40" />
@@ -202,7 +202,7 @@ const ProjectCard = ({ study, index, total }: { study: any, index: number, total
           <div className="flex items-center gap-4 text-[#64748B] font-mono text-xs tracking-[0.15em] uppercase">
             <span>{numStr} / {totalStr}</span>
             <span className="w-4 h-[1px] bg-white/10" />
-            <span className="text-[#38BDF8]">{catLabel}{study.year ? ` • ${study.year}` : ''}</span>
+            <span className="text-[#38BDF8]">{catLabel}{study.year ? ` / ${study.year}` : ''}</span>
           </div>
           
           <h3 className="text-2xl xl:text-3xl font-semibold text-[#F8FAFC] tracking-[-0.01em] group-hover:text-white transition-colors duration-300">
