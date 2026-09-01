@@ -26,6 +26,7 @@ export const sampleLeadership: LeaderItem[] = [
     fullBio: 'Fawadullah guides the architectural vision and engineering standards at Quantum AI, partnering with enterprise leaders to transform complex operational bottlenecks into intelligent, scalable software systems.',
     email: 'fawadimraj@gmail.com',
     linkedin: 'https://linkedin.com',
+    github: 'https://github.com/fawadullah15',
     displayOrder: 1,
   },
   {
@@ -39,6 +40,7 @@ export const sampleLeadership: LeaderItem[] = [
     fullBio: 'Fahad oversees distributed systems design, cloud topology, and technical reliability across Quantum AI client platforms, ensuring enterprise-grade security and zero-downtime execution.',
     email: 'fahad@quantumai.dev',
     linkedin: 'https://linkedin.com',
+    github: 'https://github.com',
     displayOrder: 2,
   },
 ];

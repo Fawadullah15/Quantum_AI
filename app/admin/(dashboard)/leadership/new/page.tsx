@@ -35,6 +35,7 @@ export default function NewLeadershipPage() {
     fullBio: "",
     email: "",
     linkedin: "",
+    github: "",
     website: "",
     location: "",
     displayOrder: 0,
@@ -212,18 +213,25 @@ export default function NewLeadershipPage() {
           <textarea style={{ ...inp, minHeight: 140, resize: "vertical" }} value={form.fullBio} onChange={(e) => setForm((f) => ({ ...f, fullBio: e.target.value }))} />
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1.25rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
           <div style={grp}>
             <label style={lbl}>Email</label>
             <input style={inp} type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} />
           </div>
           <div style={grp}>
             <label style={lbl}>LinkedIn URL</label>
-            <input style={inp} value={form.linkedin} onChange={(e) => setForm((f) => ({ ...f, linkedin: e.target.value }))} />
+            <input style={inp} placeholder="https://linkedin.com/in/username" value={form.linkedin} onChange={(e) => setForm((f) => ({ ...f, linkedin: e.target.value }))} />
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+          <div style={grp}>
+            <label style={lbl}>GitHub Profile URL</label>
+            <input style={inp} placeholder="https://github.com/username" value={form.github} onChange={(e) => setForm((f) => ({ ...f, github: e.target.value }))} />
           </div>
           <div style={grp}>
             <label style={lbl}>Website URL</label>
-            <input style={inp} value={form.website} onChange={(e) => setForm((f) => ({ ...f, website: e.target.value }))} />
+            <input style={inp} placeholder="https://example.com" value={form.website} onChange={(e) => setForm((f) => ({ ...f, website: e.target.value }))} />
           </div>
         </div>
 

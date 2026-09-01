@@ -29,6 +29,7 @@ type Member = {
   photo: string | null;
   email: string | null;
   linkedin: string | null;
+  github?: string | null;
   website: string | null;
   location: string | null;
   displayOrder: number;
@@ -62,6 +63,7 @@ export default function EditLeadershipForm({ member }: { member: Member }) {
     fullBio: member.fullBio || "",
     email: member.email || "",
     linkedin: member.linkedin || "",
+    github: (member as any).github || "",
     website: member.website || "",
     location: member.location || "",
     displayOrder: member.displayOrder,
@@ -241,18 +243,25 @@ export default function EditLeadershipForm({ member }: { member: Member }) {
           <textarea style={{ ...inp, minHeight: 140, resize: "vertical" }} value={form.fullBio} onChange={(e) => setForm((f) => ({ ...f, fullBio: e.target.value }))} />
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1.25rem" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
           <div style={grp}>
             <label style={lbl}>Email</label>
             <input style={inp} type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} />
           </div>
           <div style={grp}>
-            <label style={lbl}>LinkedIn</label>
-            <input style={inp} value={form.linkedin} onChange={(e) => setForm((f) => ({ ...f, linkedin: e.target.value }))} />
+            <label style={lbl}>LinkedIn URL</label>
+            <input style={inp} placeholder="https://linkedin.com/in/username" value={form.linkedin} onChange={(e) => setForm((f) => ({ ...f, linkedin: e.target.value }))} />
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.25rem" }}>
+          <div style={grp}>
+            <label style={lbl}>GitHub Profile URL</label>
+            <input style={inp} placeholder="https://github.com/username" value={form.github} onChange={(e) => setForm((f) => ({ ...f, github: e.target.value }))} />
           </div>
           <div style={grp}>
-            <label style={lbl}>Website</label>
-            <input style={inp} value={form.website} onChange={(e) => setForm((f) => ({ ...f, website: e.target.value }))} />
+            <label style={lbl}>Website URL</label>
+            <input style={inp} placeholder="https://example.com" value={form.website} onChange={(e) => setForm((f) => ({ ...f, website: e.target.value }))} />
           </div>
         </div>
 

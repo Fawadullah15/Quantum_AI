@@ -26,6 +26,7 @@ export async function createLeadershipMember(data: {
   photo?: string | null;
   email?: string | null;
   linkedin?: string | null;
+  github?: string | null;
   website?: string | null;
   location?: string | null;
   displayOrder?: number;
@@ -54,6 +55,7 @@ export async function createLeadershipMember(data: {
       photo: data.photo || null,
       email: data.email?.trim() || null,
       linkedin: data.linkedin?.trim() || null,
+      github: data.github?.trim() || null,
       website: data.website?.trim() || null,
       location: data.location?.trim() || 'Pakistan',
       displayOrder: Number(data.displayOrder) || count + 1,
@@ -85,6 +87,7 @@ export async function updateLeadershipMember(
     photo?: string | null;
     email?: string | null;
     linkedin?: string | null;
+    github?: string | null;
     website?: string | null;
     location?: string | null;
     displayOrder?: number;
@@ -108,6 +111,7 @@ export async function updateLeadershipMember(
   if (data.photo !== undefined) updateData.photo = data.photo || null;
   if (data.email !== undefined) updateData.email = data.email?.trim() || null;
   if (data.linkedin !== undefined) updateData.linkedin = data.linkedin?.trim() || null;
+  if (data.github !== undefined) updateData.github = data.github?.trim() || null;
   if (data.website !== undefined) updateData.website = data.website?.trim() || null;
   if (data.location !== undefined) updateData.location = data.location?.trim() || null;
   if (data.displayOrder !== undefined) updateData.displayOrder = Number(data.displayOrder);

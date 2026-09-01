@@ -58,6 +58,7 @@ export async function PATCH(
     if (body.photo !== undefined) data.photo = body.photo || null;
     if (body.email !== undefined) data.email = body.email || null;
     if (body.linkedin !== undefined) data.linkedin = body.linkedin || null;
+    if (body.github !== undefined) data.github = body.github || null;
     if (body.website !== undefined) data.website = body.website || null;
     if (body.location !== undefined) data.location = body.location || null;
     if (body.displayOrder !== undefined) data.displayOrder = parseInt(body.displayOrder, 10) || 0;
