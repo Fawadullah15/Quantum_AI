@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import React, { useRef } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useSpring, AnimatePresence, useReducedMotion } from 'framer-motion';
@@ -36,7 +36,7 @@ const HeroBackground = () => (
 );
 
 const FeaturedProject = ({ study }: { study: any }) => {
-  const cardRef = useRef<HTMLAnchorElement>(null);
+
   const shouldReduceMotion = useReducedMotion();
   
   const imageScale = useSpring(1, { stiffness: 100, damping: 30 });
@@ -69,7 +69,6 @@ const FeaturedProject = ({ study }: { study: any }) => {
     >
       <Link
         href={`/work/${study.slug}`}
-        ref={cardRef}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className="group flex flex-col lg:flex-row gap-16 relative outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] focus-visible:ring-offset-8 focus-visible:ring-offset-[#030712] items-center rounded-xl"
@@ -105,7 +104,7 @@ const FeaturedProject = ({ study }: { study: any }) => {
 
           <div className="mt-8 flex items-center gap-3 text-sm font-semibold tracking-[0.15em] text-[#F8FAFC] group-hover:text-[#38BDF8] transition-colors duration-300">
             VIEW CASE STUDY 
-            <motion.span style={{ x: arrowX }}>→</motion.span>
+            <motion.span style={{ x: arrowX }}>â†’</motion.span>
           </div>
         </div>
 
@@ -134,7 +133,7 @@ const FeaturedProject = ({ study }: { study: any }) => {
 };
 
 const ProjectCard = ({ study, index, total }: { study: any, index: number, total: number }) => {
-  const cardRef = useRef<HTMLAnchorElement>(null);
+
   const shouldReduceMotion = useReducedMotion();
   const imageScale = useSpring(1, { stiffness: 100, damping: 30 });
   const arrowX = useSpring(0, { stiffness: 200, damping: 20 });
@@ -168,7 +167,6 @@ const ProjectCard = ({ study, index, total }: { study: any, index: number, total
     >
       <Link
         href={`/work/${study.slug}`}
-        ref={cardRef}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className="group flex flex-col gap-6 relative outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] focus-visible:ring-offset-8 focus-visible:ring-offset-[#030712] w-full rounded-xl"
@@ -193,7 +191,7 @@ const ProjectCard = ({ study, index, total }: { study: any, index: number, total
             
             {/* Minimal hover indicator overlay */}
             <div className="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 font-mono text-xs tracking-widest text-white z-10 font-medium drop-shadow-md">
-              VIEW PROJECT <motion.span style={{ x: arrowX }}>→</motion.span>
+              VIEW PROJECT <motion.span style={{ x: arrowX }}>â†’</motion.span>
             </div>
           </motion.div>
         </div>
@@ -238,7 +236,7 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="font-mono text-xs tracking-[0.25em] text-[#64748B] uppercase mb-8"
           >
-            [04 — OUR WORK]
+            [04 â€” OUR WORK]
           </motion.div>
           
           <motion.h1 
@@ -307,7 +305,7 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
                 <div className="font-mono text-sm tracking-widest text-[#64748B] mb-4 uppercase">No Projects Found</div>
                 <h2 className="text-2xl font-semibold text-white mb-4">No case studies in this category yet.</h2>
                 <Link href="/work" className="font-mono text-sm tracking-wider text-[#38BDF8] hover:text-white transition-colors">
-                  VIEW ALL WORK →
+                  VIEW ALL WORK â†’
                 </Link>
               </div>
             ) : (
