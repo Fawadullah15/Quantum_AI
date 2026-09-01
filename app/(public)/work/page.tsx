@@ -58,21 +58,21 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
     <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '5rem', paddingInline: 'clamp(1rem, 4vw, 3rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
       <style>{`
         .work-page-container {
-          max-width: 1240px;
+          max-width: 1160px;
           margin: 0 auto;
         }
         .work-filters {
           display: flex;
           flex-wrap: wrap;
           gap: 0.5rem;
-          margin-bottom: 2.25rem;
+          margin-bottom: 2rem;
         }
         .work-filter-btn {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          padding: 0.45rem 0.95rem;
+          padding: 0.4rem 0.85rem;
           border-radius: 6px;
           text-decoration: none;
           transition: all 0.2s ease;
@@ -92,22 +92,19 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           font-weight: 600;
         }
         .works-grid-container {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.85rem;
           width: 100%;
         }
         .work-card {
           background-color: rgba(6, 21, 43, 0.65);
           border: 1px solid rgba(22, 119, 255, 0.16);
           border-radius: 12px;
-          padding: 1.5rem clamp(1.15rem, 2vw, 1.65rem);
+          padding: 1.25rem clamp(1rem, 2.5vw, 1.75rem);
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
-          gap: 1rem;
-          height: 100%;
-          min-height: 280px;
+          gap: 0.75rem;
           transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background-color 0.25s;
           box-sizing: border-box;
           width: 100%;
@@ -117,8 +114,8 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         .work-card:hover {
           background-color: rgba(8, 28, 58, 0.85);
           border-color: rgba(56, 189, 248, 0.45);
-          transform: translateY(-3px);
-          box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(56, 189, 248, 0.25);
+          transform: translateY(-2px);
+          box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(56, 189, 248, 0.2);
         }
         .work-card:focus-visible {
           border-color: #38BDF8;
@@ -129,9 +126,9 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           justify-content: space-between;
           align-items: center;
           flex-wrap: wrap;
-          gap: 0.65rem;
+          gap: 0.75rem;
           border-bottom: 1px solid rgba(22, 119, 255, 0.12);
-          padding-bottom: 0.85rem;
+          padding-bottom: 0.75rem;
         }
         .work-num {
           font-family: var(--font-mono, monospace);
@@ -162,19 +159,13 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           font-size: 0.72rem;
           color: #64748B;
         }
-        .work-card-body {
-          display: flex;
-          flex-direction: column;
-          gap: 0.65rem;
-          flex-grow: 1;
-        }
         .work-title {
-          font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+          font-size: clamp(1.15rem, 2vw, 1.4rem);
           font-weight: 600;
           color: #F8FAFC;
           letter-spacing: -0.015em;
           text-transform: none;
-          line-height: 1.3;
+          line-height: 1.25;
           margin: 0;
           transition: color 0.2s;
         }
@@ -183,15 +174,15 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         }
         .work-desc {
           color: #94A3B8;
-          font-size: 0.86rem;
-          line-height: 1.55;
+          font-size: 0.88rem;
+          line-height: 1.6;
+          max-width: 860px;
           margin: 0;
           font-weight: 300;
           display: -webkit-box;
           -webkit-line-clamp: 3;
           -webkit-box-orient: vertical;
           overflow: hidden;
-          flex-grow: 1;
         }
         .work-tech-container {
           display: flex;
@@ -199,24 +190,19 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           gap: 0.35rem;
         }
         .work-tech-tag {
-          font-size: 0.7rem;
+          font-size: 0.72rem;
           font-family: var(--font-mono, monospace);
-          padding: 0.18rem 0.5rem;
+          padding: 0.2rem 0.55rem;
           background-color: rgba(22, 119, 255, 0.08);
           border: 1px solid rgba(22, 119, 255, 0.16);
           border-radius: 4px;
           color: #55D6FF;
-          white-space: nowrap;
         }
         .work-action-row {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          flex-wrap: wrap;
-          gap: 0.75rem;
-          padding-top: 0.75rem;
-          border-top: 1px solid rgba(22, 119, 255, 0.08);
-          margin-top: auto;
+          padding-top: 0.25rem;
           font-family: var(--font-mono, monospace);
         }
         .work-action-text {
@@ -229,38 +215,25 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           align-items: center;
           gap: 0.35rem;
           transition: color 0.2s, transform 0.2s;
-          margin-left: auto;
         }
         .work-card:hover .work-action-text {
           color: #38BDF8;
-          transform: translateX(4px);
-        }
-
-        @media (max-width: 1024px) {
-          .works-grid-container {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1.25rem;
-          }
+          transform: translateX(3px);
         }
 
         @media (max-width: 767px) {
-          .works-grid-container {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-          }
           .work-card {
-            padding: 1.15rem 1rem;
-            gap: 0.75rem;
-            min-height: auto;
+            padding: 1rem;
+            gap: 0.6rem;
             border-radius: 10px;
           }
           .work-title {
-            font-size: 1.05rem !important;
+            font-size: 1rem !important;
           }
           .work-desc {
             font-size: 0.82rem !important;
             line-height: 1.45 !important;
-            -webkit-line-clamp: 3 !important;
+            -webkit-line-clamp: 2 !important;
           }
           .work-tech-tag {
             font-size: 0.65rem !important;
@@ -388,15 +361,13 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
                     </div>
                   </div>
 
-                  <div className="work-card-body">
-                    <h2 className="work-title">
-                      {study.title}
-                    </h2>
+                  <h2 className="work-title">
+                    {study.title}
+                  </h2>
 
-                    <p className="work-desc">
-                      {study.problem || study.solution}
-                    </p>
-                  </div>
+                  <p className="work-desc">
+                    {study.problem || study.solution}
+                  </p>
 
                   <div className="work-action-row">
                     {techList.length > 0 ? (
