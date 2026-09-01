@@ -81,7 +81,7 @@ const FeaturedProject = ({ study }: { study: any }) => {
             <span className="text-[#38BDF8] text-sm tracking-widest uppercase font-mono">{catLabel}{study.year ? ` / ${study.year}` : ''}</span>
           </div>
           
-          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-[#F8FAFC] tracking-[-0.02em] leading-[1.1] transition-colors duration-500 group-hover:text-white">
+          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-[#F8FAFC] tracking-[-0.02em] leading-[1.1] transition-all duration-500 group-hover:text-white group-hover:translate-x-2">
             {study.title}
           </h2>
           
@@ -109,10 +109,10 @@ const FeaturedProject = ({ study }: { study: any }) => {
           </div>
         </div>
 
-        <div className="w-full lg:w-[65%] relative rounded-xl overflow-hidden aspect-[16/10] bg-[#06152B] border border-white/[0.05] shadow-2xl transition-all duration-700 group-hover:border-white/[0.12] order-1 lg:order-2">
+        <div className="w-full lg:w-[65%] relative rounded-xl overflow-hidden aspect-[16/10] bg-[#06152B] border border-white/[0.05] shadow-2xl transition-all duration-700 group-hover:border-white/[0.15] group-hover:shadow-[0_12px_40px_rgba(22,119,255,0.12)] order-1 lg:order-2">
           <motion.div
             style={{ scale: imageScale }}
-            className="w-full h-full relative bg-[#030712] flex items-center justify-center"
+            className="w-full h-full relative bg-[#030712] flex items-center justify-center origin-top"
           >
             {imageSrc ? (
               <Image 
@@ -174,10 +174,10 @@ const ProjectCard = ({ study, index, total }: { study: any, index: number, total
         className="group flex flex-col gap-6 relative outline-none focus-visible:ring-2 focus-visible:ring-[#38BDF8] focus-visible:ring-offset-8 focus-visible:ring-offset-[#030712] w-full rounded-xl"
         aria-label={`View project: ${study.title}`}
       >
-        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#06152B] border border-white/[0.05] transition-all duration-500 group-hover:border-white/[0.12]">
+        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#06152B] border border-white/[0.05] shadow-lg transition-all duration-700 group-hover:border-white/[0.12] group-hover:shadow-[0_8px_30px_rgba(22,119,255,0.08)]">
           <motion.div
             style={{ scale: imageScale }}
-            className="w-full h-full relative bg-[#030712]"
+            className="w-full h-full relative bg-[#030712] origin-top"
           >
             {imageSrc ? (
               <Image 
@@ -205,7 +205,7 @@ const ProjectCard = ({ study, index, total }: { study: any, index: number, total
             <span className="text-[#38BDF8]">{catLabel}{study.year ? ` / ${study.year}` : ''}</span>
           </div>
           
-          <h3 className="text-2xl xl:text-3xl font-semibold text-[#F8FAFC] tracking-[-0.01em] group-hover:text-white transition-colors duration-300">
+          <h3 className="text-2xl xl:text-3xl font-semibold text-[#F8FAFC] tracking-[-0.01em] transition-all duration-500 group-hover:text-white group-hover:translate-x-1">
             {study.title}
           </h3>
           
@@ -249,7 +249,7 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
           >
             WORK THAT TURNS<br />
             INTELLIGENCE<br />
-            <span className="text-white/60">
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#F8FAFC] to-[#64748B]">
               INTO IMPACT.
             </span>
           </motion.h1>
