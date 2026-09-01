@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { ArrowUpRight } from 'lucide-react';
+import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motion';
 
 interface WorkDesktopClientProps {
   caseStudies: any[];
@@ -13,74 +12,68 @@ interface WorkDesktopClientProps {
 
 const getProjectImage = (study: any) => {
   if (study.heroImage) return study.heroImage;
-  if (study.gallery && study.gallery !== "[]") {
+  if (study.gallery && study.gallery !== "[]" && study.gallery !== "") {
     try {
       const parsed = JSON.parse(study.gallery);
-      if (parsed && parsed.length > 0) return parsed[0];
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed[0];
+      }
     } catch(e) {}
   }
   return "https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=2832&auto=format&fit=crop"; 
 };
 
-const Particles = () => {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay"></div>
-      <motion.div
-        animate={{
-          backgroundPosition: ['0% 0%', '100% 100%'],
-        }}
-        transition={{ duration: 40, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
-        className="absolute inset-0"
-        style={{
-          backgroundImage: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.08) 0%, transparent 60%)',
-          backgroundSize: '150% 150%'
-        }}
-      />
-    </div>
-  );
-};
+// Subtle atmospheric background
+const HeroBackground = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
+    <div className="absolute inset-0 bg-[#030712]" />
+    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-[600px] bg-[#1677ff] opacity-[0.03] blur-[140px] rounded-[100%]" />
+    <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.02] mix-blend-overlay"></div>
+    {/* Very subtle grid */}
+    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,#000_70%,transparent_100%)]" />
+  </div>
+);
 
-const ProjectCard = ({ study, index, setCursorVisible, setCursorText }: { study: any, index: number, setCursorVisible: any, setCursorText: any }) => {
+const FeaturedProject = ({ study, setCursorVisible, setCursorText }: { study: any, setCursorVisible: any, setCursorText: any }) => {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
+  
   const imageScale = useSpring(1, { stiffness: 100, damping: 30 });
-  const mouseXSpring = useSpring(x, { stiffness: 50, damping: 20 });
-  const mouseYSpring = useSpring(y, { stiffness: 50, damping: 20 });
+  const mouseXSpring = useSpring(x, { stiffness: 60, damping: 20 });
+  const arrowX = useSpring(0, { stiffness: 200, damping: 20 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    x.set((e.clientX - centerX) / 25);
-    y.set((e.clientY - centerY) / 25);
+    // Parallax only horizontally, very subtle
+    x.set((e.clientX - centerX) / 40);
   };
 
   const handleMouseEnter = () => {
-    setCursorText("EXPLORE");
+    setCursorText("VIEW PROJECT");
     setCursorVisible(true);
-    imageScale.set(1.04);
+    imageScale.set(1.035);
+    arrowX.set(4);
   };
 
   const handleMouseLeave = () => {
     setCursorVisible(false);
     imageScale.set(1);
     x.set(0);
-    y.set(0);
+    arrowX.set(0);
   };
 
   const techList = study.technologies ? study.technologies.split(',').map((t: string) => t.trim()).filter(Boolean) : [];
   const imageSrc = getProjectImage(study);
+  const catLabel = study.industry ? study.industry.split('/')[0].trim() : 'Technology';
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40, scale: 0.97 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.7, delay: (index % 2) * 0.15, ease: [0.21, 0.47, 0.32, 0.98] }}
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+      className="mb-32 mt-12"
     >
       <Link
         href={`/work/${study.slug}`}
@@ -88,141 +81,133 @@ const ProjectCard = ({ study, index, setCursorVisible, setCursorText }: { study:
         onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="group block relative no-underline outline-none"
+        className="group flex flex-col lg:flex-row gap-16 relative no-underline outline-none items-center"
       >
-        <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-[#06152B] border border-[#1677ff1a] transition-colors duration-500 group-hover:border-[#38bdf880]">
+        {/* LEFT: INFO */}
+        <div className="w-full lg:w-[35%] flex flex-col gap-6 z-10 relative order-2 lg:order-1">
+          <div className="flex flex-col gap-2">
+            <span className="font-mono text-xs text-[#64748B] tracking-[0.2em] uppercase">FEATURED PROJECT 01 / 01</span>
+            <span className="text-[#38BDF8] text-sm tracking-widest uppercase">{catLabel}</span>
+          </div>
+          
+          <h2 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-[#F8FAFC] tracking-[-0.02em] leading-[1.1] transition-transform duration-500 group-hover:translate-x-1">
+            {study.title}
+          </h2>
+          
+          <p className="text-[#94A3B8] text-base lg:text-lg font-light leading-relaxed max-w-lg mt-2">
+            {study.problem || study.solution}
+          </p>
+          
+          <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2 font-mono text-[11px] text-[#55D6FF]/80 uppercase tracking-wider">
+            {techList.map((t: string, i: number) => (
+              <span key={i} className="flex items-center gap-4">
+                {t}
+                {i < techList.length - 1 && <span className="text-white/20">/</span>}
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-8 flex items-center gap-3 text-sm font-semibold tracking-[0.15em] text-[#F8FAFC] group-hover:text-[#38BDF8] transition-colors duration-300">
+            VIEW CASE STUDY 
+            <motion.span style={{ x: arrowX }}>→</motion.span>
+          </div>
+        </div>
+
+        {/* RIGHT: IMAGE */}
+        <div className="w-full lg:w-[65%] relative rounded-xl overflow-hidden aspect-[16/10] bg-[#06152B] border border-white/[0.05] shadow-2xl transition-all duration-700 group-hover:border-white/[0.12] order-1 lg:order-2">
           <motion.div
-            style={{
-              x: mouseXSpring,
-              y: mouseYSpring,
-              scale: imageScale,
-            }}
+            style={{ x: mouseXSpring, scale: imageScale }}
             className="w-full h-full relative"
           >
-            <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-transparent to-transparent opacity-60 z-10" />
+            {/* NO black overlays. Let the image shine. */}
             <img 
               src={imageSrc} 
               alt={study.title} 
-              className="w-full h-full object-cover"
+              loading="lazy"
+              className="w-full h-full object-cover object-center"
             />
-            <div className="absolute inset-0 bg-[#38bdf8] opacity-0 group-hover:opacity-10 mix-blend-overlay transition-opacity duration-500 z-20" />
           </motion.div>
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between text-[#94A3B8] font-mono text-xs uppercase tracking-wider">
-            <span>{String(index + 2).padStart(2, '0')} — {study.industry ? study.industry.split('/')[0].trim() : 'Technology'}</span>
-            <span className="flex items-center gap-1 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-[#38BDF8]">
-              VIEW CASE STUDY <ArrowUpRight className="w-3 h-3" />
-            </span>
-          </div>
-          <h3 className="text-2xl font-semibold text-[#F8FAFC] tracking-tight group-hover:text-[#38BDF8] transition-colors duration-300">
-            {study.title}
-          </h3>
-          <p className="text-[#94A3B8] text-sm font-light leading-relaxed line-clamp-2 max-w-xl">
-            {study.problem || study.solution}
-          </p>
         </div>
       </Link>
     </motion.div>
   );
 };
 
-const FeaturedProject = ({ study, setCursorVisible, setCursorText }: { study: any, setCursorVisible: any, setCursorText: any }) => {
+const ProjectCard = ({ study, index, total, setCursorVisible, setCursorText }: { study: any, index: number, total: number, setCursorVisible: any, setCursorText: any }) => {
   const cardRef = useRef<HTMLAnchorElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
   const imageScale = useSpring(1, { stiffness: 100, damping: 30 });
-  const mouseXSpring = useSpring(x, { stiffness: 50, damping: 20 });
-  const mouseYSpring = useSpring(y, { stiffness: 50, damping: 20 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    x.set((e.clientX - centerX) / 35);
-    y.set((e.clientY - centerY) / 35);
-  };
+  const arrowX = useSpring(0, { stiffness: 200, damping: 20 });
 
   const handleMouseEnter = () => {
-    setCursorText("VIEW PROJECT");
+    setCursorText("EXPLORE");
     setCursorVisible(true);
-    imageScale.set(1.03);
+    imageScale.set(1.035);
+    arrowX.set(4);
   };
 
   const handleMouseLeave = () => {
     setCursorVisible(false);
     imageScale.set(1);
-    x.set(0);
-    y.set(0);
+    arrowX.set(0);
   };
 
-  const techList = study.technologies ? study.technologies.split(',').map((t: string) => t.trim()).filter(Boolean) : [];
   const imageSrc = getProjectImage(study);
+  const catLabel = study.industry ? study.industry.split('/')[0].trim() : 'Technology';
+  const numStr = String(index + 2).padStart(2, '0');
+  const totalStr = String(total + 1).padStart(2, '0'); // +1 because of featured project
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: [0.21, 0.47, 0.32, 0.98] }}
-      className="mb-32 mt-16"
+      initial={{ opacity: 0, y: 35, scale: 0.98 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.7, delay: (index % 2) * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className="flex"
     >
-      <div className="flex items-center justify-between mb-8 border-b border-[#1677ff1a] pb-4">
-        <span className="font-mono text-sm tracking-[0.2em] text-[#1677FF] uppercase">FEATURED PROJECT</span>
-        <span className="font-mono text-xs tracking-wider text-[#64748B]">01 / 01</span>
-      </div>
-
       <Link
         href={`/work/${study.slug}`}
         ref={cardRef}
-        onMouseMove={handleMouseMove}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="group flex gap-16 relative no-underline outline-none items-center"
+        className="group flex flex-col gap-6 relative no-underline outline-none w-full"
       >
-        <div className="w-1/3 flex flex-col gap-6 z-10 relative">
-          <div className="font-mono text-xs text-[#38BDF8] tracking-widest uppercase bg-[#1677ff1a] self-start px-3 py-1 rounded border border-[#38bdf833]">
-            {study.industry ? study.industry.split('/')[0].trim() : 'Technology'}
-          </div>
-          <h2 className="text-4xl lg:text-5xl font-bold text-[#F8FAFC] tracking-tight leading-tight group-hover:text-[#38BDF8] transition-colors duration-500">
-            {study.title}
-          </h2>
-          <p className="text-[#94A3B8] text-base font-light leading-relaxed">
-            {study.problem || study.solution}
-          </p>
-          
-          <div className="flex flex-wrap gap-2 mt-4">
-            {techList.slice(0, 4).map((t: string) => (
-              <span key={t} className="font-mono text-[10px] text-[#55D6FF] bg-[#1677ff14] border border-[#1677ff29] px-2 py-1 rounded">
-                {t}
-              </span>
-            ))}
-          </div>
-
-          <div className="mt-8 flex items-center gap-2 text-sm font-mono tracking-widest text-[#F8FAFC] group-hover:text-[#38BDF8] transition-colors duration-300">
-            VIEW CASE STUDY <ArrowUpRight className="w-4 h-4 transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300" />
-          </div>
-        </div>
-
-        <div className="w-2/3 relative rounded-2xl overflow-hidden aspect-[16/10] bg-[#06152B] border border-[#1677ff1a] transition-colors duration-500 group-hover:border-[#38bdf866] shadow-2xl">
+        {/* Large Image Container */}
+        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#06152B] border border-white/[0.05] transition-all duration-500 group-hover:border-white/[0.12]">
           <motion.div
-            style={{
-              x: mouseXSpring,
-              y: mouseYSpring,
-              scale: imageScale,
-            }}
+            style={{ scale: imageScale }}
             className="w-full h-full relative"
           >
-            <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#030712] opacity-40 z-10" />
             <img 
               src={imageSrc} 
               alt={study.title} 
-              className="w-full h-full object-cover"
+              loading="lazy"
+              className="w-full h-full object-cover object-center"
             />
-            <div className="absolute inset-0 bg-[#38BDF8] opacity-0 group-hover:opacity-10 mix-blend-overlay transition-opacity duration-700 z-20" />
+            {/* Very subtle gradient at bottom ONLY for a tiny bit of depth, not darkness */}
+            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
+            
+            {/* Hover indicator overlay (opacity 0 -> 1) */}
+            <div className="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 font-mono text-xs tracking-widest text-white z-10 font-medium">
+              VIEW PROJECT <motion.span style={{ x: arrowX }}>→</motion.span>
+            </div>
           </motion.div>
+        </div>
+
+        {/* Content Below Image */}
+        <div className="flex flex-col gap-3">
+          <div className="flex items-center gap-4 text-[#64748B] font-mono text-xs tracking-[0.15em] uppercase">
+            <span>{numStr} / {totalStr}</span>
+            <span className="w-4 h-[1px] bg-white/10" />
+            <span className="text-[#38BDF8]">{catLabel}</span>
+          </div>
+          
+          <h3 className="text-2xl xl:text-3xl font-semibold text-[#F8FAFC] tracking-[-0.01em] group-hover:text-[#38BDF8] transition-colors duration-300">
+            {study.title}
+          </h3>
+          
+          <p className="text-[#94A3B8] text-sm lg:text-base font-light leading-relaxed line-clamp-2">
+            {study.problem || study.solution}
+          </p>
         </div>
       </Link>
     </motion.div>
@@ -232,14 +217,18 @@ const FeaturedProject = ({ study, setCursorVisible, setCursorText }: { study: an
 export default function WorkDesktopClient({ caseStudies, categories, activeCategory }: WorkDesktopClientProps) {
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
-  const cursorXSpring = useSpring(cursorX, { damping: 25, stiffness: 300, mass: 0.5 });
-  const cursorYSpring = useSpring(cursorY, { damping: 25, stiffness: 300, mass: 0.5 });
+  const cursorXSpring = useSpring(cursorX, { damping: 30, stiffness: 400, mass: 0.5 });
+  const cursorYSpring = useSpring(cursorY, { damping: 30, stiffness: 400, mass: 0.5 });
+  
   const [cursorText, setCursorText] = useState("");
   const [cursorVisible, setCursorVisible] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    // Only enable custom cursor on non-touch devices
+    if (window.matchMedia("(pointer: coarse)").matches) return;
+
     const moveCursor = (e: MouseEvent) => {
       cursorX.set(e.clientX);
       cursorY.set(e.clientY);
@@ -252,10 +241,13 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
   const remainingStudies = caseStudies.length > 1 ? caseStudies.slice(1) : [];
 
   return (
-    <div className="relative min-h-screen bg-[var(--color-void,#030712)] text-white overflow-hidden pb-32" style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)' }}>
+    <div className="relative min-h-screen bg-[#030712] text-white selection:bg-[#1677FF] selection:text-white pb-32 font-sans">
+      <HeroBackground />
+
+      {/* Custom Cursor */}
       {isClient && (
         <motion.div
-          className="fixed top-0 left-0 pointer-events-none z-[9999] flex items-center justify-center rounded-full backdrop-blur-md bg-white/10 border border-white/20 text-white shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+          className="fixed top-0 left-0 pointer-events-none z-[9999] flex items-center justify-center rounded-full backdrop-blur-md bg-black/40 border border-white/10 text-white shadow-[0_0_15px_rgba(56,189,248,0.15)] hidden lg:flex"
           style={{
             x: cursorXSpring,
             y: cursorYSpring,
@@ -264,26 +256,26 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
           }}
           initial={false}
           animate={{ 
-            width: cursorVisible ? 96 : 0, 
-            height: cursorVisible ? 96 : 0, 
+            width: cursorVisible ? 84 : 0, 
+            height: cursorVisible ? 84 : 0, 
             opacity: cursorVisible ? 1 : 0 
           }}
-          transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          transition={{ type: "spring", damping: 25, stiffness: 350 }}
         >
-          <span className="text-[10px] font-mono font-bold tracking-widest text-center leading-tight">
-            {cursorText}
+          <span className="text-[9px] font-mono font-medium tracking-widest text-center leading-tight">
+            {cursorText.split(' ').map((word, i) => <React.Fragment key={i}>{word}<br/></React.Fragment>)}
           </span>
         </motion.div>
       )}
 
-      <section className="relative w-full max-w-[1400px] mx-auto px-12 pt-16 pb-24 border-b border-[#1677ff1a]">
-        <Particles />
-        <div className="relative z-10">
+      {/* Hero Section */}
+      <section className="relative w-full max-w-[1500px] mx-auto px-8 lg:px-12 pt-40 lg:pt-56 pb-16 lg:pb-24">
+        <div className="relative z-10 flex flex-col items-start">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="font-mono text-sm tracking-[0.3em] text-[#1677FF] uppercase mb-6 font-semibold"
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="font-mono text-xs tracking-[0.25em] text-[#64748B] uppercase mb-8"
           >
             [04 — OUR WORK]
           </motion.div>
@@ -291,86 +283,111 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-            className="text-[4rem] lg:text-[5.5rem] font-bold leading-[1.05] tracking-[-0.03em] text-[#F8FAFC] uppercase max-w-5xl mb-8"
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className="text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-bold leading-[1.05] tracking-[-0.02em] text-[#F8FAFC] uppercase max-w-4xl"
           >
-            SELECTED DEPLOYMENTS &<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-sky-400">
-              CASE STUDIES.
+            SELECTED<br />
+            DEVELOPMENT<br />
+            <span className="text-white/60">
+              & CASE STUDIES.
             </span>
           </motion.h1>
           
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-            className="text-lg lg:text-xl text-[#94A3B8] max-w-2xl leading-relaxed font-light"
+            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="text-lg lg:text-xl text-[#94A3B8] max-w-2xl leading-relaxed font-light mt-10"
           >
             Production software platforms, enterprise automation engines, and custom AI systems delivered by Quantum AI.
           </motion.p>
         </div>
       </section>
 
-      <div className="max-w-[1400px] mx-auto px-12 mt-12">
-        <div className="flex flex-wrap gap-3 mb-16">
-          {categories.map((cat, i) => {
-            const isActive = activeCategory === cat;
-            const href = cat === 'ALL' ? '/work' : `/work?category=${encodeURIComponent(cat)}`;
-            return (
-              <motion.div
-                key={cat}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.3 + (i * 0.05) }}
-              >
+      <div className="max-w-[1500px] mx-auto px-8 lg:px-12">
+        {/* Category Filters (Horizontal Scrolling) */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full overflow-x-auto no-scrollbar border-b border-white/[0.06] pb-8 mb-12"
+        >
+          <div className="flex flex-nowrap items-center gap-3 min-w-max">
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat;
+              const href = cat === 'ALL' ? '/work' : `/work?category=${encodeURIComponent(cat)}`;
+              return (
                 <Link
+                  key={cat}
                   href={href}
-                  className={`block font-mono text-[11px] tracking-widest uppercase px-5 py-2.5 rounded border transition-all duration-300 ${
+                  className={`block font-mono text-[10px] lg:text-[11px] tracking-[0.15em] uppercase px-6 py-3 rounded-full transition-all duration-300 ${
                     isActive 
-                      ? 'bg-[#1677ff22] border-[#38BDF8] text-[#38BDF8] font-semibold' 
-                      : 'bg-[#06152B] border-[#1677ff22] text-[#94A3B8] hover:text-[#F8FAFC] hover:border-[#38bdf880]'
+                      ? 'bg-[#1677FF]/10 border border-[#1677FF]/30 text-[#55D6FF] font-semibold' 
+                      : 'bg-transparent border border-white/10 text-[#94A3B8] hover:text-white hover:border-white/30'
                   }`}
                 >
                   {cat}
                 </Link>
-              </motion.div>
-            );
-          })}
-        </div>
-
-        {caseStudies.length === 0 ? (
-          <div className="py-32 text-center border border-dashed border-[#1677ff33] rounded-2xl bg-[#06152B]/30">
-            <div className="font-mono text-sm tracking-widest text-[#1677FF] mb-4">NO MATCHING DEPLOYMENTS</div>
-            <h2 className="text-2xl font-semibold text-white mb-4">No Case Studies Found in This Category</h2>
-            <Link href="/work" className="font-mono text-sm tracking-wider text-[#38BDF8] hover:text-white transition-colors">
-              VIEW ALL WORK →
-            </Link>
+              );
+            })}
           </div>
-        ) : (
-          <>
-            {featuredStudy && (
-              <FeaturedProject 
-                study={featuredStudy} 
-                setCursorVisible={setCursorVisible} 
-                setCursorText={setCursorText} 
-              />
-            )}
+        </motion.div>
 
-            {remainingStudies.length > 0 && (
-              <div className="grid grid-cols-2 gap-x-12 gap-y-20">
-                {remainingStudies.map((study, index) => (
-                  <ProjectCard 
-                    key={study.id} 
-                    study={study} 
-                    index={index} 
+        {/* Content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeCategory}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4 }}
+          >
+            {caseStudies.length === 0 ? (
+              <div className="py-32 text-center border border-white/5 rounded-2xl bg-white/[0.02]">
+                <div className="font-mono text-sm tracking-widest text-[#64748B] mb-4 uppercase">No Projects Found</div>
+                <h2 className="text-2xl font-semibold text-white mb-4">No case studies in this category yet.</h2>
+                <Link href="/work" className="font-mono text-sm tracking-wider text-[#38BDF8] hover:text-white transition-colors">
+                  VIEW ALL WORK →
+                </Link>
+              </div>
+            ) : (
+              <>
+                {/* FEATURED PROJECT */}
+                {featuredStudy && (
+                  <FeaturedProject 
+                    study={featuredStudy} 
                     setCursorVisible={setCursorVisible} 
                     setCursorText={setCursorText} 
                   />
-                ))}
-              </div>
+                )}
+
+                {/* DIVIDER */}
+                {remainingStudies.length > 0 && (
+                  <div className="flex justify-between items-center border-t border-white/[0.08] pt-6 mt-24 mb-16 font-mono text-xs tracking-widest text-[#64748B] uppercase">
+                    <span>SELECTED WORK</span>
+                    <span>{remainingStudies.length < 10 ? `0${remainingStudies.length}` : remainingStudies.length} PROJECTS</span>
+                  </div>
+                )}
+
+                {/* GRID */}
+                {remainingStudies.length > 0 && (
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-12 xl:gap-x-16 gap-y-24">
+                    {remainingStudies.map((study, index) => (
+                      <ProjectCard 
+                        key={study.id} 
+                        study={study} 
+                        index={index} 
+                        total={remainingStudies.length}
+                        setCursorVisible={setCursorVisible} 
+                        setCursorText={setCursorText} 
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
             )}
-          </>
-        )}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );
