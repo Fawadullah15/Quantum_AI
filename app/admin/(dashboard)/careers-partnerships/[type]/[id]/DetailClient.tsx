@@ -232,13 +232,22 @@ export default function DetailClient({
           {/* Main Info Header */}
           <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 12, padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', borderBottom: '1px solid rgba(22, 119, 255, 0.12)', paddingBottom: '0.65rem' }}>
-              <div>
-                <div style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase', fontWeight: 600 }}>
-                  {type === 'PARTNERSHIP' ? 'ENTERPRISE PROPOSAL' : 'TALENT APPLICATION'}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                {submission.photoUrl && (
+                  <img
+                    src={submission.photoUrl}
+                    alt={submission.fullName}
+                    style={{ width: '56px', height: '56px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #38BDF8', backgroundColor: '#07152F' }}
+                  />
+                )}
+                <div>
+                  <div style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase', fontWeight: 600 }}>
+                    {type === 'PARTNERSHIP' ? 'ENTERPRISE PROPOSAL' : 'TALENT APPLICATION'}
+                  </div>
+                  <h1 style={{ fontSize: '1.35rem', fontWeight: 700, margin: '0.2rem 0 0 0', color: '#F8FAFC' }}>
+                    {submission.fullName}
+                  </h1>
                 </div>
-                <h1 style={{ fontSize: '1.35rem', fontWeight: 700, margin: '0.2rem 0 0 0', color: '#F8FAFC' }}>
-                  {submission.fullName}
-                </h1>
               </div>
               <StatusBadge status={status} />
             </div>

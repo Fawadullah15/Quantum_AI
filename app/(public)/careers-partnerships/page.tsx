@@ -640,7 +640,13 @@ export default function CareersPartnershipsPage() {
                       />
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
+                      <div>
+                        <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                          Profile Photo (JPG, PNG, Optional)
+                        </label>
+                        <input type="file" name="photo" accept="image/png,image/jpeg,image/webp,image/jpg" style={fileInputStyle} />
+                      </div>
                       <div>
                         <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Upload Resume / CV (PDF, DOCX) <span style={{ color: '#38BDF8' }}>*</span>
@@ -649,7 +655,7 @@ export default function CareersPartnershipsPage() {
                       </div>
                       <div>
                         <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
-                          Additional Portfolio / Documents (Optional)
+                          Additional Portfolio / Docs (Optional)
                         </label>
                         <input type="file" name="additionalDocs" accept=".pdf,.doc,.docx,.zip" style={fileInputStyle} />
                       </div>

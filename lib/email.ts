@@ -154,6 +154,7 @@ export function getCareerAdminEmailHtml(data: {
   linkedinUrl?: string | null;
   githubUrl?: string | null;
   portfolioUrl?: string | null;
+  photoUrl?: string | null;
   resumeUrl?: string | null;
   additionalDocsUrl?: string | null;
   workType: string;
@@ -169,6 +170,16 @@ export function getCareerAdminEmailHtml(data: {
           <h1 style="font-size: 22px; color: #FFFFFF; margin: 0 0 6px 0;">New Career Application: ${data.referenceId}</h1>
           <p style="font-size: 14px; color: #94A3B8; margin: 0 0 24px 0;">Role: <strong style="color: #38BDF8;">${data.position}</strong> (${data.workType})</p>
           
+          ${data.photoUrl ? `
+            <div style="margin-bottom: 20px; display: flex; align-items: center; gap: 16px;">
+              <img src="${data.photoUrl}" alt="${data.fullName}" style="width: 72px; height: 72px; border-radius: 50%; object-fit: cover; border: 2px solid #38BDF8;" />
+              <div>
+                <strong style="font-size: 16px; color: #FFFFFF;">${data.fullName}</strong>
+                <div style="font-size: 13px; color: #38BDF8;">Applicant Profile Photo</div>
+              </div>
+            </div>
+          ` : ''}
+
           <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
             <tr><td style="padding: 8px 0; color: #94A3B8; width: 140px;">Candidate:</td><td style="padding: 8px 0; color: #FFFFFF; font-weight: 600;">${data.fullName}</td></tr>
             <tr><td style="padding: 8px 0; color: #94A3B8;">Email:</td><td style="padding: 8px 0; color: #38BDF8;"><a href="mailto:${data.email}" style="color: #38BDF8;">${data.email}</a></td></tr>

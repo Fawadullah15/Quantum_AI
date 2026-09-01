@@ -559,9 +559,24 @@ export default function CareersPartnershipsClient({
                         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                       >
                         <td style={{ padding: '0.95rem 1.15rem' }}>
-                          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', fontWeight: 600 }}>{a.referenceId}</div>
-                          <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.9rem', marginTop: '0.15rem' }}>{a.fullName}</div>
-                          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{a.position}</div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            {a.photoUrl ? (
+                              <img
+                                src={a.photoUrl}
+                                alt={a.fullName}
+                                style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #38BDF8', flexShrink: 0 }}
+                              />
+                            ) : (
+                              <div style={{ width: '38px', height: '38px', borderRadius: '50%', backgroundColor: 'rgba(22, 119, 255, 0.15)', border: '1px solid rgba(22, 119, 255, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#38BDF8', fontSize: '0.8rem', fontWeight: 600, flexShrink: 0 }}>
+                                {a.fullName.charAt(0).toUpperCase()}
+                              </div>
+                            )}
+                            <div>
+                              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', fontWeight: 600 }}>{a.referenceId}</div>
+                              <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.9rem', marginTop: '0.1rem' }}>{a.fullName}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{a.position}</div>
+                            </div>
+                          </div>
                         </td>
                         <td style={{ padding: '0.95rem 1.15rem' }}>
                           <div style={{ color: '#F8FAFC', fontSize: '0.82rem' }}>{a.experienceLevel || 'Mid Level'}</div>

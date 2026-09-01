@@ -283,6 +283,7 @@ model CareerApplication {
   email             String
   phone             String?
   currentLocation   String?
+  photoUrl          String?
   linkedinUrl       String?
   githubUrl         String?
   portfolioUrl      String?

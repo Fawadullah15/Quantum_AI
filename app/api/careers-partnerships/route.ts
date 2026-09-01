@@ -235,6 +235,17 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: fileErr.message || 'Failed to upload Resume / CV' }, { status: 400 });
       }
 
+      // Handle optional profile photo
+      let photoUrl: string | null = null;
+      const photoFile = formData.get('photo') as File | null;
+      if (photoFile && photoFile.size > 0 && photoFile.name) {
+        try {
+          photoUrl = await saveFile(photoFile, 'applicant-photo');
+        } catch (fileErr: any) {
+          console.warn('[Upload] Applicant photo upload failed:', fileErr);
+        }
+      }
+
       // Handle optional additional document
       let additionalDocsUrl: string | null = null;
       const additionalDocs = formData.get('additionalDocs') as File | null;
@@ -258,6 +269,7 @@ export async function POST(request: Request) {
           email,
           phone,
           currentLocation,
+          photoUrl,
           linkedinUrl,
           githubUrl,
           portfolioUrl,
@@ -280,6 +292,7 @@ export async function POST(request: Request) {
         email,
         phone,
         currentLocation,
+        photoUrl,
         linkedinUrl,
         githubUrl,
         portfolioUrl,
