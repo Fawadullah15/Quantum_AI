@@ -2,7 +2,8 @@
 
 import React, { useRef } from 'react';
 import Link from 'next/link';
-import { motion, useSpring, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+import { motion, useSpring, AnimatePresence, useReducedMotion } from 'framer-motion';
 
 interface WorkDesktopClientProps {
   caseStudies: any[];
@@ -20,10 +21,9 @@ const getProjectImage = (study: any) => {
       }
     } catch (e) {}
   }
-  // No fake placeholders per instruction, but we need *something* if data is genuinely missing.
-  // The prompt says "If a field is missing, gracefully hide it rather than showing undefined".
-  // For an image, a dark aesthetic fallback is necessary if the CMS data is entirely missing an image.
-  return "https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=2832&auto=format&fit=crop"; 
+  // No external placeholders per instruction. 
+  // Return null so the component can render a clean structural fallback.
+  return null; 
 };
 
 const HeroBackground = () => (
@@ -37,18 +37,23 @@ const HeroBackground = () => (
 
 const FeaturedProject = ({ study }: { study: any }) => {
   const cardRef = useRef<HTMLAnchorElement>(null);
+  const shouldReduceMotion = useReducedMotion();
   
   const imageScale = useSpring(1, { stiffness: 100, damping: 30 });
   const arrowX = useSpring(0, { stiffness: 200, damping: 20 });
 
   const handleMouseEnter = () => {
-    imageScale.set(1.03);
-    arrowX.set(4);
+    if (!shouldReduceMotion) {
+      imageScale.set(1.03);
+      arrowX.set(4);
+    }
   };
 
   const handleMouseLeave = () => {
-    imageScale.set(1);
-    arrowX.set(0);
+    if (!shouldReduceMotion) {
+      imageScale.set(1);
+      arrowX.set(0);
+    }
   };
 
   const techList = study.technologies ? study.technologies.split(',').map((t: string) => t.trim()).filter(Boolean) : [];
@@ -57,7 +62,7 @@ const FeaturedProject = ({ study }: { study: any }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
       className="mb-32 mt-12"
@@ -107,14 +112,20 @@ const FeaturedProject = ({ study }: { study: any }) => {
         <div className="w-full lg:w-[65%] relative rounded-xl overflow-hidden aspect-[16/10] bg-[#06152B] border border-white/[0.05] shadow-2xl transition-all duration-700 group-hover:border-white/[0.12] order-1 lg:order-2">
           <motion.div
             style={{ scale: imageScale }}
-            className="w-full h-full relative"
+            className="w-full h-full relative bg-[#030712] flex items-center justify-center"
           >
-            <img 
-              src={imageSrc} 
-              alt={`Screenshot of ${study.title}`} 
-              decoding="async"
-              className="w-full h-full object-cover object-center"
-            />
+            {imageSrc ? (
+              <Image 
+                src={imageSrc} 
+                alt={`Screenshot of ${study.title}`} 
+                fill
+                sizes="(max-width: 1024px) 100vw, 65vw"
+                priority
+                className="object-cover object-center"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(ellipse_80%_80%_at_50%_50%,#000_20%,transparent_100%)] opacity-50" />
+            )}
           </motion.div>
         </div>
       </Link>
@@ -124,17 +135,22 @@ const FeaturedProject = ({ study }: { study: any }) => {
 
 const ProjectCard = ({ study, index, total }: { study: any, index: number, total: number }) => {
   const cardRef = useRef<HTMLAnchorElement>(null);
+  const shouldReduceMotion = useReducedMotion();
   const imageScale = useSpring(1, { stiffness: 100, damping: 30 });
   const arrowX = useSpring(0, { stiffness: 200, damping: 20 });
 
   const handleMouseEnter = () => {
-    imageScale.set(1.03);
-    arrowX.set(4);
+    if (!shouldReduceMotion) {
+      imageScale.set(1.03);
+      arrowX.set(4);
+    }
   };
 
   const handleMouseLeave = () => {
-    imageScale.set(1);
-    arrowX.set(0);
+    if (!shouldReduceMotion) {
+      imageScale.set(1);
+      arrowX.set(0);
+    }
   };
 
   const imageSrc = getProjectImage(study);
@@ -144,10 +160,10 @@ const ProjectCard = ({ study, index, total }: { study: any, index: number, total
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 35 }}
+      initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 35 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.6, delay: (index % 2) * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.6, delay: shouldReduceMotion ? 0 : (index % 2) * 0.1, ease: [0.16, 1, 0.3, 1] }}
       className="flex"
     >
       <Link
@@ -161,15 +177,19 @@ const ProjectCard = ({ study, index, total }: { study: any, index: number, total
         <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-[#06152B] border border-white/[0.05] transition-all duration-500 group-hover:border-white/[0.12]">
           <motion.div
             style={{ scale: imageScale }}
-            className="w-full h-full relative"
+            className="w-full h-full relative bg-[#030712]"
           >
-            <img 
-              src={imageSrc} 
-              alt={`Screenshot of ${study.title}`} 
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-cover object-center"
-            />
+            {imageSrc ? (
+              <Image 
+                src={imageSrc} 
+                alt={`Screenshot of ${study.title}`} 
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover object-center"
+              />
+            ) : (
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_70%_70%_at_50%_50%,#000_20%,transparent_100%)] opacity-40" />
+            )}
             
             {/* Minimal hover indicator overlay */}
             <div className="absolute bottom-6 left-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 font-mono text-xs tracking-widest text-white z-10 font-medium drop-shadow-md">
@@ -203,6 +223,7 @@ const ProjectCard = ({ study, index, total }: { study: any, index: number, total
 export default function WorkDesktopClient({ caseStudies, categories, activeCategory }: WorkDesktopClientProps) {
   const featuredStudy = caseStudies.length > 0 ? caseStudies[0] : null;
   const remainingStudies = caseStudies.length > 1 ? caseStudies.slice(1) : [];
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <div className="relative min-h-screen bg-[#030712] text-white selection:bg-[#1677FF] selection:text-white font-sans">
@@ -212,7 +233,7 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
       <section className="relative w-full max-w-[1500px] mx-auto px-8 lg:px-12 pt-40 lg:pt-56 pb-16 lg:pb-24">
         <div className="relative z-10 flex flex-col items-start">
           <motion.div 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="font-mono text-xs tracking-[0.25em] text-[#64748B] uppercase mb-8"
@@ -221,9 +242,9 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
           </motion.div>
           
           <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: shouldReduceMotion ? 0 : 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-bold leading-[1.05] tracking-[-0.02em] text-[#F8FAFC] uppercase max-w-5xl"
           >
             WORK THAT TURNS<br />
@@ -234,9 +255,9 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
           </motion.h1>
           
           <motion.p 
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: shouldReduceMotion ? 0 : 0.2, ease: [0.16, 1, 0.3, 1] }}
             className="text-lg lg:text-xl text-[#94A3B8] max-w-2xl leading-relaxed font-light mt-10"
           >
             Quantum AI builds AI systems, software products, and digital experiences for real organizations.
@@ -247,9 +268,9 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
       <div className="max-w-[1500px] mx-auto px-8 lg:px-12">
         {/* Category Filters */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, delay: shouldReduceMotion ? 0 : 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="w-full overflow-x-auto no-scrollbar border-b border-white/[0.06] pb-8 mb-12"
         >
           <div className="flex flex-nowrap items-center gap-3 min-w-max">
@@ -322,7 +343,7 @@ export default function WorkDesktopClient({ caseStudies, categories, activeCateg
       <section className="mt-32 border-t border-white/[0.06] py-32">
         <div className="max-w-[1500px] mx-auto px-8 lg:px-12 flex flex-col items-center text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
