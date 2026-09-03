@@ -8,7 +8,7 @@ import { useAdminToast } from '@/components/admin/AdminToast';
 import { useAdminConfirm } from '@/components/admin/ConfirmDialog';
 import StatusBadge from '@/components/admin/StatusBadge';
 import EmptyState from '@/components/admin/EmptyState';
-import { createLeadershipMember, updateLeadershipMember, deleteLeadershipMember, reorderLeadershipMembers } from './actions';
+import { createLeadershipMember, updateLeadershipMember, deleteLeadershipMember, reorderLeadershipMembers, updateCareerApplicationFromLeadership } from './actions';
 import type { Leadership } from '@prisma/client';
 
 const ROLE_PRESETS = [
@@ -92,16 +92,12 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
   };
 
   const handleEdit = (m: any) => {
-    if (m.isApplication) {
-      router.push(`/admin/careers-partnerships/career/${m.id}`);
-      return;
-    }
     setFormData({
       name: m.name || '',
       slug: m.slug || '',
       publicId: m.publicId || '',
       position: m.position || '',
-      department: m.department || 'Software Development',
+      department: m.department || 'Team Member',
       shortBio: m.shortBio || '',
       fullBio: m.fullBio || '',
       photo: m.photo || '',
@@ -109,7 +105,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
       linkedin: m.linkedin || '',
       github: m.github || '',
       website: m.website || '',
-      location: m.location || 'Pakistan',
+      location: m.location || 'Remote',
       displayOrder: m.displayOrder || 0,
       isActive: m.isActive ?? true,
     });
@@ -155,7 +151,11 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
     }
   };
 
-  const handleToggleActive = async (member: Leadership) => {
+  const handleToggleActive = async (member: any) => {
+    if (member.isApplication) {
+      toast.warning('Application profiles are always Active when Accepted. To hide them, please go to their Application and change status to Archived or Rejected.', 'Cannot Toggle');
+      return;
+    }
     const newStatus = !member.isActive;
     try {
       await updateLeadershipMember(member.id, {
@@ -199,7 +199,10 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
     setMembers(reorderedItems);
 
     try {
-      await reorderLeadershipMembers(reorderedItems.map((item) => item.id));
+      const dbOnlyIds = reorderedItems
+        .filter((item) => !(item as any).isApplication)
+        .map((item) => item.id);
+      await reorderLeadershipMembers(dbOnlyIds);
       toast.success(
         `"${movedItem.name}" moved ${direction === 'UP' ? 'up' : 'down'} to position ${targetIndex + 1}.`,
         'Order Updated'
@@ -254,11 +257,20 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
     try {
       setIsSubmitting(true);
       if (currentId) {
-        const updated = await updateLeadershipMember(currentId, formData);
-        setMembers((prev) =>
-          prev.map((m) => (m.id === currentId ? (updated as Leadership) : m))
-        );
-        toast.success(`Profile for "${formData.name}" updated!`, 'Saved');
+        const editingMember = members.find((m) => m.id === currentId) as any;
+        if (editingMember?.isApplication) {
+          const updated = await updateCareerApplicationFromLeadership(currentId, formData);
+          setMembers((prev) =>
+            prev.map((m) => (m.id === currentId ? { ...m, ...formData } : m))
+          );
+          toast.success(`Application Profile for "${formData.name}" updated!`, 'Saved');
+        } else {
+          const updated = await updateLeadershipMember(currentId, formData);
+          setMembers((prev) =>
+            prev.map((m) => (m.id === currentId ? (updated as Leadership) : m))
+          );
+          toast.success(`Profile for "${formData.name}" updated!`, 'Saved');
+        }
       } else {
         const created = await createLeadershipMember(formData);
         setMembers((prev) => [...prev, created as Leadership]);
@@ -521,12 +533,13 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                         {/* Order Controls */}
                         <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', width: '80px' }}>
                           {(() => {
+                            const isApp = (member as any).isApplication;
                             const memberIdx = members.findIndex((m) => m.id === member.id);
                             const isFirst = memberIdx <= 0;
                             const isLast = memberIdx === -1 || memberIdx >= members.length - 1;
                             const orderNumber = memberIdx !== -1 ? memberIdx + 1 : index + 1;
-                            const upDisabled = isFirst || isReordering;
-                            const downDisabled = isLast || isReordering;
+                            const upDisabled = isFirst || isReordering || isApp;
+                            const downDisabled = isLast || isReordering || isApp;
 
                             return (
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', opacity: isReordering ? 0.6 : 1, transition: 'opacity 0.15s' }}>

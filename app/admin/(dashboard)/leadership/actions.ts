@@ -175,3 +175,28 @@ export async function deleteLeadershipMember(id: string) {
   revalidatePath('/');
   return { success: true };
 }
+export async function updateCareerApplicationFromLeadership(
+  id: string,
+  data: any
+) {
+  await checkAuth();
+
+  const updatedApp = await prisma.careerApplication.update({
+    where: { id },
+    data: {
+      fullName: data.name,
+      position: data.position,
+      introduction: data.shortBio,
+      whyQuantumAI: data.fullBio,
+      photoUrl: data.photo,
+      linkedinUrl: data.linkedin,
+      githubUrl: data.github,
+      portfolioUrl: data.website,
+      currentLocation: data.location,
+    },
+  });
+
+  revalidatePath('/leadership');
+  revalidatePath('/admin/leadership');
+  return updatedApp;
+}
