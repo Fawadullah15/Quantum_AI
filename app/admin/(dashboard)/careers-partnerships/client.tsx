@@ -543,9 +543,10 @@ export default function CareersPartnershipsClient({
                   <thead>
                     <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
                       <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Applicant &amp; Role</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Location &amp; Work Type</th>
                       <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Experience &amp; Skills</th>
                       <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>CV / Resume</th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Status</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Status &amp; Date</th>
                       <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
                     </tr>
                   </thead>
@@ -579,6 +580,10 @@ export default function CareersPartnershipsClient({
                           </div>
                         </td>
                         <td style={{ padding: '0.95rem 1.15rem' }}>
+                          <div style={{ color: '#F8FAFC', fontSize: '0.82rem' }}>{a.currentLocation || 'Not specified'}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.15rem' }}>{a.workType || 'Full Time'}</div>
+                        </td>
+                        <td style={{ padding: '0.95rem 1.15rem' }}>
                           <div style={{ color: '#F8FAFC', fontSize: '0.82rem' }}>{a.experienceLevel || 'Mid Level'}</div>
                           <div style={{ fontSize: '0.72rem', color: '#38BDF8', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '240px' }}>{a.skills || '-'}</div>
                         </td>
@@ -599,6 +604,9 @@ export default function CareersPartnershipsClient({
                         </td>
                         <td style={{ padding: '0.95rem 1.15rem' }}>
                           <StatusBadge status={a.status} />
+                          <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '0.45rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                            {new Date(a.createdAt).toLocaleDateString()}
+                          </div>
                         </td>
                         <td style={{ padding: '0.95rem 1.15rem', textAlign: 'right' }}>
                           <div style={{ display: 'flex', gap: '0.45rem', justifyContent: 'flex-end' }} onClick={(e) => e.stopPropagation()}>

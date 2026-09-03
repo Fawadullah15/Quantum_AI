@@ -30,6 +30,12 @@ export async function updateSubmissionStatus(type: 'PARTNERSHIP' | 'CAREER', id:
 
   revalidatePath('/admin/careers-partnerships');
   revalidatePath(`/admin/careers-partnerships/${type.toLowerCase()}/${id}`);
+  
+  if (type === 'CAREER') {
+    revalidatePath('/leadership');
+    revalidatePath('/leadership/[slug]', 'page');
+  }
+
   return { success: true };
 }
 

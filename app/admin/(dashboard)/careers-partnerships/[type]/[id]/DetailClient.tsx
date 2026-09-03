@@ -38,6 +38,28 @@ export default function DetailClient({
   ];
 
   const handleStatusUpdate = async (newStatus: string) => {
+    if (newStatus === 'ACCEPTED') {
+      const confirmed = await confirm({
+        title: 'Accept Application',
+        message: 'Are you sure you want to accept this application? Once accepted, this person will automatically be displayed on the public Leadership page.',
+        confirmText: 'Accept & Publish to Leadership',
+        confirmVariant: 'success',
+      });
+      if (!confirmed) {
+        return; // do not update if cancelled
+      }
+    } else if (newStatus === 'REJECTED') {
+      const confirmed = await confirm({
+        title: 'Reject Application',
+        message: 'Are you sure you want to reject this application? This candidate will not be displayed on the public Leadership page.',
+        confirmText: 'Reject Application',
+        confirmVariant: 'danger',
+      });
+      if (!confirmed) {
+        return;
+      }
+    }
+
     setStatus(newStatus);
     setIsSaving(true);
     try {
@@ -47,6 +69,7 @@ export default function DetailClient({
       router.refresh();
     } catch (err: any) {
       toast.error(err?.message || 'Failed to update status', 'Error');
+      setStatus(submission.status); // revert
     } finally {
       setIsSaving(false);
     }
@@ -203,13 +226,54 @@ export default function DetailClient({
             ✉ Reply via Email
           </a>
 
+          {status !== 'ACCEPTED' && (
+            <button
+              type="button"
+              onClick={() => handleStatusUpdate('ACCEPTED')}
+              style={{
+                backgroundColor: 'rgba(52, 211, 153, 0.12)',
+                border: '1px solid rgba(52, 211, 153, 0.35)',
+                color: '#34D399',
+                padding: '0.48rem 0.95rem',
+                borderRadius: 6,
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'var(--font-mono, monospace)',
+                boxShadow: '0 4px 12px rgba(52, 211, 153, 0.15)',
+              }}
+            >
+              ✓ Accept Application
+            </button>
+          )}
+
+          {status !== 'REJECTED' && (
+            <button
+              type="button"
+              onClick={() => handleStatusUpdate('REJECTED')}
+              style={{
+                backgroundColor: 'rgba(239, 68, 68, 0.12)',
+                border: '1px solid rgba(239, 68, 68, 0.35)',
+                color: '#F87171',
+                padding: '0.48rem 0.95rem',
+                borderRadius: 6,
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'var(--font-mono, monospace)',
+              }}
+            >
+              ✗ Reject Application
+            </button>
+          )}
+
           <button
             type="button"
             onClick={handleDelete}
             style={{
-              backgroundColor: 'rgba(239, 68, 68, 0.12)',
-              border: '1px solid rgba(239, 68, 68, 0.35)',
-              color: '#F87171',
+              backgroundColor: 'transparent',
+              border: '1px solid rgba(148, 163, 184, 0.25)',
+              color: '#94A3B8',
               padding: '0.48rem 0.95rem',
               borderRadius: 6,
               fontSize: '0.8rem',
@@ -324,6 +388,12 @@ export default function DetailClient({
                   </div>
                   <div>
                     <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                      Current Location
+                    </div>
+                    <div style={{ color: '#F8FAFC', fontSize: '0.85rem' }}>{submission.currentLocation || 'Not provided'}</div>
+                  </div>
+                  <div>
+                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       CV / Resume Document
                     </div>
                     {submission.resumeUrl ? (
@@ -331,7 +401,19 @@ export default function DetailClient({
                         📄 View Attached CV ↗
                       </a>
                     ) : (
-                      <span style={{ color: '#64748B', fontSize: '0.85rem' }}>No link</span>
+                      <span style={{ color: '#64748B', fontSize: '0.85rem' }}>Not provided</span>
+                    )}
+                  </div>
+                  <div>
+                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                      Additional Portfolio
+                    </div>
+                    {submission.additionalDocsUrl ? (
+                      <a href={submission.additionalDocsUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.82rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                        📁 View Attached Docs ↗
+                      </a>
+                    ) : (
+                      <span style={{ color: '#64748B', fontSize: '0.85rem' }}>Not provided</span>
                     )}
                   </div>
                 </>
@@ -342,13 +424,42 @@ export default function DetailClient({
           {/* Submission Details / Message Body */}
           <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 12, padding: '1.5rem' }}>
             <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 0.85rem 0', borderBottom: '1px solid rgba(22, 119, 255, 0.12)', paddingBottom: '0.5rem' }}>
-              {type === 'PARTNERSHIP' ? 'Proposal Details & Message' : 'Candidate Introduction & Skills'}
+              {type === 'PARTNERSHIP' ? 'Proposal Details & Message' : 'Candidate Profile & Details'}
             </h2>
 
+            {type === 'CAREER' && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
+                <div>
+                  <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    LinkedIn
+                  </div>
+                  {submission.linkedinUrl ? (
+                    <a href={submission.linkedinUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.85rem' }}>{submission.linkedinUrl}</a>
+                  ) : <span style={{ color: '#64748B', fontSize: '0.85rem' }}>Not provided</span>}
+                </div>
+                <div>
+                  <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    GitHub
+                  </div>
+                  {submission.githubUrl ? (
+                    <a href={submission.githubUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.85rem' }}>{submission.githubUrl}</a>
+                  ) : <span style={{ color: '#64748B', fontSize: '0.85rem' }}>Not provided</span>}
+                </div>
+                <div>
+                  <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    Portfolio Website
+                  </div>
+                  {submission.portfolioUrl ? (
+                    <a href={submission.portfolioUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.85rem' }}>{submission.portfolioUrl}</a>
+                  ) : <span style={{ color: '#64748B', fontSize: '0.85rem' }}>Not provided</span>}
+                </div>
+              </div>
+            )}
+
             {type === 'CAREER' && submission.skills && (
-              <div style={{ marginBottom: '1rem' }}>
+              <div style={{ marginBottom: '1.25rem' }}>
                 <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
-                  Technical Skills
+                  Core Technical Skills
                 </div>
                 <div style={{ backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.2)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#38BDF8', fontSize: '0.85rem' }}>
                   {submission.skills}
@@ -356,9 +467,9 @@ export default function DetailClient({
               </div>
             )}
 
-            <div>
+            <div style={{ marginBottom: '1.25rem' }}>
               <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
-                {type === 'PARTNERSHIP' ? 'Message' : 'Introduction / Cover Letter'}
+                {type === 'PARTNERSHIP' ? 'Message' : 'Introduction & Engineering Background'}
               </div>
               <div
                 style={{
@@ -376,6 +487,29 @@ export default function DetailClient({
                 {type === 'PARTNERSHIP' ? submission.message : submission.introduction}
               </div>
             </div>
+
+            {type === 'CAREER' && submission.whyQuantumAI && (
+              <div>
+                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
+                  Why Quantum AI
+                </div>
+                <div
+                  style={{
+                    backgroundColor: '#070B14',
+                    border: '1px solid rgba(22, 119, 255, 0.2)',
+                    borderRadius: 8,
+                    padding: '1.15rem',
+                    color: '#F8FAFC',
+                    fontSize: '0.92rem',
+                    lineHeight: 1.6,
+                    whiteSpace: 'pre-wrap',
+                    wordBreak: 'break-word',
+                  }}
+                >
+                  {submission.whyQuantumAI}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

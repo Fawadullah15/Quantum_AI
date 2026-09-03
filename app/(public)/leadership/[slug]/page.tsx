@@ -109,9 +109,13 @@ const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
   },
 };
 
+import { getMergedLeaders } from "@/lib/getMergedLeaders";
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const dbMember = await prisma.leadership.findUnique({ where: { slug } }).catch(() => null);
+  const { dbMembers, appMembers } = await getMergedLeaders();
+  const allMembers = [...dbMembers, ...appMembers];
+  const dbMember = allMembers.find((m) => m.slug === slug);
   const m = dbMember || FALLBACK_MEMBERS_MAP[slug];
 
   if (!m) return { title: "Profile Not Found | Quantum AI" };
@@ -125,15 +129,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 export async function generateStaticParams() {
-  const dbMembers = await prisma.leadership.findMany({ where: { isActive: true }, select: { slug: true } }).catch(() => []);
-  const dbSlugs = dbMembers.map((m) => ({ slug: m.slug }));
+  const { dbMembers, appMembers } = await getMergedLeaders();
+  const dbSlugs = [...dbMembers, ...appMembers].map((m) => ({ slug: m.slug }));
   const fallbackSlugs = Object.keys(FALLBACK_MEMBERS_MAP).map((slug) => ({ slug }));
   return dbSlugs.length > 0 ? dbSlugs : fallbackSlugs;
 }
 
 export default async function LeadershipProfilePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const dbMember = await prisma.leadership.findUnique({ where: { slug } }).catch(() => null);
+  const { dbMembers, appMembers } = await getMergedLeaders();
+  const allMembers = [...dbMembers, ...appMembers];
+  const dbMember = allMembers.find((m) => m.slug === slug);
   const m = dbMember || FALLBACK_MEMBERS_MAP[slug];
 
   if (!m || m.isActive === false) {

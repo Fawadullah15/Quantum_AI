@@ -100,13 +100,14 @@ const FALLBACK_MEMBERS: LeaderItem[] = [
   },
 ];
 
-export default async function LeadershipPage() {
-  const dbMembers = await prisma.leadership.findMany({
-    where: { isActive: true },
-    orderBy: { displayOrder: "asc" },
-  }).catch(() => []);
+import { getMergedLeaders } from "@/lib/getMergedLeaders";
 
-  const members: LeaderItem[] = dbMembers && dbMembers.length > 0 ? dbMembers : FALLBACK_MEMBERS;
+export default async function LeadershipPage() {
+  const { dbMembers, appMembers } = await getMergedLeaders();
+
+  const members: LeaderItem[] = dbMembers && dbMembers.length > 0 
+    ? [...dbMembers, ...appMembers] 
+    : [...FALLBACK_MEMBERS, ...appMembers];
 
   // ─── PARTITION LEADERS ACCORDING TO DISPLAY ORDER & ROLES ───
   const isExecutive = (m: LeaderItem) =>
