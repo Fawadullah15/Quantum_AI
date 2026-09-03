@@ -186,46 +186,41 @@ export default function DetailClient({
           </span>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', backgroundColor: 'rgba(6, 21, 43, 0.4)', padding: '0.35rem', borderRadius: '6px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
           <button
             type="button"
             onClick={handleCopyEmail}
             style={{
-              backgroundColor: 'rgba(56, 189, 248, 0.12)',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
+              backgroundColor: 'transparent',
+              border: '1px solid rgba(56, 189, 248, 0.25)',
               color: '#38BDF8',
-              padding: '0.48rem 0.95rem',
-              borderRadius: 6,
-              fontSize: '0.8rem',
+              padding: '0.45rem 0.85rem',
+              borderRadius: 4,
+              fontSize: '0.75rem',
               fontWeight: 600,
               cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.35rem',
               fontFamily: 'var(--font-mono, monospace)',
+              transition: 'all 0.2s',
             }}
           >
-            📋 Copy Email
+            COPY EMAIL
           </button>
 
           <a
-            href={`mailto:${submission.email}?subject=Regarding your ${type.toLowerCase()} submission to Quantum AI (${submission.referenceId})&body=Hi ${encodeURIComponent(submission.fullName)},%0D%0A%0D%0AThank you for connecting with Quantum AI.`}
+            href={`mailto:${submission.email}?subject=Regarding your ${type.toLowerCase()} submission to Quantum AI (${submission.referenceId})`}
             style={{
-              backgroundColor: '#1677FF',
-              color: '#FFFFFF',
-              padding: '0.48rem 1rem',
-              borderRadius: 6,
-              fontSize: '0.8rem',
+              backgroundColor: 'rgba(22, 119, 255, 0.1)',
+              border: '1px solid rgba(22, 119, 255, 0.3)',
+              color: '#38BDF8',
+              padding: '0.45rem 0.85rem',
+              borderRadius: 4,
+              fontSize: '0.75rem',
               fontWeight: 600,
               textDecoration: 'none',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
               fontFamily: 'var(--font-mono, monospace)',
-              boxShadow: '0 4px 12px rgba(22, 119, 255, 0.35)',
             }}
           >
-            ✉ Reply via Email
+            REPLY
           </a>
 
           {status !== 'ACCEPTED' && (
@@ -233,19 +228,18 @@ export default function DetailClient({
               type="button"
               onClick={() => handleStatusUpdate('ACCEPTED')}
               style={{
-                backgroundColor: 'rgba(52, 211, 153, 0.12)',
-                border: '1px solid rgba(52, 211, 153, 0.35)',
-                color: '#34D399',
-                padding: '0.48rem 0.95rem',
-                borderRadius: 6,
-                fontSize: '0.8rem',
+                backgroundColor: '#1677FF',
+                border: '1px solid #1677FF',
+                color: '#FFFFFF',
+                padding: '0.45rem 0.85rem',
+                borderRadius: 4,
+                fontSize: '0.75rem',
                 fontWeight: 600,
                 cursor: 'pointer',
                 fontFamily: 'var(--font-mono, monospace)',
-                boxShadow: '0 4px 12px rgba(52, 211, 153, 0.15)',
               }}
             >
-              ✓ Accept Application
+              ACCEPT
             </button>
           )}
 
@@ -254,18 +248,58 @@ export default function DetailClient({
               type="button"
               onClick={() => handleStatusUpdate('REJECTED')}
               style={{
-                backgroundColor: 'rgba(239, 68, 68, 0.12)',
-                border: '1px solid rgba(239, 68, 68, 0.35)',
+                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                border: '1px solid rgba(239, 68, 68, 0.3)',
                 color: '#F87171',
-                padding: '0.48rem 0.95rem',
-                borderRadius: 6,
-                fontSize: '0.8rem',
+                padding: '0.45rem 0.85rem',
+                borderRadius: 4,
+                fontSize: '0.75rem',
                 fontWeight: 600,
                 cursor: 'pointer',
                 fontFamily: 'var(--font-mono, monospace)',
               }}
             >
-              ✗ Reject Application
+              REJECT
+            </button>
+          )}
+
+          {status !== 'ARCHIVED' && (
+            <button
+              type="button"
+              onClick={() => handleStatusUpdate('ARCHIVED')}
+              style={{
+                backgroundColor: 'transparent',
+                border: '1px solid rgba(148, 163, 184, 0.25)',
+                color: '#94A3B8',
+                padding: '0.45rem 0.85rem',
+                borderRadius: 4,
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'var(--font-mono, monospace)',
+              }}
+            >
+              ARCHIVE
+            </button>
+          )}
+          
+          {status !== 'IGNORED' && (
+            <button
+              type="button"
+              onClick={() => handleStatusUpdate('IGNORED')}
+              style={{
+                backgroundColor: 'transparent',
+                border: '1px solid rgba(148, 163, 184, 0.25)',
+                color: '#94A3B8',
+                padding: '0.45rem 0.85rem',
+                borderRadius: 4,
+                fontSize: '0.75rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'var(--font-mono, monospace)',
+              }}
+            >
+              IGNORE
             </button>
           )}
 
@@ -274,17 +308,17 @@ export default function DetailClient({
             onClick={handleDelete}
             style={{
               backgroundColor: 'transparent',
-              border: '1px solid rgba(148, 163, 184, 0.25)',
-              color: '#94A3B8',
-              padding: '0.48rem 0.95rem',
-              borderRadius: 6,
-              fontSize: '0.8rem',
+              border: 'none',
+              color: '#64748B',
+              padding: '0.45rem 0.65rem',
+              fontSize: '0.75rem',
               fontWeight: 600,
               cursor: 'pointer',
               fontFamily: 'var(--font-mono, monospace)',
+              marginLeft: '0.5rem',
             }}
           >
-            🗑 Delete
+            DELETE
           </button>
         </div>
       </div>

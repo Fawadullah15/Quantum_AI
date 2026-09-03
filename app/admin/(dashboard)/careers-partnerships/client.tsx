@@ -483,24 +483,24 @@ export default function CareersPartnershipsClient({
                         onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.08)')}
                         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                       >
-                        <td style={{ padding: '0.95rem 1.15rem' }}>
+                        <td style={{ padding: '0.75rem 1rem' }}>
                           <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', fontWeight: 600 }}>{p.referenceId}</div>
                           <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.9rem', marginTop: '0.15rem' }}>{p.fullName}</div>
                           <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{p.email}</div>
                         </td>
-                        <td style={{ padding: '0.95rem 1.15rem' }}>
+                        <td style={{ padding: '0.75rem 1rem' }}>
                           <div style={{ color: '#F8FAFC', fontWeight: 500 }}>{p.company || '-'}</div>
                           <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{p.country || 'Global'}</div>
                         </td>
-                        <td style={{ padding: '0.95rem 1.15rem' }}>
+                        <td style={{ padding: '0.75rem 1rem' }}>
                           <span style={{ backgroundColor: 'rgba(22, 119, 255, 0.12)', border: '1px solid rgba(22, 119, 255, 0.25)', padding: '0.2rem 0.55rem', borderRadius: 4, fontSize: '0.75rem', color: '#CBD5E1', fontFamily: 'var(--font-mono, monospace)' }}>
                             {p.partnershipType || 'Strategic'}
                           </span>
                         </td>
-                        <td style={{ padding: '0.95rem 1.15rem' }}>
+                        <td style={{ padding: '0.75rem 1rem' }}>
                           <StatusBadge status={p.status} />
                         </td>
-                        <td style={{ padding: '0.95rem 1.15rem', textAlign: 'right' }}>
+                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
                           <div style={{ display: 'flex', gap: '0.45rem', justifyContent: 'flex-end' }} onClick={(e) => e.stopPropagation()}>
                             <Link
                               href={`/admin/careers-partnerships/partnership/${p.id}`}
@@ -559,7 +559,7 @@ export default function CareersPartnershipsClient({
                         onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.08)')}
                         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                       >
-                        <td style={{ padding: '0.95rem 1.15rem' }}>
+                        <td style={{ padding: '0.75rem 1rem' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                             {a.photoUrl ? (
                               <img
@@ -579,15 +579,15 @@ export default function CareersPartnershipsClient({
                             </div>
                           </div>
                         </td>
-                        <td style={{ padding: '0.95rem 1.15rem' }}>
+                        <td style={{ padding: '0.75rem 1rem' }}>
                           <div style={{ color: '#F8FAFC', fontSize: '0.82rem' }}>{a.currentLocation || 'Not specified'}</div>
                           <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.15rem' }}>{a.workType || 'Full Time'}</div>
                         </td>
-                        <td style={{ padding: '0.95rem 1.15rem' }}>
+                        <td style={{ padding: '0.75rem 1rem' }}>
                           <div style={{ color: '#F8FAFC', fontSize: '0.82rem' }}>{a.experienceLevel || 'Mid Level'}</div>
                           <div style={{ fontSize: '0.72rem', color: '#38BDF8', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '240px' }}>{a.skills || '-'}</div>
                         </td>
-                        <td style={{ padding: '0.95rem 1.15rem' }} onClick={(e) => e.stopPropagation()}>
+                        <td style={{ padding: '0.75rem 1rem' }} onClick={(e) => e.stopPropagation()}>
                           {a.resumeUrl ? (
                             <a
                               href={a.resumeUrl}
@@ -602,13 +602,13 @@ export default function CareersPartnershipsClient({
                             <span style={{ color: '#64748B', fontSize: '0.75rem' }}>No link</span>
                           )}
                         </td>
-                        <td style={{ padding: '0.95rem 1.15rem' }}>
+                        <td style={{ padding: '0.75rem 1rem' }}>
                           <StatusBadge status={a.status} />
                           <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '0.45rem', fontFamily: 'var(--font-mono, monospace)' }}>
                             {new Date(a.createdAt).toLocaleDateString()}
                           </div>
                         </td>
-                        <td style={{ padding: '0.95rem 1.15rem', textAlign: 'right' }}>
+                        <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
                           <div style={{ display: 'flex', gap: '0.45rem', justifyContent: 'flex-end' }} onClick={(e) => e.stopPropagation()}>
                             <Link
                               href={`/admin/careers-partnerships/career/${a.id}`}
@@ -765,16 +765,16 @@ export default function CareersPartnershipsClient({
                       <tbody>
                         {filteredPositions.map((pos) => (
                           <tr key={pos.id} style={{ borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
-                            <td style={{ padding: '0.95rem 1.15rem', fontWeight: 600, color: '#F8FAFC' }}>
+                            <td style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#F8FAFC' }}>
                               {pos.title}
                             </td>
-                            <td style={{ padding: '0.95rem 1.15rem', color: '#38BDF8' }}>
+                            <td style={{ padding: '0.75rem 1rem', color: '#38BDF8' }}>
                               {pos.department}
                             </td>
-                            <td style={{ padding: '0.95rem 1.15rem', color: '#94A3B8' }}>
+                            <td style={{ padding: '0.75rem 1rem', color: '#94A3B8' }}>
                               {pos.workType}
                             </td>
-                            <td style={{ padding: '0.95rem 1.15rem' }}>
+                            <td style={{ padding: '0.75rem 1rem' }}>
                               <button
                                 type="button"
                                 onClick={() => handleTogglePositionActive(pos)}
@@ -793,7 +793,7 @@ export default function CareersPartnershipsClient({
                                 {pos.isActive ? '● LIVE / ACTIVE' : '○ DRAFT'}
                               </button>
                             </td>
-                            <td style={{ padding: '0.95rem 1.15rem', textAlign: 'right' }}>
+                            <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
                               <div style={{ display: 'flex', gap: '0.45rem', justifyContent: 'flex-end' }}>
                                 <button
                                   type="button"

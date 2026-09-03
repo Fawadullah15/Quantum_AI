@@ -312,23 +312,25 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
   const inputStyle: React.CSSProperties = {
     width: '100%',
     padding: '0.65rem 0.85rem',
-    backgroundColor: '#070B14',
-    border: '1px solid rgba(22, 119, 255, 0.22)',
-    borderRadius: 6,
+    backgroundColor: 'rgba(3, 7, 18, 0.8)',
+    border: '1px solid rgba(22, 119, 255, 0.25)',
+    borderRadius: 4,
     color: '#F8FAFC',
     fontSize: '0.875rem',
     outline: 'none',
     boxSizing: 'border-box',
+    fontFamily: 'inherit',
+    transition: 'border-color 0.2s',
   };
 
   const labelStyle: React.CSSProperties = {
     display: 'block',
-    fontSize: '0.75rem',
+    fontSize: '0.72rem',
     fontWeight: 600,
     color: '#94A3B8',
     marginBottom: '0.35rem',
     textTransform: 'uppercase',
-    letterSpacing: '0.05em',
+    letterSpacing: '0.1em',
     fontFamily: 'var(--font-mono, monospace)',
   };
 

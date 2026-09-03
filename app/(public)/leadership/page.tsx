@@ -231,47 +231,88 @@ export default async function LeadershipPage() {
           margin-bottom: clamp(3.5rem, 6vw, 5rem);
         }
 
-        /* ─── Premium Executive Card ─── */
+        /* /// Premium Executive Card /// */
         .exec-card {
-          background-color: rgba(6, 21, 43, 0.65);
-          border: 1px solid rgba(22, 119, 255, 0.16);
-          border-radius: 12px;
+          background-color: rgba(6, 21, 43, 0.4);
+          border: 1px solid rgba(22, 119, 255, 0.15);
+          border-radius: 4px;
           overflow: hidden;
           text-decoration: none;
           display: flex;
           flex-direction: column;
-          transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s, background-color 0.25s;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
           box-sizing: border-box;
           position: relative;
           outline: none;
         }
+        .exec-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.3), transparent);
+          opacity: 0;
+          transition: opacity 0.3s;
+        }
         .exec-card:hover {
-          background-color: rgba(8, 28, 58, 0.85);
-          border-color: rgba(56, 189, 248, 0.45);
-          transform: translateY(-3px);
-          box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(56, 189, 248, 0.25);
+          background-color: rgba(6, 21, 43, 0.7);
+          border-color: rgba(56, 189, 248, 0.4);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+        }
+        .exec-card:hover::before {
+          opacity: 1;
         }
         .exec-card:focus-visible {
           border-color: #38BDF8;
-          box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.4);
+          box-shadow: 0 0 0 1px #38BDF8;
         }
 
-        /* Portrait Photo Container (4:5 Aspect Ratio) */
+        /* /// Photo Area /// */
         .exec-photo-wrapper {
           position: relative;
           width: 100%;
-          aspect-ratio: 4 / 4.8;
-          background: linear-gradient(180deg, #07152F 0%, #030A17 100%);
+          aspect-ratio: 5 / 4;
+          background: #050A14;
+          border-bottom: 1px solid rgba(22, 119, 255, 0.1);
           overflow: hidden;
-          border-bottom: 1px solid rgba(22, 119, 255, 0.14);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .exec-photo-wrapper::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          box-shadow: inset 0 0 30px rgba(3, 7, 18, 0.8);
+          pointer-events: none;
         }
         .exec-photo-img {
           width: 100%;
           height: 100%;
           object-fit: cover;
-          object-position: center 15%;
+          object-position: center top !important;
           transition: transform 0.4s ease;
         }
+        .exec-card:hover .exec-photo-img {
+          transform: scale(1.02);
+        }
+        
+        .exec-photo-fallback {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 0.65rem;
+          color: rgba(56, 189, 248, 0.25);
+          font-family: var(--font-mono, monospace);
+          font-size: 0.75rem;
+          letter-spacing: 0.1em;
+          background: repeating-linear-gradient(45deg, rgba(22, 119, 255, 0.02) 0px, rgba(22, 119, 255, 0.02) 2px, transparent 2px, transparent 8px);
+        }
+
         /* Featured Executive (CEO & Chairman) Natural Portrait Framing */
         .principal-photo-wrapper {
           aspect-ratio: 1 / 1 !important;
@@ -280,21 +321,6 @@ export default async function LeadershipPage() {
         .principal-photo-img {
           object-fit: cover !important;
           object-position: center top !important;
-        }
-        .exec-card:hover .exec-photo-img {
-          transform: scale(1.03);
-        }
-        .exec-photo-fallback {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          color: rgba(56, 189, 248, 0.4);
-          font-family: var(--font-mono, monospace);
-          font-size: 0.8rem;
         }
 
         /* Top Corner Badge on Photo */
@@ -630,13 +656,12 @@ export default async function LeadershipPage() {
                         className="exec-photo-img principal-photo-img"
                       />
                     ) : (
-                      <div className="exec-photo-fallback">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                          <circle cx="12" cy="7" r="4" />
-                        </svg>
-                        <span>QUANTUM AI</span>
-                      </div>
+                        <div className="exec-photo-fallback">
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                            <path d="M12 2v4M12 18v4M2 12h4M18 12h4M12 7a5 5 0 1 0 0 10 5 5 0 1 0 0-10z" />
+                          </svg>
+                          <span>NO IMAGE DATA</span>
+                        </div>
                     )}
                   </div>
 
@@ -721,11 +746,10 @@ export default async function LeadershipPage() {
                         />
                       ) : (
                         <div className="exec-photo-fallback">
-                          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                            <circle cx="12" cy="7" r="4" />
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
+                            <path d="M12 2v4M12 18v4M2 12h4M18 12h4M12 7a5 5 0 1 0 0 10 5 5 0 1 0 0-10z" />
                           </svg>
-                          <span>QUANTUM AI</span>
+                          <span>NO IMAGE DATA</span>
                         </div>
                       )}
                     </div>
