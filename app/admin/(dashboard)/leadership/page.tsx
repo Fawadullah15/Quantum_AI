@@ -1,4 +1,4 @@
-import prisma from '@/lib/db';
+import { getMergedLeaders } from '@/lib/getMergedLeaders';
 import LeadershipClient from './client';
 
 export const dynamic = 'force-dynamic';
@@ -9,9 +9,19 @@ export const metadata = {
 };
 
 export default async function LeadershipPage() {
-  const members = await prisma.leadership.findMany({
-    orderBy: [{ displayOrder: 'asc' }, { createdAt: 'asc' }],
-  }).catch(() => []);
+  const { dbMembers, appMembers } = await getMergedLeaders();
+
+  const allMembers = [
+    ...dbMembers,
+    ...appMembers.map((app: any) => ({
+      ...app,
+      isApplication: true,
+      roleType: 'APPLICATION',
+    }))
+  ];
+
+  // Sort by display order
+  allMembers.sort((a, b) => a.displayOrder - b.displayOrder);
 
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
@@ -27,7 +37,7 @@ export default async function LeadershipPage() {
         </p>
       </div>
 
-      <LeadershipClient initialMembers={members} />
+      <LeadershipClient initialMembers={allMembers as any} />
     </div>
   );
 }

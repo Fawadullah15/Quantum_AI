@@ -22,57 +22,18 @@ export async function updateSubmissionStatus(type: 'PARTNERSHIP' | 'CAREER', id:
       data: { status },
     });
   } else {
-    // Fetch the existing application to check its current state and get data
-    const app = await prisma.careerApplication.findUnique({ where: { id } });
-    if (!app) throw new Error('Application not found');
-
-    // Update the application status
     await prisma.careerApplication.update({
       where: { id },
       data: { status },
     });
-
-    // Handle Leadership Automation
-    if (status === 'ACCEPTED' && app.status !== 'ACCEPTED') {
-      // Create Leadership record if it doesn't exist
-      const existing = await prisma.leadership.findUnique({ where: { publicId: app.referenceId } });
-      if (!existing) {
-        const baseSlug = app.fullName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-        const slug = `${baseSlug}-${app.referenceId.toLowerCase()}`;
-        
-        await prisma.leadership.create({
-          data: {
-            publicId: app.referenceId,
-            slug: slug,
-            name: app.fullName,
-            position: app.position,
-            department: 'Team Member',
-            shortBio: app.introduction || 'Team Member at Quantum AI',
-            fullBio: app.whyQuantumAI || app.skills || '',
-            photo: app.photoUrl,
-            linkedin: app.linkedinUrl,
-            github: app.githubUrl,
-            website: app.portfolioUrl,
-            location: app.currentLocation,
-            displayOrder: 100,
-            isActive: true,
-          }
-        });
-      }
-    } else if (status !== 'ACCEPTED' && app.status === 'ACCEPTED') {
-      // Remove from Leadership if status is changed from ACCEPTED to something else
-      await prisma.leadership.deleteMany({
-        where: { publicId: app.referenceId }
-      });
-    }
   }
 
   revalidatePath('/admin/careers-partnerships');
   revalidatePath(`/admin/careers-partnerships/${type.toLowerCase()}/${id}`);
   
   if (type === 'CAREER') {
-    revalidatePath('/admin/leadership');
     revalidatePath('/leadership');
+    revalidatePath('/admin/leadership');
     revalidatePath('/leadership/[slug]', 'page');
   }
 

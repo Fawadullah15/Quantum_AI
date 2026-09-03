@@ -91,7 +91,11 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
     setIsEditing(true);
   };
 
-  const handleEdit = (m: Leadership) => {
+  const handleEdit = (m: any) => {
+    if (m.isApplication) {
+      router.push(`/admin/careers-partnerships/career/${m.id}`);
+      return;
+    }
     setFormData({
       name: m.name || '',
       slug: m.slug || '',
@@ -103,7 +107,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
       photo: m.photo || '',
       email: m.email || '',
       linkedin: m.linkedin || '',
-      github: (m as any).github || '',
+      github: m.github || '',
       website: m.website || '',
       location: m.location || 'Pakistan',
       displayOrder: m.displayOrder || 0,
@@ -211,19 +215,24 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
     }
   };
 
-  const handleDelete = async (id: string, name: string) => {
+  const handleDelete = async (member: any) => {
+    if (member.isApplication) {
+      toast.warning('This profile is linked to an accepted Career Application. To remove them from Leadership, please go to their Application and change their status to Rejected or Archived.', 'Action Not Allowed');
+      return;
+    }
+
     const confirmed = await confirm({
       title: 'Delete Leadership Profile',
-      message: `Are you sure you want to permanently delete "${name}" from the Leadership & Team directory? This will also remove their public detail page.`,
+      message: `Are you sure you want to permanently delete "${member.name}" from the Leadership & Team directory? This will also remove their public detail page.`,
       confirmText: 'Delete Permanently',
       confirmVariant: 'danger',
     });
 
     if (confirmed) {
       try {
-        await deleteLeadershipMember(id);
-        setMembers((prev) => prev.filter((m) => m.id !== id));
-        toast.success(`"${name}" was deleted.`, 'Deleted');
+        await deleteLeadershipMember(member.id);
+        setMembers((prev) => prev.filter((m) => m.id !== member.id));
+        toast.success(`"${member.name}" was deleted.`, 'Deleted');
         router.refresh();
       } catch (err) {
         toast.error('Failed to delete profile.', 'Error');
@@ -747,7 +756,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleDelete(member.id, member.name)}
+                              onClick={() => handleDelete(member)}
                               style={{
                                 backgroundColor: 'rgba(239, 68, 68, 0.12)',
                                 border: '1px solid rgba(239, 68, 68, 0.3)',

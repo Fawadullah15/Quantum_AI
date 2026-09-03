@@ -12,11 +12,8 @@ export async function getMergedLeaders() {
     orderBy: { createdAt: 'asc' }
   }).catch(() => []);
 
-  // Filter out any applications that have already been synced to the Leadership table natively
-  const syncedPublicIds = new Set(dbMembers.map((m: any) => m.publicId));
-  const unsyncedApps = acceptedApps.filter((app: any) => !syncedPublicIds.has(app.referenceId));
-
-  const appMembers = unsyncedApps.map((app: any) => {
+  const appMembers = acceptedApps.map((app: any) => {
+    // Generate a unique slug from name and reference ID to prevent duplicates
     const baseSlug = app.fullName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
     const slug = `${baseSlug}-${app.referenceId.toLowerCase()}`;
     
