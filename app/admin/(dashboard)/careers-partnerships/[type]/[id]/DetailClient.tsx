@@ -58,6 +58,22 @@ export default function DetailClient({
       if (!confirmed) {
         return;
       }
+    } else if (newStatus === 'ARCHIVED') {
+      const confirmed = await confirm({
+        title: 'Archive Application',
+        message: 'Are you sure you want to archive this application? It will be hidden from the active pipeline.',
+        confirmText: 'Archive',
+        confirmVariant: 'warning',
+      });
+      if (!confirmed) return;
+    } else if (newStatus === 'IGNORED') {
+      const confirmed = await confirm({
+        title: 'Ignore Application',
+        message: 'Are you sure you want to ignore this application?',
+        confirmText: 'Ignore',
+        confirmVariant: 'primary',
+      });
+      if (!confirmed) return;
     }
 
     setStatus(newStatus);
@@ -264,6 +280,46 @@ export default function DetailClient({
               }}
             >
               ✗ Reject Application
+            </button>
+          )}
+
+          {status !== 'IGNORED' && (
+            <button
+              type="button"
+              onClick={() => handleStatusUpdate('IGNORED')}
+              style={{
+                backgroundColor: 'transparent',
+                border: '1px solid rgba(148, 163, 184, 0.25)',
+                color: '#94A3B8',
+                padding: '0.48rem 0.95rem',
+                borderRadius: 6,
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'var(--font-mono, monospace)',
+              }}
+            >
+              Ignore
+            </button>
+          )}
+
+          {status !== 'ARCHIVED' && (
+            <button
+              type="button"
+              onClick={() => handleStatusUpdate('ARCHIVED')}
+              style={{
+                backgroundColor: 'rgba(245, 158, 11, 0.12)',
+                border: '1px solid rgba(245, 158, 11, 0.35)',
+                color: '#FBBF24',
+                padding: '0.48rem 0.95rem',
+                borderRadius: 6,
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+                fontFamily: 'var(--font-mono, monospace)',
+              }}
+            >
+              Archive
             </button>
           )}
 
