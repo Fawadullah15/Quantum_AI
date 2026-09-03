@@ -29,6 +29,7 @@ export async function getMergedLeaders() {
       photo: app.photoUrl,
       linkedin: app.linkedinUrl,
       github: app.githubUrl,
+      email: null,
       website: app.portfolioUrl,
       location: app.currentLocation,
       displayOrder: 100,

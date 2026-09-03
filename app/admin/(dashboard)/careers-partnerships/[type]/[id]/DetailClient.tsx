@@ -43,7 +43,7 @@ export default function DetailClient({
         title: 'Accept Application',
         message: 'Are you sure you want to accept this application? Once accepted, this person will automatically be displayed on the public Leadership page.',
         confirmText: 'Accept & Publish to Leadership',
-        confirmVariant: 'success',
+        confirmVariant: 'primary',
       });
       if (!confirmed) {
         return; // do not update if cancelled
