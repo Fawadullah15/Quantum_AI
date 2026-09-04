@@ -132,6 +132,29 @@ export default function BackupClient() {
     }
   };
 
+  const handleDownload = async (url: string, filename: string) => {
+    try {
+      toast.info('Starting download...', 'Fetching file');
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.style.display = 'none';
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      
+      window.URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Download failed:', error);
+      toast.error('Failed to download backup file.', 'Download Error');
+    }
+  };
+
   const formatSize = (bytes: number) => {
     return (bytes / 1024).toFixed(2) + ' KB';
   };
@@ -231,9 +254,8 @@ export default function BackupClient() {
                   </td>
                   <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}>
                     <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                      <a
-                        href={b.url}
-                        download
+                      <button
+                        onClick={() => handleDownload(b.url, b.pathname.split('/').pop() || 'backup.json')}
                         style={{
                           backgroundColor: 'rgba(56, 189, 248, 0.1)',
                           border: '1px solid rgba(56, 189, 248, 0.25)',
@@ -241,13 +263,13 @@ export default function BackupClient() {
                           padding: '0.35rem 0.65rem',
                           borderRadius: '4px',
                           fontSize: '0.75rem',
-                          textDecoration: 'none',
                           fontFamily: 'var(--font-mono, monospace)',
                           fontWeight: 600,
+                          cursor: 'pointer',
                         }}
                       >
                         DOWNLOAD
-                      </a>
+                      </button>
                       <button
                         onClick={() => handleRestore(b)}
                         style={{
