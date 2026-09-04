@@ -42,6 +42,7 @@ export const navSections = [
       { href: '/admin/media', label: 'Media Library', icon: '🖼️' },
       { href: '/admin/settings', label: 'Website Settings', icon: '⚙️' },
       { href: '/admin/settings/account', label: 'Account Security', icon: '🔒' },
+      { href: '/admin/backup', label: 'Database Backup', icon: '💾' },
     ],
   },
 ];
