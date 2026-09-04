@@ -20,7 +20,7 @@ export default function BackupClient() {
   const [isUploading, setIsUploading] = useState(false);
   
   const toast = useAdminToast();
-  const confirm = useAdminConfirm();
+  const { confirm } = useAdminConfirm();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   const fetchBackups = async () => {
