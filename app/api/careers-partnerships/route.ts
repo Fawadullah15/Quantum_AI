@@ -235,15 +235,28 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: fileErr.message || 'Failed to upload Resume / CV' }, { status: 400 });
       }
 
-      // Handle optional profile photo
+      // Handle required profile photo
       let photoUrl: string | null = null;
       const photoFile = formData.get('photo') as File | null;
-      if (photoFile && photoFile.size > 0 && photoFile.name) {
-        try {
-          photoUrl = await saveFile(photoFile, 'applicant-photo');
-        } catch (fileErr: any) {
-          console.warn('[Upload] Applicant photo upload failed:', fileErr);
-        }
+      if (!photoFile || photoFile.size === 0 || !photoFile.name) {
+        return NextResponse.json({ error: 'Profile photo is required.' }, { status: 400 });
+      }
+
+      // Check size specifically for photo (e.g. 5MB)
+      if (photoFile.size > 5 * 1024 * 1024) {
+        return NextResponse.json({ error: 'Profile photo exceeds 5MB limit.' }, { status: 400 });
+      }
+      
+      // Check specific image mime types
+      const allowedPhotoTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
+      if (!allowedPhotoTypes.includes((photoFile.type || '').toLowerCase())) {
+        return NextResponse.json({ error: 'Profile photo must be a JPG, PNG, or WEBP image.' }, { status: 400 });
+      }
+
+      try {
+        photoUrl = await saveFile(photoFile, 'applicant-photo');
+      } catch (fileErr: any) {
+        return NextResponse.json({ error: fileErr.message || 'Failed to upload Profile photo.' }, { status: 400 });
       }
 
       // Handle optional additional document

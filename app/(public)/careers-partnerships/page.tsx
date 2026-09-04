@@ -643,9 +643,22 @@ export default function CareersPartnershipsPage() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
                       <div>
                         <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
-                          Profile Photo (JPG, PNG, Optional)
+                          Profile Photo (JPG, PNG) <span style={{ color: '#38BDF8' }}>*</span>
                         </label>
-                        <input type="file" name="photo" accept="image/png,image/jpeg,image/webp,image/jpg" style={fileInputStyle} />
+                        <input 
+                          required 
+                          type="file" 
+                          name="photo" 
+                          accept="image/png,image/jpeg,image/webp,image/jpg" 
+                          style={fileInputStyle} 
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file && file.size > 5 * 1024 * 1024) {
+                              alert('Profile photo must be less than 5MB.');
+                              e.target.value = '';
+                            }
+                          }}
+                        />
                       </div>
                       <div>
                         <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
