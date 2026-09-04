@@ -70,20 +70,27 @@ export default function BackupClient() {
     setIsUploading(true);
     toast.info('Uploading backup file...');
     
-    const formData = new FormData();
-    formData.append('file', file);
-    
-    const res = await uploadBackup(formData);
-    
-    if (res.success) {
-      toast.success('Backup file uploaded successfully. You can now restore it.');
-      fetchBackups();
-    } else {
-      toast.error(res.error || 'Failed to upload backup file.');
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const res = await uploadBackup(formData);
+      
+      if (res.success) {
+        toast.success('Backup file uploaded successfully. You can now restore it.');
+        fetchBackups();
+      } else {
+        toast.error(res.error || 'Failed to upload backup file.');
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast.error('Upload failed. The file might be too large (max 15MB) or network disconnected.');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
-    
-    setIsUploading(false);
-    e.target.value = '';
   };
 
   const handleRestore = async (b: BackupRecord) => {
