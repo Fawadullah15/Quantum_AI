@@ -152,15 +152,19 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
   };
 
   const handleToggleActive = async (member: any) => {
-    if (member.isApplication) {
-      toast.warning('Application profiles are always Active when Accepted. To hide them, please go to their Application and change status to Archived or Rejected.', 'Cannot Toggle');
-      return;
-    }
     const newStatus = !member.isActive;
+    
     try {
-      await updateLeadershipMember(member.id, {
-        isActive: newStatus,
-      });
+      if (member.isApplication) {
+        await updateCareerApplicationFromLeadership(member.id, {
+          status: newStatus ? 'ACCEPTED' : 'ACCEPTED_HIDDEN',
+        });
+      } else {
+        await updateLeadershipMember(member.id, {
+          isActive: newStatus,
+        });
+      }
+
       setMembers((prev) =>
         prev.map((m) => (m.id === member.id ? { ...m, isActive: newStatus } : m))
       );

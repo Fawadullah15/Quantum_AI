@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 export default async function LeadershipPage() {
-  const { dbMembers, appMembers } = await getMergedLeaders();
+  const { dbMembers, appMembers } = await getMergedLeaders(true);
 
   const allMembers = [
     ...dbMembers,

@@ -181,19 +181,25 @@ export async function updateCareerApplicationFromLeadership(
 ) {
   await checkAuth();
 
+  const updateData: any = {
+    fullName: data.name,
+    position: data.position,
+    introduction: data.shortBio,
+    whyQuantumAI: data.fullBio,
+    photoUrl: data.photo,
+    linkedinUrl: data.linkedin,
+    githubUrl: data.github,
+    portfolioUrl: data.website,
+    currentLocation: data.location,
+  };
+
+  if (data.status) {
+    updateData.status = data.status;
+  }
+
   const updatedApp = await prisma.careerApplication.update({
     where: { id },
-    data: {
-      fullName: data.name,
-      position: data.position,
-      introduction: data.shortBio,
-      whyQuantumAI: data.fullBio,
-      photoUrl: data.photo,
-      linkedinUrl: data.linkedin,
-      githubUrl: data.github,
-      portfolioUrl: data.website,
-      currentLocation: data.location,
-    },
+    data: updateData,
   });
 
   revalidatePath('/leadership');

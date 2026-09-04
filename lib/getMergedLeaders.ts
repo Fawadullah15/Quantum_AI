@@ -1,14 +1,16 @@
 
 import prisma from '@/lib/db';
 
-export async function getMergedLeaders() {
+export async function getMergedLeaders(includeInactive = false) {
   const dbMembers = await prisma.leadership.findMany({
-    where: { isActive: true },
+    where: includeInactive ? undefined : { isActive: true },
     orderBy: { displayOrder: 'asc' },
   }).catch(() => []);
 
+  const statuses = includeInactive ? ['ACCEPTED', 'ACCEPTED_HIDDEN'] : ['ACCEPTED'];
+
   const acceptedApps = await prisma.careerApplication.findMany({
-    where: { status: 'ACCEPTED' },
+    where: { status: { in: statuses } },
     orderBy: { createdAt: 'asc' }
   }).catch(() => []);
 
@@ -33,7 +35,7 @@ export async function getMergedLeaders() {
       website: app.portfolioUrl,
       location: app.currentLocation,
       displayOrder: 100,
-      isActive: true,
+      isActive: app.status === 'ACCEPTED',
     };
   });
 

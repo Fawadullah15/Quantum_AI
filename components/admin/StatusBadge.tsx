@@ -32,16 +32,23 @@ export default function StatusBadge({ status, label, size = 'md' }: StatusBadgeP
       case 'ACTIVE':
       case 'PUBLISHED':
       case 'RESOLVED':
+      case 'ACCEPTED':
         return { bg: 'rgba(16, 185, 129, 0.15)', text: '#34D399', border: 'rgba(16, 185, 129, 0.35)' };
       case 'CONTACTED':
       case 'PENDING':
       case 'DRAFT':
         return { bg: 'rgba(245, 158, 11, 0.15)', text: '#FBBF24', border: 'rgba(245, 158, 11, 0.35)' };
       case 'IN_PROGRESS':
+      case 'REVIEWING':
+      case 'SHORTLISTED':
+      case 'INTERVIEW':
         return { bg: 'rgba(168, 85, 247, 0.15)', text: '#C084FC', border: 'rgba(168, 85, 247, 0.35)' };
       case 'CLOSED':
       case 'ARCHIVED':
       case 'INACTIVE':
+      case 'ACCEPTED_HIDDEN':
+      case 'REJECTED':
+      case 'IGNORED':
       default:
         return { bg: 'rgba(100, 116, 139, 0.15)', text: '#94A3B8', border: 'rgba(100, 116, 139, 0.35)' };
     }

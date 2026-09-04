@@ -33,6 +33,7 @@ export default function DetailClient({
     'CONTACTED',
     'INTERVIEW',
     'ACCEPTED',
+    'ACCEPTED_HIDDEN',
     'REJECTED',
     'IGNORED',
     'ARCHIVED',
