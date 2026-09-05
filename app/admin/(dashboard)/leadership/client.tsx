@@ -27,9 +27,20 @@ const ROLE_PRESETS = [
 const DEPARTMENT_PRESETS = [
   'Executive Leadership',
   'Artificial Intelligence',
+  'Machine Learning Engineering',
   'Software Development',
+  'Research & Development',
+  'Data Science & Analytics',
   'Product & Design',
+  'Business Development',
+  'Sales & Partnerships',
+  'Marketing & Communications',
   'Operations & Strategy',
+  'Finance & Legal',
+  'Human Resources & Talent',
+  'Information Technology',
+  'Customer Success & Support',
+  'Other / General',
 ];
 
 export default function LeadershipClient({ initialMembers = [] }: { initialMembers: Leadership[] }) {
