@@ -82,6 +82,9 @@ export default function CareersPartnershipsPage() {
   const [experienceLevel, setExperienceLevel] = useState('Mid Level');
   const [workType, setWorkType] = useState('Full Time');
   const [positionInput, setPositionInput] = useState('');
+  
+  const [positions, setPositions] = useState<any[]>([]);
+  const [loadingPositions, setLoadingPositions] = useState(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -95,6 +98,21 @@ export default function CareersPartnershipsPage() {
         setPositionInput(roleParam);
       }
     }
+
+    const fetchPositions = async () => {
+      try {
+        const res = await fetch('/api/careers-partnerships/positions');
+        if (res.ok) {
+          const data = await res.json();
+          setPositions(data);
+        }
+      } catch (err) {
+        console.error('Failed to load positions', err);
+      } finally {
+        setLoadingPositions(false);
+      }
+    };
+    fetchPositions();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -568,7 +586,57 @@ export default function CareersPartnershipsPage() {
                 ) : (
                   <>
                     <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>
-                      CAREER APPLICATION
+                      OPEN POSITIONS
+                    </div>
+
+                    {loadingPositions ? (
+                      <div style={{ color: '#64748B', fontSize: '0.85rem' }}>Loading open positions...</div>
+                    ) : positions.length > 0 ? (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.5rem' }}>
+                        {positions.map((pos) => (
+                          <div 
+                            key={pos.id} 
+                            onClick={() => setPositionInput(pos.title)}
+                            style={{
+                              padding: '1rem',
+                              backgroundColor: positionInput === pos.title ? 'rgba(56, 189, 248, 0.1)' : '#081735',
+                              border: positionInput === pos.title ? '1px solid #38BDF8' : '1px solid rgba(56, 189, 248, 0.15)',
+                              borderRadius: '8px',
+                              cursor: 'pointer',
+                              transition: 'all 0.2s ease',
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              gap: '1rem'
+                            }}
+                          >
+                            <div>
+                              <div style={{ color: positionInput === pos.title ? '#38BDF8' : '#F8FAFC', fontWeight: 600, fontSize: '0.95rem', marginBottom: '0.2rem' }}>
+                                {pos.title}
+                              </div>
+                              <div style={{ color: '#94A3B8', fontSize: '0.8rem' }}>
+                                {pos.department} &bull; {pos.workType} &bull; {pos.location || 'Remote / Hybrid'}
+                              </div>
+                            </div>
+                            <div style={{ 
+                              width: '20px', 
+                              height: '20px', 
+                              borderRadius: '50%', 
+                              border: positionInput === pos.title ? '5px solid #38BDF8' : '1px solid #475569',
+                              backgroundColor: positionInput === pos.title ? '#0F172A' : 'transparent',
+                              flexShrink: 0
+                            }} />
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div style={{ color: '#64748B', fontSize: '0.85rem', marginBottom: '1.5rem' }}>No open positions at the moment. You can still submit a general application.</div>
+                    )}
+
+                    <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(56, 189, 248, 0.15)', margin: '1rem 0 1.5rem 0' }} />
+
+                    <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>
+                      YOUR APPLICATION
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
