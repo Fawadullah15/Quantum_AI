@@ -3,6 +3,74 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
+const CustomFileInput = ({ name, accept, required, onChange, label, hint }: any) => {
+  const [fileName, setFileName] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (onChange) {
+      const keepGoing = onChange(e);
+      if (keepGoing === false) {
+        setFileName('');
+        return;
+      }
+    }
+    if (file) {
+      setFileName(file.name);
+    } else {
+      setFileName('');
+    }
+  };
+
+  return (
+    <div>
+      <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+        {label} {required && <span style={{ color: '#38BDF8' }}>*</span>}
+      </label>
+      <label 
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          padding: '0.65rem 1rem',
+          backgroundColor: fileName ? 'rgba(56, 189, 248, 0.05)' : '#081735',
+          border: fileName ? '1px solid rgba(56, 189, 248, 0.5)' : '1px dashed rgba(56, 189, 248, 0.35)',
+          borderRadius: '8px',
+          color: fileName ? '#E2E8F0' : '#64748B',
+          fontSize: '0.85rem',
+          cursor: 'pointer',
+          transition: 'all 0.2s ease',
+          boxSizing: 'border-box'
+        }}
+      >
+        <div style={{
+          backgroundColor: fileName ? '#38BDF8' : '#0F2954',
+          color: fileName ? '#0F172A' : '#38BDF8',
+          padding: '0.35rem 0.75rem',
+          borderRadius: '4px',
+          marginRight: '1rem',
+          fontWeight: 600,
+          fontSize: '0.75rem',
+          fontFamily: 'var(--font-mono, monospace)'
+        }}>
+          {fileName ? 'CHANGE' : 'BROWSE'}
+        </div>
+        <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+          {fileName || hint || 'No file selected'}
+        </span>
+        <input 
+          required={required} 
+          type="file" 
+          name={name} 
+          accept={accept} 
+          style={{ display: 'none' }} 
+          onChange={handleChange}
+        />
+      </label>
+    </div>
+  );
+};
+
 export default function CareersPartnershipsPage() {
   const [activeTab, setActiveTab] = useState<'PARTNERSHIP' | 'CAREER'>('PARTNERSHIP');
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -489,10 +557,11 @@ export default function CareersPartnershipsPage() {
                         </select>
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
-                          Company Profile / Deck (PDF/DOCX, Optional)
-                        </label>
-                        <input type="file" name="attachment" accept=".pdf,.doc,.docx,.zip,.png,.jpg" style={fileInputStyle} />
+                        <CustomFileInput 
+                          name="attachment" 
+                          label="Company Profile / Deck (PDF/DOCX, Optional)" 
+                          accept=".pdf,.doc,.docx,.zip,.png,.jpg" 
+                        />
                       </div>
                     </div>
                   </>
@@ -642,35 +711,36 @@ export default function CareersPartnershipsPage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
-                          Profile Photo (JPG, PNG) <span style={{ color: '#38BDF8' }}>*</span>
-                        </label>
-                        <input 
-                          required 
-                          type="file" 
+                        <CustomFileInput 
                           name="photo" 
+                          label="Profile Photo (JPG, PNG)" 
+                          required={true}
                           accept="image/png,image/jpeg,image/webp,image/jpg" 
-                          style={fileInputStyle} 
-                          onChange={(e) => {
+                          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                             const file = e.target.files?.[0];
                             if (file && file.size > 5 * 1024 * 1024) {
                               alert('Profile photo must be less than 5MB.');
                               e.target.value = '';
+                              return false;
                             }
+                            return true;
                           }}
                         />
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
-                          Upload Resume / CV (PDF, DOCX) <span style={{ color: '#38BDF8' }}>*</span>
-                        </label>
-                        <input required type="file" name="resume" accept=".pdf,.doc,.docx" style={fileInputStyle} />
+                        <CustomFileInput 
+                          name="resume" 
+                          label="Upload Resume / CV (PDF, DOCX)" 
+                          required={true}
+                          accept=".pdf,.doc,.docx" 
+                        />
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
-                          Additional Portfolio / Docs (Optional)
-                        </label>
-                        <input type="file" name="additionalDocs" accept=".pdf,.doc,.docx,.zip" style={fileInputStyle} />
+                        <CustomFileInput 
+                          name="additionalDocs" 
+                          label="Additional Portfolio / Docs (Optional)" 
+                          accept=".pdf,.doc,.docx,.zip" 
+                        />
                       </div>
                     </div>
                   </>
