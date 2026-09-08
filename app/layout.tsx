@@ -3,6 +3,7 @@ import { Space_Grotesk, Space_Mono } from 'next/font/google'
 import React from 'react'
 import '@/styles/tokens.css'
 import '@/styles/globals.css'
+import '@/styles/quantum-foundation.css'
 import { SITE_URL, SITE_NAME, DEFAULT_TITLE, DEFAULT_DESCRIPTION } from '@/lib/seo'
 
 const spaceGrotesk = Space_Grotesk({
