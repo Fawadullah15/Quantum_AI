@@ -1,0 +1,182 @@
+/* QUANTUM AI DESIGN TOKENS (Phase 1)
+   Future-ready visual foundation
+*/
+
+:root {
+  /* COLOR TOKENS */
+  --q-void: #050509;
+  --q-bg: #08080D;
+  --q-bg-2: #0C0B12;
+  --q-surface: #111018;
+  --q-surface-2: #17151F;
+
+  --q-violet: #7657FF;
+  --q-violet-deep: #4E36B8;
+  --q-violet-soft: #B8ABFF;
+  --q-silver: #E8E7EE;
+
+  --q-white: #FAF9FC;
+  --q-text: #F2F1F6;
+  --q-muted: #A39FAF;
+  --q-subtle: #777383;
+
+  --q-border: #292631;
+  --q-border-soft: #1E1C25;
+
+  --q-success: #42D392;
+  --q-warning: #E9B949;
+  --q-error: #F06A7A;
+  --q-focus: #B6A3FF;
+
+  /* RADIUS TOKENS */
+  --q-radius-feature: 24px;
+  --q-radius-card: 18px;
+  --q-radius-input: 12px;
+  --q-radius-pill: 999px;
+
+  /* MOTION TOKENS */
+  --q-ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --q-motion-fast: 180ms;
+  --q-motion-base: 280ms;
+  --q-motion-slow: 600ms;
+
+  /* SPACING TOKENS (4px base) */
+  --q-space-1: 4px;
+  --q-space-2: 8px;
+  --q-space-3: 12px;
+  --q-space-4: 16px;
+  --q-space-5: 20px;
+  --q-space-6: 24px;
+  --q-space-8: 32px;
+  --q-space-10: 40px;
+  --q-space-12: 48px;
+  --q-space-14: 56px;
+  --q-space-16: 64px;
+  --q-space-24: 96px;
+  --q-space-32: 128px;
+  --q-space-42: 168px;
+
+  /* PAGE CONTAINER TOKENS */
+  --q-container-max: 1360px;
+}
+
+/* TYPOGRAPHY CLASSES
+   Created as reusable classes for future adoption.
+*/
+
+.q-display {
+  font-family: var(--font-space-grotesk, sans-serif);
+  font-size: 52px;
+  line-height: 0.96;
+}
+@media (min-width: 1024px) {
+  .q-display {
+    font-size: 88px;
+    line-height: 0.92;
+  }
+}
+
+.q-h1 {
+  font-family: var(--font-space-grotesk, sans-serif);
+  font-size: 42px;
+  line-height: 1;
+}
+@media (min-width: 1024px) {
+  .q-h1 {
+    font-size: 64px;
+    line-height: 0.98;
+  }
+}
+
+.q-h2 {
+  font-family: var(--font-space-grotesk, sans-serif);
+  font-size: 34px;
+  line-height: 1.05;
+}
+@media (min-width: 1024px) {
+  .q-h2 {
+    font-size: 48px;
+    line-height: 1.02;
+  }
+}
+
+.q-h3 {
+  font-family: var(--font-space-grotesk, sans-serif);
+  font-size: 26px;
+  line-height: 1.1;
+}
+@media (min-width: 1024px) {
+  .q-h3 {
+    font-size: 32px;
+    line-height: 1.08;
+  }
+}
+
+.q-h4 {
+  font-family: var(--font-space-grotesk, sans-serif);
+  font-size: 20px;
+  line-height: 1.25;
+}
+@media (min-width: 1024px) {
+  .q-h4 {
+    font-size: 22px;
+    line-height: 1.2;
+  }
+}
+
+.q-body-xl {
+  font-family: var(--font-space-grotesk, sans-serif);
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+.q-body {
+  font-family: var(--font-space-grotesk, sans-serif);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.q-small {
+  font-family: var(--font-space-grotesk, sans-serif);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.q-metadata {
+  font-family: var(--font-space-mono, monospace);
+  font-size: 12px;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* GRADIENTS AND SHADOWS */
+.q-bg-gradient {
+  background: var(--q-bg);
+  background-image: radial-gradient(circle at top center, rgba(78, 54, 184, 0.15) 0%, transparent 70%);
+}
+
+.q-text-gradient {
+  background: linear-gradient(90deg, var(--q-violet-deep), var(--q-violet), var(--q-silver));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.q-shadow-elevation-1 {
+  box-shadow: 0 4px 12px rgba(5, 5, 9, 0.5);
+}
+
+.q-shadow-elevation-2 {
+  box-shadow: 0 8px 24px rgba(5, 5, 9, 0.6), 0 2px 4px rgba(0,0,0,0.4);
+}
+
+/* ACCESSIBILITY & REDUCED MOTION */
+@media (prefers-reduced-motion: reduce) {
+  .q-motion-respect {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
