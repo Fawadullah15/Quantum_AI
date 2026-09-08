@@ -21,12 +21,15 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
+  const [isUploadingGallery, setIsUploadingGallery] = useState(false);
+  const [manualGalleryUrl, setManualGalleryUrl] = useState('');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PUBLISHED' | 'DRAFT'>('ALL');
   const [industryFilter, setIndustryFilter] = useState('ALL');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const galleryFileInputRef = useRef<HTMLInputElement>(null);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -37,6 +40,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     services: '',
     technologies: '',
     heroImage: '',
+    gallery: [] as string[],
     externalUrl: '',
     problem: '',
     solution: '',
@@ -56,6 +60,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
       services: 'AI Engineering, Custom Software',
       technologies: 'Next.js, Python, TypeScript, PyTorch',
       heroImage: '',
+      gallery: [],
       externalUrl: '',
       problem: '',
       solution: '',
@@ -64,11 +69,26 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
       published: true,
       order: caseStudies.length + 1,
     });
+    setManualGalleryUrl('');
     setCurrentId(null);
     setIsEditing(true);
   };
 
   const handleEdit = (study: CaseStudy) => {
+    let initialGallery: string[] = [];
+    if (study.gallery) {
+      try {
+        const parsed = typeof study.gallery === 'string' ? JSON.parse(study.gallery) : study.gallery;
+        if (Array.isArray(parsed)) {
+          initialGallery = parsed.filter(
+            (item): item is string => typeof item === 'string' && item.trim().length > 0
+          );
+        }
+      } catch (err) {
+        console.warn('Failed to parse study gallery JSON:', err);
+      }
+    }
+
     setFormData({
       title: study.title || '',
       slug: study.slug || '',
@@ -78,6 +98,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
       services: study.services || '',
       technologies: study.technologies || '',
       heroImage: study.heroImage || '',
+      gallery: initialGallery,
       externalUrl: study.externalUrl || '',
       problem: study.problem || '',
       solution: study.solution || '',
@@ -86,6 +107,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
       published: study.published ?? true,
       order: study.order || 0,
     });
+    setManualGalleryUrl('');
     setCurrentId(study.id);
     setIsEditing(true);
   };
@@ -125,7 +147,98 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
       toast.error('Failed to upload hero image.', 'Upload Error');
     } finally {
       setIsUploading(false);
+      if (e.target) {
+        e.target.value = '';
+      }
     }
+  };
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    try {
+      setIsUploadingGallery(true);
+      const newUrls: string[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const data = new FormData();
+        data.append('file', file);
+
+        const res = await fetch('/api/media', {
+          method: 'POST',
+          body: data,
+        });
+
+        if (!res.ok) {
+          throw new Error(`Failed to upload "${file.name}"`);
+        }
+
+        const result = await res.json();
+        if (result.url) {
+          newUrls.push(result.url);
+        }
+      }
+
+      if (newUrls.length > 0) {
+        setFormData((prev) => {
+          const combined = [...prev.gallery, ...newUrls];
+          const unique = Array.from(new Set(combined));
+          return { ...prev, gallery: unique };
+        });
+        toast.success(
+          `${newUrls.length} gallery image${newUrls.length > 1 ? 's' : ''} uploaded successfully!`,
+          'Gallery Ready'
+        );
+      }
+    } catch (err: any) {
+      console.error('Gallery upload error:', err);
+      toast.error(err?.message || 'Failed to upload gallery image.', 'Upload Error');
+    } finally {
+      setIsUploadingGallery(false);
+      if (e.target) {
+        e.target.value = '';
+      }
+    }
+  };
+
+  const handleAddManualGalleryUrl = () => {
+    const url = manualGalleryUrl.trim();
+    if (!url) {
+      toast.warning('Please enter an image URL', 'Validation');
+      return;
+    }
+    if (formData.gallery.includes(url)) {
+      toast.warning('This image URL is already in the gallery', 'Duplicate');
+      return;
+    }
+    setFormData((prev) => ({
+      ...prev,
+      gallery: [...prev.gallery, url],
+    }));
+    setManualGalleryUrl('');
+    toast.success('Image added to gallery', 'Added');
+  };
+
+  const handleRemoveGalleryImage = (indexToRemove: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      gallery: prev.gallery.filter((_, idx) => idx !== indexToRemove),
+    }));
+  };
+
+  const handleMoveGalleryImage = (index: number, direction: 'LEFT' | 'RIGHT') => {
+    const targetIndex = direction === 'LEFT' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= formData.gallery.length) return;
+
+    setFormData((prev) => {
+      const newGallery = [...prev.gallery];
+      const temp = newGallery[index];
+      newGallery[index] = newGallery[targetIndex];
+      newGallery[targetIndex] = temp;
+      return { ...prev, gallery: newGallery };
+    });
   };
 
   const handleTogglePublish = async (study: CaseStudy) => {
@@ -544,6 +657,31 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                                 >
                                   /work/{study.slug} ↗
                                 </Link>
+                                {(() => {
+                                  try {
+                                    const parsed = typeof study.gallery === 'string' ? JSON.parse(study.gallery) : study.gallery;
+                                    if (Array.isArray(parsed) && parsed.length > 0) {
+                                      return (
+                                        <span
+                                          style={{
+                                            backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                                            color: '#38BDF8',
+                                            fontSize: '0.68rem',
+                                            fontFamily: 'var(--font-mono, monospace)',
+                                            padding: '1px 6px',
+                                            borderRadius: '4px',
+                                            border: '1px solid rgba(56, 189, 248, 0.25)',
+                                          }}
+                                        >
+                                          {parsed.length} gallery img{parsed.length > 1 ? 's' : ''}
+                                        </span>
+                                      );
+                                    }
+                                  } catch {
+                                    return null;
+                                  }
+                                  return null;
+                                })()}
                               </div>
                             </div>
                           </div>
@@ -878,6 +1016,254 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                       onChange={(e) => setFormData({ ...formData, heroImage: e.target.value })}
                       style={{ ...inputStyle, fontSize: '0.78rem', padding: '0.45rem 0.65rem' }}
                     />
+                  </div>
+                </div>
+              </div>
+
+              {/* Gallery Images Component */}
+              <div
+                style={{
+                  marginTop: '1.25rem',
+                  backgroundColor: 'rgba(3, 10, 24, 0.6)',
+                  border: '1px solid rgba(56, 189, 248, 0.18)',
+                  borderRadius: '8px',
+                  padding: '1rem',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  <div>
+                    <label style={{ ...labelStyle, marginBottom: '0.15rem' }}>
+                      Gallery Images ({formData.gallery.length})
+                    </label>
+                    <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
+                      Additional project visuals and screenshots. These can be displayed inside the 3D screens in future stages.
+                    </div>
+                  </div>
+                  {formData.gallery.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setFormData((prev) => ({ ...prev, gallery: [] }))}
+                      style={{
+                        backgroundColor: 'transparent',
+                        border: '1px solid rgba(239, 68, 68, 0.25)',
+                        color: '#F87171',
+                        padding: '0.25rem 0.55rem',
+                        borderRadius: '4px',
+                        fontSize: '0.72rem',
+                        cursor: 'pointer',
+                        fontFamily: 'var(--font-mono, monospace)',
+                      }}
+                    >
+                      Clear All
+                    </button>
+                  )}
+                </div>
+
+                {/* Gallery Previews Grid */}
+                {formData.gallery.length > 0 ? (
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
+                      gap: '0.75rem',
+                      marginBottom: '0.85rem',
+                      marginTop: '0.75rem',
+                    }}
+                  >
+                    {formData.gallery.map((url, idx) => (
+                      <div
+                        key={`${url}-${idx}`}
+                        style={{
+                          backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                          border: '1px solid rgba(56, 189, 248, 0.2)',
+                          borderRadius: '6px',
+                          overflow: 'hidden',
+                          position: 'relative',
+                          display: 'flex',
+                          flexDirection: 'column',
+                        }}
+                      >
+                        {/* Image Thumbnail */}
+                        <div
+                          style={{
+                            width: '100%',
+                            aspectRatio: '16/9',
+                            position: 'relative',
+                            backgroundColor: '#020714',
+                          }}
+                        >
+                          <Image
+                            src={url}
+                            alt={`Gallery image ${idx + 1}`}
+                            fill
+                            sizes="130px"
+                            style={{ objectFit: 'cover' }}
+                            unoptimized={url.startsWith('http')}
+                          />
+                          <div
+                            style={{
+                              position: 'absolute',
+                              top: '4px',
+                              left: '4px',
+                              backgroundColor: 'rgba(3, 7, 18, 0.85)',
+                              color: '#38BDF8',
+                              fontSize: '0.65rem',
+                              fontFamily: 'var(--font-mono, monospace)',
+                              fontWeight: 700,
+                              padding: '1px 5px',
+                              borderRadius: '3px',
+                              border: '1px solid rgba(56, 189, 248, 0.3)',
+                            }}
+                          >
+                            #{idx + 1}
+                          </div>
+                        </div>
+
+                        {/* Controls Bar */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: '4px 6px',
+                            backgroundColor: 'rgba(7, 11, 20, 0.95)',
+                            borderTop: '1px solid rgba(56, 189, 248, 0.1)',
+                          }}
+                        >
+                          <div style={{ display: 'flex', gap: '2px' }}>
+                            <button
+                              type="button"
+                              title="Move earlier"
+                              disabled={idx === 0}
+                              onClick={() => handleMoveGalleryImage(idx, 'LEFT')}
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: idx === 0 ? '#334155' : '#94A3B8',
+                                fontSize: '0.75rem',
+                                cursor: idx === 0 ? 'not-allowed' : 'pointer',
+                                padding: '2px 4px',
+                              }}
+                            >
+                              ◀
+                            </button>
+                            <button
+                              type="button"
+                              title="Move later"
+                              disabled={idx === formData.gallery.length - 1}
+                              onClick={() => handleMoveGalleryImage(idx, 'RIGHT')}
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: idx === formData.gallery.length - 1 ? '#334155' : '#94A3B8',
+                                fontSize: '0.75rem',
+                                cursor: idx === formData.gallery.length - 1 ? 'not-allowed' : 'pointer',
+                                padding: '2px 4px',
+                              }}
+                            >
+                              ▶
+                            </button>
+                          </div>
+                          <button
+                            type="button"
+                            title="Remove image"
+                            onClick={() => handleRemoveGalleryImage(idx)}
+                            style={{
+                              background: 'transparent',
+                              border: 'none',
+                              color: '#F87171',
+                              fontSize: '0.75rem',
+                              cursor: 'pointer',
+                              padding: '2px 4px',
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      padding: '1rem',
+                      textAlign: 'center',
+                      color: '#64748B',
+                      fontSize: '0.78rem',
+                      border: '1px dashed rgba(56, 189, 248, 0.15)',
+                      borderRadius: '6px',
+                      margin: '0.65rem 0',
+                    }}
+                  >
+                    No gallery images added yet. Upload screenshots or visuals below.
+                  </div>
+                )}
+
+                {/* Upload & Add Controls */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <input
+                    type="file"
+                    ref={galleryFileInputRef}
+                    accept="image/*"
+                    multiple
+                    onChange={handleGalleryUpload}
+                    style={{ display: 'none' }}
+                  />
+
+                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                    <button
+                      type="button"
+                      disabled={isUploadingGallery}
+                      onClick={() => galleryFileInputRef.current?.click()}
+                      style={{
+                        backgroundColor: 'rgba(22, 119, 255, 0.15)',
+                        border: '1px solid rgba(22, 119, 255, 0.35)',
+                        color: '#38BDF8',
+                        padding: '0.45rem 0.85rem',
+                        borderRadius: '6px',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        cursor: isUploadingGallery ? 'not-allowed' : 'pointer',
+                        fontFamily: 'var(--font-mono, monospace)',
+                      }}
+                    >
+                      {isUploadingGallery ? 'Uploading gallery image(s)...' : '📁 Upload Gallery Image(s)'}
+                    </button>
+                  </div>
+
+                  {/* Manual URL Input */}
+                  <div style={{ display: 'flex', gap: '0.5rem' }}>
+                    <input
+                      type="text"
+                      placeholder="Or paste direct image URL (e.g. /images/work/slide-1.jpg or https://...)"
+                      value={manualGalleryUrl}
+                      onChange={(e) => setManualGalleryUrl(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleAddManualGalleryUrl();
+                        }
+                      }}
+                      style={{ ...inputStyle, fontSize: '0.78rem', padding: '0.45rem 0.65rem', flex: 1 }}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddManualGalleryUrl}
+                      style={{
+                        backgroundColor: 'rgba(56, 189, 248, 0.12)',
+                        border: '1px solid rgba(56, 189, 248, 0.25)',
+                        color: '#38BDF8',
+                        padding: '0.45rem 0.85rem',
+                        borderRadius: '6px',
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        fontFamily: 'var(--font-mono, monospace)',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      + Add URL
+                    </button>
                   </div>
                 </div>
               </div>

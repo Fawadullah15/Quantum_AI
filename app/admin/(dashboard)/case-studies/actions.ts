@@ -13,7 +13,65 @@ async function checkAuth() {
   return session;
 }
 
-export async function createCaseStudy(data: any) {
+export interface CaseStudyInput {
+  title: string;
+  slug?: string;
+  client?: string;
+  industry?: string;
+  problem?: string;
+  briefDescription?: string;
+  solution?: string;
+  implementation?: string;
+  technologies?: string;
+  results?: string;
+  year?: number | string;
+  services?: string;
+  heroImage?: string | null;
+  gallery?: string[] | string;
+  externalUrl?: string | null;
+  url?: string | null;
+  published?: boolean | string;
+  order?: number | string;
+  metrics?: Array<{ label: string; value: string; description?: string | null }>;
+}
+
+export function sanitizeGallery(input: unknown): string {
+  let list: unknown[] = [];
+  if (Array.isArray(input)) {
+    list = input;
+  } else if (typeof input === 'string') {
+    const trimmed = input.trim();
+    if (trimmed) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          list = parsed;
+        } else if (typeof parsed === 'string') {
+          list = [parsed];
+        }
+      } catch {
+        list = [trimmed];
+      }
+    }
+  }
+
+  const sanitized: string[] = [];
+  const seen = new Set<string>();
+
+  for (const item of list) {
+    if (typeof item === 'string') {
+      const trimmedUrl = item.trim();
+      if (trimmedUrl.length > 0 && !seen.has(trimmedUrl)) {
+        seen.add(trimmedUrl);
+        sanitized.push(trimmedUrl);
+      }
+    }
+  }
+
+  return JSON.stringify(sanitized);
+}
+
+export async function createCaseStudy(data: CaseStudyInput) {
   await checkAuth();
 
   let slug = data.slug
@@ -38,9 +96,7 @@ export async function createCaseStudy(data: any) {
         }))
     : [];
 
-  const galleryString = typeof data.gallery === 'string'
-    ? data.gallery
-    : JSON.stringify(Array.isArray(data.gallery) ? data.gallery.filter(Boolean) : []);
+  const galleryString = sanitizeGallery(data.gallery);
 
   const study = await prisma.caseStudy.create({
     data: {
@@ -53,13 +109,13 @@ export async function createCaseStudy(data: any) {
       implementation: data.implementation?.trim() || '',
       technologies: data.technologies?.trim() || '',
       results: data.results?.trim() || '',
-      year: parseInt(data.year, 10) || new Date().getFullYear(),
+      year: parseInt(String(data.year), 10) || new Date().getFullYear(),
       services: data.services?.trim() || '',
       heroImage: data.heroImage || null,
       gallery: galleryString,
       externalUrl: data.externalUrl || data.url || null,
       published: data.published === 'true' || data.published === true || data.published === 'on',
-      order: parseInt(data.order, 10) || 0,
+      order: parseInt(String(data.order), 10) || 0,
       ...(validMetrics.length > 0 ? { metrics: { create: validMetrics } } : {}),
     },
   });
@@ -73,7 +129,7 @@ export async function createCaseStudy(data: any) {
   return study;
 }
 
-export async function updateCaseStudy(id: string, data: any) {
+export async function updateCaseStudy(id: string, data: Partial<CaseStudyInput>) {
   await checkAuth();
 
   let slug = data.slug
@@ -89,12 +145,6 @@ export async function updateCaseStudy(id: string, data: any) {
     }
   }
 
-  const galleryString = typeof data.gallery === 'string'
-    ? data.gallery
-    : Array.isArray(data.gallery)
-    ? JSON.stringify(data.gallery.filter(Boolean))
-    : undefined;
-
   const updateData: any = {};
   if (data.title !== undefined) updateData.title = data.title.trim();
   if (slug !== undefined) updateData.slug = slug;
@@ -107,10 +157,10 @@ export async function updateCaseStudy(id: string, data: any) {
   if (data.implementation !== undefined) updateData.implementation = data.implementation.trim();
   if (data.technologies !== undefined) updateData.technologies = data.technologies.trim();
   if (data.results !== undefined) updateData.results = data.results.trim();
-  if (data.year !== undefined) updateData.year = parseInt(data.year, 10) || new Date().getFullYear();
+  if (data.year !== undefined) updateData.year = parseInt(String(data.year), 10) || new Date().getFullYear();
   if (data.services !== undefined) updateData.services = data.services.trim();
   if (data.heroImage !== undefined) updateData.heroImage = data.heroImage || null;
-  if (galleryString !== undefined) updateData.gallery = galleryString;
+  if (data.gallery !== undefined) updateData.gallery = sanitizeGallery(data.gallery);
   if (data.externalUrl !== undefined || data.url !== undefined) {
     updateData.externalUrl = data.externalUrl || data.url || null;
   }
