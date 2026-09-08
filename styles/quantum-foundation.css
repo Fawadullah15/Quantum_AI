@@ -1,6 +1,7 @@
 /* QUANTUM AI DESIGN TOKENS (Phase 1)
    Future-ready visual foundation
 */
+@tailwind utilities;
 
 :root {
   /* COLOR TOKENS */
