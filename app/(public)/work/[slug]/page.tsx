@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import prisma from '@/lib/db';
 import { createPageMetadata, getCaseStudySchema } from '@/lib/seo';
+import { parseGallery } from '@/lib/gallery';
+import { GalleryConfigurator } from '@/components/layout/GalleryConfigurator';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -49,10 +51,14 @@ export default async function CaseStudyPage({ params }: Props) {
   const technologies = typeof study.technologies === 'string'
     ? study.technologies.split(',').map((t) => t.trim()).filter(Boolean)
     : [];
+  const galleryImages = parseGallery(study.gallery);
   const schemaJson = getCaseStudySchema(study);
 
   return (
     <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', paddingInline: 'clamp(1.25rem, 5vw, 4rem)', maxWidth: '1000px', margin: '0 auto', minHeight: '100vh' }}>
+      {/* 3D Scene Gallery Bridge */}
+      <GalleryConfigurator images={galleryImages} slug={study.slug} />
+
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"

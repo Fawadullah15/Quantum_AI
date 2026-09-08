@@ -28,6 +28,8 @@ interface GlobalContextType {
   setScrollProgress: (progress: number) => void;
   isMobile: boolean;
   setIsMobile: (isMobile: boolean) => void;
+  activeGalleryImages: string[];
+  setActiveGalleryImages: (images: string[]) => void;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -37,13 +39,15 @@ export function GlobalProvider({ children }: { children: ReactNode }) {
   const [cameraTarget, setCameraTarget] = useState<THREE.Vector3>(new THREE.Vector3(0, 1.5, 5));
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [activeGalleryImages, setActiveGalleryImages] = useState<string[]>([]);
 
   return (
     <GlobalContext.Provider value={{
       currentScene, setCurrentScene,
       cameraTarget, setCameraTarget,
       scrollProgress, setScrollProgress,
-      isMobile, setIsMobile
+      isMobile, setIsMobile,
+      activeGalleryImages, setActiveGalleryImages
     }}>
       {children}
     </GlobalContext.Provider>
