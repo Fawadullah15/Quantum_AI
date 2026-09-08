@@ -74,6 +74,15 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     setIsEditing(true);
   };
 
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('new') === '1' || params.get('create') === '1') {
+        handleCreate();
+      }
+    }
+  }, []);
+
   const handleEdit = (study: CaseStudy) => {
     let initialGallery: string[] = [];
     if (study.gallery) {
@@ -1023,22 +1032,43 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
               {/* Gallery Images Component */}
               <div
                 style={{
-                  marginTop: '1.25rem',
-                  backgroundColor: 'rgba(3, 10, 24, 0.6)',
-                  border: '1px solid rgba(56, 189, 248, 0.18)',
-                  borderRadius: '8px',
-                  padding: '1rem',
+                  marginTop: '1.5rem',
+                  backgroundColor: 'rgba(3, 10, 24, 0.75)',
+                  border: '1px solid rgba(56, 189, 248, 0.25)',
+                  borderRadius: '10px',
+                  padding: '1.25rem',
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  <div>
-                    <label style={{ ...labelStyle, marginBottom: '0.15rem' }}>
-                      Gallery Images ({formData.gallery.length})
-                    </label>
-                    <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
-                      Additional project visuals and screenshots. These can be displayed inside the 3D screens in future stages.
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div
+                      style={{
+                        fontSize: '0.85rem',
+                        fontWeight: 700,
+                        color: '#38BDF8',
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                        fontFamily: 'var(--font-mono, monospace)',
+                      }}
+                    >
+                      Gallery Images
                     </div>
+                    <span
+                      style={{
+                        backgroundColor: 'rgba(56, 189, 248, 0.12)',
+                        border: '1px solid rgba(56, 189, 248, 0.3)',
+                        padding: '1px 8px',
+                        borderRadius: '12px',
+                        fontSize: '0.72rem',
+                        color: '#38BDF8',
+                        fontFamily: 'var(--font-mono, monospace)',
+                      }}
+                    >
+                      {formData.gallery.length} image{formData.gallery.length !== 1 ? 's' : ''}
+                    </span>
                   </div>
+
                   {formData.gallery.length > 0 && (
                     <button
                       type="button"
@@ -1047,160 +1077,24 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                         backgroundColor: 'transparent',
                         border: '1px solid rgba(239, 68, 68, 0.25)',
                         color: '#F87171',
-                        padding: '0.25rem 0.55rem',
+                        padding: '0.3rem 0.65rem',
                         borderRadius: '4px',
                         fontSize: '0.72rem',
                         cursor: 'pointer',
                         fontFamily: 'var(--font-mono, monospace)',
                       }}
                     >
-                      Clear All
+                      Clear All Images
                     </button>
                   )}
                 </div>
 
-                {/* Gallery Previews Grid */}
-                {formData.gallery.length > 0 ? (
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
-                      gap: '0.75rem',
-                      marginBottom: '0.85rem',
-                      marginTop: '0.75rem',
-                    }}
-                  >
-                    {formData.gallery.map((url, idx) => (
-                      <div
-                        key={`${url}-${idx}`}
-                        style={{
-                          backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                          border: '1px solid rgba(56, 189, 248, 0.2)',
-                          borderRadius: '6px',
-                          overflow: 'hidden',
-                          position: 'relative',
-                          display: 'flex',
-                          flexDirection: 'column',
-                        }}
-                      >
-                        {/* Image Thumbnail */}
-                        <div
-                          style={{
-                            width: '100%',
-                            aspectRatio: '16/9',
-                            position: 'relative',
-                            backgroundColor: '#020714',
-                          }}
-                        >
-                          <Image
-                            src={url}
-                            alt={`Gallery image ${idx + 1}`}
-                            fill
-                            sizes="130px"
-                            style={{ objectFit: 'cover' }}
-                            unoptimized={url.startsWith('http')}
-                          />
-                          <div
-                            style={{
-                              position: 'absolute',
-                              top: '4px',
-                              left: '4px',
-                              backgroundColor: 'rgba(3, 7, 18, 0.85)',
-                              color: '#38BDF8',
-                              fontSize: '0.65rem',
-                              fontFamily: 'var(--font-mono, monospace)',
-                              fontWeight: 700,
-                              padding: '1px 5px',
-                              borderRadius: '3px',
-                              border: '1px solid rgba(56, 189, 248, 0.3)',
-                            }}
-                          >
-                            #{idx + 1}
-                          </div>
-                        </div>
-
-                        {/* Controls Bar */}
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: '4px 6px',
-                            backgroundColor: 'rgba(7, 11, 20, 0.95)',
-                            borderTop: '1px solid rgba(56, 189, 248, 0.1)',
-                          }}
-                        >
-                          <div style={{ display: 'flex', gap: '2px' }}>
-                            <button
-                              type="button"
-                              title="Move earlier"
-                              disabled={idx === 0}
-                              onClick={() => handleMoveGalleryImage(idx, 'LEFT')}
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: idx === 0 ? '#334155' : '#94A3B8',
-                                fontSize: '0.75rem',
-                                cursor: idx === 0 ? 'not-allowed' : 'pointer',
-                                padding: '2px 4px',
-                              }}
-                            >
-                              ◀
-                            </button>
-                            <button
-                              type="button"
-                              title="Move later"
-                              disabled={idx === formData.gallery.length - 1}
-                              onClick={() => handleMoveGalleryImage(idx, 'RIGHT')}
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: idx === formData.gallery.length - 1 ? '#334155' : '#94A3B8',
-                                fontSize: '0.75rem',
-                                cursor: idx === formData.gallery.length - 1 ? 'not-allowed' : 'pointer',
-                                padding: '2px 4px',
-                              }}
-                            >
-                              ▶
-                            </button>
-                          </div>
-                          <button
-                            type="button"
-                            title="Remove image"
-                            onClick={() => handleRemoveGalleryImage(idx)}
-                            style={{
-                              background: 'transparent',
-                              border: 'none',
-                              color: '#F87171',
-                              fontSize: '0.75rem',
-                              cursor: 'pointer',
-                              padding: '2px 4px',
-                            }}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div
-                    style={{
-                      padding: '1rem',
-                      textAlign: 'center',
-                      color: '#64748B',
-                      fontSize: '0.78rem',
-                      border: '1px dashed rgba(56, 189, 248, 0.15)',
-                      borderRadius: '6px',
-                      margin: '0.65rem 0',
-                    }}
-                  >
-                    No gallery images added yet. Upload screenshots or visuals below.
-                  </div>
-                )}
+                <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: '0 0 1rem 0', lineHeight: 1.4 }}>
+                  Additional project visuals, screenshots, or design renders. These images will automatically display inside the 3D TV screens in the background on the project detail page.
+                </p>
 
                 {/* Upload & Add Controls */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1rem' }}>
                   <input
                     type="file"
                     ref={galleryFileInputRef}
@@ -1210,24 +1104,28 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     style={{ display: 'none' }}
                   />
 
-                  <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap', alignItems: 'center' }}>
                     <button
                       type="button"
                       disabled={isUploadingGallery}
                       onClick={() => galleryFileInputRef.current?.click()}
                       style={{
-                        backgroundColor: 'rgba(22, 119, 255, 0.15)',
-                        border: '1px solid rgba(22, 119, 255, 0.35)',
-                        color: '#38BDF8',
-                        padding: '0.45rem 0.85rem',
+                        backgroundColor: '#1677FF',
+                        border: '1px solid #1677FF',
+                        color: '#FFFFFF',
+                        padding: '0.55rem 1.15rem',
                         borderRadius: '6px',
-                        fontSize: '0.78rem',
+                        fontSize: '0.82rem',
                         fontWeight: 600,
                         cursor: isUploadingGallery ? 'not-allowed' : 'pointer',
                         fontFamily: 'var(--font-mono, monospace)',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        boxShadow: '0 2px 8px rgba(22, 119, 255, 0.3)',
                       }}
                     >
-                      {isUploadingGallery ? 'Uploading gallery image(s)...' : '📁 Upload Gallery Image(s)'}
+                      <span>📁</span> {isUploadingGallery ? 'Uploading images...' : 'Upload Gallery Images (Select Multiple)'}
                     </button>
                   </div>
 
@@ -1244,18 +1142,18 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                           handleAddManualGalleryUrl();
                         }
                       }}
-                      style={{ ...inputStyle, fontSize: '0.78rem', padding: '0.45rem 0.65rem', flex: 1 }}
+                      style={{ ...inputStyle, fontSize: '0.8rem', padding: '0.5rem 0.75rem', flex: 1 }}
                     />
                     <button
                       type="button"
                       onClick={handleAddManualGalleryUrl}
                       style={{
-                        backgroundColor: 'rgba(56, 189, 248, 0.12)',
-                        border: '1px solid rgba(56, 189, 248, 0.25)',
+                        backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                        border: '1px solid rgba(56, 189, 248, 0.3)',
                         color: '#38BDF8',
-                        padding: '0.45rem 0.85rem',
+                        padding: '0.5rem 1.15rem',
                         borderRadius: '6px',
-                        fontSize: '0.78rem',
+                        fontSize: '0.8rem',
                         fontWeight: 600,
                         cursor: 'pointer',
                         fontFamily: 'var(--font-mono, monospace)',
@@ -1266,6 +1164,148 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     </button>
                   </div>
                 </div>
+
+                {/* Gallery Previews Grid */}
+                {formData.gallery.length > 0 ? (
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
+                      gap: '0.85rem',
+                    }}
+                  >
+                    {formData.gallery.map((url, idx) => (
+                      <div
+                        key={`${url}-${idx}`}
+                        style={{
+                          backgroundColor: 'rgba(15, 23, 42, 0.95)',
+                          border: '1px solid rgba(56, 189, 248, 0.25)',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          position: 'relative',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
+                        }}
+                      >
+                        {/* Image Thumbnail */}
+                        <div
+                          style={{
+                            width: '100%',
+                            aspectRatio: '16/9',
+                            position: 'relative',
+                            backgroundColor: '#020714',
+                          }}
+                        >
+                          <Image
+                            src={url}
+                            alt={`Gallery image ${idx + 1}`}
+                            fill
+                            sizes="140px"
+                            style={{ objectFit: 'cover' }}
+                            unoptimized={true}
+                          />
+                          <div
+                            style={{
+                              position: 'absolute',
+                              top: '5px',
+                              left: '5px',
+                              backgroundColor: 'rgba(3, 7, 18, 0.9)',
+                              color: '#38BDF8',
+                              fontSize: '0.68rem',
+                              fontFamily: 'var(--font-mono, monospace)',
+                              fontWeight: 700,
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              border: '1px solid rgba(56, 189, 248, 0.4)',
+                            }}
+                          >
+                            #{idx + 1}
+                          </div>
+                        </div>
+
+                        {/* Controls Bar */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: '6px 8px',
+                            backgroundColor: 'rgba(7, 11, 20, 0.98)',
+                            borderTop: '1px solid rgba(56, 189, 248, 0.15)',
+                          }}
+                        >
+                          <div style={{ display: 'flex', gap: '4px' }}>
+                            <button
+                              type="button"
+                              title="Move earlier"
+                              disabled={idx === 0}
+                              onClick={() => handleMoveGalleryImage(idx, 'LEFT')}
+                              style={{
+                                background: 'transparent',
+                                border: '1px solid rgba(148, 163, 184, 0.2)',
+                                borderRadius: '4px',
+                                color: idx === 0 ? '#334155' : '#38BDF8',
+                                fontSize: '0.72rem',
+                                cursor: idx === 0 ? 'not-allowed' : 'pointer',
+                                padding: '2px 6px',
+                              }}
+                            >
+                              ◀
+                            </button>
+                            <button
+                              type="button"
+                              title="Move later"
+                              disabled={idx === formData.gallery.length - 1}
+                              onClick={() => handleMoveGalleryImage(idx, 'RIGHT')}
+                              style={{
+                                background: 'transparent',
+                                border: '1px solid rgba(148, 163, 184, 0.2)',
+                                borderRadius: '4px',
+                                color: idx === formData.gallery.length - 1 ? '#334155' : '#38BDF8',
+                                fontSize: '0.72rem',
+                                cursor: idx === formData.gallery.length - 1 ? 'not-allowed' : 'pointer',
+                                padding: '2px 6px',
+                              }}
+                            >
+                              ▶
+                            </button>
+                          </div>
+                          <button
+                            type="button"
+                            title="Remove image"
+                            onClick={() => handleRemoveGalleryImage(idx)}
+                            style={{
+                              background: 'transparent',
+                              border: '1px solid rgba(239, 68, 68, 0.2)',
+                              borderRadius: '4px',
+                              color: '#F87171',
+                              fontSize: '0.72rem',
+                              cursor: 'pointer',
+                              padding: '2px 6px',
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      padding: '1.5rem',
+                      textAlign: 'center',
+                      color: '#64748B',
+                      fontSize: '0.82rem',
+                      border: '1px dashed rgba(56, 189, 248, 0.25)',
+                      borderRadius: '8px',
+                      backgroundColor: 'rgba(2, 6, 23, 0.4)',
+                    }}
+                  >
+                    No gallery images added yet. Click &quot;Upload Gallery Images&quot; above to select multiple screenshots, or paste image URLs.
+                  </div>
+                )}
               </div>
             </div>
 
