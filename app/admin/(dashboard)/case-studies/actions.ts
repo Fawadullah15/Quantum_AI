@@ -167,7 +167,7 @@ export async function updateCaseStudy(id: string, data: Partial<CaseStudyInput>)
   if (data.published !== undefined) {
     updateData.published = data.published === 'true' || data.published === true || data.published === 'on';
   }
-  if (data.order !== undefined) updateData.order = parseInt(data.order, 10) || 0;
+  if (data.order !== undefined) updateData.order = parseInt(String(data.order), 10) || 0;
 
   if (Array.isArray(data.metrics)) {
     await prisma.caseStudyMetric.deleteMany({ where: { caseStudyId: id } });
