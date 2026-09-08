@@ -81,7 +81,7 @@ export function DigitalGallery() {
             tex.dispose();
             return;
           }
-          tex.colorSpace = THREE.SRGBColorSpace;
+          tex.colorSpace = THREE.LinearSRGBColorSpace;
           tex.generateMipmaps = true;
           tex.minFilter = THREE.LinearMipmapLinearFilter;
           tex.magFilter = THREE.LinearFilter;
@@ -161,13 +161,14 @@ function Installation({
   index: number;
   texture: THREE.Texture | null;
 }) {
-  const meshRef = useRef<THREE.Mesh>(null);
+  const bobGroupRef = useRef<THREE.Group>(null);
   const lightRef = useRef<THREE.PointLight>(null);
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    if (meshRef.current) {
-      meshRef.current.position.y = Math.sin(t * 0.5 + index) * 0.5;
+    // Bob the entire inner group (frame + screens + light) together
+    if (bobGroupRef.current) {
+      bobGroupRef.current.position.y = Math.sin(t * 0.5 + index) * 0.5;
     }
     if (lightRef.current) {
       lightRef.current.intensity = 1 + Math.sin(t * 2 + index) * 0.5;
@@ -176,46 +177,79 @@ function Installation({
 
   return (
     <group position={position} rotation={rotation}>
-      {/* Massive Frame */}
-      <mesh ref={meshRef}>
-        <boxGeometry args={[16, 9, 1]} />
-        <meshStandardMaterial color="#020304" roughness={0.1} metalness={0.9} />
-        
+      {/* Inner group that bobs up/down — contains frame, screen, and light */}
+      <group ref={bobGroupRef}>
+        {/* TV Frame — dark metallic box */}
+        <mesh>
+          <boxGeometry args={[16, 9, 1]} />
+          <meshStandardMaterial color="#020304" roughness={0.1} metalness={0.9} />
+        </mesh>
+
+        {/*
+          CRITICAL FIX: Screen planes are SIBLINGS of the frame mesh (both
+          inside bobGroupRef), NOT children of the frame mesh.
+
+          Previously, the screen mesh was nested INSIDE <mesh ref={meshRef}>,
+          which made it a child object of the frame box mesh. In R3F/Three.js,
+          child meshes of a mesh do render in the parent's local space, but
+          the parent's material (dark near-black #020304) was what got applied
+          to the box geometry — the screen child received its own material via
+          JSX children, but these are separate three.js Object3Ds within the
+          parent mesh's world — the real problem was that meshStandardMaterial
+          on the screen plane requires light facing the surface, and in a
+          circular arrangement most screens face away from the central lights.
+
+          Fix 1: Screen planes are now siblings of the frame — correct hierarchy.
+          Fix 2: meshBasicMaterial for screen — always fully lit, no lighting dep.
+          Fix 3: LinearSRGBColorSpace — prevents double gamma darkening with ACES.
+        */}
+
         {texture ? (
           <>
-            {/* Screen Surface with Project Image */}
+            {/* Image screen */}
             <mesh position={[0, 0, 0.51]}>
               <planeGeometry args={[15.5, 8.5]} />
-              <meshStandardMaterial
+              <meshBasicMaterial
                 map={texture}
-                roughness={0.25}
-                metalness={0.1}
                 toneMapped={false}
               />
             </mesh>
-            {/* Subtle digital screen sheen on top of image */}
+            {/* Subtle digital glass sheen overlay */}
             <mesh position={[0, 0, 0.515]}>
               <planeGeometry args={[15.5, 8.5]} />
               <meshBasicMaterial
                 color="#ffffff"
                 transparent
-                opacity={0.06}
+                opacity={0.05}
                 blending={THREE.AdditiveBlending}
+                depthWrite={false}
               />
             </mesh>
           </>
         ) : (
-          /* Fallback Glow surface (exact original appearance when no texture is available) */
+          /* Fallback: original glowing white surface */
           <mesh position={[0, 0, 0.51]}>
             <planeGeometry args={[15.5, 8.5]} />
-            <meshBasicMaterial color="#ffffff" transparent opacity={0.1} blending={THREE.AdditiveBlending} />
+            <meshBasicMaterial
+              color="#ffffff"
+              transparent
+              opacity={0.1}
+              blending={THREE.AdditiveBlending}
+              depthWrite={false}
+            />
           </mesh>
         )}
-      </mesh>
 
-      {/* Localized stark spotlighting */}
-      <pointLight ref={lightRef} position={[0, 0, 2]} intensity={1.5} color="#00e5ff" distance={15} decay={2} />
+        {/* Localized cyan spotlight */}
+        <pointLight
+          ref={lightRef}
+          position={[0, 0, 2]}
+          intensity={1.5}
+          color="#00e5ff"
+          distance={15}
+          decay={2}
+        />
+      </group>
     </group>
   );
 }
-
