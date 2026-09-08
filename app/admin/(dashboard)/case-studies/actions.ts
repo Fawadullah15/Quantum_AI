@@ -35,7 +35,7 @@ export interface CaseStudyInput {
   metrics?: Array<{ label: string; value: string; description?: string | null }>;
 }
 
-export function sanitizeGallery(input: unknown): string {
+function sanitizeGallery(input: unknown): string {
   let list: unknown[] = [];
   if (Array.isArray(input)) {
     list = input;
