@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useRef, useState, useEffect, useSyncExternalStore } from 'react';
 import { useFrame } from '@react-three/fiber';
@@ -32,13 +32,17 @@ function adjustTextureAspect(texture: THREE.Texture) {
 export function DigitalGallery() {
   const groupRef = useRef<THREE.Group>(null);
 
+  /**
+   * Read gallery images from the MODULE-LEVEL store, not React context.
+   * useSyncExternalStore works across all render tree boundaries,
+   * including the R3F Canvas internal reconciler.
+   */
   const activeGalleryImages = useSyncExternalStore(
     galleryStore.subscribe,
     galleryStore.getSnapshot,
+    // Server snapshot (always empty — no images on server)
     () => [] as string[]
   );
-
-  console.log('[DigitalGallery] activeGalleryImages rendering:', activeGalleryImages);
 
   useFrame((_, delta) => {
     if (groupRef.current) {
@@ -55,12 +59,7 @@ export function DigitalGallery() {
         const radius = 20;
         const x = Math.cos(angle) * radius;
         const z = Math.sin(angle) * radius;
-        
-        let imageUrl = activeCount > 0 ? activeGalleryImages[i % activeCount] : null;
-        if (i === 0) {
-           imageUrl = '/quantum-q-logo.png';
-        }
-
+        const imageUrl = activeCount > 0 ? activeGalleryImages[i % activeCount] : null;
         return (
           <Installation
             key={i}
@@ -98,7 +97,6 @@ function Installation({
       return;
     }
 
-    console.log(`[DigitalGallery] Screen ${index}: starting load of ${imageUrl}`);
     let cancelled = false;
     let loadedTex: THREE.Texture | null = null;
 
@@ -108,7 +106,6 @@ function Installation({
     loader.load(
       imageUrl,
       (tex) => {
-        console.log(`[DigitalGallery] Screen ${index}: load SUCCESS -> ${imageUrl}`);
         if (cancelled) {
           tex.dispose();
           return;
@@ -124,13 +121,12 @@ function Installation({
       undefined,
       (err) => {
         if (!cancelled) {
-          console.warn(`[DigitalGallery] Screen ${index}: FAILED to load ${imageUrl}`, err);
+          console.warn('[DigitalGallery] Screen ' + index + ': failed to load ' + imageUrl, err);
         }
       }
     );
 
     return () => {
-      console.log(`[DigitalGallery] Screen ${index}: cleanup for ${imageUrl}`);
       cancelled = true;
       setTexture(null);
       if (loadedTex) {
@@ -153,22 +149,23 @@ function Installation({
   return (
     <group position={position} rotation={rotation}>
       <group ref={bobRef}>
+        {/* TV Frame */}
         <mesh>
           <boxGeometry args={[16, 9, 1]} />
           <meshStandardMaterial color="#020304" roughness={0.1} metalness={0.9} />
         </mesh>
-        <mesh position={[0, 0, 0.6]}>
+        {/* Screen surface — sibling of frame mesh, inside bobbing group */}
+        <mesh position={[0, 0, 0.51]}>
           <planeGeometry args={[SCREEN_W, SCREEN_H]} />
           {texture ? (
-            <meshBasicMaterial map={texture} toneMapped={false} side={THREE.DoubleSide} color="#ffffff" />
+            <meshBasicMaterial map={texture} toneMapped={false} />
           ) : (
             <meshBasicMaterial
-              color="#ff0000"
+              color="#ffffff"
               transparent
-              opacity={0.5}
+              opacity={0.1}
               blending={THREE.AdditiveBlending}
               depthWrite={false}
-              side={THREE.DoubleSide}
             />
           )}
         </mesh>

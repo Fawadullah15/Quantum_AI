@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect } from 'react';
 import { galleryStore } from '@/lib/gallery-state';
@@ -31,23 +31,17 @@ export function GalleryConfigurator({ images, slug }: GalleryConfiguratorProps) 
       }
     }
 
-    console.log('[GalleryConfigurator] Mounting with slug:', slug);
-    console.log('[GalleryConfigurator] Input images:', images);
-    console.log('[GalleryConfigurator] Setting sanitized:', sanitized);
-
     galleryStore.set(sanitized);
 
-    // Cleanup: temporarily disabled to ensure React 18 Strict Mode double-invoke 
-    // isn't accidentally leaving the store empty.
+    // Cleanup: clear when leaving this project page
     return () => {
-      console.log('[GalleryConfigurator] Unmounting for slug:', slug);
-      // galleryStore.clear(); // Disabled for isolation test
+      galleryStore.clear();
     };
+  // Re-run only when the actual serialized images or slug change
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(images), slug]);
 
   return null;
 }
-
 
 export default GalleryConfigurator;
