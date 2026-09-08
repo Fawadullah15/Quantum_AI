@@ -1,9 +1,9 @@
-﻿'use client';
+'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useSyncExternalStore } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import { useGlobalStore } from '@/components/layout/GlobalStore';
+import { galleryStore } from '@/lib/gallery-state';
 
 const INSTALLATIONS = 6;
 const SCREEN_W = 15.5;
@@ -31,7 +31,18 @@ function adjustTextureAspect(texture: THREE.Texture) {
 
 export function DigitalGallery() {
   const groupRef = useRef<THREE.Group>(null);
-  const { activeGalleryImages } = useGlobalStore();
+
+  /**
+   * Read gallery images from the MODULE-LEVEL store, not React context.
+   * useSyncExternalStore works across all render tree boundaries,
+   * including the R3F Canvas internal reconciler.
+   */
+  const activeGalleryImages = useSyncExternalStore(
+    galleryStore.subscribe,
+    galleryStore.getSnapshot,
+    // Server snapshot (always empty — no images on server)
+    () => [] as string[]
+  );
 
   useFrame((_, delta) => {
     if (groupRef.current) {
@@ -138,10 +149,12 @@ function Installation({
   return (
     <group position={position} rotation={rotation}>
       <group ref={bobRef}>
+        {/* TV Frame */}
         <mesh>
           <boxGeometry args={[16, 9, 1]} />
           <meshStandardMaterial color="#020304" roughness={0.1} metalness={0.9} />
         </mesh>
+        {/* Screen surface — sibling of frame mesh, inside bobbing group */}
         <mesh position={[0, 0, 0.51]}>
           <planeGeometry args={[SCREEN_W, SCREEN_H]} />
           {texture ? (

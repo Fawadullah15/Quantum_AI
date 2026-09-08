@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
-import { useEffect, useMemo } from 'react';
-import { useGlobalStore } from './GlobalStore';
+import { useEffect } from 'react';
+import { galleryStore } from '@/lib/gallery-state';
 
 interface GalleryConfiguratorProps {
   images: string[];
@@ -9,40 +9,37 @@ interface GalleryConfiguratorProps {
 }
 
 /**
- * Invisible client dispatcher that syncs a project's gallery images
- * into the GlobalStore for the 3D scene (DigitalGallery), and cleans
- * them up when the project page unmounts or navigates.
+ * Invisible client component that writes the current project gallery images
+ * into the module-level galleryStore (not React context).
+ *
+ * Using a module-level store rather than React context ensures the images
+ * reach DigitalGallery inside the R3F Canvas regardless of render tree
+ * boundaries.
  */
 export function GalleryConfigurator({ images, slug }: GalleryConfiguratorProps) {
-  const { setActiveGalleryImages } = useGlobalStore();
-
-  // Normalize, filter, and deduplicate while preserving original order
-  const sanitizedImages = useMemo(() => {
-    const list: string[] = [];
+  useEffect(() => {
+    // Normalize and deduplicate, preserving order
     const seen = new Set<string>();
-
+    const sanitized: string[] = [];
     for (const url of images) {
       if (typeof url === 'string') {
         const trimmed = url.trim();
         if (trimmed.length > 0 && !seen.has(trimmed)) {
           seen.add(trimmed);
-          list.push(trimmed);
+          sanitized.push(trimmed);
         }
       }
     }
-    return list;
-  }, [images]);
 
-  // Serialized key to avoid re-triggering the effect unless image URLs actually change
-  const serialized = useMemo(() => JSON.stringify(sanitizedImages), [sanitizedImages]);
+    galleryStore.set(sanitized);
 
-  useEffect(() => {
-    setActiveGalleryImages(sanitizedImages);
-
+    // Cleanup: clear when leaving this project page
     return () => {
-      setActiveGalleryImages([]);
+      galleryStore.clear();
     };
-  }, [serialized, slug, setActiveGalleryImages]);
+  // Re-run only when the actual serialized images or slug change
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(images), slug]);
 
   return null;
 }
