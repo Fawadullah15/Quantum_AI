@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, Suspense, useEffect } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGlobalStore } from '@/components/layout/GlobalStore';
 import { GlobalParticles } from './particles/GlobalParticles';
@@ -21,6 +21,25 @@ const OrbitalSystem = React.lazy(() => import('./scenes/OrbitalSystem').then(m =
 const SignalNetwork = React.lazy(() => import('./scenes/SignalNetwork').then(m => ({ default: m.SignalNetwork })));
 const LeadershipCore = React.lazy(() => import('./scenes/LeadershipCore').then(m => ({ default: m.LeadershipCore })));
 
+/**
+ * MobileFog — Adapts fog near/far based on viewport width.
+ * Desktop: deep fog (8–80) for expansive depth.
+ * Mobile: compressed fog (5–40) so objects stay visible and the scene
+ * doesn't feel like tiny dots lost in infinite space.
+ */
+function MobileFog() {
+  const { size } = useThree();
+  const width = size.width || (typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const isMobile = width < 768;
+  
+  return (
+    <fog
+      attach="fog"
+      args={['#020817', isMobile ? 5 : 8, isMobile ? 40 : 80]}
+    />
+  );
+}
+
 export function GlobalScene() {
   const { currentScene } = useGlobalStore();
   const mouseRef = useRef({ x: 0, y: 0 });
@@ -36,32 +55,65 @@ export function GlobalScene() {
 
   useFrame((state) => {
     const cam = state.camera as THREE.PerspectiveCamera;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const isLandscapeMobile = isMobile && window.innerWidth > window.innerHeight;
     
-    // Parallax
-    const targetX = mouseRef.current.x * 1.2;
-    const targetY = mouseRef.current.y * 0.8;
+    // Parallax — greatly reduced on mobile to avoid the globe drifting off-screen
+    const parallaxScale = isMobile ? 0.15 : 1.0;
+    const targetX = mouseRef.current.x * 1.2 * parallaxScale;
+    const targetY = mouseRef.current.y * 0.8 * parallaxScale;
 
     if ((currentScene as string) === 'room' || (currentScene as string) === 'earth') {
-      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-      const camXOffset = isMobile ? 0 : -3.8;
-      
-      cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX + camXOffset, 0.05);
-      cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY, 0.05);
-      cam.position.z = THREE.MathUtils.lerp(cam.position.z, 14.5, 0.05);
-      
-      cam.lookAt(0, 0, 0);
+      if (isMobile) {
+        // ── MOBILE COMPOSITION ──
+        // Camera positioned much closer for a large, cinematic globe hero shot.
+        // Centered horizontally with a slight upward offset so the globe
+        // occupies the upper ~60% of the viewport, leaving clear space for hero text below.
+        const mobileZ = isLandscapeMobile ? 10.5 : 9.5;
+        const mobileY = isLandscapeMobile ? 0.8 : 1.2;
+        const mobileFov = isLandscapeMobile ? 48 : 55;
+        
+        cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX, 0.05);
+        cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY + mobileY, 0.05);
+        cam.position.z = THREE.MathUtils.lerp(cam.position.z, mobileZ, 0.05);
+        
+        // Smooth FOV transition
+        cam.fov = THREE.MathUtils.lerp(cam.fov, mobileFov, 0.05);
+        cam.updateProjectionMatrix();
+        
+        cam.lookAt(0, 0, 0);
+      } else {
+        // ── DESKTOP COMPOSITION — unchanged ──
+        const camXOffset = -3.8;
+        
+        cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX + camXOffset, 0.05);
+        cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY, 0.05);
+        cam.position.z = THREE.MathUtils.lerp(cam.position.z, 14.5, 0.05);
+        
+        // Restore desktop FOV if switching from mobile
+        cam.fov = THREE.MathUtils.lerp(cam.fov, 50, 0.05);
+        cam.updateProjectionMatrix();
+        
+        cam.lookAt(0, 0, 0);
+      }
     } else {
-      const targetZ = 15;
+      const targetZ = isMobile ? 12 : 15;
       cam.position.x = THREE.MathUtils.lerp(cam.position.x, targetX, 0.05);
       cam.position.y = THREE.MathUtils.lerp(cam.position.y, targetY, 0.05);
       cam.position.z = THREE.MathUtils.lerp(cam.position.z, targetZ, 0.05);
+      
+      // Restore appropriate FOV for non-home scenes
+      const sceneFov = isMobile ? 52 : 50;
+      cam.fov = THREE.MathUtils.lerp(cam.fov, sceneFov, 0.05);
+      cam.updateProjectionMatrix();
+      
       cam.lookAt(0, 0, 0);
     }
   });
 
   return (
     <>
-      <fog attach="fog" args={['#020817', 8, 80]} />
+      <MobileFog />
       <ambientLight intensity={0.05} color="#F8FAFF" />
 
       <Suspense fallback={null}>

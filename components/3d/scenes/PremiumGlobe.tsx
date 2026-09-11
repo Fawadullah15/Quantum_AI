@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 // ── Geographic Dot Grid ───────────────────────────────────────────────────────
@@ -78,10 +78,12 @@ function buildArc(a: [number, number], b: [number, number], r: number, segments 
 // ── Components ────────────────────────────────────────────────────────────────
 
 function GlobeDots() {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  
   const positions = useMemo(() => {
     const arr: number[] = [];
     let attempts = 0;
-    const needed = typeof window !== 'undefined' && window.innerWidth < 768 ? 3000 : DOT_COUNT;
+    const needed = isMobile ? 2000 : DOT_COUNT;
     while (arr.length / 3 < needed && attempts < needed * 20) {
       attempts++;
       const lat = (Math.random() * 180) - 90;
@@ -91,6 +93,7 @@ function GlobeDots() {
       arr.push(x, y, z);
     }
     return new Float32Array(arr);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -99,7 +102,7 @@ function GlobeDots() {
         <bufferAttribute attach="attributes-position" args={[positions, 3]} />
       </bufferGeometry>
       <pointsMaterial
-        size={DOT_SIZE}
+        size={isMobile ? 0.032 : DOT_SIZE}
         color="#48D7FF"
         transparent
         opacity={0.85}
@@ -187,7 +190,7 @@ function ConnectionArc({
   });
 
   return (
-    // @ts-ignore
+    // @ts-expect-error R3F line intrinsic
     <line ref={lineRef} geometry={geom}>
       <lineBasicMaterial
         color="#4F46E5"
@@ -202,6 +205,8 @@ function ConnectionArc({
 // ── Main globe export ─────────────────────────────────────────────────────────
 export function PremiumGlobe() {
   const groupRef = useRef<THREE.Group>(null);
+  const { size } = useThree();
+  const isMobile = (size.width || (typeof window !== 'undefined' ? window.innerWidth : 1200)) < 768;
   const [reducedMotion, setReducedMotion] = useState(false);
   const scrollRef = useRef({ current: 0, target: 0, velocity: 0, lastY: 0 });
 
@@ -245,39 +250,57 @@ export function PremiumGlobe() {
     mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.05;
     mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.05;
 
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
     if (groupRef.current) {
       if (!reducedMotion) {
-        const boost = scrollRef.current.velocity * 0.85;
-        groupRef.current.rotation.y += delta * 0.05 + boost;
+        // Mobile: slower rotation for calmer, more premium feel
+        const rotSpeed = isMobile ? 0.035 : 0.05;
+        const boost = scrollRef.current.velocity * (isMobile ? 0.4 : 0.85);
+        groupRef.current.rotation.y += delta * rotSpeed + boost;
         scrollRef.current.velocity *= 0.90;
       }
 
-      // ── Smooth Near / Far 3D Scroll Depth ──
-      // Top of Page (progress = 0):
-      // Earth is near, large, front and center (z = 0, y = -0.5, scale = 1.0)
-      // As user scrolls down (progress -> 1):
-      // 1. Z recedes deeply into the background (targetZ = -progress * 11.0) -> Goes far away!
-      // 2. Scale eases down smoothly (targetScale = 1.0 - progress * 0.35)
-      // 3. Y stays centered in the viewport with subtle settling (targetY = -0.5 - progress * 0.6)
-      // When user scrolls up (progress -> 0):
-      // Earth smoothly zooms forward from deep space and returns close to the screen!
-      const targetZ = -progress * 11.0;
-      const targetY = -0.5 - progress * 0.6;
-      const targetScale = Math.max(0.55, 1.0 - progress * 0.35);
+      if (isMobile) {
+        // ── MOBILE SCROLL DEPTH ──
+        // Much shallower recession: globe stays close and prominent.
+        // Z only recedes to -5 (vs -11 on desktop)
+        // Scale stays larger (min 0.75 vs 0.55)
+        // Y offset is gentler
+        const targetZ = -progress * 5.0;
+        const targetY = -0.3 - progress * 0.3;
+        const targetScale = Math.max(0.75, 1.0 - progress * 0.2);
 
-      groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, 0.06);
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.06);
+        groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, 0.06);
+        groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.06);
 
-      const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.06);
-      groupRef.current.scale.set(s, s, s);
+        const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.06);
+        groupRef.current.scale.set(s, s, s);
 
-      // Dynamic interactive tilt with time, scroll, and mouse interaction
-      const mouseRotX = -mouseRef.current.y * 0.2;
-      const mouseRotZ = mouseRef.current.x * 0.15;
-      const targetRotX = Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + progress * 0.15 + mouseRotX;
+        // Minimal interactive tilt on mobile (no mouse interaction on touch devices)
+        const targetRotX = Math.sin(state.clock.elapsedTime * 0.15) * 0.03 + progress * 0.08;
+        groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotX, 0.06);
+        groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, 0, 0.06);
+      } else {
+        // ── DESKTOP SCROLL DEPTH — unchanged ──
+        const targetZ = -progress * 11.0;
+        const targetY = -0.5 - progress * 0.6;
+        const targetScale = Math.max(0.55, 1.0 - progress * 0.35);
 
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotX, 0.06);
-      groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, mouseRotZ, 0.06);
+        groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, 0.06);
+        groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.06);
+
+        const s = THREE.MathUtils.lerp(groupRef.current.scale.x, targetScale, 0.06);
+        groupRef.current.scale.set(s, s, s);
+
+        // Dynamic interactive tilt with time, scroll, and mouse interaction
+        const mouseRotX = -mouseRef.current.y * 0.2;
+        const mouseRotZ = mouseRef.current.x * 0.15;
+        const targetRotX = Math.sin(state.clock.elapsedTime * 0.15) * 0.04 + progress * 0.15 + mouseRotX;
+
+        groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetRotX, 0.06);
+        groupRef.current.rotation.z = THREE.MathUtils.lerp(groupRef.current.rotation.z, mouseRotZ, 0.06);
+      }
     }
   });
 
@@ -297,7 +320,7 @@ export function PremiumGlobe() {
       <GlobeDots />
 
       {/* ── Connection arcs ── */}
-      {ARCS.map(([ai, bi], i) => (
+      {(isMobile ? ARCS.slice(0, 3) : ARCS).map(([ai, bi], i) => (
         <ConnectionArc
           key={i}
           idx={i}
@@ -307,7 +330,7 @@ export function PremiumGlobe() {
       ))}
 
       {/* ── Hub nodes ── */}
-      {HUBS.map((h, i) => (
+      {(isMobile ? HUBS.slice(0, 4) : HUBS).map((h, i) => (
         <HubNode key={i} lat={h.lat} lng={h.lng} idx={i} />
       ))}
 

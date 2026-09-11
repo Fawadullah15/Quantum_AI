@@ -21,20 +21,30 @@ const SCREEN_ASPECT = SCREEN_W / SCREEN_H;
 function useGalleryConfig() {
   const size = useThree((state) => state.size);
   const width = size.width || (typeof window !== 'undefined' ? window.innerWidth : 1200);
+  const height = size.height || (typeof window !== 'undefined' ? window.innerHeight : 800);
+  const isLandscape = width > height && height < 600;
 
   if (width < 768) {
+    if (isLandscape) {
+      return {
+        scale: 0.40,
+        radius: 7.5,
+        groupPosition: [0, -0.6, -5] as [number, number, number],
+        rotationSpeed: 0.020,
+      };
+    }
     return {
-      scale: 0.22,
-      radius: 8.5,
-      groupPosition: [0, 0.4, -15] as [number, number, number],
-      rotationSpeed: 0.018,
+      scale: 0.46,
+      radius: 8.0,
+      groupPosition: [0, -1.2, -4] as [number, number, number],
+      rotationSpeed: 0.020,
     };
   } else if (width < 1024) {
     return {
-      scale: 0.38,
-      radius: 10.5,
-      groupPosition: [0, -1.0, -13] as [number, number, number],
-      rotationSpeed: 0.021,
+      scale: 0.65,
+      radius: 13.0,
+      groupPosition: [0, -1.5, -6] as [number, number, number],
+      rotationSpeed: 0.022,
     };
   } else {
     return {
