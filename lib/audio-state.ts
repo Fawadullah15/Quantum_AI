@@ -30,6 +30,18 @@ function _notify(): void {
   _listeners.forEach((fn) => fn());
 }
 
+function _safelyStopAudio(el: HTMLAudioElement | null): void {
+  if (!el) return;
+  try {
+    el.pause();
+    el.currentTime = 0;
+    el.src = '';
+    el.load();
+  } catch {
+    // Ignore audio teardown exceptions
+  }
+}
+
 export const audioStore = {
   getSnapshot(): AudioState {
     return _state;
@@ -46,7 +58,19 @@ export const audioStore = {
   },
 
   _register(audio: HTMLAudioElement | null): void {
+    if (_audio && _audio !== audio) {
+      _safelyStopAudio(_audio);
+    }
     _audio = audio;
+  },
+
+  _cleanup(): void {
+    if (_audio) {
+      _safelyStopAudio(_audio);
+      _audio = null;
+    }
+    _state = { ...INITIAL_STATE };
+    _notify();
   },
 
   _setPlaying(playing: boolean): void {
@@ -68,35 +92,44 @@ export const audioStore = {
    */
   toggleMute(): void {
     if (!_audio) return;
+    const currentAudio = _audio;
 
     // Case A: autoplay was blocked -> first click = start audio (do not mute)
     if (_state.isBlocked && !_state.isMuted) {
       _state = { ..._state, isBlocked: false };
       _notify();
-      _audio.play().catch((err: Error) => {
-        if (err.name === 'NotAllowedError') {
-          _state = { ..._state, isBlocked: true };
-          _notify();
-        }
-      });
+      const playPromise = currentAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err: Error) => {
+          if (_audio !== currentAudio) return; // audio was replaced or destroyed
+          if (err.name === 'NotAllowedError') {
+            _state = { ..._state, isBlocked: true };
+            _notify();
+          }
+        });
+      }
       return;
     }
 
     // Case B: normal toggle
     const nextMuted = !_state.isMuted;
     if (nextMuted) {
-      _audio.pause();
+      currentAudio.pause();
       _state = { ..._state, isMuted: true, isPlaying: false };
       _notify();
     } else {
       _state = { ..._state, isMuted: false };
       _notify();
-      _audio.play().catch((err: Error) => {
-        if (err.name === 'NotAllowedError') {
-          _state = { ..._state, isBlocked: true };
-          _notify();
-        }
-      });
+      const playPromise = currentAudio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err: Error) => {
+          if (_audio !== currentAudio) return;
+          if (err.name === 'NotAllowedError') {
+            _state = { ..._state, isBlocked: true };
+            _notify();
+          }
+        });
+      }
     }
   },
 
@@ -106,13 +139,18 @@ export const audioStore = {
    */
   enableSound(): void {
     if (!_audio) return;
+    const currentAudio = _audio;
     _state = { ..._state, isMuted: false, isBlocked: false };
     _notify();
-    _audio.play().catch((err: Error) => {
-      if (err.name === 'NotAllowedError') {
-        _state = { ..._state, isBlocked: true };
-        _notify();
-      }
-    });
+    const playPromise = currentAudio.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err: Error) => {
+        if (_audio !== currentAudio) return;
+        if (err.name === 'NotAllowedError') {
+          _state = { ..._state, isBlocked: true };
+          _notify();
+        }
+      });
+    }
   },
 };
