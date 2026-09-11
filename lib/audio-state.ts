@@ -99,4 +99,20 @@ export const audioStore = {
       });
     }
   },
+
+  /**
+   * Explicitly start ambient audio synchronously from the floating sound prompt.
+   * Clears muted/blocked state and immediately calls audio.play() in the user gesture.
+   */
+  enableSound(): void {
+    if (!_audio) return;
+    _state = { ..._state, isMuted: false, isBlocked: false };
+    _notify();
+    _audio.play().catch((err: Error) => {
+      if (err.name === 'NotAllowedError') {
+        _state = { ..._state, isBlocked: true };
+        _notify();
+      }
+    });
+  },
 };

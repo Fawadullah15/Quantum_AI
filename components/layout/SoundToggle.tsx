@@ -1,14 +1,16 @@
-'use client';
+﻿'use client';
 
 import React, { useSyncExternalStore } from 'react';
 import { audioStore } from '@/lib/audio-state';
+import { SoundPrompt } from './SoundPrompt';
 
 /**
- * SoundToggle — refined, minimal fixed-position ambient audio control.
+ * SoundToggle — refined, minimal fixed-position ambient audio control
+ * with an attached non-blocking floating prompt.
  *
  * Sits at z-index 1000 (below WelcomeIntro 99999 and CustomCursor 9999).
- * Uses Quantum AI design tokens: deep void backdrop, subtle blue/cyan borders,
- * restrained glow, and responsive safe-area positioning.
+ * The outer container has pointer-events: none so clicks pass freely to the site.
+ * The button and the floating prompt have pointer-events: auto.
  *
  * toggleMute() is executed synchronously within the click handler to satisfy
  * Safari/iOS user-gesture requirements.
@@ -25,13 +27,160 @@ export function SoundToggle() {
   const label = isActive ? 'Mute background music' : 'Enable background music';
 
   return (
-    <>
+    <div className="qa-sound-control-root">
+      {/* Small floating sound hint attached above the toggle */}
+      <SoundPrompt />
+
+      {/* Main sound toggle button */}
+      <button
+        type="button"
+        aria-label={label}
+        title={label}
+        onClick={audioStore.toggleMute}
+        className={`qa-sound-btn ${isActive ? 'qa-sound-btn--active' : 'qa-sound-btn--silent'}`}
+      >
+        {isActive ? <IconSoundOn /> : <IconSoundOff />}
+      </button>
+
       <style>{`
-        .qa-sound-btn {
+        .qa-sound-control-root {
           position: fixed;
           bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
           right: calc(1.5rem + env(safe-area-inset-right, 0px));
           z-index: 1000;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 10px;
+          pointer-events: none;
+        }
+
+        /* Floating prompt card */
+        .qa-sound-prompt-card {
+          pointer-events: auto;
+          width: 275px;
+          max-width: calc(100vw - 2.5rem);
+          background: rgba(6, 21, 43, 0.92);
+          border: 1px solid rgba(56, 189, 248, 0.22);
+          border-radius: 10px;
+          padding: 13px 15px 14px;
+          box-shadow: 0 0 24px rgba(55, 48, 163, 0.2), 0 12px 32px -8px rgba(0, 0, 0, 0.85);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          outline: none;
+          user-select: none;
+        }
+
+        .qa-sound-prompt-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 5px;
+        }
+
+        .qa-sound-prompt-title-group {
+          display: flex;
+          align-items: center;
+          gap: 7px;
+        }
+
+        .qa-sound-prompt-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #38BDF8;
+          box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+        }
+
+        .qa-sound-prompt-title {
+          font-family: var(--font-sans, sans-serif);
+          font-size: 0.84rem;
+          font-weight: 600;
+          color: #F8FAFC;
+          letter-spacing: -0.01em;
+          line-height: 1.2;
+        }
+
+        .qa-sound-prompt-close {
+          background: transparent;
+          border: none;
+          color: #64748B;
+          width: 22px;
+          height: 22px;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          padding: 0;
+          transition: color 0.15s ease, background-color 0.15s ease;
+          outline: none;
+        }
+
+        .qa-sound-prompt-close:hover {
+          color: #F8FAFC;
+          background: rgba(255, 255, 255, 0.08);
+        }
+
+        .qa-sound-prompt-close:focus-visible {
+          outline: 2px solid #38BDF8;
+          outline-offset: 1px;
+        }
+
+        .qa-sound-prompt-desc {
+          font-family: var(--font-sans, sans-serif);
+          font-size: 0.77rem;
+          color: #94A3B8;
+          line-height: 1.45;
+          margin: 0 0 11px 0;
+          font-weight: 400;
+        }
+
+        .qa-sound-prompt-footer {
+          display: flex;
+          align-items: center;
+        }
+
+        .qa-sound-prompt-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #1677FF, #0050B3);
+          color: #FFFFFF;
+          border: 1px solid rgba(56, 189, 248, 0.4);
+          border-radius: 5px;
+          padding: 6px 14px;
+          font-family: var(--font-mono, monospace);
+          font-size: 0.72rem;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+          cursor: pointer;
+          box-shadow: 0 2px 10px rgba(22, 119, 255, 0.35);
+          transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, background 0.2s ease;
+          outline: none;
+          white-space: nowrap;
+          min-height: 32px;
+        }
+
+        .qa-sound-prompt-btn:hover {
+          background: linear-gradient(135deg, #2563EB, #1D4ED8);
+          border-color: #38BDF8;
+          box-shadow: 0 4px 16px rgba(56, 189, 248, 0.5);
+        }
+
+        .qa-sound-prompt-btn:active {
+          transform: scale(0.97);
+        }
+
+        .qa-sound-prompt-btn:focus-visible {
+          outline: 2px solid #38BDF8;
+          outline-offset: 2px;
+        }
+
+        /* Sound button styles */
+        .qa-sound-btn {
+          pointer-events: auto;
           width: 40px;
           height: 40px;
           border-radius: 50%;
@@ -88,32 +237,29 @@ export function SoundToggle() {
           outline-offset: 3px;
         }
         @media (max-width: 768px) {
-          .qa-sound-btn {
+          .qa-sound-control-root {
             bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
             right: calc(1rem + env(safe-area-inset-right, 0px));
           }
+          .qa-sound-prompt-card {
+            width: 245px;
+            padding: 12px 13px 13px;
+          }
         }
         @media (prefers-reduced-motion: reduce) {
-          .qa-sound-btn {
+          .qa-sound-btn,
+          .qa-sound-prompt-card,
+          .qa-sound-prompt-btn {
             transition: none !important;
             transform: none !important;
           }
-          .qa-sound-btn:active {
+          .qa-sound-btn:active,
+          .qa-sound-prompt-btn:active {
             transform: none !important;
           }
         }
       `}</style>
-
-      <button
-        type="button"
-        aria-label={label}
-        title={label}
-        onClick={audioStore.toggleMute}
-        className={`qa-sound-btn ${isActive ? 'qa-sound-btn--active' : 'qa-sound-btn--silent'}`}
-      >
-        {isActive ? <IconSoundOn /> : <IconSoundOff />}
-      </button>
-    </>
+    </div>
   );
 }
 

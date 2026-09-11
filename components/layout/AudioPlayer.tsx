@@ -53,9 +53,9 @@ export function AudioPlayer() {
     let isAttempting = false;
 
     const handleFirstInteraction = (e: Event) => {
-      // If the interaction is directly on the SoundToggle button, let SoundToggle handle it
+      // If the interaction is inside the sound control area (toggle button or floating prompt), let that control handle it
       const target = e.target as HTMLElement | null;
-      if (target?.closest?.('.qa-sound-btn')) {
+      if (target?.closest?.('.qa-sound-control-root') || target?.closest?.('.qa-sound-btn')) {
         return;
       }
 
