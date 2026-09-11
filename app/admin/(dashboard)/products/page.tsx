@@ -7,7 +7,14 @@ export const metadata = {
   title: 'Products Management | Quantum Admin',
 };
 
-export default async function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ new?: string; action?: string }>;
+}) {
+  const params = searchParams ? await searchParams : {};
+  const initialNew = params.new === '1' || params.new === 'true' || params.action === 'new';
+
   const products = await prisma.product.findMany({
     include: {
       features: {
@@ -31,7 +38,7 @@ export default async function ProductsPage() {
         </p>
       </div>
 
-      <ProductsClient products={products} />
+      <ProductsClient products={products} initialCreating={initialNew} />
     </div>
   );
 }

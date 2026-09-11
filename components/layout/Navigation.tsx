@@ -24,6 +24,7 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
   { href: '/work', label: 'Work' },
+  { href: '/products', label: 'Products' },
   {
     href: '/technology', label: 'Technology',
     dropdown: [

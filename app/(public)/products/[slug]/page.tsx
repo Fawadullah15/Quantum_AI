@@ -152,7 +152,7 @@ export default async function ProductPage({ params }: Props) {
             textTransform: 'uppercase',
           }}
         >
-          ← Back to Software Systems
+          ← Back to Products
         </Link>
       </div>
 
@@ -290,7 +290,7 @@ export default async function ProductPage({ params }: Props) {
                   {item.description}
                 </p>
                 <span style={{ marginTop: 'auto', paddingTop: '0.5rem', color: '#38BDF8', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600, letterSpacing: '0.05em' }}>
-                  SYSTEM DETAILS →
+                  VIEW PRODUCT →
                 </span>
               </Link>
             ))}

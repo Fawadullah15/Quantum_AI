@@ -65,6 +65,11 @@ export async function createProduct(data: {
       order: Number(data.order) || 0,
       ...(validFeatures.length > 0 ? { features: { create: validFeatures } } : {}),
     },
+    include: {
+      features: {
+        orderBy: { order: 'asc' },
+      },
+    },
   });
 
   revalidatePath('/admin/products');
@@ -137,6 +142,11 @@ export async function updateProduct(
   const product = await prisma.product.update({
     where: { id },
     data: updateData,
+    include: {
+      features: {
+        orderBy: { order: 'asc' },
+      },
+    },
   });
 
   revalidatePath('/admin/products');

@@ -198,10 +198,10 @@ export default async function ProductsPage() {
         {/* Header */}
         <div style={{ marginBottom: 'clamp(1.75rem, 3.5vw, 2.75rem)' }}>
           <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
-            [05 — DIGITAL PRODUCTS]
+            [04 — PRODUCTS]
           </div>
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: '#F8FAFC', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
-            SOFTWARE SYSTEMS &amp; PLATFORMS.
+            SOFTWARE PRODUCTS &amp; PLATFORMS.
           </h1>
           <p style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#94A3B8', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
             Proprietary software engines, autonomous workflow frameworks, and intelligent platforms engineered by Quantum AI.
@@ -302,7 +302,7 @@ export default async function ProductsPage() {
                     )}
 
                     <span className="product-action-text">
-                      EXPLORE SYSTEM ARCHITECTURE →
+                      VIEW PRODUCT →
                     </span>
                   </div>
                 </Link>

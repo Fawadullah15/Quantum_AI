@@ -26,13 +26,19 @@ export interface ProductItem {
   features?: { id?: string; title: string; description: string; order?: number }[];
 }
 
-export default function ProductsClient({ products: initialProducts }: { products: ProductItem[] }) {
+export default function ProductsClient({
+  products: initialProducts,
+  initialCreating = false,
+}: {
+  products: ProductItem[];
+  initialCreating?: boolean;
+}) {
   const router = useRouter();
   const toast = useAdminToast();
   const { confirm } = useAdminConfirm();
 
   const [products, setProducts] = useState<ProductItem[]>(initialProducts);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(initialCreating);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
@@ -52,11 +58,19 @@ export default function ProductsClient({ products: initialProducts }: { products
     heroImage: '',
     demoUrl: '',
     docsUrl: '',
-    technologies: 'Next.js, Python, PostgreSQL',
+    technologies: 'Next.js, Python, PostgreSQL, PyTorch',
     published: true,
-    order: 0,
-    features: [{ title: '', description: '' }],
+    order: initialProducts.length + 1,
+    features: [{ title: 'Autonomous Decision Engine', description: 'Real-time neural inference pipeline.' }],
   });
+
+  const handleCloseForm = () => {
+    setIsEditing(false);
+    setCurrentId(null);
+    if (typeof window !== 'undefined' && window.location.search) {
+      router.replace('/admin/products');
+    }
+  };
 
   const handleCreate = () => {
     setFormData({
@@ -247,8 +261,7 @@ export default function ProductsClient({ products: initialProducts }: { products
         setProducts((prev) => [...prev, created as ProductItem]);
         toast.success(`Product "${formData.name}" created!`, 'Created');
       }
-      setIsEditing(false);
-      setCurrentId(null);
+      handleCloseForm();
       router.refresh();
     } catch (err: any) {
       toast.error(err?.message || 'Failed to save product', 'Error');
@@ -722,7 +735,7 @@ export default function ProductsClient({ products: initialProducts }: { products
             </h2>
             <button
               type="button"
-              onClick={() => setIsEditing(false)}
+              onClick={handleCloseForm}
               style={{ background: 'transparent', border: 'none', color: '#94A3B8', fontSize: '1.1rem', cursor: 'pointer' }}
             >
               ✕
@@ -1010,7 +1023,7 @@ export default function ProductsClient({ products: initialProducts }: { products
             <div style={{ display: 'flex', gap: '0.65rem', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
               <button
                 type="button"
-                onClick={() => setIsEditing(false)}
+                onClick={handleCloseForm}
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
