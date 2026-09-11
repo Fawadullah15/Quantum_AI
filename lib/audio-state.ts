@@ -62,6 +62,10 @@ export const audioStore = {
       _safelyStopAudio(_audio);
     }
     _audio = audio;
+    if (audio) {
+      _state = { ...INITIAL_STATE };
+      _notify();
+    }
   },
 
   _cleanup(): void {
@@ -69,7 +73,11 @@ export const audioStore = {
       _safelyStopAudio(_audio);
       _audio = null;
     }
-    _state = { ...INITIAL_STATE };
+    _state = {
+      isMuted: true,
+      isPlaying: false,
+      isBlocked: true,
+    };
     _notify();
   },
 
