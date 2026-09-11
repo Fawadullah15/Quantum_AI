@@ -44,36 +44,59 @@ class Particle {
     this.ease = ease;
   }
 
-  update(mouseX: number, mouseY: number, mouseRadius: number, mouseForce: number) {
-    // Distance from mouse
-    const dx = mouseX - this.x;
-    const dy = mouseY - this.y;
-    const distance = Math.sqrt(dx * dx + dy * dy);
+  update(mouseX: number, mouseY: number, mouseRadius: number, mouseForce: number, repelStrength: number) {
+    if (repelStrength > 0) {
+      const dx = mouseX - this.x;
+      const dy = mouseY - this.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
 
-    if (distance < mouseRadius) {
-      // Calculate repulsion force
-      const forceDirectionX = dx / distance;
-      const forceDirectionY = dy / distance;
-      const force = (mouseRadius - distance) / mouseRadius; // 0 to 1
-      
-      const repelX = forceDirectionX * force * mouseForce * -1;
-      const repelY = forceDirectionY * force * mouseForce * -1;
+      if (distance < mouseRadius) {
+        let forceDirectionX: number;
+        let forceDirectionY: number;
 
-      this.vx += repelX;
-      this.vy += repelY;
+        if (distance < 0.1) {
+          const angle = Math.random() * Math.PI * 2;
+          forceDirectionX = Math.cos(angle);
+          forceDirectionY = Math.sin(angle);
+        } else {
+          forceDirectionX = dx / distance;
+          forceDirectionY = dy / distance;
+        }
+
+        const force = (mouseRadius - distance) / mouseRadius; // 0 to 1
+        const effectiveForce = mouseForce * repelStrength;
+        const repelX = forceDirectionX * force * effectiveForce * -1;
+        const repelY = forceDirectionY * force * effectiveForce * -1;
+
+        this.vx += repelX;
+        this.vy += repelY;
+      }
     }
 
     // Spring back to origin
     this.vx += (this.originX - this.x) * this.ease;
     this.vy += (this.originY - this.y) * this.ease;
 
-    // Apply friction
-    this.vx *= this.friction;
-    this.vy *= this.friction;
+    // Apply friction with subtle return stabilization
+    const currentFriction = this.friction * (0.95 + 0.05 * repelStrength);
+    this.vx *= currentFriction;
+    this.vy *= currentFriction;
 
     // Update position
     this.x += this.vx;
     this.y += this.vy;
+
+    // Crisp typography lock-in when returning and near resting origin (zero drift)
+    if (repelStrength <= 0) {
+      const distOriginSq = (this.originX - this.x) ** 2 + (this.originY - this.y) ** 2;
+      const velSq = this.vx ** 2 + this.vy ** 2;
+      if (distOriginSq < 0.16 && velSq < 0.04) {
+        this.x = this.originX;
+        this.y = this.originY;
+        this.vx = 0;
+        this.vy = 0;
+      }
+    }
   }
 
   draw(ctx: CanvasRenderingContext2D) {
@@ -104,6 +127,7 @@ export default function ParticleText({
   const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const mouseRef = useRef({ x: -9999, y: -9999 });
+  const lastInteractionRef = useRef<number>(0);
   const animationRef = useRef<number>(0);
 
   // Parse multiline text (split by newlines or <br/> roughly)
@@ -166,11 +190,6 @@ export default function ParticleText({
       const startY = (ch - totalHeight) / 2;
 
       lines.forEach((line, i) => {
-        const metrics = offCtx.measureText(line);
-        // Left align or center align? Let's use left align for the specific design
-        // The original design has it upper-left or centered. The spec says "Left or upper-left".
-        // We'll just draw it with a 0 x offset, or maybe center it vertically.
-        // Actually, let's start at x=0 for clean left alignment, or maybe 10px padding.
         offCtx.fillText(line, 0, startY + i * lineHeight);
       });
 
@@ -211,16 +230,30 @@ export default function ParticleText({
 
     let isVisible = true;
 
+    // Timing constants for natural dispersion hold and smooth return
+    const HOLD_MS = 100;
+    const DECAY_MS = 300;
+
     const animate = () => {
       if (!isVisible) return;
 
       ctx.clearRect(0, 0, cw, ch);
       
       const { x: mx, y: my } = mouseRef.current;
+      const now = performance.now();
+      const elapsed = now - lastInteractionRef.current;
+
+      let repelStrength = 0;
+      if (elapsed < HOLD_MS) {
+        repelStrength = 1.0;
+      } else if (elapsed < HOLD_MS + DECAY_MS) {
+        const p = (elapsed - HOLD_MS) / DECAY_MS;
+        repelStrength = 1.0 - (p * p * (3 - 2 * p));
+      }
 
       for (let i = 0; i < particlesRef.current.length; i++) {
         const p = particlesRef.current[i];
-        p.update(mx, my, mouseRadius, mouseRepelForce);
+        p.update(mx, my, mouseRadius, mouseRepelForce, repelStrength);
         p.draw(ctx);
       }
 
@@ -258,25 +291,114 @@ export default function ParticleText({
       }
     };
 
+    const lastMovePos = { x: -9999, y: -9999 };
+
     const handleMouseMove = (e: MouseEvent) => {
       if (!container || !isVisible) return;
       const rect = container.getBoundingClientRect();
-      mouseRef.current.x = e.clientX - rect.left;
-      mouseRef.current.y = e.clientY - rect.top;
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+
+      const isNear = 
+        clientX >= rect.left - mouseRadius &&
+        clientX <= rect.right + mouseRadius &&
+        clientY >= rect.top - mouseRadius &&
+        clientY <= rect.bottom + mouseRadius;
+
+      if (!isNear) {
+        if (mouseRef.current.x !== -9999) {
+          mouseRef.current.x = -9999;
+          mouseRef.current.y = -9999;
+        }
+        return;
+      }
+
+      const distMoved = Math.hypot(clientX - lastMovePos.x, clientY - lastMovePos.y);
+      if (distMoved >= 2.5) {
+        lastMovePos.x = clientX;
+        lastMovePos.y = clientY;
+        mouseRef.current.x = clientX - rect.left;
+        mouseRef.current.y = clientY - rect.top;
+        lastInteractionRef.current = performance.now();
+      }
+    };
+
+    const handlePointerDown = (e: PointerEvent | MouseEvent) => {
+      if (!container || !isVisible) return;
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      if (x >= -30 && x <= rect.width + 30 && y >= -30 && y <= rect.height + 30) {
+        mouseRef.current.x = x;
+        mouseRef.current.y = y;
+        lastMovePos.x = e.clientX;
+        lastMovePos.y = e.clientY;
+        lastInteractionRef.current = performance.now();
+      }
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (!container || !isVisible || !e.touches[0]) return;
+      const rect = container.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+
+      if (x >= -30 && x <= rect.width + 30 && y >= -30 && y <= rect.height + 30) {
+        mouseRef.current.x = x;
+        mouseRef.current.y = y;
+        lastMovePos.x = touch.clientX;
+        lastMovePos.y = touch.clientY;
+        lastInteractionRef.current = performance.now();
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!container || !isVisible || !e.touches[0]) return;
+      const rect = container.getBoundingClientRect();
+      const touch = e.touches[0];
+      const clientX = touch.clientX;
+      const clientY = touch.clientY;
+
+      const isNear = 
+        clientX >= rect.left - mouseRadius &&
+        clientX <= rect.right + mouseRadius &&
+        clientY >= rect.top - mouseRadius &&
+        clientY <= rect.bottom + mouseRadius;
+
+      if (isNear) {
+        const distMoved = Math.hypot(clientX - lastMovePos.x, clientY - lastMovePos.y);
+        if (distMoved >= 2.5) {
+          lastMovePos.x = clientX;
+          lastMovePos.y = clientY;
+          mouseRef.current.x = clientX - rect.left;
+          mouseRef.current.y = clientY - rect.top;
+          lastInteractionRef.current = performance.now();
+        }
+      }
     };
 
     const handleMouseLeave = () => {
       mouseRef.current.x = -9999;
       mouseRef.current.y = -9999;
+      lastMovePos.x = -9999;
+      lastMovePos.y = -9999;
     };
 
     window.addEventListener('resize', handleResize);
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    container.addEventListener('pointerdown', handlePointerDown);
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchmove', handleTouchMove, { passive: true });
     container.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
+      container?.removeEventListener('pointerdown', handlePointerDown);
+      container?.removeEventListener('touchstart', handleTouchStart);
+      container?.removeEventListener('touchmove', handleTouchMove);
       container?.removeEventListener('mouseleave', handleMouseLeave);
       observer.disconnect();
       cancelAnimationFrame(animationRef.current);
