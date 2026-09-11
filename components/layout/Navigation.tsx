@@ -10,12 +10,13 @@ import { Wordmark } from '../ui/Wordmark';
 // ─── Nav Data ────────────────────────────────────────────────────────────────
 
 interface DropdownItem { href: string; label: string; desc?: string }
-interface NavItem { href: string; label: string; dropdown?: DropdownItem[] }
+interface NavItem { href: string; label: string; dropdown?: DropdownItem[]; hideOnDesktop?: boolean }
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/', label: 'Home' },
   {
     href: '/services', label: 'Solutions',
+    hideOnDesktop: true,
     dropdown: [
       { href: '/services#ai', label: 'AI Systems', desc: 'Intelligent systems built on real models' },
       { href: '/services#software', label: 'Business Software', desc: 'Platforms that run your operations' },
@@ -253,9 +254,9 @@ export default function Navigation({
             <nav
               aria-label="Primary navigation"
               className="nav-desktop-links"
-              style={{ display: 'flex', gap: '0.25rem', alignItems: 'center', position: 'relative' }}
+              style={{ display: 'flex', gap: 'clamp(0.15rem, 0.35vw, 0.25rem)', alignItems: 'center', position: 'relative' }}
             >
-              {NAV_ITEMS.map((item) => (
+              {NAV_ITEMS.filter((item) => !item.hideOnDesktop).map((item) => (
                 <div
                   key={item.href}
                   style={{ position: 'relative' }}
@@ -272,11 +273,11 @@ export default function Navigation({
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.25rem',
-                      padding: '0.5rem 0.875rem',
-                      fontSize: '0.8rem',
+                      padding: '0.45rem clamp(0.55rem, 0.75vw, 0.85rem)',
+                      fontSize: '0.78rem',
                       fontFamily: 'var(--font-mono)',
                       fontWeight: 400,
-                      letterSpacing: '0.12em',
+                      letterSpacing: '0.1em',
                       textTransform: 'uppercase',
                       color: isActive(item.href) ? '#F8FAFF' : '#94A3B8',
                       textDecoration: 'none',
@@ -636,6 +637,9 @@ export default function Navigation({
         }
         @media (prefers-reduced-motion: reduce) {
           .liquid-gradient { animation: none; background: rgba(22,119,255,0.15); }
+        }
+        @media (max-width: 1120px) {
+          .nav-careers-btn { display: none !important; }
         }
         @media (max-width: 900px) {
           .nav-desktop-links { display: none !important; }

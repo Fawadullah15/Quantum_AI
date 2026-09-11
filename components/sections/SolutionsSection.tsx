@@ -380,6 +380,46 @@ export default function SolutionsSection() {
             </Link>
           ))}
         </div>
+
+        {/* ─── Solutions Overview CTA Button ─── */}
+        <div style={{ marginTop: 'clamp(2rem, 4vh, 2.75rem)', display: 'flex', justifyContent: 'center' }}>
+          <Link
+            href="/services"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.65rem',
+              padding: '0.8rem 1.85rem',
+              backgroundColor: 'rgba(22, 119, 255, 0.1)',
+              border: '1px solid rgba(56, 189, 248, 0.4)',
+              borderRadius: 999,
+              color: '#F8FAFC',
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '0.8rem',
+              fontWeight: 600,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              boxShadow: '0 0 20px -5px rgba(22, 119, 255, 0.3)',
+              transition: 'all 0.25s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.25)';
+              e.currentTarget.style.borderColor = '#38BDF8';
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 0 30px -4px rgba(56, 189, 248, 0.5)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+              e.currentTarget.style.transform = 'none';
+              e.currentTarget.style.boxShadow = '0 0 20px -5px rgba(22, 119, 255, 0.3)';
+            }}
+          >
+            <span>VIEW ALL SOLUTIONS &amp; ARCHITECTURES</span>
+            <span style={{ color: '#38BDF8' }}>→</span>
+          </Link>
+        </div>
       </div>
     </section>
   );

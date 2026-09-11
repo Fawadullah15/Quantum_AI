@@ -607,6 +607,72 @@ export default function HomePage() {
         <TestimonialsSection />
 
         {/* ═══════════════════════════════════════════════════════════
+            SOLUTIONS DISCOVERY BANNER (Bottom Landing Page)
+        ═══════════════════════════════════════════════════════════ */}
+        <section style={{ padding: 'clamp(1.5rem, 3.5vh, 2.75rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
+          <div style={{
+            maxWidth: 1200,
+            margin: '0 auto',
+            background: 'linear-gradient(135deg, rgba(6, 21, 43, 0.75) 0%, rgba(8, 28, 58, 0.9) 100%)',
+            border: '1px solid rgba(22, 119, 255, 0.22)',
+            borderRadius: 14,
+            padding: 'clamp(1.5rem, 3.5vw, 2.25rem)',
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '1.5rem',
+            boxShadow: '0 16px 40px -10px rgba(0, 0, 0, 0.7), 0 0 24px -6px rgba(22, 119, 255, 0.18)',
+          }}>
+            <div style={{ maxWidth: 640 }}>
+              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#38BDF8', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
+                CUSTOM SOFTWARE ARCHITECTURES
+              </div>
+              <h3 style={{ fontSize: 'clamp(1.3rem, 2.4vw, 1.75rem)', fontWeight: 700, color: '#F8FAFC', textTransform: 'uppercase', margin: '0 0 0.5rem 0', letterSpacing: '-0.02em', lineHeight: 1.15 }}>
+                Tailored solutions engineered for your operations.
+              </h3>
+              <p style={{ color: '#94A3B8', fontSize: '0.9rem', lineHeight: 1.55, margin: 0, fontWeight: 300 }}>
+                From autonomous agentic workflows and automated pipelines to enterprise operations platforms, discover our complete software systems catalog.
+              </p>
+            </div>
+            <Link
+              href="/services"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                padding: '0.8rem 1.65rem',
+                backgroundColor: '#1677FF',
+                borderRadius: 8,
+                color: '#FFFFFF',
+                fontFamily: 'var(--font-mono, monospace)',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                boxShadow: '0 4px 16px rgba(22, 119, 255, 0.4)',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#0050B3';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(22, 119, 255, 0.6)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#1677FF';
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(22, 119, 255, 0.4)';
+              }}
+            >
+              <span>EXPLORE ALL SOLUTIONS</span>
+              <span>→</span>
+            </Link>
+          </div>
+        </section>
+
+        {/* ═══════════════════════════════════════════════════════════
             CONTACT SECTION
         ═══════════════════════════════════════════════════════════ */}
         <section id="contact-form" style={{ padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
