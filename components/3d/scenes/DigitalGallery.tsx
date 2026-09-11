@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useEffect, useSyncExternalStore } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { galleryStore } from '@/lib/gallery-state';
 
@@ -9,6 +9,42 @@ const INSTALLATIONS = 6;
 const SCREEN_W = 15.5;
 const SCREEN_H = 8.5;
 const SCREEN_ASPECT = SCREEN_W / SCREEN_H;
+
+/**
+ * Responsive composition settings for 3D Screen Gallery:
+ * - Desktop (>= 1024px): 100% preserves current scale (1.0), radius (20), position ([0, -2, -5]), and speed (0.025).
+ * - Tablet (768px - 1023px): intermediate balanced depth and gentle rotation.
+ * - Mobile (< 768px): significantly scaled down (0.22), deeper in background ([0, 0.4, -15]),
+ *   compact radius (8.5), and ~28% slower rotation (0.018), ensuring closest screen never
+ *   exceeds 30-40% of viewport width and never covers page content.
+ */
+function useGalleryConfig() {
+  const size = useThree((state) => state.size);
+  const width = size.width || (typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+  if (width < 768) {
+    return {
+      scale: 0.22,
+      radius: 8.5,
+      groupPosition: [0, 0.4, -15] as [number, number, number],
+      rotationSpeed: 0.018,
+    };
+  } else if (width < 1024) {
+    return {
+      scale: 0.38,
+      radius: 10.5,
+      groupPosition: [0, -1.0, -13] as [number, number, number],
+      rotationSpeed: 0.021,
+    };
+  } else {
+    return {
+      scale: 1.0,
+      radius: 20,
+      groupPosition: [0, -2, -5] as [number, number, number],
+      rotationSpeed: 0.025,
+    };
+  }
+}
 
 function adjustTextureAspect(texture: THREE.Texture) {
   if (!texture.image) return;
@@ -32,6 +68,7 @@ function adjustTextureAspect(texture: THREE.Texture) {
 
 export function DigitalGallery() {
   const groupRef = useRef<THREE.Group>(null);
+  const config = useGalleryConfig();
 
   /**
    * Read gallery images from the MODULE-LEVEL store, not React context.
@@ -47,7 +84,7 @@ export function DigitalGallery() {
 
   useFrame((_, delta) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.025;
+      groupRef.current.rotation.y += delta * config.rotationSpeed;
     }
   });
 
@@ -57,12 +94,11 @@ export function DigitalGallery() {
   const activeCount = validImages.length;
 
   return (
-    <group ref={groupRef} position={[0, -2, -5]}>
+    <group ref={groupRef} position={config.groupPosition}>
       {Array.from({ length: INSTALLATIONS }).map((_, i) => {
         const angle = (i / INSTALLATIONS) * Math.PI * 2;
-        const radius = 20;
-        const x = Math.cos(angle) * radius;
-        const z = Math.sin(angle) * radius;
+        const x = Math.cos(angle) * config.radius;
+        const z = Math.sin(angle) * config.radius;
         // Inward facing: screen forward normal (+Z) points directly toward center [0, 0, 0]
         const rotY = Math.atan2(-x, -z);
         const imageUrl = activeCount > 0 ? validImages[i % activeCount] : null;
@@ -71,6 +107,7 @@ export function DigitalGallery() {
             key={i}
             position={[x, 0, z]}
             rotation={[0, rotY, 0]}
+            scale={config.scale}
             index={i}
             imageUrl={imageUrl}
           />
@@ -85,11 +122,13 @@ export function DigitalGallery() {
 function Installation({
   position,
   rotation,
+  scale,
   index,
   imageUrl,
 }: {
   position: [number, number, number];
   rotation: [number, number, number];
+  scale: number;
   index: number;
   imageUrl: string | null;
 }) {
@@ -147,15 +186,15 @@ function Installation({
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     if (bobRef.current) {
-      bobRef.current.position.y = Math.sin(t * 0.5 + index) * 0.5;
+      bobRef.current.position.y = Math.sin(t * 0.5 + index) * (0.5 * scale);
     }
     if (lightRef.current) {
-      lightRef.current.intensity = 1 + Math.sin(t * 2 + index) * 0.5;
+      lightRef.current.intensity = (1 + Math.sin(t * 2 + index) * 0.5) * Math.min(scale * 1.5, 1);
     }
   });
 
   return (
-    <group position={position} rotation={rotation}>
+    <group position={position} rotation={rotation} scale={[scale, scale, scale]}>
       <group ref={bobRef}>
         {/* TV Frame Housing: 16x9x1 enclosure */}
         <mesh position={[0, 0, 0]}>
