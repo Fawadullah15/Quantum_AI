@@ -212,7 +212,7 @@ function Installation({
           <meshStandardMaterial color="#020304" roughness={0.1} metalness={0.9} />
         </mesh>
 
-        {/* Screen Display Surface:
+        {/* Front Screen Display Surface:
             - Positioned at z = 0.55 (0.05 units in front of box face at z = 0.50) to eliminate Z-fighting
             - key={texture?.uuid} forces fresh MeshBasicMaterial instance when texture loads
             - side={THREE.DoubleSide} prevents any backface culling
@@ -222,6 +222,30 @@ function Installation({
           <planeGeometry args={[SCREEN_W, SCREEN_H]} />
           <meshBasicMaterial
             key={texture ? texture.uuid : 'empty-screen'}
+            map={texture || undefined}
+            color={texture ? '#ffffff' : '#040d21'}
+            side={THREE.DoubleSide}
+            toneMapped={false}
+            transparent={false}
+            opacity={1}
+            depthTest={true}
+            depthWrite={true}
+            polygonOffset={true}
+            polygonOffsetFactor={-1}
+            polygonOffsetUnits={-1}
+          />
+        </mesh>
+
+        {/* Reverse-Side Screen Display Surface:
+            - Positioned at z = -0.55 (0.05 units behind back box face at z = -0.50)
+            - rotation={[0, Math.PI, 0]} orients the display outward from the reverse face
+            - Uses identical project texture with aspect ratio preserved
+            - Guarantees the project content is ALWAYS visible when a screen approaches
+              the camera in the front half of the orbit, completely eliminating blank black backsides */}
+        <mesh position={[0, 0, -0.55]} rotation={[0, Math.PI, 0]}>
+          <planeGeometry args={[SCREEN_W, SCREEN_H]} />
+          <meshBasicMaterial
+            key={texture ? `${texture.uuid}-back` : 'empty-screen-back'}
             map={texture || undefined}
             color={texture ? '#ffffff' : '#040d21'}
             side={THREE.DoubleSide}
