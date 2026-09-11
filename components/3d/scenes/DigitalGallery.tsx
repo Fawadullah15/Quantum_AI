@@ -94,6 +94,7 @@ function Installation({
 }) {
   const bobRef = useRef<THREE.Group>(null);
   const lightRef = useRef<THREE.PointLight>(null);
+  const planeRef = useRef<THREE.Mesh>(null);
   const [texture, setTexture] = useState<THREE.Texture | null>(null);
 
   useEffect(() => {
@@ -149,30 +150,50 @@ function Installation({
     if (lightRef.current) {
       lightRef.current.intensity = 1 + Math.sin(t * 2 + index) * 0.5;
     }
+    // Periodic diagnostic log for screen 0
+    if (index === 0 && planeRef.current && (Math.floor(t * 10) % 30 === 0)) {
+      const planeWorldPos = new THREE.Vector3();
+      planeRef.current.getWorldPosition(planeWorldPos);
+      const q = new THREE.Quaternion();
+      planeRef.current.getWorldQuaternion(q);
+      const normal = new THREE.Vector3(0, 0, 1).applyQuaternion(q);
+      console.log('[DEBUG_GALLERY_DIAG]', {
+        index,
+        imageUrl: imageUrl ? imageUrl.slice(0, 50) : null,
+        texturePresent: !!texture,
+        planeWorldPos: [planeWorldPos.x.toFixed(2), planeWorldPos.y.toFixed(2), planeWorldPos.z.toFixed(2)],
+        normal: [normal.x.toFixed(2), normal.y.toFixed(2), normal.z.toFixed(2)],
+        camPos: [state.camera.position.x.toFixed(2), state.camera.position.y.toFixed(2), state.camera.position.z.toFixed(2)],
+        distToCam: planeWorldPos.distanceTo(state.camera.position).toFixed(2),
+        planeVisible: planeRef.current.visible,
+      });
+    }
   });
 
   return (
     <group position={position} rotation={rotation}>
       <group ref={bobRef}>
-        {/* TV Frame */}
+        {/* Diagnostic Step 1: Housing temporarily commented out to rule out occlusion */}
+        {/*
         <mesh>
           <boxGeometry args={[16, 9, 1]} />
           <meshStandardMaterial color="#020304" roughness={0.1} metalness={0.9} />
         </mesh>
-        {/* Screen surface — sibling of frame mesh, inside bobbing group */}
-        <mesh position={[0, 0, 0.51]}>
+        */}
+        {/* Screen surface with DoubleSide, key, and red fallback if no texture */}
+        <mesh ref={planeRef} position={[0, 0, 0.51]}>
           <planeGeometry args={[SCREEN_W, SCREEN_H]} />
-          {texture ? (
-            <meshBasicMaterial map={texture} toneMapped={false} />
-          ) : (
-            <meshBasicMaterial
-              color="#ffffff"
-              transparent
-              opacity={0.1}
-              blending={THREE.AdditiveBlending}
-              depthWrite={false}
-            />
-          )}
+          <meshBasicMaterial
+            key={texture ? texture.uuid : 'empty-pink'}
+            map={texture || undefined}
+            color={texture ? '#ffffff' : '#ff0055'}
+            side={THREE.DoubleSide}
+            toneMapped={false}
+            transparent={false}
+            opacity={1}
+            depthTest={true}
+            depthWrite={true}
+          />
         </mesh>
         <pointLight
           ref={lightRef}
