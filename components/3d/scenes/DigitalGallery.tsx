@@ -26,6 +26,7 @@ function adjustTextureAspect(texture: THREE.Texture) {
     texture.repeat.set(1, scale);
     texture.offset.set(0, (1 - scale) / 2);
   }
+  texture.matrixAutoUpdate = true;
   texture.needsUpdate = true;
 }
 
@@ -75,7 +76,7 @@ export function DigitalGallery() {
           />
         );
       })}
-      <ambientLight intensity={0.1} color="#ffffff" />
+      <ambientLight intensity={0.2} color="#ffffff" />
       <pointLight position={[0, 10, 0]} intensity={3} color="#ffffff" distance={50} decay={2} />
     </group>
   );
@@ -94,7 +95,6 @@ function Installation({
 }) {
   const bobRef = useRef<THREE.Group>(null);
   const lightRef = useRef<THREE.PointLight>(null);
-  const planeRef = useRef<THREE.Mesh>(null);
   const [texture, setTexture] = useState<THREE.Texture | null>(null);
 
   useEffect(() => {
@@ -107,7 +107,9 @@ function Installation({
     let loadedTex: THREE.Texture | null = null;
 
     const loader = new THREE.TextureLoader();
-    loader.setCrossOrigin('anonymous');
+    if (!imageUrl.startsWith('data:')) {
+      loader.setCrossOrigin('anonymous');
+    }
 
     loader.load(
       imageUrl,
@@ -127,7 +129,7 @@ function Installation({
       undefined,
       (err) => {
         if (!cancelled) {
-          console.warn('[DigitalGallery] Screen ' + index + ': failed to load ' + imageUrl, err);
+          console.warn('[DigitalGallery] Screen ' + index + ': failed to load ' + imageUrl.slice(0, 50), err);
         }
       }
     );
@@ -150,51 +152,41 @@ function Installation({
     if (lightRef.current) {
       lightRef.current.intensity = 1 + Math.sin(t * 2 + index) * 0.5;
     }
-    // Periodic diagnostic log for screen 0
-    if (index === 0 && planeRef.current && (Math.floor(t * 10) % 30 === 0)) {
-      const planeWorldPos = new THREE.Vector3();
-      planeRef.current.getWorldPosition(planeWorldPos);
-      const q = new THREE.Quaternion();
-      planeRef.current.getWorldQuaternion(q);
-      const normal = new THREE.Vector3(0, 0, 1).applyQuaternion(q);
-      console.log('[DEBUG_GALLERY_DIAG]', {
-        index,
-        imageUrl: imageUrl ? imageUrl.slice(0, 50) : null,
-        texturePresent: !!texture,
-        planeWorldPos: [planeWorldPos.x.toFixed(2), planeWorldPos.y.toFixed(2), planeWorldPos.z.toFixed(2)],
-        normal: [normal.x.toFixed(2), normal.y.toFixed(2), normal.z.toFixed(2)],
-        camPos: [state.camera.position.x.toFixed(2), state.camera.position.y.toFixed(2), state.camera.position.z.toFixed(2)],
-        distToCam: planeWorldPos.distanceTo(state.camera.position).toFixed(2),
-        planeVisible: planeRef.current.visible,
-      });
-    }
   });
 
   return (
     <group position={position} rotation={rotation}>
       <group ref={bobRef}>
-        {/* Diagnostic Step 1: Housing temporarily commented out to rule out occlusion */}
-        {/*
-        <mesh>
+        {/* TV Frame Housing: 16x9x1 enclosure */}
+        <mesh position={[0, 0, 0]}>
           <boxGeometry args={[16, 9, 1]} />
           <meshStandardMaterial color="#020304" roughness={0.1} metalness={0.9} />
         </mesh>
-        */}
-        {/* Screen surface with DoubleSide, key, and red fallback if no texture */}
-        <mesh ref={planeRef} position={[0, 0, 0.51]}>
+
+        {/* Screen Display Surface:
+            - Positioned at z = 0.55 (0.05 units in front of box face at z = 0.50) to eliminate Z-fighting
+            - key={texture?.uuid} forces fresh MeshBasicMaterial instance when texture loads
+            - side={THREE.DoubleSide} prevents any backface culling
+            - toneMapped={false} keeps true photographic contrast and vibrance
+            - polygonOffset ensures plane always draws cleanly on top of housing */}
+        <mesh position={[0, 0, 0.55]}>
           <planeGeometry args={[SCREEN_W, SCREEN_H]} />
           <meshBasicMaterial
-            key={texture ? texture.uuid : 'empty-pink'}
+            key={texture ? texture.uuid : 'empty-screen'}
             map={texture || undefined}
-            color={texture ? '#ffffff' : '#ff0055'}
+            color={texture ? '#ffffff' : '#040d21'}
             side={THREE.DoubleSide}
             toneMapped={false}
             transparent={false}
             opacity={1}
             depthTest={true}
             depthWrite={true}
+            polygonOffset={true}
+            polygonOffsetFactor={-1}
+            polygonOffsetUnits={-1}
           />
         </mesh>
+
         <pointLight
           ref={lightRef}
           position={[0, 0, 2]}
