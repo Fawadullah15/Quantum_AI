@@ -53,7 +53,13 @@ export default async function CaseStudyPage({ params }: Props) {
   const technologies = typeof study.technologies === 'string'
     ? study.technologies.split(',').map((t) => t.trim()).filter(Boolean)
     : [];
-  const galleryImages = parseGallery(study.gallery);
+  const rawGallery = parseGallery(study.gallery);
+  const galleryImages = study.heroImage
+    ? [
+        study.heroImage,
+        ...rawGallery.filter((url) => url !== study.heroImage),
+      ]
+    : rawGallery;
   const schemaJson = getCaseStudySchema(study);
 
   return (

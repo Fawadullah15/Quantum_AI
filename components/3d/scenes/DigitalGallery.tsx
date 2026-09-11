@@ -50,7 +50,10 @@ export function DigitalGallery() {
     }
   });
 
-  const activeCount = activeGalleryImages.length;
+  const validImages = activeGalleryImages.filter(
+    (img): img is string => typeof img === 'string' && img.trim().length > 0
+  );
+  const activeCount = validImages.length;
 
   return (
     <group ref={groupRef} position={[0, -2, -5]}>
@@ -59,12 +62,14 @@ export function DigitalGallery() {
         const radius = 20;
         const x = Math.cos(angle) * radius;
         const z = Math.sin(angle) * radius;
-        const imageUrl = activeCount > 0 ? activeGalleryImages[i % activeCount] : null;
+        // Inward facing: screen forward normal (+Z) points directly toward center [0, 0, 0]
+        const rotY = Math.atan2(-x, -z);
+        const imageUrl = activeCount > 0 ? validImages[i % activeCount] : null;
         return (
           <Installation
             key={i}
             position={[x, 0, z]}
-            rotation={[0, -angle + Math.PI / 2, 0]}
+            rotation={[0, rotY, 0]}
             index={i}
             imageUrl={imageUrl}
           />

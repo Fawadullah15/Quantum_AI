@@ -1,6 +1,8 @@
 import prisma from '@/lib/db';
 import Link from 'next/link';
 import { createPageMetadata } from '@/lib/seo';
+import { parseGallery } from '@/lib/gallery';
+import { GalleryConfigurator } from '@/components/layout/GalleryConfigurator';
 
 export const dynamic = 'force-dynamic';
 
@@ -22,6 +24,24 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
     where: { published: true },
     orderBy: { order: 'asc' },
   }).catch(() => []);
+
+  // Collect images from published case studies for the 3D gallery background
+  const workGalleryImages: string[] = [];
+  const seenUrls = new Set<string>();
+
+  for (const study of allCaseStudies) {
+    if (study.heroImage && !seenUrls.has(study.heroImage)) {
+      seenUrls.add(study.heroImage);
+      workGalleryImages.push(study.heroImage);
+    }
+    const galleryItems = parseGallery(study.gallery);
+    for (const img of galleryItems) {
+      if (!seenUrls.has(img)) {
+        seenUrls.add(img);
+        workGalleryImages.push(img);
+      }
+    }
+  }
 
   const categories = [
     'ALL',
@@ -56,6 +76,8 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
 
   return (
     <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '5rem', paddingInline: 'clamp(1rem, 4vw, 3rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
+      {/* 3D Scene Gallery Bridge for Portfolio Overview */}
+      <GalleryConfigurator images={workGalleryImages} slug="work-index" />
       <style>{`
         .work-page-container {
           max-width: 1160px;
