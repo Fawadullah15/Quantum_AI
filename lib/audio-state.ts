@@ -99,21 +99,4 @@ export const audioStore = {
       });
     }
   },
-
-  /**
-   * Explicitly enable and start ambient audio from a direct user interaction
-   * (such as the SoundOptInPrompt "Enable Sound" button).
-   * Unmutes, clears blocked state, and synchronously calls audio.play().
-   */
-  enableAudio(): void {
-    if (!_audio) return;
-    _state = { ..._state, isMuted: false, isBlocked: false };
-    _notify();
-    _audio.play().catch((err: Error) => {
-      if (err.name === 'NotAllowedError') {
-        _state = { ..._state, isBlocked: true };
-        _notify();
-      }
-    });
-  },
 };

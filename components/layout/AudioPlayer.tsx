@@ -30,9 +30,6 @@ export function AudioPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    const prefersReducedMotion =
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     // Create the audio element imperatively (not as JSX) to keep it out of the
     // React reconciler and prevent any accidental duplication.
     const audio = new Audio(AUDIO_SRC);
@@ -56,9 +53,9 @@ export function AudioPlayer() {
     let isAttempting = false;
 
     const handleFirstInteraction = (e: Event) => {
-      // If the interaction is on the SoundToggle button or SoundOptInPrompt, let those components manage it
+      // If the interaction is directly on the SoundToggle button, let SoundToggle handle it
       const target = e.target as HTMLElement | null;
-      if (target?.closest?.('.qa-sound-btn') || target?.closest?.('.qa-sound-prompt')) {
+      if (target?.closest?.('.qa-sound-btn')) {
         return;
       }
 
@@ -124,25 +121,21 @@ export function AudioPlayer() {
     audio.addEventListener('ended', onEnded);
     audio.addEventListener('error', onError);
 
-    // Attempt autoplay. Most browsers will block this on first visit.
-    // If blocked: mark isBlocked=true and attach temporary first-interaction listeners.
-    // If allowed: music begins at low volume (0.15) in the background.
-    if (!prefersReducedMotion) {
-      audio.play().catch((err: Error) => {
-        if (err.name === 'NotAllowedError') {
-          // Expected — browser autoplay policy blocked it. Not an error.
-          audioStore._setBlocked(true);
-          setupInteractionListeners();
-        } else {
-          // Genuinely unexpected (e.g., file not found); log once, don't retry.
-          console.warn('[AudioPlayer] Playback error:', err.message);
-          audioStore._setBlocked(true);
-        }
-      });
-    } else {
-      // Respect prefers-reduced-motion: start muted/blocked, let user opt in.
-      audioStore._setBlocked(true);
-    }
+    // Immediately attempt to play background audio when the website loads.
+    // If the browser permits audible autoplay, playback begins automatically at 15% volume.
+    // If the browser blocks autoplay (NotAllowedError), attach temporary window
+    // capture listeners so playback begins synchronously on the first legitimate interaction.
+    audio.play().catch((err: Error) => {
+      if (err.name === 'NotAllowedError') {
+        // Expected — browser autoplay policy blocked audible autoplay.
+        audioStore._setBlocked(true);
+        setupInteractionListeners();
+      } else {
+        // Genuinely unexpected error (e.g., network/file issue); log once, don't retry.
+        console.warn('[AudioPlayer] Playback error:', err.message);
+        audioStore._setBlocked(true);
+      }
+    });
 
     return () => {
       // Full cleanup — runs on unmount and on Strict Mode's synthetic unmount.

@@ -5,7 +5,6 @@ import CustomCursor from '@/components/layout/CustomCursor';
 import ClientLayout from '@/components/layout/ClientLayout';
 import { AudioPlayer } from '@/components/layout/AudioPlayer';
 import { SoundToggle } from '@/components/layout/SoundToggle';
-import { SoundOptInPrompt } from '@/components/layout/SoundOptInPrompt';
 import { getOrganizationSchema, getWebSiteSchema } from '@/lib/seo';
 import { getSiteSettings } from '@/lib/settings';
 
@@ -17,10 +16,9 @@ export default async function PublicLayout({ children }: { children: React.React
   return (
     <>
       <CustomCursor />
-      {/* Global ambient music — invisible player + minimal fixed toggle + cinematic prompt */}
+      {/* Global ambient music — invisible player + minimal fixed toggle */}
       <AudioPlayer />
       <SoundToggle />
-      <SoundOptInPrompt />
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
