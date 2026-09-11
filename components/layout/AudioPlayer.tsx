@@ -1,10 +1,18 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useRef } from 'react';
 import { audioStore } from '@/lib/audio-state';
 
 const AUDIO_SRC = '/bg-sound/Weight_of_the_Near_Stars.mp3';
 const INITIAL_VOLUME = 0.15;
+
+/** Real user events capable of triggering transient user activation in modern browsers */
+const INTERACTION_EVENTS: readonly (keyof WindowEventMap)[] = [
+  'pointerdown',
+  'touchstart',
+  'click',
+  'keydown',
+];
 
 /**
  * AudioPlayer — invisible client component that owns the single <audio> element
@@ -13,10 +21,10 @@ const INITIAL_VOLUME = 0.15;
  * Mounted once in app/(public)/layout.tsx. Because that layout never unmounts
  * during SPA navigation, the audio element persists across all page changes.
  *
- * React Strict Mode note: the effect will run twice in development (mount →
- * cleanup → mount). This is safe because each cleanup fully destroys the audio
- * element and unregisters it from audioStore before the next effect creates
- * a fresh one. Production always runs exactly once.
+ * When browser autoplay policy blocks audible playback on initial visit,
+ * temporary capture listeners are attached to window so the very first genuine
+ * user interaction anywhere on the public site synchronously starts playback.
+ * Once playback starts or if the user explicitly mutes, listeners are detached.
  */
 export function AudioPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -35,13 +43,80 @@ export function AudioPlayer() {
     audioRef.current = audio;
     audioStore._register(audio);
 
+    let interactionListenersActive = false;
+
+    const cleanupInteractionListeners = () => {
+      if (!interactionListenersActive) return;
+      interactionListenersActive = false;
+      INTERACTION_EVENTS.forEach((evt) => {
+        window.removeEventListener(evt, handleFirstInteraction, true);
+      });
+    };
+
+    let isAttempting = false;
+
+    const handleFirstInteraction = (e: Event) => {
+      // If the interaction is directly on the SoundToggle button, let SoundToggle handle it
+      const target = e.target as HTMLElement | null;
+      if (target?.closest?.('.qa-sound-btn')) {
+        return;
+      }
+
+      const state = audioStore.getSnapshot();
+      // If user explicitly muted or audio is already playing, do not play
+      if (state.isMuted || state.isPlaying || !audioRef.current) {
+        cleanupInteractionListeners();
+        return;
+      }
+
+      if (isAttempting) return;
+      isAttempting = true;
+
+      // Synchronous execution: audio.play() is invoked directly in the user gesture call stack
+      const playPromise = audioRef.current.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            audioStore._setBlocked(false);
+            audioStore._setPlaying(true);
+            cleanupInteractionListeners();
+          })
+          .catch((err: Error) => {
+            isAttempting = false;
+            if (err.name === 'NotAllowedError') {
+              // Browser did not grant user activation on this specific event;
+              // keep listeners active so the next interaction can activate playback.
+            } else {
+              // Unexpected error — clean up to prevent repeated attempts
+              cleanupInteractionListeners();
+            }
+          });
+      } else {
+        cleanupInteractionListeners();
+      }
+    };
+
+    const setupInteractionListeners = () => {
+      if (interactionListenersActive) return;
+      interactionListenersActive = true;
+      INTERACTION_EVENTS.forEach((evt) => {
+        window.addEventListener(evt, handleFirstInteraction, true);
+      });
+    };
+
     // Reflect native audio events into the store
-    const onPlay = () => audioStore._setPlaying(true);
+    const onPlay = () => {
+      audioStore._setPlaying(true);
+      audioStore._setBlocked(false);
+      cleanupInteractionListeners();
+    };
     const onPause = () => audioStore._setPlaying(false);
     const onEnded = () => audioStore._setPlaying(false);
     const onError = () => {
       // Do not crash the page on audio errors
       audioStore._setPlaying(false);
+      cleanupInteractionListeners();
     };
 
     audio.addEventListener('play', onPlay);
@@ -50,13 +125,14 @@ export function AudioPlayer() {
     audio.addEventListener('error', onError);
 
     // Attempt autoplay. Most browsers will block this on first visit.
-    // If blocked: mark isBlocked=true and wait for a user gesture via SoundToggle.
+    // If blocked: mark isBlocked=true and attach temporary first-interaction listeners.
     // If allowed: music begins at low volume (0.15) in the background.
     if (!prefersReducedMotion) {
       audio.play().catch((err: Error) => {
         if (err.name === 'NotAllowedError') {
           // Expected — browser autoplay policy blocked it. Not an error.
           audioStore._setBlocked(true);
+          setupInteractionListeners();
         } else {
           // Genuinely unexpected (e.g., file not found); log once, don't retry.
           console.warn('[AudioPlayer] Playback error:', err.message);
@@ -70,6 +146,7 @@ export function AudioPlayer() {
 
     return () => {
       // Full cleanup — runs on unmount and on Strict Mode's synthetic unmount.
+      cleanupInteractionListeners();
       audio.removeEventListener('play', onPlay);
       audio.removeEventListener('pause', onPause);
       audio.removeEventListener('ended', onEnded);
