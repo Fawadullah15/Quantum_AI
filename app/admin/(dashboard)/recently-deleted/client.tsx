@@ -1006,7 +1006,18 @@ export default function RecentlyDeletedClient({
                         </span>
                       </div>
                       <div style={{ fontSize: '0.82rem', color: '#E2E8F0', marginTop: '0.2rem' }}>
-                        {log.details || `${log.action} on ${log.entity}`}
+                        {log.entityName ? (
+                          <span style={{ fontWeight: 600, color: '#F8FAFC' }}>{log.entityName} &bull; </span>
+                        ) : null}
+                        {typeof log.details === 'string'
+                          ? log.details
+                          : typeof log.details?.reason === 'string'
+                          ? log.details.reason
+                          : typeof log.details?.restoredTo === 'string'
+                          ? `Restored to ${log.details.restoredTo}`
+                          : log.details
+                          ? JSON.stringify(log.details)
+                          : `${log.action} performed on ${log.entity}`}
                       </div>
                     </div>
 

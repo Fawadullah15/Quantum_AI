@@ -42,16 +42,26 @@ export function RecoveryDetailModal({
   if (!isOpen || !item) return null;
 
   let parsedData: any = {};
-  try {
-    parsedData = JSON.parse(item.data);
-  } catch {
-    parsedData = { raw: item.data };
+  if (typeof item.data === 'string') {
+    try {
+      parsedData = JSON.parse(item.data);
+    } catch {
+      parsedData = { raw: item.data };
+    }
+  } else if (item.data && typeof item.data === 'object') {
+    parsedData = item.data;
   }
 
   let mediaUrls: string[] = [];
-  try {
-    mediaUrls = JSON.parse(item.mediaUrls || '[]');
-  } catch {}
+  if (Array.isArray(item.mediaUrls)) {
+    mediaUrls = item.mediaUrls;
+  } else if (typeof item.mediaUrls === 'string') {
+    try {
+      mediaUrls = JSON.parse(item.mediaUrls);
+    } catch {
+      mediaUrls = [];
+    }
+  }
 
   const config = TYPE_CONFIG[item.entityType] || {
     label: item.entityType,
