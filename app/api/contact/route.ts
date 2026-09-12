@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
-import { sendEmail, getContactAdminEmailHtml, ADMIN_NOTIFICATION_EMAIL } from '@/lib/email';
+import { createAdminNotification } from '@/lib/notifications';
 
 export async function POST(request: Request) {
   try {
@@ -24,37 +24,43 @@ export async function POST(request: Request) {
     const cleanCompany = company ? String(company).trim() : null;
     const cleanProjectType = projectType ? String(projectType).trim() : null;
 
+    const cleanPhone = phone ? String(phone).trim() : null;
+    const cleanBudget = budget ? String(budget).trim() : null;
+
     const submission = await prisma.contactSubmission.create({
       data: {
         name: cleanName,
         email: cleanEmail,
         message: cleanMessage,
         company: cleanCompany,
-        phone: phone ? String(phone).trim() : null,
+        phone: cleanPhone,
         projectType: cleanProjectType,
-        budget: budget ? String(budget).trim() : null,
+        budget: cleanBudget,
         status: 'NEW',
       },
     });
 
-    // Send automated email notification to configured routing email or default
-    const { getSiteSettings } = await import('@/lib/settings');
-    const settings = await getSiteSettings();
-    const notificationDestination = settings.company_routing_email || ADMIN_NOTIFICATION_EMAIL;
-
-    const emailHtml = getContactAdminEmailHtml({
-      name: cleanName,
-      email: cleanEmail,
-      company: cleanCompany,
-      projectType: cleanProjectType,
-      message: cleanMessage,
+    // Centralized Admin Notification & Email Dispatch to quantumai.cmp@gmail.com
+    await createAdminNotification({
+      type: cleanProjectType ? 'PROJECT_INQUIRY' : 'CONTACT',
+      title: cleanProjectType ? `New ${cleanProjectType} Inquiry` : `New Contact Message from ${cleanName}`,
+      subtitle: cleanCompany ? `${cleanCompany} • ${cleanProjectType || cleanEmail}` : (cleanProjectType || cleanEmail),
+      senderName: cleanName,
+      senderEmail: cleanEmail,
+      preview: cleanMessage.length > 120 ? cleanMessage.slice(0, 120) + '...' : cleanMessage,
+      link: `/admin/messages/${submission.id}`,
+      details: {
+        id: submission.id,
+        name: cleanName,
+        email: cleanEmail,
+        phone: cleanPhone,
+        company: cleanCompany,
+        projectType: cleanProjectType,
+        budget: cleanBudget,
+        message: cleanMessage,
+        createdAt: submission.createdAt,
+      },
     });
-
-    await sendEmail({
-      to: notificationDestination,
-      subject: `[Quantum AI Contact] New Project Inquiry from ${cleanName}`,
-      html: emailHtml,
-    }).catch((err) => console.error('[Contact Email Dispatch Error]:', err));
 
     revalidatePath('/admin/messages');
     revalidatePath('/admin');

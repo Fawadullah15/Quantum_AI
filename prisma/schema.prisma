@@ -349,3 +349,31 @@ model SubmissionNote {
   createdAt            DateTime            @default(now())
 }
 
+// ─────────────────────────────────────────────────────────────
+// CENTRALIZED NOTIFICATION INBOX
+// ─────────────────────────────────────────────────────────────
+
+model Notification {
+  id          String    @id @default(cuid())
+  type        String    // CONTACT | CAREER | PARTNERSHIP | PROJECT_INQUIRY | NEWSLETTER | TESTIMONIAL | SYSTEM
+  title       String
+  subtitle    String?
+  senderName  String?
+  senderEmail String?
+  preview     String
+  details     String?   // JSON stringified payload of the complete submission
+  referenceId String?   // e.g. QA-CAR-1001, QA-PTR-2001
+  link        String?   // Link to dedicated admin view
+  read        Boolean   @default(false)
+  readAt      DateTime?
+  emailStatus String    @default("PENDING") // PENDING | SENT | FAILED | SKIPPED
+  emailError  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([read])
+  @@index([type])
+  @@index([createdAt])
+}
+
+

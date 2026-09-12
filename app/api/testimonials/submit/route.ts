@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { createAdminNotification } from '@/lib/notifications';
+
 
 export async function POST(req: Request) {
   try {
@@ -30,6 +32,26 @@ export async function POST(req: Request) {
 
     revalidatePath('/admin/testimonials');
     revalidatePath('/admin');
+
+    // Centralized Admin Notification & Email Copy to quantumai.cmp@gmail.com
+    await createAdminNotification({
+      type: 'TESTIMONIAL',
+      title: `New Client Review from ${name.trim()}`,
+      subtitle: `${company ? String(company).trim() + ' • ' : ''}${rating || 5} Stars Rating`,
+      senderName: name.trim(),
+      preview: content.trim().length > 120 ? content.trim().slice(0, 120) + '...' : content.trim(),
+      link: '/admin/testimonials',
+      details: {
+        id: newTestimonial.id,
+        name: name.trim(),
+        company: company ? String(company).trim() : null,
+        role: role ? String(role).trim() : null,
+        rating: typeof rating === 'number' ? rating : 5,
+        content: content.trim(),
+        photo: photo ? String(photo).trim() : null,
+        createdAt: newTestimonial.createdAt,
+      },
+    });
 
     return NextResponse.json(
       {

@@ -1,18 +1,106 @@
 // Server-side secure email dispatcher for Quantum AI
+import nodemailer from 'nodemailer';
 
-interface EmailPayload {
+export interface EmailPayload {
   to: string;
   subject: string;
   html: string;
   text?: string;
 }
 
-export const ADMIN_NOTIFICATION_EMAIL = process.env.COMPANY_NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || 'admin@quantumai.dev';
+export interface EmailResult {
+  success: boolean;
+  status: 'SENT' | 'FAILED';
+  error?: string;
+  messageId?: string;
+}
 
-export async function sendEmail({ to, subject, html, text }: EmailPayload): Promise<boolean> {
-  const fromEmail = process.env.EMAIL_FROM || 'notifications@quantumai.dev';
-  
-  // 1. Resend API if configured
+export const ADMIN_NOTIFICATION_EMAIL =
+  process.env.ADMIN_NOTIFICATION_EMAIL ||
+  process.env.COMPANY_NOTIFICATION_EMAIL ||
+  process.env.ADMIN_EMAIL ||
+  'quantumai.cmp@gmail.com';
+
+/**
+ * Robust server-side email dispatcher supporting:
+ * 1. Gmail SMTP via Nodemailer (GMAIL_USER & GMAIL_APP_PASSWORD)
+ * 2. Generic SMTP via Nodemailer (SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS)
+ * 3. Resend API (RESEND_API_KEY)
+ * 4. Custom Webhook (EMAIL_WEBHOOK_URL)
+ * 5. Safe development fallback logging
+ */
+export async function sendEmailDetailed({ to, subject, html, text }: EmailPayload): Promise<EmailResult> {
+  const fromEmail = process.env.EMAIL_FROM || process.env.GMAIL_USER || process.env.SMTP_USER || 'notifications@quantumai.dev';
+  const cleanText = text || html.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim();
+  let lastError = '';
+
+  // 1. Gmail SMTP (e.g. Google App Password)
+  const gmailUser = process.env.GMAIL_USER || (process.env.SMTP_USER && process.env.SMTP_USER.includes('@gmail.com') ? process.env.SMTP_USER : null);
+  const gmailPass = process.env.GMAIL_APP_PASSWORD || (gmailUser ? process.env.SMTP_PASS : null);
+
+  if (gmailUser && gmailPass) {
+    try {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: gmailUser,
+          pass: gmailPass,
+        },
+      });
+
+      const info = await transporter.sendMail({
+        from: `Quantum AI <${gmailUser}>`,
+        to,
+        subject,
+        html,
+        text: cleanText,
+      });
+
+      return {
+        success: true,
+        status: 'SENT',
+        messageId: info.messageId,
+      };
+    } catch (err: any) {
+      console.error('[Email] Gmail SMTP dispatch error:', err);
+      lastError = `Gmail SMTP error: ${err?.message || err}`;
+    }
+  }
+
+  // 2. Generic SMTP Server
+  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    try {
+      const port = Number(process.env.SMTP_PORT) || 465;
+      const transporter = nodemailer.createTransport({
+        host: process.env.SMTP_HOST,
+        port,
+        secure: port === 465,
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS,
+        },
+      });
+
+      const info = await transporter.sendMail({
+        from: `Quantum AI <${fromEmail}>`,
+        to,
+        subject,
+        html,
+        text: cleanText,
+      });
+
+      return {
+        success: true,
+        status: 'SENT',
+        messageId: info.messageId,
+      };
+    } catch (err: any) {
+      console.error('[Email] Custom SMTP dispatch error:', err);
+      lastError = `SMTP error: ${err?.message || err}`;
+    }
+  }
+
+  // 3. Resend API
   if (process.env.RESEND_API_KEY) {
     try {
       const res = await fetch('https://api.resend.com/emails', {
@@ -26,32 +114,64 @@ export async function sendEmail({ to, subject, html, text }: EmailPayload): Prom
           to,
           subject,
           html,
-          text,
+          text: cleanText,
         }),
       });
-      return res.ok;
-    } catch (err) {
+
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        return {
+          success: true,
+          status: 'SENT',
+          messageId: data.id,
+        };
+      } else {
+        const errBody = await res.text().catch(() => '');
+        console.error('[Email] Resend API error response:', res.status, errBody);
+        lastError = `Resend API error (${res.status}): ${errBody.slice(0, 120)}`;
+      }
+    } catch (err: any) {
       console.error('[Email] Resend API dispatch error:', err);
+      lastError = `Resend error: ${err?.message || err}`;
     }
   }
 
-  // 2. Custom Webhook / SMTP Service if configured
+  // 4. Custom Webhook Service
   if (process.env.EMAIL_WEBHOOK_URL) {
     try {
       const res = await fetch(process.env.EMAIL_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ to, from: fromEmail, subject, html, text }),
+        body: JSON.stringify({ to, from: fromEmail, subject, html, text: cleanText }),
       });
-      return res.ok;
-    } catch (err) {
+
+      if (res.ok) {
+        return { success: true, status: 'SENT' };
+      } else {
+        lastError = `Webhook HTTP error ${res.status}`;
+      }
+    } catch (err: any) {
       console.error('[Email] Webhook dispatch error:', err);
+      lastError = `Webhook error: ${err?.message || err}`;
     }
   }
 
-  // 3. Fallback: Log email details safely in server console
-  console.log(`[Email Dispatched] To: ${to} | Subject: ${subject}`);
-  return true;
+  // 5. Fallback if no provider credentials are configured
+  if (!lastError) {
+    lastError = 'No email transport configured in environment (set GMAIL_USER/GMAIL_APP_PASSWORD or RESEND_API_KEY)';
+  }
+
+  console.warn(`[Email Delivery Simulated/Unsent] To: ${to} | Subject: ${subject} | Reason: ${lastError}`);
+  return {
+    success: false,
+    status: 'FAILED',
+    error: lastError,
+  };
+}
+
+export async function sendEmail(payload: EmailPayload): Promise<boolean> {
+  const res = await sendEmailDetailed(payload);
+  return res.success;
 }
 
 export function getContactAdminEmailHtml(data: {
@@ -202,6 +322,76 @@ export function getCareerAdminEmailHtml(data: {
 
           <div style="border-top: 1px solid #1E293B; padding-top: 16px; font-size: 12px; color: #64748B;">
             Application logged in Quantum AI Admin Console under reference <strong>${data.referenceId}</strong>.
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+}
+
+export function getGenericAdminEmailHtml(data: {
+  title: string;
+  type: string;
+  senderName?: string | null;
+  senderEmail?: string | null;
+  preview: string;
+  details?: Record<string, any> | null;
+  referenceId?: string | null;
+  createdAt?: Date | string;
+}) {
+  const dateStr = data.createdAt ? new Date(data.createdAt).toUTCString() : new Date().toUTCString();
+
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      </head>
+      <body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #030712; color: #F8FAFC;">
+        <div style="max-width: 620px; margin: 0 auto; background-color: #07152F; border: 1px solid #1E3A8A; border-radius: 12px; overflow: hidden; box-shadow: 0 16px 40px rgba(0,0,0,0.6);">
+          
+          <div style="background: linear-gradient(135deg, #0A192F 0%, #1E3A8A 100%); padding: 28px 32px; border-bottom: 1px solid #1E3A8A;">
+            <div style="font-family: monospace; font-size: 11px; letter-spacing: 2px; color: #38BDF8; text-transform: uppercase; margin-bottom: 8px;">QUANTUM AI // SYSTEM NOTIFICATION</div>
+            <h1 style="margin: 0; font-size: 22px; font-weight: 700; color: #FFFFFF; letter-spacing: -0.02em;">${data.title}</h1>
+            <p style="margin: 6px 0 0 0; font-size: 13px; color: #94A3B8;">Type: ${data.type} • Received on ${dateStr}</p>
+          </div>
+
+          <div style="padding: 32px;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 14px; margin-bottom: 24px;">
+              ${data.senderName ? `
+              <tr>
+                <td style="padding: 10px 0; color: #94A3B8; width: 140px; border-bottom: 1px solid #0F2347;">Sender Name:</td>
+                <td style="padding: 10px 0; color: #FFFFFF; font-weight: 600; border-bottom: 1px solid #0F2347;">${data.senderName}</td>
+              </tr>` : ''}
+              ${data.senderEmail ? `
+              <tr>
+                <td style="padding: 10px 0; color: #94A3B8; border-bottom: 1px solid #0F2347;">Sender Email:</td>
+                <td style="padding: 10px 0; border-bottom: 1px solid #0F2347;">
+                  <a href="mailto:${data.senderEmail}" style="color: #38BDF8; text-decoration: none;">${data.senderEmail}</a>
+                </td>
+              </tr>` : ''}
+              ${data.referenceId ? `
+              <tr>
+                <td style="padding: 10px 0; color: #94A3B8; border-bottom: 1px solid #0F2347;">Reference ID:</td>
+                <td style="padding: 10px 0; color: #38BDF8; font-family: monospace; font-weight: 700; border-bottom: 1px solid #0F2347;">${data.referenceId}</td>
+              </tr>` : ''}
+            </table>
+
+            <div style="background-color: #040E24; border: 1px solid #1E293B; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+              <div style="font-family: monospace; font-size: 11px; color: #94A3B8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px;">SUBMISSION PREVIEW:</div>
+              <div style="font-size: 14px; line-height: 1.65; color: #E2E8F0; white-space: pre-wrap;">${data.preview}</div>
+            </div>
+
+            ${data.details ? `
+            <div style="background-color: #040E24; border: 1px solid #1E293B; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+              <div style="font-family: monospace; font-size: 11px; color: #94A3B8; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px;">ADDITIONAL DATA PAYLOAD:</div>
+              <pre style="margin: 0; font-family: monospace; font-size: 12px; color: #94A3B8; overflow-x: auto; white-space: pre-wrap;">${JSON.stringify(data.details, null, 2)}</pre>
+            </div>` : ''}
+
+            <div style="border-top: 1px solid #1E293B; padding-top: 16px; font-size: 12px; color: #64748B; line-height: 1.5;">
+              Delivered to <strong style="color: #94A3B8;">${ADMIN_NOTIFICATION_EMAIL}</strong> via Quantum AI Central Notification System.
+            </div>
           </div>
         </div>
       </body>

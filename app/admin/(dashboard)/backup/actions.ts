@@ -39,6 +39,7 @@ export async function createBackup() {
         Testimonial: await prisma.testimonial.findMany(),
         Client: await prisma.client.findMany(),
         ContactSubmission: await prisma.contactSubmission.findMany(),
+        Notification: await prisma.notification.findMany(),
         Media: await prisma.media.findMany(),
         CareerPosition: await prisma.careerPosition.findMany(),
       },
@@ -122,6 +123,7 @@ export async function restoreBackup(url: string) {
       await tx.testimonial.deleteMany();
       await tx.client.deleteMany();
       await tx.contactSubmission.deleteMany();
+      await tx.notification.deleteMany();
       await tx.media.deleteMany();
       await tx.careerPosition.deleteMany();
       await tx.user.deleteMany();
@@ -139,6 +141,7 @@ export async function restoreBackup(url: string) {
       if (t.Testimonial?.length) await tx.testimonial.createMany({ data: t.Testimonial });
       if (t.Client?.length) await tx.client.createMany({ data: t.Client });
       if (t.ContactSubmission?.length) await tx.contactSubmission.createMany({ data: t.ContactSubmission });
+      if (t.Notification?.length) await tx.notification.createMany({ data: t.Notification });
       if (t.Media?.length) await tx.media.createMany({ data: t.Media });
       if (t.CareerPosition?.length) await tx.careerPosition.createMany({ data: t.CareerPosition });
       if (t.CareerApplication?.length) await tx.careerApplication.createMany({ data: t.CareerApplication });

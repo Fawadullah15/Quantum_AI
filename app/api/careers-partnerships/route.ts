@@ -6,10 +6,10 @@ import { join } from 'path';
 import { existsSync } from 'fs';
 import {
   sendEmail,
-  getPartnershipAdminEmailHtml,
-  getCareerAdminEmailHtml,
   getApplicantConfirmationEmailHtml,
 } from '@/lib/email';
+import { createAdminNotification } from '@/lib/notifications';
+
 
 export const dynamic = 'force-dynamic';
 
@@ -151,28 +151,34 @@ export async function POST(request: Request) {
         },
       });
 
-      // Send automated admin notification email
-      const adminEmailHtml = getPartnershipAdminEmailHtml({
+      // Centralized Admin Notification & Email Dispatch to quantumai.cmp@gmail.com
+      await createAdminNotification({
+        type: 'PARTNERSHIP',
+        title: `New Partnership: ${subject}`,
+        subtitle: `${fullName}${company ? ' • ' + company : ''} • ${partnershipType}`,
+        senderName: fullName,
+        senderEmail: email,
+        preview: message.length > 120 ? message.slice(0, 120) + '...' : message,
         referenceId,
-        fullName,
-        email,
-        phone,
-        company,
-        website,
-        country,
-        partnershipType,
-        subject,
-        message,
-        budgetRange,
-        attachmentUrl,
-        createdAt: partnership.createdAt,
+        link: `/admin/careers-partnerships/partnership/${partnership.id}`,
+        details: {
+          id: partnership.id,
+          referenceId,
+          fullName,
+          email,
+          phone,
+          company,
+          website,
+          country,
+          partnershipType,
+          subject,
+          message,
+          budgetRange,
+          preferredContactMethod,
+          attachmentUrl,
+          createdAt: partnership.createdAt,
+        },
       });
-
-      await sendEmail({
-        to: companyEmail,
-        subject: `[Partnership Proposal] ${subject} (${referenceId})`,
-        html: adminEmailHtml,
-      }).catch((e) => console.error('[Email Error] Admin notification failed:', e));
 
       // Send confirmation email to applicant
       const confirmationHtml = getApplicantConfirmationEmailHtml(fullName, referenceId, 'PARTNERSHIP');
@@ -298,33 +304,38 @@ export async function POST(request: Request) {
         },
       });
 
-      // Send admin notification email
-      const adminEmailHtml = getCareerAdminEmailHtml({
+      // Centralized Admin Notification & Email Dispatch to quantumai.cmp@gmail.com
+      await createAdminNotification({
+        type: 'CAREER',
+        title: `New Career Application: ${fullName}`,
+        subtitle: `${position} • ${experienceLevel} (${workType})`,
+        senderName: fullName,
+        senderEmail: email,
+        preview: introduction.length > 120 ? introduction.slice(0, 120) + '...' : introduction,
         referenceId,
-        fullName,
-        email,
-        phone,
-        currentLocation,
-        photoUrl,
-        linkedinUrl,
-        githubUrl,
-        portfolioUrl,
-        position,
-        experienceLevel,
-        skills,
-        introduction,
-        whyQuantumAI,
-        resumeUrl,
-        additionalDocsUrl,
-        workType,
-        createdAt: application.createdAt,
+        link: `/admin/careers-partnerships/career/${application.id}`,
+        details: {
+          id: application.id,
+          referenceId,
+          fullName,
+          email,
+          phone,
+          currentLocation,
+          photoUrl,
+          linkedinUrl,
+          githubUrl,
+          portfolioUrl,
+          position,
+          experienceLevel,
+          skills,
+          introduction,
+          whyQuantumAI,
+          resumeUrl,
+          additionalDocsUrl,
+          workType,
+          createdAt: application.createdAt,
+        },
       });
-
-      await sendEmail({
-        to: companyEmail,
-        subject: `[Career Application] ${fullName} - ${position} (${referenceId})`,
-        html: adminEmailHtml,
-      }).catch((e) => console.error('[Email Error] Admin notification failed:', e));
 
       // Send applicant confirmation email
       const confirmationHtml = getApplicantConfirmationEmailHtml(fullName, referenceId, 'CAREER');
