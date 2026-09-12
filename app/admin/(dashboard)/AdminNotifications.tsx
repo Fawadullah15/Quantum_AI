@@ -18,6 +18,10 @@ export interface NotificationItem {
   readAt?: string | null
   emailStatus: 'SENT' | 'FAILED' | 'PENDING' | string
   emailError?: string | null
+  emailSentAt?: string | null
+  emailFailedAt?: string | null
+  emailRetryCount?: number
+  emailRecipient?: string | null
   createdAt: string
   updatedAt: string
 }
@@ -31,6 +35,8 @@ export function AdminNotifications() {
   const [activeFilter, setActiveFilter] = useState<'ALL' | 'UNREAD' | 'CONTACT' | 'CAREERS' | 'PARTNERSHIPS'>('ALL')
   const [selectedNotification, setSelectedNotification] = useState<NotificationItem | null>(null)
   const [isMarkingAll, setIsMarkingAll] = useState(false)
+  const [retryingId, setRetryingId] = useState<string | null>(null)
+  const [retryToast, setRetryToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null)
   const ref = useRef<HTMLDivElement>(null)
 
   const fetchNotifications = async (filter = activeFilter) => {
@@ -55,6 +61,14 @@ export function AdminNotifications() {
     const interval = setInterval(() => fetchNotifications(activeFilter), 25000)
     return () => clearInterval(interval)
   }, [activeFilter])
+
+  // Clear toast after 5 seconds
+  useEffect(() => {
+    if (retryToast) {
+      const timer = setTimeout(() => setRetryToast(null), 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [retryToast])
 
   // Close popover when clicking outside
   useEffect(() => {
@@ -127,6 +141,98 @@ export function AdminNotifications() {
     }
   }
 
+  const handleRetryEmail = async (id: string, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation()
+    if (retryingId) return
+    setRetryingId(id)
+    setRetryToast(null)
+
+    try {
+      const res = await fetch('/api/admin/notifications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'retry_email', id }),
+      })
+
+      const data = await res.json()
+
+      if (res.ok && data.success) {
+        setRetryToast({
+          message: '✓ Email copy dispatched successfully to quantumai.cmp@gmail.com',
+          type: 'success',
+        })
+        const nowStr = new Date().toISOString()
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n.id === id
+              ? {
+                  ...n,
+                  emailStatus: 'SENT',
+                  emailError: null,
+                  emailSentAt: nowStr,
+                  emailRetryCount: (n.emailRetryCount || 0) + 1,
+                }
+              : n
+          )
+        )
+        if (selectedNotification && selectedNotification.id === id) {
+          setSelectedNotification((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  emailStatus: 'SENT',
+                  emailError: null,
+                  emailSentAt: nowStr,
+                  emailRetryCount: (prev.emailRetryCount || 0) + 1,
+                }
+              : null
+          )
+        }
+      } else {
+        const errMsg = data.error || 'Retry failed. Check email provider environment configuration.'
+        setRetryToast({
+          message: `⚠ ${errMsg}`,
+          type: 'error',
+        })
+        const nowStr = new Date().toISOString()
+        setNotifications((prev) =>
+          prev.map((n) =>
+            n.id === id
+              ? {
+                  ...n,
+                  emailStatus: 'FAILED',
+                  emailError: errMsg,
+                  emailFailedAt: nowStr,
+                  emailRetryCount: (n.emailRetryCount || 0) + 1,
+                }
+              : n
+          )
+        )
+        if (selectedNotification && selectedNotification.id === id) {
+          setSelectedNotification((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  emailStatus: 'FAILED',
+                  emailError: errMsg,
+                  emailFailedAt: nowStr,
+                  emailRetryCount: (prev.emailRetryCount || 0) + 1,
+                }
+              : null
+          )
+        }
+      }
+    } catch (err: any) {
+      const errMsg = err?.message || 'Network error during email retry'
+      setRetryToast({
+        message: `⚠ ${errMsg}`,
+        type: 'error',
+      })
+    } finally {
+      setRetryingId(null)
+    }
+  }
+
   const handleOpenDetail = (n: NotificationItem) => {
     setSelectedNotification(n)
     if (!n.read) {
@@ -154,7 +260,8 @@ export function AdminNotifications() {
     }
   }
 
-  const formatFullDate = (dateStr: string) => {
+  const formatFullDate = (dateStr?: string | null) => {
+    if (!dateStr) return 'N/A'
     try {
       const date = new Date(dateStr)
       return date.toLocaleString('en-US', {
@@ -165,7 +272,7 @@ export function AdminNotifications() {
         minute: '2-digit',
       })
     } catch {
-      return dateStr
+      return String(dateStr)
     }
   }
 
@@ -210,7 +317,8 @@ export function AdminNotifications() {
     }
   }
 
-  const renderEmailStatusPill = (status: string, error?: string | null) => {
+  const renderEmailStatusPill = (status: string, error?: string | null, id?: string) => {
+    const isRetrying = retryingId === id
     if (status === 'SENT') {
       return (
         <span
@@ -235,24 +343,49 @@ export function AdminNotifications() {
     }
     if (status === 'FAILED') {
       return (
-        <span
-          title={error ? `Email error: ${error}` : 'Email dispatch failed'}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 3,
-            fontSize: '0.62rem',
-            color: '#F87171',
-            backgroundColor: 'rgba(239, 68, 68, 0.12)',
-            padding: '2px 6px',
-            borderRadius: 4,
-            fontWeight: 600,
-            letterSpacing: '0.02em',
-          }}
-        >
-          <span>⚠</span>
-          <span>Email Failed</span>
-        </span>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+          <span
+            title={error ? `Email error: ${error}` : 'Email dispatch failed'}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 3,
+              fontSize: '0.62rem',
+              color: '#F87171',
+              backgroundColor: 'rgba(239, 68, 68, 0.12)',
+              padding: '2px 6px',
+              borderRadius: 4,
+              fontWeight: 600,
+              letterSpacing: '0.02em',
+            }}
+          >
+            <span>⚠</span>
+            <span>Email Failed</span>
+          </span>
+          {id && (
+            <button
+              onClick={(e) => handleRetryEmail(id, e)}
+              disabled={isRetrying}
+              title="Retry sending email copy"
+              style={{
+                backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                border: '1px solid rgba(56, 189, 248, 0.35)',
+                color: '#38BDF8',
+                borderRadius: 4,
+                padding: '1px 5px',
+                fontSize: '0.6rem',
+                fontWeight: 600,
+                cursor: isRetrying ? 'not-allowed' : 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 2,
+              }}
+            >
+              <span style={{ transform: isRetrying ? 'rotate(180deg)' : 'none', transition: 'transform 0.4s' }}>🔄</span>
+              <span>{isRetrying ? 'Retrying...' : 'Retry'}</span>
+            </button>
+          )}
+        </div>
       )
     }
     return (
@@ -343,7 +476,7 @@ export function AdminNotifications() {
               position: 'absolute',
               top: 'calc(100% + 10px)',
               right: 0,
-              width: 'clamp(320px, 92vw, 420px)',
+              width: 'clamp(320px, 92vw, 440px)',
               backgroundColor: '#0A101D',
               border: '1px solid rgba(56, 189, 248, 0.22)',
               borderRadius: 12,
@@ -472,6 +605,31 @@ export function AdminNotifications() {
                 )
               })}
             </div>
+
+            {/* In-Popover Toast Notification */}
+            {retryToast && (
+              <div
+                style={{
+                  padding: '0.5rem 1rem',
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                  backgroundColor: retryToast.type === 'success' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                  borderBottom: `1px solid ${retryToast.type === 'success' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+                  color: retryToast.type === 'success' ? '#34D399' : '#F87171',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <span>{retryToast.message}</span>
+                <button
+                  onClick={() => setRetryToast(null)}
+                  style={{ background: 'transparent', border: 'none', color: 'inherit', cursor: 'pointer', fontSize: '0.8rem' }}
+                >
+                  ✕
+                </button>
+              </div>
+            )}
 
             {/* Notifications Scrollable List */}
             <div style={{ maxHeight: 380, overflowY: 'auto' }}>
@@ -607,9 +765,9 @@ export function AdminNotifications() {
                         {n.preview}
                       </div>
 
-                      {/* Bottom status row: Email status */}
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-                        {renderEmailStatusPill(n.emailStatus, n.emailError)}
+                      {/* Bottom status row: Email status + Retry + Link */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4, flexWrap: 'wrap', gap: 4 }}>
+                        {renderEmailStatusPill(n.emailStatus, n.emailError, n.id)}
                         <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 500 }}>
                           Click to open submission →
                         </span>
@@ -696,7 +854,7 @@ export function AdminNotifications() {
               }}
             >
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
                   {(() => {
                     const typeInfo = getTypeStyle(selectedNotification.type)
                     return (
@@ -781,11 +939,37 @@ export function AdminNotifications() {
 
             {/* Modal Scrollable Body */}
             <div style={{ padding: '1.5rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-              {/* Email Delivery Card */}
+              {/* Modal Toast Banner */}
+              {retryToast && (
+                <div
+                  style={{
+                    padding: '0.75rem 1rem',
+                    borderRadius: 8,
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    backgroundColor: retryToast.type === 'success' ? 'rgba(16, 185, 129, 0.18)' : 'rgba(239, 68, 68, 0.18)',
+                    border: `1px solid ${retryToast.type === 'success' ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
+                    color: retryToast.type === 'success' ? '#34D399' : '#F87171',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <span>{retryToast.message}</span>
+                  <button
+                    onClick={() => setRetryToast(null)}
+                    style={{ background: 'transparent', border: 'none', color: 'inherit', cursor: 'pointer' }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+
+              {/* Enhanced Email Delivery Status Card */}
               <div
                 style={{
-                  padding: '0.85rem 1rem',
-                  borderRadius: 8,
+                  padding: '1rem 1.15rem',
+                  borderRadius: 10,
                   backgroundColor:
                     selectedNotification.emailStatus === 'SENT'
                       ? 'rgba(16, 185, 129, 0.08)'
@@ -794,55 +978,135 @@ export function AdminNotifications() {
                       : 'rgba(245, 158, 11, 0.08)',
                   border:
                     selectedNotification.emailStatus === 'SENT'
-                      ? '1px solid rgba(16, 185, 129, 0.25)'
+                      ? '1px solid rgba(16, 185, 129, 0.3)'
                       : selectedNotification.emailStatus === 'FAILED'
-                      ? '1px solid rgba(239, 68, 68, 0.25)'
-                      : '1px solid rgba(245, 158, 11, 0.25)',
+                      ? '1px solid rgba(239, 68, 68, 0.3)'
+                      : '1px solid rgba(245, 158, 11, 0.3)',
                   display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: 8,
+                  flexDirection: 'column',
+                  gap: '0.75rem',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontSize: '1rem' }}>
-                    {selectedNotification.emailStatus === 'SENT' ? '✓' : selectedNotification.emailStatus === 'FAILED' ? '⚠' : '⏳'}
-                  </span>
-                  <div>
-                    <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#F1F5F9' }}>
-                      {selectedNotification.emailStatus === 'SENT'
-                        ? 'Email Copy Sent'
-                        : selectedNotification.emailStatus === 'FAILED'
-                        ? 'Email Copy Not Delivered'
-                        : 'Email Copy Pending'}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontSize: '1.25rem' }}>
+                      {selectedNotification.emailStatus === 'SENT' ? '✓' : selectedNotification.emailStatus === 'FAILED' ? '⚠' : '⏳'}
+                    </span>
+                    <div>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#F1F5F9' }}>
+                        {selectedNotification.emailStatus === 'SENT'
+                          ? 'Email Copy Successfully Delivered'
+                          : selectedNotification.emailStatus === 'FAILED'
+                          ? 'Email Copy Delivery Failed'
+                          : 'Email Copy Pending Dispatch'}
+                      </div>
+                      <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                        Target: <span style={{ color: '#38BDF8', fontWeight: 600 }}>{selectedNotification.emailRecipient || 'quantumai.cmp@gmail.com'}</span>
+                      </div>
                     </div>
-                    <div style={{ fontSize: '0.72rem', color: '#94A3B8' }}>
-                      {selectedNotification.emailStatus === 'SENT'
-                        ? 'Delivered to quantumai.cmp@gmail.com'
-                        : selectedNotification.emailError || 'Configure GMAIL_USER/GMAIL_APP_PASSWORD or RESEND_API_KEY in environment variables'}
-                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span
+                      style={{
+                        fontSize: '0.68rem',
+                        fontFamily: 'var(--font-mono, monospace)',
+                        fontWeight: 700,
+                        padding: '3px 8px',
+                        borderRadius: 4,
+                        color:
+                          selectedNotification.emailStatus === 'SENT'
+                            ? '#34D399'
+                            : selectedNotification.emailStatus === 'FAILED'
+                            ? '#F87171'
+                            : '#FBBF24',
+                        backgroundColor: 'rgba(0,0,0,0.3)',
+                        border: `1px solid ${
+                          selectedNotification.emailStatus === 'SENT'
+                            ? 'rgba(16, 185, 129, 0.4)'
+                            : selectedNotification.emailStatus === 'FAILED'
+                            ? 'rgba(239, 68, 68, 0.4)'
+                            : 'rgba(245, 158, 11, 0.4)'
+                        }`,
+                      }}
+                    >
+                      {selectedNotification.emailStatus}
+                    </span>
+
+                    {/* Prominent Retry Button in Header */}
+                    <button
+                      onClick={() => handleRetryEmail(selectedNotification.id)}
+                      disabled={retryingId === selectedNotification.id}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 5,
+                        backgroundColor: selectedNotification.emailStatus === 'SENT' ? 'rgba(56, 189, 248, 0.12)' : 'rgba(239, 68, 68, 0.2)',
+                        border: selectedNotification.emailStatus === 'SENT' ? '1px solid rgba(56, 189, 248, 0.35)' : '1px solid rgba(239, 68, 68, 0.5)',
+                        color: selectedNotification.emailStatus === 'SENT' ? '#38BDF8' : '#FCA5A5',
+                        padding: '0.35rem 0.75rem',
+                        borderRadius: 6,
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        cursor: retryingId === selectedNotification.id ? 'not-allowed' : 'pointer',
+                        transition: 'all 0.15s',
+                      }}
+                    >
+                      <span style={{ transform: retryingId === selectedNotification.id ? 'rotate(180deg)' : 'none', transition: 'transform 0.4s' }}>
+                        🔄
+                      </span>
+                      <span>
+                        {retryingId === selectedNotification.id
+                          ? 'Dispatching...'
+                          : selectedNotification.emailStatus === 'SENT'
+                          ? 'Resend Copy'
+                          : 'Retry Email'}
+                      </span>
+                    </button>
                   </div>
                 </div>
 
-                <span
+                {/* Email Delivery Details & Timestamps */}
+                <div
                   style={{
-                    fontSize: '0.65rem',
-                    fontFamily: 'var(--font-mono, monospace)',
-                    fontWeight: 700,
-                    padding: '2px 8px',
-                    borderRadius: 4,
-                    color:
-                      selectedNotification.emailStatus === 'SENT'
-                        ? '#34D399'
-                        : selectedNotification.emailStatus === 'FAILED'
-                        ? '#F87171'
-                        : '#FBBF24',
-                    backgroundColor: 'rgba(0,0,0,0.2)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+                    padding: '0.65rem 0.85rem',
+                    borderRadius: 6,
+                    fontSize: '0.74rem',
+                    color: '#94A3B8',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 4,
                   }}
                 >
-                  {selectedNotification.emailStatus}
-                </span>
+                  {selectedNotification.emailSentAt && (
+                    <div>
+                      <span style={{ color: '#64748B' }}>Sent timestamp:</span>{' '}
+                      <span style={{ color: '#34D399', fontWeight: 500 }}>{formatFullDate(selectedNotification.emailSentAt)}</span>
+                    </div>
+                  )}
+
+                  {selectedNotification.emailFailedAt && (
+                    <div>
+                      <span style={{ color: '#64748B' }}>Last failed attempt:</span>{' '}
+                      <span style={{ color: '#F87171', fontWeight: 500 }}>{formatFullDate(selectedNotification.emailFailedAt)}</span>
+                    </div>
+                  )}
+
+                  {(selectedNotification.emailRetryCount || 0) > 0 && (
+                    <div>
+                      <span style={{ color: '#64748B' }}>Retry attempts:</span>{' '}
+                      <span style={{ color: '#F1F5F9', fontWeight: 500 }}>{selectedNotification.emailRetryCount}</span>
+                    </div>
+                  )}
+
+                  {selectedNotification.emailError && (
+                    <div style={{ marginTop: 2, color: '#FCA5A5', lineHeight: 1.4 }}>
+                      <span style={{ fontWeight: 600, color: '#EF4444' }}>Error reason: </span>
+                      {selectedNotification.emailError}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Applicant / Sender Contact Details */}
@@ -950,24 +1214,17 @@ export function AdminNotifications() {
                       </div>
                     )}
 
-                    {selectedNotification.details.skills && (
-                      <div style={{ gridColumn: '1 / -1' }}>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase', marginBottom: 2 }}>Core Skills</div>
-                        <div style={{ fontSize: '0.85rem', color: '#38BDF8', fontWeight: 500 }}>{selectedNotification.details.skills}</div>
-                      </div>
-                    )}
-
                     {selectedNotification.details.partnershipType && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Partnership Category</div>
+                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Partnership Type</div>
                         <div style={{ fontSize: '0.88rem', color: '#34D399', fontWeight: 600 }}>{selectedNotification.details.partnershipType}</div>
                       </div>
                     )}
 
-                    {selectedNotification.details.budgetRange && (
+                    {selectedNotification.details.projectType && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Budget Range</div>
-                        <div style={{ fontSize: '0.88rem', color: '#FBBF24', fontWeight: 600 }}>{selectedNotification.details.budgetRange}</div>
+                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Project Type</div>
+                        <div style={{ fontSize: '0.88rem', color: '#38BDF8', fontWeight: 600 }}>{selectedNotification.details.projectType}</div>
                       </div>
                     )}
 
@@ -978,68 +1235,74 @@ export function AdminNotifications() {
                       </div>
                     )}
 
-                    {selectedNotification.details.projectType && (
+                    {selectedNotification.details.budgetRange && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Inquiry Type</div>
-                        <div style={{ fontSize: '0.88rem', color: '#38BDF8', fontWeight: 600 }}>{selectedNotification.details.projectType}</div>
+                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Budget Range</div>
+                        <div style={{ fontSize: '0.88rem', color: '#FBBF24', fontWeight: 600 }}>{selectedNotification.details.budgetRange}</div>
                       </div>
                     )}
 
-                    {selectedNotification.details.preferredContactMethod && (
+                    {selectedNotification.details.timeline && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Preferred Contact</div>
-                        <div style={{ fontSize: '0.88rem', color: '#F1F5F9' }}>{selectedNotification.details.preferredContactMethod}</div>
+                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Timeline</div>
+                        <div style={{ fontSize: '0.88rem', color: '#F1F5F9' }}>{selectedNotification.details.timeline}</div>
+                      </div>
+                    )}
+
+                    {selectedNotification.details.rating && (
+                      <div>
+                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Rating</div>
+                        <div style={{ fontSize: '0.88rem', color: '#FBBF24', fontWeight: 700 }}>{'★'.repeat(selectedNotification.details.rating)} ({selectedNotification.details.rating}/5)</div>
                       </div>
                     )}
                   </div>
-                </div>
-              )}
 
-              {/* Message / Cover Letter / Introduction Content */}
-              <div
-                style={{
-                  backgroundColor: '#070D1F',
-                  border: '1px solid rgba(30, 41, 59, 0.8)',
-                  borderRadius: 8,
-                  padding: '1.25rem',
-                }}
-              >
-                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#38BDF8', textTransform: 'uppercase', marginBottom: '0.65rem', fontWeight: 700 }}>
-                  SUBMISSION CONTENT / MESSAGE
-                </div>
-                <div
-                  style={{
-                    fontSize: '0.88rem',
-                    lineHeight: 1.65,
-                    color: '#E2E8F0',
-                    whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-word',
-                  }}
-                >
-                  {selectedNotification.details?.message ||
-                    selectedNotification.details?.introduction ||
-                    selectedNotification.preview}
-                </div>
-              </div>
+                  {/* Skills Tags */}
+                  {selectedNotification.details.skills && (
+                    <div style={{ marginTop: '0.85rem' }}>
+                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>Skills & Expertise</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+                        {selectedNotification.details.skills.split(',').map((skill: string, idx: number) => (
+                          <span
+                            key={idx}
+                            style={{
+                              fontSize: '0.72rem',
+                              backgroundColor: 'rgba(168, 85, 247, 0.15)',
+                              color: '#C084FC',
+                              border: '1px solid rgba(168, 85, 247, 0.3)',
+                              padding: '2px 8px',
+                              borderRadius: 4,
+                            }}
+                          >
+                            {skill.trim()}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
-              {/* Attachments / Files (Resume, Proposal, Photo) */}
-              {(selectedNotification.details?.resumeUrl ||
-                selectedNotification.details?.attachmentUrl ||
-                selectedNotification.details?.photoUrl ||
-                selectedNotification.details?.portfolioUrl) && (
-                <div
-                  style={{
-                    backgroundColor: '#070D1F',
-                    border: '1px solid rgba(30, 41, 59, 0.8)',
-                    borderRadius: 8,
-                    padding: '1rem 1.25rem',
-                  }}
-                >
-                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#38BDF8', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 700 }}>
-                    ATTACHED DOCUMENTS & LINKS
-                  </div>
+                  {/* Message / Introduction */}
+                  {(selectedNotification.details.message || selectedNotification.details.introduction || selectedNotification.preview) && (
+                    <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(30, 41, 59, 0.5)', paddingTop: '0.75rem' }}>
+                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>Full Message / Statement</div>
+                      <div style={{ fontSize: '0.86rem', color: '#E2E8F0', lineHeight: 1.6, whiteSpace: 'pre-wrap', backgroundColor: '#0A101D', padding: '0.75rem', borderRadius: 6, border: '1px solid rgba(30, 41, 59, 0.5)' }}>
+                        {selectedNotification.details.message || selectedNotification.details.introduction || selectedNotification.preview}
+                      </div>
+                    </div>
+                  )}
 
-                  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                  {/* Why Quantum AI */}
+                  {selectedNotification.details.whyQuantumAI && (
+                    <div style={{ marginTop: '0.85rem' }}>
+                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>Why Quantum AI?</div>
+                      <div style={{ fontSize: '0.84rem', color: '#CBD5E1', lineHeight: 1.5, backgroundColor: '#0A101D', padding: '0.65rem 0.75rem', borderRadius: 6, border: '1px solid rgba(30, 41, 59, 0.5)' }}>
+                        {selectedNotification.details.whyQuantumAI}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Attachments & External Links */}
+                  <div style={{ marginTop: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                     {selectedNotification.details.resumeUrl && (
                       <a
                         href={selectedNotification.details.resumeUrl}
@@ -1110,18 +1373,17 @@ export function AdminNotifications() {
                       </a>
                     )}
 
-                    {selectedNotification.details.photoUrl && (
+                    {selectedNotification.details.linkedinUrl && (
                       <a
-                        href={selectedNotification.details.photoUrl}
+                        href={selectedNotification.details.linkedinUrl.startsWith('http') ? selectedNotification.details.linkedinUrl : `https://${selectedNotification.details.linkedinUrl}`}
                         target="_blank"
                         rel="noreferrer"
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
                           gap: 6,
-                          backgroundColor: '#1E293B',
-                          color: '#F1F5F9',
-                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                          backgroundColor: '#0A66C2',
+                          color: '#FFFFFF',
                           padding: '0.5rem 1rem',
                           borderRadius: 6,
                           fontSize: '0.8rem',
@@ -1129,8 +1391,8 @@ export function AdminNotifications() {
                           textDecoration: 'none',
                         }}
                       >
-                        <span>👤</span>
-                        <span>Applicant Photo ↗</span>
+                        <span>💼</span>
+                        <span>LinkedIn Profile ↗</span>
                       </a>
                     )}
                   </div>
@@ -1151,7 +1413,7 @@ export function AdminNotifications() {
                 gap: '0.75rem',
               }}
             >
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <button
                   onClick={() => handleMarkAsRead(selectedNotification.id, !selectedNotification.read)}
                   style={{
@@ -1184,7 +1446,7 @@ export function AdminNotifications() {
                       gap: 4,
                     }}
                   >
-                    <span>Reply by Email</span>
+                    <span>Reply to Sender</span>
                     <span>→</span>
                   </a>
                 )}

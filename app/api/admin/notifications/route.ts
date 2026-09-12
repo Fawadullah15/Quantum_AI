@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { retryAdminNotificationEmail } from '@/lib/notifications';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,6 +43,7 @@ export async function GET(request: Request) {
             read: c.status !== 'NEW',
             readAt: c.status !== 'NEW' ? c.updatedAt : null,
             emailStatus: 'SENT',
+            emailRecipient: 'quantumai.cmp@gmail.com',
             createdAt: c.createdAt,
             updatedAt: c.updatedAt,
           });
@@ -61,6 +63,7 @@ export async function GET(request: Request) {
             read: a.status !== 'NEW',
             readAt: a.status !== 'NEW' ? a.updatedAt : null,
             emailStatus: 'SENT',
+            emailRecipient: 'quantumai.cmp@gmail.com',
             createdAt: a.createdAt,
             updatedAt: a.updatedAt,
           });
@@ -80,6 +83,7 @@ export async function GET(request: Request) {
             read: p.status !== 'NEW',
             readAt: p.status !== 'NEW' ? p.updatedAt : null,
             emailStatus: 'SENT',
+            emailRecipient: 'quantumai.cmp@gmail.com',
             createdAt: p.createdAt,
             updatedAt: p.updatedAt,
           });
@@ -147,6 +151,10 @@ export async function GET(request: Request) {
           readAt: n.readAt,
           emailStatus: n.emailStatus || 'PENDING',
           emailError: n.emailError || null,
+          emailSentAt: n.emailSentAt || null,
+          emailFailedAt: n.emailFailedAt || null,
+          emailRetryCount: n.emailRetryCount || 0,
+          emailRecipient: n.emailRecipient || 'quantumai.cmp@gmail.com',
           createdAt: n.createdAt,
           updatedAt: n.updatedAt,
         };
@@ -155,6 +163,49 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Notifications fetch error:', error);
     return NextResponse.json({ unreadCount: 0, totalCount: 0, notifications: [] });
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const body = await request.json().catch(() => ({}));
+    const { action, id } = body;
+
+    if (action === 'retry_email') {
+      if (!id) {
+        return NextResponse.json({ error: 'Notification ID is required for email retry' }, { status: 400 });
+      }
+
+      const result = await retryAdminNotificationEmail(String(id));
+      if (result.success) {
+        return NextResponse.json({
+          success: true,
+          message: 'Email dispatched successfully to quantumai.cmp@gmail.com',
+          notification: result.notification,
+          provider: result.provider,
+          messageId: result.messageId,
+        });
+      } else {
+        return NextResponse.json(
+          {
+            success: false,
+            error: result.error || 'Failed to dispatch email copy',
+            notification: result.notification,
+          },
+          { status: 422 }
+        );
+      }
+    }
+
+    return NextResponse.json({ error: 'Unknown action' }, { status: 400 });
+  } catch (error: any) {
+    console.error('Notification POST action error:', error);
+    return NextResponse.json({ error: error?.message || 'Server error' }, { status: 500 });
   }
 }
 
