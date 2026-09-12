@@ -490,9 +490,13 @@ export default function RecentlyDeletedClient({
             <button
               type="button"
               onClick={async () => {
-                const logs = await getRecoveryAuditLogsAction(30);
-                setAuditLogs(logs);
                 setShowAuditModal(true);
+                try {
+                  const logs = await getRecoveryAuditLogsAction(30);
+                  if (logs && Array.isArray(logs)) setAuditLogs(logs);
+                } catch {
+                  // Keep current/initial logs
+                }
               }}
               style={{
                 backgroundColor: 'rgba(168, 85, 247, 0.1)',
