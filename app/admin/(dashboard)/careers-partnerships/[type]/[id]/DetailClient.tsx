@@ -123,16 +123,16 @@ export default function DetailClient({
 
   const handleDelete = async () => {
     const confirmed = await confirm({
-      title: 'Delete Submission',
-      message: `Permanently delete submission ${submission.referenceId}? This cannot be undone.`,
-      confirmText: 'Delete Permanently',
+      title: 'Move to Recently Deleted?',
+      message: `Move this item to Recently Deleted?`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
     if (confirmed) {
       try {
         await deleteSubmission(type, submission.id);
-        toast.success(`Submission ${submission.referenceId} was deleted.`, 'Deleted');
+        toast.success(`Submission ${submission.referenceId} moved to Recently Deleted.`, 'Moved to Bin');
         router.push('/admin/careers-partnerships');
         router.refresh();
       } catch (err: any) {

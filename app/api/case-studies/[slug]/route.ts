@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { softDelete } from '@/lib/recovery';
 
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -66,16 +67,15 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ s
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { slug } = await params;
-    await prisma.caseStudy.delete({
-      where: { slug },
-    });
+    const study = await prisma.caseStudy.findUnique({ where: { slug } });
+    if (!study) return NextResponse.json({ error: 'Not Found' }, { status: 404 });
 
-    revalidatePath('/');
-    revalidatePath('/work');
-    revalidatePath(`/work/${slug}`);
-    revalidatePath('/case-studies');
-    revalidatePath(`/case-studies/${slug}`);
-    revalidatePath('/admin/case-studies');
+    const user = session.user as any;
+    await softDelete({
+      entityType: 'CASE_STUDY',
+      id: study.id,
+      adminUser: { id: user?.id, name: user?.name, email: user?.email },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

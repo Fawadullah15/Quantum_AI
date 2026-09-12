@@ -42,6 +42,7 @@ export async function createBackup() {
         Notification: await prisma.notification.findMany(),
         Media: await prisma.media.findMany(),
         CareerPosition: await prisma.careerPosition.findMany(),
+        RecentlyDeleted: await prisma.recentlyDeleted.findMany(),
       },
     };
 
@@ -126,6 +127,7 @@ export async function restoreBackup(url: string) {
       await tx.notification.deleteMany();
       await tx.media.deleteMany();
       await tx.careerPosition.deleteMany();
+      await tx.recentlyDeleted.deleteMany();
       await tx.user.deleteMany();
 
       const t = backup.tables;
@@ -152,6 +154,7 @@ export async function restoreBackup(url: string) {
       if (t.CaseStudyMetric?.length) await tx.caseStudyMetric.createMany({ data: t.CaseStudyMetric });
       if (t.ActivityLog?.length) await tx.activityLog.createMany({ data: t.ActivityLog });
       if (t.SubmissionNote?.length) await tx.submissionNote.createMany({ data: t.SubmissionNote });
+      if (t.RecentlyDeleted?.length) await tx.recentlyDeleted.createMany({ data: t.RecentlyDeleted });
     }, { timeout: 30000 });
 
     return { success: true };

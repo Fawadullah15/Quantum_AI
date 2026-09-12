@@ -92,16 +92,23 @@ export async function addSubmissionNote(type: 'PARTNERSHIP' | 'CAREER', id: stri
   return { success: true };
 }
 
-export async function deleteSubmission(type: 'PARTNERSHIP' | 'CAREER', id: string) {
-  await checkAuth();
+import { softDelete } from '@/lib/recovery';
 
-  if (type === 'PARTNERSHIP') {
-    await prisma.partnershipRequest.delete({ where: { id } });
-  } else {
-    await prisma.careerApplication.delete({ where: { id } });
-  }
+export async function deleteSubmission(type: 'PARTNERSHIP' | 'CAREER', id: string) {
+  const session = await checkAuth();
+
+  await softDelete({
+    entityType: type === 'PARTNERSHIP' ? 'PARTNERSHIP_REQUEST' : 'CAREER_APPLICATION',
+    id,
+    adminUser: {
+      id: (session.user as any)?.id,
+      name: session.user?.name || undefined,
+      email: session.user?.email || undefined,
+    },
+  });
 
   revalidatePath('/admin/careers-partnerships');
+  revalidatePath('/admin/recently-deleted');
   return { success: true };
 }
 
@@ -170,11 +177,20 @@ export async function updateCareerPosition(
 }
 
 export async function deleteCareerPosition(id: string) {
-  await checkAuth();
+  const session = await checkAuth();
 
-  await prisma.careerPosition.delete({ where: { id } });
+  await softDelete({
+    entityType: 'CAREER_POSITION',
+    id,
+    adminUser: {
+      id: (session.user as any)?.id,
+      name: session.user?.name || undefined,
+      email: session.user?.email || undefined,
+    },
+  });
 
   revalidatePath('/careers');
   revalidatePath('/admin/careers-partnerships');
+  revalidatePath('/admin/recently-deleted');
   return { success: true };
 }

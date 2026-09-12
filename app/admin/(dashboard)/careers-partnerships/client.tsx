@@ -92,9 +92,9 @@ export default function CareersPartnershipsClient({
 
   const handleDelete = async (type: 'PARTNERSHIP' | 'CAREER', id: string, refId: string) => {
     const confirmed = await confirm({
-      title: 'Delete Submission',
-      message: `Permanently delete submission ${refId}? This action cannot be undone.`,
-      confirmText: 'Delete Permanently',
+      title: 'Move to Recently Deleted?',
+      message: `Move this item to Recently Deleted?`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
@@ -107,7 +107,7 @@ export default function CareersPartnershipsClient({
         } else {
           setApplications((prev) => prev.filter((a) => a.id !== id));
         }
-        toast.success(`Submission ${refId} was deleted.`, 'Deleted');
+        toast.success(`Submission ${refId} moved to Recently Deleted.`, 'Moved to Bin');
         router.refresh();
       } catch (err: any) {
         toast.error(err?.message || 'Failed to delete submission', 'Error');
@@ -179,9 +179,9 @@ export default function CareersPartnershipsClient({
 
   const handleDeletePosition = async (id: string, title: string) => {
     const confirmed = await confirm({
-      title: 'Delete Position',
-      message: `Permanently delete open role "${title}"?`,
-      confirmText: 'Delete Permanently',
+      title: 'Move to Recently Deleted?',
+      message: `Move this item to Recently Deleted?`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
@@ -189,7 +189,7 @@ export default function CareersPartnershipsClient({
       try {
         await deleteCareerPosition(id);
         setPositions((prev) => prev.filter((p) => p.id !== id));
-        toast.success(`Position "${title}" removed`, 'Deleted');
+        toast.success(`Position "${title}" moved to Recently Deleted.`, 'Moved to Bin');
         router.refresh();
       } catch (err: any) {
         toast.error(err?.message || 'Failed to delete position', 'Error');

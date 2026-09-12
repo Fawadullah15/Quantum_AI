@@ -4,6 +4,7 @@ import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
+import { softDelete } from '@/lib/recovery';
 
 async function checkAuth() {
   const session = await getServerSession(authOptions);
@@ -164,15 +165,15 @@ export async function reorderLeadershipMembers(orderedIds: string[]) {
 }
 
 export async function deleteLeadershipMember(id: string) {
-  await checkAuth();
+  const session = await checkAuth();
+  const user = session.user as any;
 
-  await prisma.leadership.delete({ where: { id } });
+  await softDelete({
+    entityType: 'LEADERSHIP',
+    id,
+    adminUser: { id: user?.id, name: user?.name, email: user?.email },
+  });
 
-  revalidatePath('/admin/leadership');
-  revalidatePath('/leadership');
-  revalidatePath('/team');
-  revalidatePath('/about');
-  revalidatePath('/');
   return { success: true };
 }
 export async function updateCareerApplicationFromLeadership(

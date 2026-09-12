@@ -70,12 +70,20 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 
     const { id } = await params;
 
-    await prisma.client.delete({
-      where: { id },
+    const { softDelete } = await import('@/lib/recovery');
+    await softDelete({
+      entityType: 'CLIENT',
+      id,
+      adminUser: {
+        id: (session.user as any)?.id,
+        name: session.user?.name || undefined,
+        email: session.user?.email || undefined,
+      },
     });
 
     revalidatePath('/');
     revalidatePath('/admin/clients');
+    revalidatePath('/admin/recently-deleted');
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -70,9 +70,9 @@ export default function MessagesListClient({
   const handleDelete = async (e: React.MouseEvent, id: string, name: string) => {
     e.stopPropagation();
     const confirmed = await confirm({
-      title: 'Delete Inquiry',
-      message: `Are you sure you want to permanently delete the inquiry from "${name}"? This action cannot be undone.`,
-      confirmText: 'Delete Permanently',
+      title: 'Move to Recently Deleted?',
+      message: `Move this item to Recently Deleted?`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
@@ -86,7 +86,7 @@ export default function MessagesListClient({
         if (!res.ok) throw new Error('Delete failed');
 
         setItems((prev) => prev.filter((item) => item.id !== id));
-        toast.success(`Inquiry from "${name}" was deleted.`, 'Deleted');
+        toast.success(`Inquiry from "${name}" moved to Recently Deleted.`, 'Moved to Bin');
         router.refresh();
       } catch (err) {
         console.error('Delete error:', err);

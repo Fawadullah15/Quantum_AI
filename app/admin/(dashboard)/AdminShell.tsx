@@ -40,6 +40,7 @@ export const navSections = [
     label: 'SITE & SECURITY',
     links: [
       { href: '/admin/media', label: 'Media Library', icon: '🖼️' },
+      { href: '/admin/recently-deleted', label: 'Recently Deleted', icon: '🗑️' },
       { href: '/admin/settings', label: 'Website Settings', icon: '⚙️' },
       { href: '/admin/settings/account', label: 'Account Security', icon: '🔒' },
       { href: '/admin/backup', label: 'Database Backup', icon: '💾' },

@@ -82,14 +82,23 @@ export async function updateClient(
   return client;
 }
 
-export async function deleteClient(id: string) {
-  await checkAuth();
+import { softDelete } from '@/lib/recovery';
 
-  await prisma.client.delete({
-    where: { id },
+export async function deleteClient(id: string) {
+  const session = await checkAuth();
+
+  await softDelete({
+    entityType: 'CLIENT',
+    id,
+    adminUser: {
+      id: (session.user as any)?.id,
+      name: session.user?.name || undefined,
+      email: session.user?.email || undefined,
+    },
   });
 
   revalidatePath('/');
   revalidatePath('/admin/clients');
+  revalidatePath('/admin/recently-deleted');
   return { success: true };
 }

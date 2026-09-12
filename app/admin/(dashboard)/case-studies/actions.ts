@@ -4,6 +4,7 @@ import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
+import { softDelete } from '@/lib/recovery';
 
 async function checkAuth() {
   const session = await getServerSession(authOptions);
@@ -199,22 +200,15 @@ export async function updateCaseStudy(id: string, data: Partial<CaseStudyInput>)
 }
 
 export async function deleteCaseStudy(id: string) {
-  await checkAuth();
+  const session = await checkAuth();
+  const user = session.user as any;
 
-  const study = await prisma.caseStudy.findUnique({ where: { id } });
-
-  await prisma.caseStudy.delete({
-    where: { id },
+  await softDelete({
+    entityType: 'CASE_STUDY',
+    id,
+    adminUser: { id: user?.id, name: user?.name, email: user?.email },
   });
 
-  revalidatePath('/');
-  revalidatePath('/work');
-  if (study) {
-    revalidatePath(`/work/${study.slug}`);
-    revalidatePath(`/case-studies/${study.slug}`);
-  }
-  revalidatePath('/case-studies');
-  revalidatePath('/admin/case-studies');
   return { success: true };
 }
 

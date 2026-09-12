@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { softDelete } from '@/lib/recovery';
 
 export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -61,14 +62,15 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ s
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { slug } = await params;
-    await prisma.product.delete({
-      where: { slug },
-    });
+    const product = await prisma.product.findUnique({ where: { slug } });
+    if (!product) return NextResponse.json({ error: 'Not Found' }, { status: 404 });
 
-    revalidatePath('/products');
-    revalidatePath(`/products/${slug}`);
-    revalidatePath('/');
-    revalidatePath('/admin/products');
+    const user = session.user as any;
+    await softDelete({
+      entityType: 'PRODUCT',
+      id: product.id,
+      adminUser: { id: user?.id, name: user?.name, email: user?.email },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

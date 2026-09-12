@@ -262,14 +262,21 @@ model Media {
 }
 
 model ActivityLog {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  action    String
-  entity    String
-  entityId  String?
-  details   String?
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  adminName  String?
+  adminEmail String?
+  action     String
+  entity     String
+  entityId   String?
+  entityName String?
+  details    String?
+  createdAt  DateTime @default(now())
+
+  @@index([action])
+  @@index([entity])
+  @@index([createdAt])
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -375,5 +382,35 @@ model Notification {
   @@index([type])
   @@index([createdAt])
 }
+
+// ─────────────────────────────────────────────────────────────
+// RECENTLY DELETED / RECOVERY SYSTEM
+// ─────────────────────────────────────────────────────────────
+
+model RecentlyDeleted {
+  id              String    @id @default(cuid())
+  entityType      String    // CASE_STUDY | PRODUCT | LEADERSHIP | TESTIMONIAL | SERVICE | TECHNOLOGY | BLOG_POST | CLIENT | CAREER_APPLICATION | PARTNERSHIP_REQUEST | CAREER_POSITION | CONTACT_SUBMISSION | MEDIA | NOTIFICATION | TEAM_MEMBER | FOUNDER
+  originalId      String
+  title           String
+  subtitle        String?
+  originalSection String
+  adminEmail      String?
+  adminName       String?
+  data            String    // Complete JSON snapshot with all fields, relations, and metadata
+  mediaUrls       String?   @default("[]") // JSON string array of media/attachment URLs
+  originalSlug    String?
+  status          String    @default("DELETED") // DELETED | RESTORED
+  deletedAt       DateTime  @default(now())
+  restoredAt      DateTime?
+  restoredBy      String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([entityType])
+  @@index([originalId])
+  @@index([deletedAt])
+  @@index([status])
+}
+
 
 

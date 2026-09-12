@@ -3,6 +3,7 @@ import prisma from '@/lib/db';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
+import { softDelete } from '@/lib/recovery';
 
 export const dynamic = 'force-dynamic';
 
@@ -79,12 +80,13 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    await prisma.testimonial.delete({
-      where: { id },
-    });
+    const user = session.user as any;
 
-    revalidatePath('/');
-    revalidatePath('/admin/testimonials');
+    await softDelete({
+      entityType: 'TESTIMONIAL',
+      id,
+      adminUser: { id: user?.id, name: user?.name, email: user?.email },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

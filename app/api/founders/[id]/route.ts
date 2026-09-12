@@ -31,13 +31,19 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   }
 }
 
+import { softDelete } from '@/lib/recovery';
+
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    await prisma.founder.delete({
-      where: { id: (await params).id },
+    const { id } = await params;
+    const user = session.user as any;
+    await softDelete({
+      entityType: 'FOUNDER',
+      id,
+      adminUser: { id: user?.id, name: user?.name, email: user?.email },
     });
     return NextResponse.json({ success: true });
   } catch (error) {

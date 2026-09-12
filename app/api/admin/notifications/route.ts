@@ -217,12 +217,20 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'Notification ID is required' }, { status: 400 });
     }
 
-    await prisma.notification.delete({
-      where: { id },
+    const { softDelete } = await import('@/lib/recovery');
+    await softDelete({
+      entityType: 'NOTIFICATION',
+      id,
+      adminUser: {
+        id: (session.user as any)?.id,
+        name: session.user?.name || undefined,
+        email: session.user?.email || undefined,
+      },
     });
 
     revalidatePath('/api/admin/notifications');
-    return NextResponse.json({ success: true, message: 'Notification deleted' });
+    revalidatePath('/admin/recently-deleted');
+    return NextResponse.json({ success: true, message: 'Notification moved to Recently Deleted' });
   } catch (error) {
     console.error('Notification delete error:', error);
     return NextResponse.json({ error: 'Failed to delete notification' }, { status: 500 });

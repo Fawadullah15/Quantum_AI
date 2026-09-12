@@ -214,9 +214,9 @@ export default function TechnologyClient({ initialData = [] }: { initialData: Te
 
   const handleDelete = async (id: string, name: string) => {
     const confirmed = await confirm({
-      title: 'Delete Technology',
-      message: `Are you sure you want to permanently delete "${name}"? This will also remove its public detail page.`,
-      confirmText: 'Delete Permanently',
+      title: 'Move this item to Recently Deleted?',
+      message: `Move "${name}" to Recently Deleted? It will be hidden from the website and can be restored at any time.`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
@@ -224,10 +224,10 @@ export default function TechnologyClient({ initialData = [] }: { initialData: Te
       try {
         await deleteTechnology(id);
         setTechnologies((prev) => prev.filter((s) => s.id !== id));
-        toast.success(`"${name}" was deleted.`, 'Deleted');
+        toast.success(`"${name}" was moved to Recently Deleted.`, 'Moved to Bin');
         router.refresh();
       } catch (err) {
-        toast.error('Failed to delete technology.', 'Error');
+        toast.error('Failed to move technology to Recently Deleted.', 'Error');
       }
     }
   };

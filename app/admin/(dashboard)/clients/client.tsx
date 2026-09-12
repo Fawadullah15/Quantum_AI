@@ -201,9 +201,9 @@ export default function ClientsManagerClient({
 
   const handleDelete = async (id: string, name: string) => {
     const confirmed = await confirm({
-      title: 'Delete Organization',
-      message: `Are you sure you want to permanently delete "${name}" from the logo showcase?`,
-      confirmText: 'Delete Permanently',
+      title: 'Move to Recently Deleted?',
+      message: `Move this item to Recently Deleted?`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
@@ -211,7 +211,7 @@ export default function ClientsManagerClient({
       try {
         await deleteClient(id);
         setItems((prev) => prev.filter((item) => item.id !== id));
-        toast.success(`"${name}" was deleted.`, 'Deleted');
+        toast.success(`"${name}" moved to Recently Deleted.`, 'Moved to Bin');
         router.refresh();
       } catch (error) {
         console.error('Failed to delete client:', error);

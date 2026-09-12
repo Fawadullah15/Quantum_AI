@@ -128,9 +128,9 @@ export default function ServicesClient({ initialData = [] }: { initialData: Serv
 
   const handleDelete = async (id: string, name: string) => {
     const confirmed = await confirm({
-      title: 'Delete Service',
-      message: `Are you sure you want to permanently delete "${name}"? This action cannot be undone.`,
-      confirmText: 'Delete Permanently',
+      title: 'Move this item to Recently Deleted?',
+      message: `Move "${name}" to Recently Deleted? It will be hidden from the website and can be restored at any time.`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
@@ -138,10 +138,10 @@ export default function ServicesClient({ initialData = [] }: { initialData: Serv
       try {
         await deleteService(id);
         setItems((prev) => prev.filter((s) => s.id !== id));
-        toast.success(`"${name}" was deleted.`, 'Deleted');
+        toast.success(`"${name}" was moved to Recently Deleted.`, 'Moved to Bin');
         router.refresh();
       } catch (err) {
-        toast.error('Failed to delete service.', 'Error');
+        toast.error('Failed to move service to Recently Deleted.', 'Error');
       }
     }
   };

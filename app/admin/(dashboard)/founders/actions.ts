@@ -3,6 +3,10 @@
 import prisma from '@/lib/db'
 import { revalidatePath } from 'next/cache'
 
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth'
+import { softDelete } from '@/lib/recovery'
+
 export async function createFounder(data: {
   name: string
   role: string
@@ -43,8 +47,14 @@ export async function updateFounder(id: string, data: {
 }
 
 export async function deleteFounder(id: string) {
-  await prisma.founder.delete({
-    where: { id },
+  const session = await getServerSession(authOptions)
+  const user = session?.user as any
+
+  await softDelete({
+    entityType: 'FOUNDER',
+    id,
+    adminUser: { id: user?.id, name: user?.name, email: user?.email },
   })
+
   revalidatePath('/admin/founders')
 }

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { softDelete } from '@/lib/recovery';
 
 export async function GET(
   request: Request,
@@ -95,14 +96,13 @@ export async function DELETE(
     }
 
     const { id } = await params;
-    await prisma.leadership.delete({
-      where: { id },
-    });
+    const user = session.user as any;
 
-    revalidatePath('/');
-    revalidatePath('/leadership');
-    revalidatePath('/team');
-    revalidatePath('/admin/leadership');
+    await softDelete({
+      entityType: 'LEADERSHIP',
+      id,
+      adminUser: { id: user?.id, name: user?.name, email: user?.email },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

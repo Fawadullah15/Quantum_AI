@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
+import { softDelete } from '@/lib/recovery';
 
 function cleanString(val: any): string | null {
   if (val === undefined || val === null) return null;
@@ -93,14 +94,13 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { id } = await params;
-    const tech = await prisma.technology.delete({
-      where: { id },
-    });
+    const user = session.user as any;
 
-    revalidatePath('/technology');
-    revalidatePath(`/technologies/${tech.slug}`);
-    revalidatePath('/');
-    revalidatePath('/admin/technology');
+    await softDelete({
+      entityType: 'TECHNOLOGY',
+      id,
+      adminUser: { id: user?.id, name: user?.name, email: user?.email },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

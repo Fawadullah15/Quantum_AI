@@ -301,9 +301,9 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
 
   const handleDelete = async (id: string, title: string) => {
     const confirmed = await confirm({
-      title: 'Delete Case Study',
-      message: `Are you sure you want to permanently delete "${title}"? This cannot be undone.`,
-      confirmText: 'Delete Permanently',
+      title: 'Move this item to Recently Deleted?',
+      message: `Move "${title}" to Recently Deleted? It will be hidden from the website and can be restored at any time.`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
@@ -311,10 +311,10 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
       try {
         await deleteCaseStudy(id);
         setCaseStudies((prev) => prev.filter((s) => s.id !== id));
-        toast.success(`"${title}" was deleted.`, 'Deleted');
+        toast.success(`"${title}" was moved to Recently Deleted.`, 'Moved to Bin');
         router.refresh();
       } catch (err) {
-        toast.error('Failed to delete case study.', 'Error');
+        toast.error('Failed to move case study to Recently Deleted.', 'Error');
       }
     }
   };

@@ -110,9 +110,9 @@ export default function MediaLibrary({
 
   const handleDelete = async (id: string, filename: string) => {
     const confirmed = await confirm({
-      title: 'Delete Media Asset',
-      message: `Are you sure you want to permanently delete "${filename}"? If this image is used on any Case Study, Product, or Service page, it will be removed.`,
-      confirmText: 'Delete Permanently',
+      title: 'Move to Recently Deleted?',
+      message: `Move this item to Recently Deleted?`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
@@ -126,7 +126,7 @@ export default function MediaLibrary({
 
         setMedia((prev) => prev.filter((m) => m.id !== id));
         if (previewItem?.id === id) setPreviewItem(null);
-        toast.success(`"${filename}" was deleted.`, 'Asset Deleted');
+        toast.success(`"${filename}" moved to Recently Deleted.`, 'Moved to Bin');
       } catch (err) {
         toast.error('Failed to delete media asset.', 'Error');
       }

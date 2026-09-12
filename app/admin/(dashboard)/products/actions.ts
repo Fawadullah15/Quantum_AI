@@ -4,6 +4,7 @@ import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
+import { softDelete } from '@/lib/recovery';
 
 async function checkAuth() {
   const session = await getServerSession(authOptions);
@@ -157,18 +158,15 @@ export async function updateProduct(
 }
 
 export async function deleteProduct(id: string) {
-  await checkAuth();
+  const session = await checkAuth();
+  const user = session.user as any;
 
-  const product = await prisma.product.findUnique({ where: { id } });
+  await softDelete({
+    entityType: 'PRODUCT',
+    id,
+    adminUser: { id: user?.id, name: user?.name, email: user?.email },
+  });
 
-  await prisma.product.delete({ where: { id } });
-
-  revalidatePath('/admin/products');
-  revalidatePath('/products');
-  if (product) {
-    revalidatePath(`/products/${product.slug}`);
-  }
-  revalidatePath('/');
   return { success: true };
 }
 

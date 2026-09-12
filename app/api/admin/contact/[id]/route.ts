@@ -58,11 +58,19 @@ export async function DELETE(request: Request, { params }: { params: Promise<{ i
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { id } = await params;
-    await prisma.contactSubmission.delete({
-      where: { id },
+    const { softDelete } = await import('@/lib/recovery');
+    await softDelete({
+      entityType: 'CONTACT_SUBMISSION',
+      id,
+      adminUser: {
+        id: (session.user as any)?.id,
+        name: session.user?.name || undefined,
+        email: session.user?.email || undefined,
+      },
     });
 
     revalidatePath('/admin/messages');
+    revalidatePath('/admin/recently-deleted');
     revalidatePath('/admin');
 
     return NextResponse.json({ success: true });

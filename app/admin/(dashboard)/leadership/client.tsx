@@ -240,9 +240,9 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
     }
 
     const confirmed = await confirm({
-      title: 'Delete Leadership Profile',
-      message: `Are you sure you want to permanently delete "${member.name}" from the Leadership & Team directory? This will also remove their public detail page.`,
-      confirmText: 'Delete Permanently',
+      title: 'Move this item to Recently Deleted?',
+      message: `Move "${member.name}" to Recently Deleted? They will be hidden from the website and can be restored at any time.`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
@@ -250,10 +250,10 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
       try {
         await deleteLeadershipMember(member.id);
         setMembers((prev) => prev.filter((m) => m.id !== member.id));
-        toast.success(`"${member.name}" was deleted.`, 'Deleted');
+        toast.success(`"${member.name}" was moved to Recently Deleted.`, 'Moved to Bin');
         router.refresh();
       } catch (err) {
-        toast.error('Failed to delete profile.', 'Error');
+        toast.error('Failed to move profile to Recently Deleted.', 'Error');
       }
     }
   };

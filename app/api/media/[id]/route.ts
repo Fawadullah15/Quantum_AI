@@ -16,26 +16,22 @@ export async function DELETE(
 
     const { id } = await params;
 
-    const media = await prisma.media.findUnique({ where: { id } });
+    const { softDelete } = await import('@/lib/recovery');
+    await softDelete({
+      entityType: 'MEDIA',
+      id,
+      adminUser: {
+        id: (session.user as any)?.id,
+        name: session.user?.name || undefined,
+        email: session.user?.email || undefined,
+      },
+    });
 
-    if (!media) {
+    return NextResponse.json({ success: true, message: 'Media moved to Recently Deleted' });
+  } catch (error: any) {
+    if (error?.message?.includes('not found')) {
       return NextResponse.json({ error: 'Media not found' }, { status: 404 });
     }
-
-    // Attempt to delete from Vercel Blob if the URL is hosted there
-    if (media.url.includes('public.blob.vercel-storage.com')) {
-      try {
-          const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.DATABASE_URL_READ_WRITE_TOKEN;
-        await del(media.url, { token });
-      } catch (blobErr) {
-        console.error('Error deleting from Vercel Blob:', blobErr);
-      }
-    }
-
-    await prisma.media.delete({ where: { id } });
-
-    return NextResponse.json({ success: true, message: 'Media deleted' });
-  } catch (error) {
     console.error('DELETE /api/media/[id] error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

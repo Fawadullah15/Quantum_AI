@@ -4,6 +4,7 @@ import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
+import { softDelete } from '@/lib/recovery';
 
 async function checkAuth() {
   const session = await getServerSession(authOptions);
@@ -132,13 +133,14 @@ export async function updateBlogPost(
 }
 
 export async function deleteBlogPost(id: string) {
-  await checkAuth();
+  const session = await checkAuth();
+  const user = session.user as any;
 
-  await prisma.blogPost.delete({ where: { id } });
+  await softDelete({
+    entityType: 'BLOG_POST',
+    id,
+    adminUser: { id: user?.id, name: user?.name, email: user?.email },
+  });
 
-  revalidatePath('/admin/blog');
-  revalidatePath('/blog');
-  revalidatePath('/insights');
-  revalidatePath('/');
   return { success: true };
 }

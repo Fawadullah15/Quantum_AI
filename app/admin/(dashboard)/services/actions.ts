@@ -4,6 +4,7 @@ import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
+import { softDelete } from '@/lib/recovery';
 
 async function checkAuth() {
   const session = await getServerSession(authOptions);
@@ -75,13 +76,14 @@ export async function updateService(
 }
 
 export async function deleteService(id: string) {
-  await checkAuth();
+  const session = await checkAuth();
+  const user = session.user as any;
 
-  await prisma.service.delete({ where: { id } });
+  await softDelete({
+    entityType: 'SERVICE',
+    id,
+    adminUser: { id: user?.id, name: user?.name, email: user?.email },
+  });
 
-  revalidatePath('/admin/services');
-  revalidatePath('/services');
-  revalidatePath('/systems');
-  revalidatePath('/');
   return { success: true };
 }

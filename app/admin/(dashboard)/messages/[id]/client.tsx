@@ -84,9 +84,9 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
 
   const handleDelete = async () => {
     const confirmed = await confirm({
-      title: 'Delete Inquiry',
-      message: `Are you sure you want to permanently delete the inquiry from "${message.name}"? This cannot be undone.`,
-      confirmText: 'Delete Permanently',
+      title: 'Move to Recently Deleted?',
+      message: `Move this item to Recently Deleted?`,
+      confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
 
@@ -101,7 +101,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
           throw new Error('Failed to delete message');
         }
 
-        toast.success(`Inquiry from "${message.name}" was deleted.`, 'Deleted');
+        toast.success(`Inquiry from "${message.name}" moved to Recently Deleted.`, 'Moved to Bin');
         router.push('/admin/messages');
         router.refresh();
       } catch (err) {
