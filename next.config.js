@@ -1,9 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  turbopack: {},
-  serverActions: {
-    bodySizeLimit: '15mb',
-  },
   experimental: {
     serverActions: {
       bodySizeLimit: '15mb',
@@ -11,9 +7,6 @@ const nextConfig = {
   },
   typescript: {
     ignoreBuildErrors: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   env: {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://quantumai-snowy.vercel.app',
