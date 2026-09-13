@@ -1,8 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { signIn } from "next-auth/react"
-import { useRouter } from 'next/navigation'
 import styles from "./page.module.css"
 import { QuantumLogo } from '@/components/ui/QuantumLogo'
 
@@ -19,6 +17,7 @@ export default function AdminLogin() {
     setError("")
 
     try {
+      const { signIn } = await import('next-auth/react')
       const res = await signIn("credentials", {
         email,
         password,
