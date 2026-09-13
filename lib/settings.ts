@@ -104,22 +104,11 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
   footer_copyright: `© ${new Date().getFullYear()} Quantum AI. All rights reserved.`,
 };
 
-let cachedSettings: { data: SiteSettingsMap; expires: number } | null = null;
-
-export function clearSettingsCache() {
-  cachedSettings = null;
-}
-
 /**
  * Retrieves all site settings from the database merged with defaults.
  * Guaranteed to return full typed settings even if database is unavailable.
  */
 export async function getSiteSettings(): Promise<SiteSettingsMap> {
-  const now = Date.now();
-  if (cachedSettings && cachedSettings.expires > now) {
-    return cachedSettings.data;
-  }
-
   try {
     const dbSettings = await prisma.siteSettings.findMany();
     const result = { ...DEFAULT_SETTINGS };
@@ -137,11 +126,10 @@ export async function getSiteSettings(): Promise<SiteSettingsMap> {
       result.QUANTUM_AI = result.company_name;
     }
 
-    cachedSettings = { data: result, expires: now + 60000 };
     return result;
   } catch (error) {
     console.error('[Settings] Error fetching site settings from DB:', error);
-    return cachedSettings ? cachedSettings.data : DEFAULT_SETTINGS;
+    return DEFAULT_SETTINGS;
   }
 }
 
