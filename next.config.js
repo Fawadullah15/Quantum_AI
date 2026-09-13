@@ -29,6 +29,24 @@ const nextConfig = {
         ],
       },
       {
+        source: '/(about|blog|careers|careers-partnerships|case-studies|contact|industries|insights|leadership|philosophy|products|research|services|systems|team|technology|work)(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=120, stale-while-revalidate=600' },
+        ],
+      },
+      {
+        source: '/',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=120, stale-while-revalidate=600' },
+        ],
+      },
+      {
+        source: '/api/(leadership|case-studies|services|technology|testimonials|clients)(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=60, stale-while-revalidate=300' },
+        ],
+      },
+      {
         source: '/:path*',
         headers: [
           { key: 'X-DNS-Prefetch-Control', value: 'on' },

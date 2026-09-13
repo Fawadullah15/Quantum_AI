@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createPageMetadata } from "@/lib/seo";
 
-export const revalidate = 120;
+export const dynamic = "force-dynamic";
 
 interface LeaderItem {
   id: string;

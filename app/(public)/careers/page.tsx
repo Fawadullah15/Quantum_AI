@@ -2,7 +2,7 @@ import Link from 'next/link';
 import prisma from '@/lib/db';
 import { createPageMetadata } from '@/lib/seo';
 
-export const revalidate = 120;
+export const dynamic = 'force-dynamic';
 
 export const metadata = createPageMetadata({
   title: 'Engineering Careers & Open Roles — Quantum AI',

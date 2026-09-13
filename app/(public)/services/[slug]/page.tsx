@@ -4,7 +4,7 @@ import Link from 'next/link';
 import prisma from '@/lib/db';
 import { createPageMetadata, getServiceSchema, getFAQSchema } from '@/lib/seo';
 
-export const revalidate = 120;
+export const dynamic = 'force-dynamic';
 
 interface Props {
   params: Promise<{ slug: string }>;
