@@ -11,11 +11,7 @@ export async function GET() {
       include: { metrics: true },
       orderBy: { order: 'asc' },
     });
-    return NextResponse.json(caseStudies, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
-      },
-    });
+    return NextResponse.json(caseStudies);
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
