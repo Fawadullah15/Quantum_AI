@@ -1,11 +1,5 @@
-import { getServerSession } from 'next-auth/next'
-import { redirect } from 'next/navigation'
-import { authOptions } from '@/lib/auth'
+import React from 'react';
 
-export default async function LoginLayout({ children }: { children: React.ReactNode }) {
-  const session = await getServerSession(authOptions)
-  if (session) {
-    redirect('/admin')
-  }
-  return <>{children}</>
+export default function LoginLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
 }
