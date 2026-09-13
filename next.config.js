@@ -8,9 +8,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   env: {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL || 'https://quantumai-snowy.vercel.app',
   },
@@ -26,36 +23,6 @@ const nextConfig = {
         source: '/uploads/:path*',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
-      {
-        source: '/:path(about|blog|careers|careers-partnerships|case-studies|contact|industries|insights|leadership|philosophy|products|research|services|systems|team|technology|work)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=120, stale-while-revalidate=600' },
-        ],
-      },
-      {
-        source: '/:path(about|blog|careers|careers-partnerships|case-studies|contact|industries|insights|leadership|philosophy|products|research|services|systems|team|technology|work)/:subpath*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=120, stale-while-revalidate=600' },
-        ],
-      },
-      {
-        source: '/',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=120, stale-while-revalidate=600' },
-        ],
-      },
-      {
-        source: '/api/:path(leadership|case-studies|services|technology|testimonials|clients)',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=60, stale-while-revalidate=300' },
-        ],
-      },
-      {
-        source: '/api/:path(leadership|case-studies|services|technology|testimonials|clients)/:subpath*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=0, s-maxage=60, stale-while-revalidate=300' },
         ],
       },
       {
