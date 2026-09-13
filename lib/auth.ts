@@ -25,24 +25,29 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Too many login attempts. Account temporarily locked for 5 minutes.');
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email: cleanEmail },
-        });
+        try {
+          const user = await prisma.user.findUnique({
+            where: { email: cleanEmail },
+          });
 
-        if (!user) return null;
+          if (!user) return null;
 
-        const valid = await bcrypt.compare(credentials.password, user.password);
-        if (!valid) return null;
+          const valid = await bcrypt.compare(credentials.password, user.password);
+          if (!valid) return null;
 
-        resetRateLimit(`auth:login:${cleanEmail}`);
+          resetRateLimit(`auth:login:${cleanEmail}`);
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          tokenVersion: user.tokenVersion,
-        };
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            tokenVersion: user.tokenVersion,
+          };
+        } catch (dbErr) {
+          console.error('[Auth Error] Database lookup failed:', dbErr);
+          return null;
+        }
       },
     }),
   ],

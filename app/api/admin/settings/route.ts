@@ -3,7 +3,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
-import { getSiteSettings } from '@/lib/settings';
+import { getSiteSettings, clearSettingsCache } from '@/lib/settings';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +40,7 @@ export async function PATCH(request: Request) {
     });
 
     await Promise.all(updates);
+    clearSettingsCache();
 
     revalidatePath('/', 'layout');
     revalidatePath('/admin/settings');

@@ -4,7 +4,7 @@ import prisma from '@/lib/db';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
-import { DEFAULT_SETTINGS, SiteSettingsMap } from '@/lib/settings';
+import { DEFAULT_SETTINGS, SiteSettingsMap, clearSettingsCache } from '@/lib/settings';
 
 export async function updateSiteSettings(data: { key: string; value: string }[]) {
   const session = await getServerSession(authOptions);
@@ -35,6 +35,7 @@ export async function updateSiteSettings(data: { key: string; value: string }[])
       create: { key: item.key, value: item.value ?? '' },
     });
   }
+  clearSettingsCache();
 
   // Revalidate relevant pages and layout
   revalidatePath('/admin/settings');
@@ -65,6 +66,7 @@ export async function resetSiteSettingsToDefaults() {
       create: { key: item.key, value: item.value },
     });
   }
+  clearSettingsCache();
 
   revalidatePath('/admin/settings');
   revalidatePath('/', 'layout');
