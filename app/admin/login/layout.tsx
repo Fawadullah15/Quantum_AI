@@ -1,21 +1,5 @@
-import { getServerSession } from 'next-auth/next';
-import { redirect } from 'next/navigation';
-import { authOptions } from '@/lib/auth';
+import React from 'react';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
-export default async function LoginLayout({ children }: { children: React.ReactNode }) {
-  let session = null;
-  try {
-    session = await getServerSession(authOptions);
-  } catch (err) {
-    console.error('[Login Layout] Session check error:', err);
-  }
-
-  if (session && session.user && (session.user as any).id) {
-    redirect('/admin');
-  }
-
+export default function LoginLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

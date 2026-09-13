@@ -3,7 +3,7 @@ import Link from 'next/link';
 import TrustSection from '@/components/sections/TrustSection';
 import { createPageMetadata } from '@/lib/seo';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 export const metadata = createPageMetadata({
   title: 'Core Technology Stack & Architecture — Quantum AI',

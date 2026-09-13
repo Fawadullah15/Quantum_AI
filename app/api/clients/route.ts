@@ -26,6 +26,14 @@ export async function GET(req: Request) {
       orderBy: [{ order: 'asc' }, { createdAt: 'desc' }],
     });
 
+    if (!getAll) {
+      return NextResponse.json(clients, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        },
+      });
+    }
+
     return NextResponse.json(clients);
   } catch (error) {
     console.error('Error fetching clients:', error);

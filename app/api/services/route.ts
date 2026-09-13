@@ -4,13 +4,19 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
+export const revalidate = 60;
+
 export async function GET() {
   try {
     const services = await prisma.service.findMany({
       where: { published: true },
       orderBy: { order: 'asc' },
     });
-    return NextResponse.json(services);
+    return NextResponse.json(services, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    });
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

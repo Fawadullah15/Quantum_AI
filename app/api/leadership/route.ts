@@ -4,15 +4,18 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
 
 export async function GET() {
   try {
     const members = await prisma.leadership.findMany({
       orderBy: { displayOrder: 'asc' },
     });
-    return NextResponse.json(members);
+    return NextResponse.json(members, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    });
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

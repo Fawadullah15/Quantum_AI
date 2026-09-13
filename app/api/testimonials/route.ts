@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 // GET: Public fetch of published testimonials
 export async function GET() {
@@ -13,7 +13,11 @@ export async function GET() {
       where: { published: true },
       orderBy: { order: 'asc' },
     });
-    return NextResponse.json(testimonials);
+    return NextResponse.json(testimonials, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    });
   } catch (error) {
     console.error('Error fetching testimonials:', error);
     return NextResponse.json({ error: 'Failed to fetch testimonials' }, { status: 500 });

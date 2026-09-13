@@ -4,7 +4,7 @@ import { createPageMetadata } from '@/lib/seo';
 import { parseGallery } from '@/lib/gallery';
 import { GalleryConfigurator } from '@/components/layout/GalleryConfigurator';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 export const metadata = createPageMetadata({
   title: 'Selected Deployments & Client Case Studies — Quantum AI',

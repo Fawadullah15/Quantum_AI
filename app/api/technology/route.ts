@@ -10,13 +10,19 @@ function cleanString(val: any): string | null {
   return s.length > 0 ? s : null;
 }
 
+export const revalidate = 60;
+
 export async function GET() {
   try {
     const tech = await prisma.technology.findMany({
       where: { published: true },
       orderBy: { order: 'asc' },
     });
-    return NextResponse.json(tech);
+    return NextResponse.json(tech, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    });
   } catch (error) {
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }

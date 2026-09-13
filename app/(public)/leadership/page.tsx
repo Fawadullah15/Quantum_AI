@@ -2,8 +2,7 @@ import prisma from "@/lib/db";
 import Link from "next/link";
 import { createPageMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export const revalidate = 120;
 
 export const metadata = createPageMetadata({
   title: "Leadership & Engineering Team — Quantum AI",

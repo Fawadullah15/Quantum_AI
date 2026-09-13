@@ -1,7 +1,7 @@
 import prisma from '@/lib/db';
 import { createPageMetadata } from '@/lib/seo';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 export const metadata = createPageMetadata({
   title: 'Intelligent Systems & Neural Architecture — Quantum AI',

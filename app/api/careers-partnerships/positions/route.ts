@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 
 const DEFAULT_POSITIONS = [
   { id: 'pos-1', title: 'Senior AI / Machine Learning Engineer', department: 'AI Engineering', workType: 'Full Time' },
@@ -22,7 +22,11 @@ export async function GET() {
     }).catch(() => []);
 
     const positions = dbPositions.length > 0 ? dbPositions : DEFAULT_POSITIONS;
-    return NextResponse.json(positions);
+    return NextResponse.json(positions, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    });
   } catch (error) {
     return NextResponse.json(DEFAULT_POSITIONS);
   }
