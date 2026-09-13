@@ -5,6 +5,16 @@ import prisma from '@/lib/db';
 import { createPageMetadata } from '@/lib/seo';
 
 export const revalidate = 120;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  return [
+    { slug: 'artificial-intelligence' },
+    { slug: 'software-engineering' },
+    { slug: 'cloud-devops' },
+    { slug: 'data-engineering' },
+  ];
+}
 
 interface Props {
   params: Promise<{ slug: string }>;

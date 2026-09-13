@@ -4,8 +4,6 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
-export const revalidate = 60;
-
 export async function GET() {
   try {
     const services = await prisma.service.findMany({

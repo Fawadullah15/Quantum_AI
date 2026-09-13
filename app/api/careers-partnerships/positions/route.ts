@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db';
 
-export const revalidate = 60;
-
 const DEFAULT_POSITIONS = [
   { id: 'pos-1', title: 'Senior AI / Machine Learning Engineer', department: 'AI Engineering', workType: 'Full Time' },
   { id: 'pos-2', title: 'Neural Systems & Agent Architect', department: 'AI Engineering', workType: 'Full Time' },

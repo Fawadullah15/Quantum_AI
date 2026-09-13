@@ -4,8 +4,6 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 
-export const revalidate = 60;
-
 // GET: Public fetch of published testimonials
 export async function GET() {
   try {
