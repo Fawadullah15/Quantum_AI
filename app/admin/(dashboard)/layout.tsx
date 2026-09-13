@@ -8,18 +8,13 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  let session = null;
-  try {
-    session = await getServerSession(authOptions);
-  } catch (err) {
-    console.error('[Admin Layout] Session retrieval error:', err);
-  }
+  const session = await getServerSession(authOptions);
 
-  if (!session || !session.user || !(session.user as any).id) {
+  if (!session) {
     redirect('/admin/login');
   }
 
-  const user = session.user as { name?: string; email?: string; role?: string };
+  const user = session?.user as { name?: string; email?: string; role?: string } | undefined;
 
   return (
     <AdminShell

@@ -25,34 +25,29 @@ export const authOptions: NextAuthOptions = {
           throw new Error('Too many login attempts. Account temporarily locked for 5 minutes.');
         }
 
-        try {
-          const user = await prisma.user.findUnique({
-            where: { email: cleanEmail },
-          });
+        const user = await prisma.user.findUnique({
+          where: { email: cleanEmail },
+        });
 
-          if (!user) return null;
+        if (!user) return null;
 
-          const valid = await bcrypt.compare(credentials.password, user.password);
-          if (!valid) return null;
+        const valid = await bcrypt.compare(credentials.password, user.password);
+        if (!valid) return null;
 
-          resetRateLimit(`auth:login:${cleanEmail}`);
+        resetRateLimit(`auth:login:${cleanEmail}`);
 
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            tokenVersion: user.tokenVersion,
-          };
-        } catch (dbErr) {
-          console.error('[Auth Error] Database lookup failed:', dbErr);
-          return null;
-        }
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          tokenVersion: user.tokenVersion,
+        };
       },
     }),
   ],
   callbacks: {
-    async jwt({ token, user, trigger, session }: any) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
@@ -65,17 +60,29 @@ export const authOptions: NextAuthOptions = {
         if (session.user?.tokenVersion !== undefined) token.tokenVersion = session.user.tokenVersion;
       }
 
+      // Check if user session has been revoked via tokenVersion
+      if (token.id && token.tokenVersion !== undefined) {
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { id: token.id as string },
+            select: { tokenVersion: true },
+          });
+          if (!dbUser || dbUser.tokenVersion !== token.tokenVersion) {
+            // Invalidate revoked session
+            return {} as any;
+          }
+        } catch {
+          // If DB is temporarily offline/unreachable, fallback to token
+        }
+      }
+
       return token;
     },
-    session({ session, token }: any) {
-      if (token && token.id) {
-        session.user = {
-          ...session.user,
-          id: token.id as string,
-          name: (token.name as string) || session.user?.name || 'Admin',
-          email: (token.email as string) || session.user?.email || 'admin@quantumai.dev',
-          role: (token.role as string) || 'SUPER_ADMIN',
-        } as any;
+    session({ session, token }) {
+      if (token && token.id && session.user) {
+        (session.user as any).id = token.id;
+        (session.user as any).role = token.role;
+        (session.user as any).tokenVersion = token.tokenVersion;
       }
       return session;
     },
