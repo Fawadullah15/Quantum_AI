@@ -39,9 +39,13 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
 
   // ── Sequence Orchestration ─────────────────────────────────
   useEffect(() => {
+    // Helper to clear FOUC class
+    const clearFouc = () => document.documentElement.classList.remove('qa-intro-active');
+
     // 1. Reduced motion check
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
+      clearFouc();
       markSeen();
       setPhase('done');
       return;
@@ -50,6 +54,7 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
     // 2. Session check (play once per session)
     try {
       if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+        clearFouc();
         setPhase('done');
         return;
       }
@@ -59,6 +64,14 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
 
     // 3. Start Sequence
     setPhase('init');
+    
+    // Once the overlay is mounted, clear the FOUC class so the website 
+    // is present in the DOM behind it, ready to be revealed.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        clearFouc();
+      });
+    });
 
     const t1 = setTimeout(() => setPhase('entrance'), 200);
     const t2 = setTimeout(() => setPhase('hold'), 1000); // 800ms entrance roll
@@ -105,6 +118,7 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
     
+    document.documentElement.classList.remove('qa-intro-active');
     markSeen();
     setPhase('done');
   }, []);
@@ -183,8 +197,24 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
   // Determine background opacity based on timeline (fades out 0.7s after travel starts)
   const isTravel = phase === 'travel';
 
+  // Anti-FOUC Script ensures the screen is pitch black before React hydrates if the intro should play.
+  // This prevents the raw website from flashing for 100ms before the overlay mounts.
+  const ANTI_FOUC_SCRIPT = `
+    try {
+      if (sessionStorage.getItem('${SESSION_KEY}') !== 'true' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('qa-intro-active');
+      }
+    } catch(e) {}
+  `;
+
   return (
     <>
+      <script dangerouslySetInnerHTML={{ __html: ANTI_FOUC_SCRIPT }} suppressHydrationWarning />
+      <style dangerouslySetInnerHTML={{ __html: `
+        .qa-intro-active body { background-color: #030712 !important; }
+        .qa-intro-active #qa-website-content { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      `}} suppressHydrationWarning />
+
       {/* Hide the real navbar logo while the animation plays for a seamless handoff */}
       <style>{`
         #navbar-quantum-logo { visibility: hidden !important; opacity: 0 !important; }
@@ -265,7 +295,9 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
         </motion.div>
       </div>
 
-      {children}
+      <div id="qa-website-content">
+        {children}
+      </div>
     </>
   );
 }
