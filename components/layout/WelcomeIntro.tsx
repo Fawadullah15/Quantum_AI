@@ -60,30 +60,29 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
     // 3. Start Sequence
     setPhase('init');
 
-    const t1 = setTimeout(() => setPhase('entrance'), 300);
-    const t2 = setTimeout(() => setPhase('hold'), 1200);
+    const t1 = setTimeout(() => setPhase('entrance'), 200);
+    const t2 = setTimeout(() => setPhase('hold'), 1000); // 800ms entrance roll
     const t3 = setTimeout(() => {
       // Before travelling, calculate the exact destination
       const target = document.getElementById('navbar-quantum-logo');
       if (target) {
         const rect = target.getBoundingClientRect();
-        // The animated logo sits in a fixed flex-center overlay, so its natural center is window center
         const startX = window.innerWidth / 2;
         const startY = window.innerHeight / 2;
         
         setTargetCoords({
           x: rect.left + rect.width / 2 - startX,
           y: rect.top + rect.height / 2 - startY,
-          scale: rect.width / 110, // 110px is the base width in CSS
+          scale: rect.width / 110,
         });
       }
       setPhase('travel');
-    }, 1600);
+    }, 1350); // 350ms hold
 
     const t4 = setTimeout(() => {
       markSeen();
       setPhase('done');
-    }, 3200);
+    }, 3000); // 1650ms for travel and settle
 
     // Hard failsafe
     const tSafe = setTimeout(() => {
@@ -134,13 +133,13 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
 
   // Animation variants
   const logoVariants = {
-    init: { scale: 0.8, rotate: -45, y: 30, opacity: 0, filter: 'blur(10px)', x: 0 },
+    init: { scale: 0.75, rotate: -65, x: -40, y: 40, opacity: 0, filter: 'blur(4px)' },
     entrance: { 
-      scale: 1, rotate: 0, y: 0, opacity: 1, filter: 'blur(0px)', x: 0,
-      transition: { duration: 0.9, ease: easePrecise } 
+      scale: 1, rotate: 0, x: 0, y: 0, opacity: 1, filter: 'blur(0px)',
+      transition: { duration: 0.8, ease: [0.2, 0.8, 0.2, 1] } 
     },
     hold: { 
-      scale: 1, rotate: 0, y: 0, x: 0, opacity: 1, filter: 'blur(0px)' 
+      scale: 1, rotate: 0, x: 0, y: 0, opacity: 1, filter: 'blur(0px)' 
     },
     travel: (coords: typeof targetCoords) => coords ? {
       x: coords.x,
@@ -149,7 +148,12 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
       rotate: 0, // ensure perfectly upright
       opacity: 1,
       filter: 'blur(0px)',
-      transition: { duration: 1.4, ease: easePrecise }
+      transition: {
+        x: { duration: 1.5, ease: [0.35, 1, 0.35, 1] }, // slightly slower start on X for curve
+        y: { duration: 1.5, ease: easePrecise }, // faster start on Y
+        scale: { duration: 1.5, ease: [0.25, 1, 0.3, 1] },
+        default: { duration: 1.5, ease: easePrecise }
+      }
     } : {
       // Failsafe fade-out if navbar logo wasn't found
       opacity: 0,
@@ -164,13 +168,14 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
     travel: (coords: typeof targetCoords) => coords ? {
       x: coords.x,
       y: coords.y,
-      scale: coords.scale * 1.3,
-      opacity: [0, 0.4, 0], // fades in then out during travel
-      filter: 'blur(12px)',
+      scale: coords.scale * 1.15,
+      opacity: [0, 0.12, 0], // extremely restrained trace
+      filter: 'blur(8px)',
       transition: { 
-        duration: 1.4, 
-        ease: easePrecise,
-        opacity: { times: [0, 0.2, 0.9], duration: 1.4 }
+        x: { duration: 1.5, ease: [0.35, 1, 0.35, 1] },
+        y: { duration: 1.5, ease: easePrecise },
+        scale: { duration: 1.5, ease: [0.25, 1, 0.3, 1] },
+        opacity: { times: [0, 0.2, 0.8], duration: 1.5 }
       }
     } : { opacity: 0 }
   };
@@ -192,11 +197,11 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
           background: 'transparent' // Background is handled by the motion.div below
         }} 
       >
-        {/* Background that reveals the website */}
+        {/* Background that reveals the website synchronized with travel */}
         <motion.div
           initial={{ opacity: 1 }}
           animate={{ opacity: isTravel ? 0 : 1 }}
-          transition={{ duration: 0.6, delay: isTravel ? 0.7 : 0, ease: 'easeInOut' }}
+          transition={{ duration: 1.0, delay: isTravel ? 0.25 : 0, ease: 'easeInOut' }}
           style={{
             position: 'absolute',
             inset: 0,
