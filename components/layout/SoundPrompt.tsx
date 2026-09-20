@@ -43,9 +43,9 @@ export function SoundPrompt({ onEnable, onDismiss }: SoundPromptProps) {
     const mql = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(mql.matches);
 
-    // 3. Gentle entrance delay: 2.2s to smoothly follow WelcomeIntro completion,
-    // or 400ms if reduced motion (where WelcomeIntro is skipped)
-    const delay = mql.matches ? 400 : 2200;
+    // 3. Gentle entrance delay: 3.4s to smoothly follow brand reveal completion,
+    // or 400ms if reduced motion (where brand reveal is skipped)
+    const delay = mql.matches ? 400 : 3400;
 
     const timer = setTimeout(() => {
       // Re-verify audio is still not playing before showing
