@@ -10,9 +10,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: var(--color-void, #030712);
   pointer-events: all;
-  will-change: opacity;
 }
 
 /* ── Ambient radial glow ──────────────────────────────────── */
@@ -54,58 +52,6 @@
   -webkit-user-drag: none;
 }
 
-/* ── Wordmark ─────────────────────────────────────────────── */
-
-.wordmark {
-  display: flex;
-  align-items: baseline;
-  gap: 0.45rem;
-  margin-top: 1.5rem;
-  z-index: 2;
-  will-change: opacity;
-}
-
-.wordmarkQuantum {
-  font-family: var(--font-sans, 'Space Grotesk', sans-serif);
-  font-weight: 600;
-  font-size: 1.3rem;
-  text-transform: uppercase;
-  color: var(--color-text-primary, #F8FAFC);
-  letter-spacing: 0.25em;
-  line-height: 1;
-}
-
-.wordmarkAI {
-  font-family: var(--font-sans, 'Space Grotesk', sans-serif);
-  font-weight: 700;
-  font-size: 1.3rem;
-  text-transform: uppercase;
-  background: linear-gradient(135deg, #3B82F6 0%, #22D3EE 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: 0.15em;
-  line-height: 1;
-}
-
-/* ── Skip hint ────────────────────────────────────────────── */
-
-.skipHint {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-mono, 'Space Mono', monospace);
-  font-size: 0.65rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary, #64748B);
-  opacity: 0;
-  z-index: 2;
-  pointer-events: none;
-  user-select: none;
-}
-
 /* ── Mobile adjustments ───────────────────────────────────── */
 
 @media (max-width: 640px) {
@@ -118,21 +64,6 @@
     width: 88px;
     height: 88px;
   }
-
-  .wordmarkQuantum,
-  .wordmarkAI {
-    font-size: 1.05rem;
-  }
-
-  .wordmark {
-    margin-top: 1.2rem;
-    gap: 0.35rem;
-  }
-
-  .skipHint {
-    bottom: 2rem;
-    font-size: 0.6rem;
-  }
 }
 
 /* ── Reduced motion ───────────────────────────────────────── */
@@ -140,9 +71,7 @@
 @media (prefers-reduced-motion: reduce) {
   .overlay,
   .glow,
-  .logoContainer,
-  .wordmark,
-  .skipHint {
+  .logoContainer {
     animation: none !important;
     transition: none !important;
     will-change: auto;

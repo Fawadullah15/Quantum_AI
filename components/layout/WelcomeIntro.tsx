@@ -5,38 +5,41 @@ import { motion, AnimatePresence } from 'framer-motion';
 import styles from './BrandReveal.module.css';
 
 /**
- * Premium Brand Reveal — Quantum AI Opening Identity Sequence
+ * Premium Brand Reveal — Quantum AI Opening Identity Sequence (Revised)
  *
- * A cinematic ~3.2 s brand reveal that plays once per browser session.
- * Phase state machine: glow → logo → wordmark → hold → dissolve → done
+ * Sequence:
+ * 0.0s - 0.3s : init (dark screen)
+ * 0.3s - 1.2s : entrance (logo rolls/rotates in)
+ * 1.2s - 1.6s : hold (logo stabilizes)
+ * 1.6s - 3.2s : travel (logo travels to exactly match navbar logo position)
+ * 2.3s - 2.9s : background fades out, revealing the website underneath
+ * 3.2s+       : overlay unmounts seamlessly leaving the real navbar logo
  *
- * - Session-gated via sessionStorage('quantum-ai-brand-seen')
- * - Respects prefers-reduced-motion
- * - Click / key press skips to dissolve
- * - 5 s hard-timeout failsafe
+ * Uses `getBoundingClientRect` on `#navbar-quantum-logo` for exact positioning.
  */
 
 const SESSION_KEY = 'quantum-ai-brand-seen';
 
-// Precise, calm easing — no spring, no bounce
-const easePrecise: [number, number, number, number] = [0.25, 0.1, 0.25, 1];
-const easeStandard: [number, number, number, number] = [0.4, 0, 0.2, 1];
+// Custom Expo-Out for cinematic slow settling (No bounce)
+const easePrecise: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-type Phase = 'glow' | 'logo' | 'wordmark' | 'hold' | 'dissolve' | 'done';
+type Phase = 'init' | 'entrance' | 'hold' | 'travel' | 'done';
 
 export default function WelcomeIntro({ children }: { children: React.ReactNode }) {
-  const [phase, setPhase] = useState<Phase | null>(null); // null = not yet determined
+  const [phase, setPhase] = useState<Phase | null>(null); // null = SSR/first paint
+  const [targetCoords, setTargetCoords] = useState<{ x: number; y: number; scale: number } | null>(null);
+  
   const phaseRef = useRef<Phase | null>(null);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  // Keep phaseRef in sync
+  // Keep ref in sync for event listeners
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
 
-  // ── Initialisation ─────────────────────────────────────────
+  // ── Sequence Orchestration ─────────────────────────────────
   useEffect(() => {
-    // Reduced motion → skip entirely
+    // 1. Reduced motion check
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) {
       markSeen();
@@ -44,65 +47,73 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
       return;
     }
 
-    // Session check → skip if already seen
+    // 2. Session check (play once per session)
     try {
       if (sessionStorage.getItem(SESSION_KEY) === 'true') {
         setPhase('done');
         return;
       }
     } catch {
-      // sessionStorage unavailable — play animation anyway
+      // Ignored
     }
 
-    // Start the sequence
-    setPhase('glow');
+    // 3. Start Sequence
+    setPhase('init');
 
-    // Schedule phase transitions
-    const t1 = setTimeout(() => setPhase('logo'), 400);
-    const t2 = setTimeout(() => setPhase('wordmark'), 1200);
-    const t3 = setTimeout(() => setPhase('hold'), 1800);
-    const t4 = setTimeout(() => setPhase('dissolve'), 2400);
-    const t5 = setTimeout(() => {
+    const t1 = setTimeout(() => setPhase('entrance'), 300);
+    const t2 = setTimeout(() => setPhase('hold'), 1200);
+    const t3 = setTimeout(() => {
+      // Before travelling, calculate the exact destination
+      const target = document.getElementById('navbar-quantum-logo');
+      if (target) {
+        const rect = target.getBoundingClientRect();
+        // The animated logo sits in a fixed flex-center overlay, so its natural center is window center
+        const startX = window.innerWidth / 2;
+        const startY = window.innerHeight / 2;
+        
+        setTargetCoords({
+          x: rect.left + rect.width / 2 - startX,
+          y: rect.top + rect.height / 2 - startY,
+          scale: rect.width / 110, // 110px is the base width in CSS
+        });
+      }
+      setPhase('travel');
+    }, 1600);
+
+    const t4 = setTimeout(() => {
       markSeen();
       setPhase('done');
     }, 3200);
 
-    // Hard timeout failsafe
+    // Hard failsafe
     const tSafe = setTimeout(() => {
       markSeen();
       setPhase('done');
-    }, 5000);
+    }, 4500);
 
-    timeoutsRef.current = [t1, t2, t3, t4, t5, tSafe];
+    timeoutsRef.current = [t1, t2, t3, t4, tSafe];
 
     return () => {
       timeoutsRef.current.forEach(clearTimeout);
     };
   }, []);
 
-  // ── Skip mechanism ─────────────────────────────────────────
+  // ── Skip Mechanism ─────────────────────────────────────────
   const handleSkip = useCallback(() => {
     const current = phaseRef.current;
-    if (!current || current === 'done' || current === 'dissolve') return;
+    if (!current || current === 'done') return;
 
-    // Clear scheduled transitions
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
-
-    // Jump to dissolve, then done
-    setPhase('dissolve');
-    const t = setTimeout(() => {
-      markSeen();
-      setPhase('done');
-    }, 600);
-    timeoutsRef.current = [t];
+    
+    markSeen();
+    setPhase('done');
   }, []);
 
   useEffect(() => {
     if (phase === 'done' || phase === null) return;
 
     const onKey = (e: KeyboardEvent) => {
-      // Don't skip on Tab (accessibility navigation)
       if (e.key === 'Tab') return;
       handleSkip();
     };
@@ -117,131 +128,145 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
 
   // ── Render ─────────────────────────────────────────────────
 
-  // Not yet determined (SSR / first paint) — render children only
-  if (phase === null) {
+  if (phase === null || phase === 'done') {
     return <>{children}</>;
   }
 
-  // Animation complete — render children only (overlay removed from DOM)
-  if (phase === 'done') {
-    return <>{children}</>;
-  }
+  // Animation variants
+  const logoVariants = {
+    init: { scale: 0.8, rotate: -45, y: 30, opacity: 0, filter: 'blur(10px)', x: 0 },
+    entrance: { 
+      scale: 1, rotate: 0, y: 0, opacity: 1, filter: 'blur(0px)', x: 0,
+      transition: { duration: 0.9, ease: easePrecise } 
+    },
+    hold: { 
+      scale: 1, rotate: 0, y: 0, x: 0, opacity: 1, filter: 'blur(0px)' 
+    },
+    travel: (coords: typeof targetCoords) => coords ? {
+      x: coords.x,
+      y: coords.y,
+      scale: coords.scale,
+      rotate: 0, // ensure perfectly upright
+      opacity: 1,
+      filter: 'blur(0px)',
+      transition: { duration: 1.4, ease: easePrecise }
+    } : {
+      // Failsafe fade-out if navbar logo wasn't found
+      opacity: 0,
+      transition: { duration: 0.4 }
+    }
+  };
 
-  // Active animation phases
-  const showLogo = phase === 'logo' || phase === 'wordmark' || phase === 'hold' || phase === 'dissolve';
-  const showWordmark = phase === 'wordmark' || phase === 'hold' || phase === 'dissolve';
-  const isDissolving = phase === 'dissolve';
+  const trailVariants = {
+    init: { opacity: 0 },
+    entrance: { opacity: 0 },
+    hold: { opacity: 0 },
+    travel: (coords: typeof targetCoords) => coords ? {
+      x: coords.x,
+      y: coords.y,
+      scale: coords.scale * 1.3,
+      opacity: [0, 0.4, 0], // fades in then out during travel
+      filter: 'blur(12px)',
+      transition: { 
+        duration: 1.4, 
+        ease: easePrecise,
+        opacity: { times: [0, 0.2, 0.9], duration: 1.4 }
+      }
+    } : { opacity: 0 }
+  };
+
+  // Determine background opacity based on timeline (fades out 0.7s after travel starts)
+  const isTravel = phase === 'travel';
 
   return (
     <>
-      <AnimatePresence>
-        {phase !== 'done' && (
-          <motion.div
-            key="brand-reveal"
-            className={styles.overlay}
-            initial={{ opacity: 1 }}
-            animate={{ opacity: isDissolving ? 0 : 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: isDissolving ? 0.8 : 0.3, ease: easeStandard }}
-            onAnimationComplete={() => {
-              if (isDissolving) {
-                markSeen();
-                setPhase('done');
-              }
-            }}
-            role="presentation"
-            aria-hidden="true"
-          >
-            {/* ── Ambient radial glow ── */}
-            <motion.div
-              className={styles.glow}
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{
-                opacity: isDissolving ? 0 : phase === 'glow' ? 0.4 : 0.7,
-                scale: isDissolving ? 1.3 : phase === 'glow' ? 0.8 : 1.0,
-              }}
-              transition={{ duration: 0.8, ease: easePrecise }}
-            />
+      {/* Hide the real navbar logo while the animation plays for a seamless handoff */}
+      <style>{`
+        #navbar-quantum-logo { visibility: hidden !important; opacity: 0 !important; }
+      `}</style>
 
-            {/* ── Logo ── */}
-            <motion.div
-              className={styles.logoContainer}
-              initial={{ opacity: 0, scale: 0.92, filter: 'blur(4px)' }}
-              animate={{
-                opacity: showLogo ? 1 : 0,
-                scale: showLogo ? 1 : 0.92,
-                filter: showLogo ? 'blur(0px)' : 'blur(4px)',
-              }}
-              transition={{ duration: 0.7, ease: easePrecise }}
-            >
-              {/* Using <img> intentionally — this overlay is ephemeral and removed from DOM after 3.2s.
-                  next/image optimisation overhead is unnecessary here. */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/quantum-q-logo.png"
-                alt=""
-                className={styles.logo}
-                draggable={false}
-              />
-            </motion.div>
-
-            {/* ── Wordmark: QUANTUM AI ── */}
-            <motion.div
-              className={styles.wordmark}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: showWordmark ? 1 : 0 }}
-              transition={{ duration: 0.5, ease: easePrecise }}
-            >
-              <motion.span
-                className={styles.wordmarkQuantum}
-                initial={{ letterSpacing: '0.5em', opacity: 0 }}
-                animate={{
-                  letterSpacing: showWordmark ? '0.25em' : '0.5em',
-                  opacity: showWordmark ? 1 : 0,
-                }}
-                transition={{ duration: 0.55, ease: easePrecise }}
-              >
-                QUANTUM
-              </motion.span>
-              <motion.span
-                className={styles.wordmarkAI}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: showWordmark ? 1 : 0 }}
-                transition={{ duration: 0.45, delay: 0.1, ease: easePrecise }}
-              >
-                AI
-              </motion.span>
-            </motion.div>
-
-            {/* ── Skip hint ── */}
-            <motion.div
-              className={styles.skipHint}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: showWordmark && !isDissolving ? 0.5 : 0 }}
-              transition={{ duration: 0.4, delay: 0.3, ease: easeStandard }}
-            >
-              Click to skip
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Main website content — always rendered underneath */}
-      <motion.div
-        animate={{ opacity: phase === 'done' ? 1 : 0.85 }}
-        transition={{ duration: 0.5 }}
+      <div 
+        className={styles.overlay} 
+        style={{ 
+          pointerEvents: isTravel ? 'none' : 'all', // Let clicks through during travel
+          background: 'transparent' // Background is handled by the motion.div below
+        }} 
       >
-        {children}
-      </motion.div>
+        {/* Background that reveals the website */}
+        <motion.div
+          initial={{ opacity: 1 }}
+          animate={{ opacity: isTravel ? 0 : 1 }}
+          transition={{ duration: 0.6, delay: isTravel ? 0.7 : 0, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'var(--color-void, #030712)',
+            zIndex: 1
+          }}
+        />
+
+        {/* Ambient atmospheric light (fades out as travel begins) */}
+        <motion.div
+          className={styles.glow}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{
+            opacity: isTravel ? 0 : phase === 'init' ? 0 : 0.6,
+            scale: isTravel ? 1.2 : 1.0,
+          }}
+          transition={{ duration: 0.8, ease: easePrecise }}
+          style={{ zIndex: 2 }}
+        />
+
+        {/* The travelling logo container */}
+        <motion.div
+          className={styles.logoContainer}
+          custom={targetCoords}
+          variants={logoVariants}
+          initial="init"
+          animate={phase}
+          style={{ zIndex: 4, transformOrigin: 'center' }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/quantum-q-logo.png"
+            alt=""
+            className={styles.logo}
+            draggable={false}
+          />
+        </motion.div>
+
+        {/* Light trail / motion blur behind the travelling logo */}
+        <motion.div
+          className={styles.logoContainer}
+          custom={targetCoords}
+          variants={trailVariants}
+          initial="init"
+          animate={phase}
+          style={{ 
+            position: 'absolute',
+            zIndex: 3, 
+            transformOrigin: 'center',
+            mixBlendMode: 'screen' 
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/quantum-q-logo.png"
+            alt=""
+            className={styles.logo}
+            style={{ filter: 'brightness(1.5) drop-shadow(0 0 20px rgba(59, 130, 246, 0.8))' }}
+            draggable={false}
+          />
+        </motion.div>
+      </div>
+
+      {children}
     </>
   );
 }
 
-/** Mark the brand reveal as seen for this session */
 function markSeen(): void {
   try {
     sessionStorage.setItem(SESSION_KEY, 'true');
-  } catch {
-    // sessionStorage unavailable — fail silently
-  }
+  } catch {}
 }

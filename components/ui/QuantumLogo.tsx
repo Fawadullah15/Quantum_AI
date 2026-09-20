@@ -6,6 +6,7 @@ export interface QuantumLogoProps {
   height?: number;
   className?: string;
   style?: React.CSSProperties;
+  id?: string;
   /** Legacy hero prop kept for backward compatibility */
   hero?: boolean;
 }
@@ -14,9 +15,10 @@ export interface QuantumLogoProps {
  * Quantum AI "Q" mark.
  * Uses the official 3D orbital-Q brand logo image.
  */
-export function QuantumLogo({ width = 32, height = 32, className, style }: QuantumLogoProps) {
+export function QuantumLogo({ width = 32, height = 32, className, style, id }: QuantumLogoProps) {
   return (
     <Image
+      id={id}
       src="/quantum-q-logo.png"
       alt="Quantum AI"
       width={width}
