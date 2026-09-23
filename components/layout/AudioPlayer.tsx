@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { audioStore } from '@/lib/audio-state';
 
 const AUDIO_SRC = '/bg-sound/Weight_of_the_Near_Stars.mp3';
-const INITIAL_VOLUME = 0.38;
+const INITIAL_VOLUME = 0.40;
 
 /** Real user events capable of triggering transient user activation in modern browsers */
 const INTERACTION_EVENTS: readonly (keyof WindowEventMap)[] = [
@@ -199,7 +199,7 @@ export function AudioPlayer() {
     window.addEventListener('beforeunload', handleDocumentUnload);
 
     // Immediately attempt to play background audio when the website loads.
-    // If the browser permits audible autoplay, playback begins automatically at 38% volume.
+    // If the browser permits audible autoplay, playback begins automatically at 15% volume.
     // If the browser blocks autoplay (NotAllowedError), attach temporary window
     // capture listeners so playback begins synchronously on the first legitimate interaction.
     const initialPlayPromise = audio.play();
