@@ -10,7 +10,7 @@ export const DEFAULT_TITLE = 'Quantum AI | AI, Software & Automation Solutions';
 export const DEFAULT_DESCRIPTION =
   'Quantum AI builds AI systems, custom business software, and automation for organizations that need better ways to operate.';
 
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/quantum-q-logo.png`;
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/quantum-ai-og.png`;
 
 /**
  * Returns a clean absolute canonical URL

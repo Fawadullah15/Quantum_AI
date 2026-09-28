@@ -289,7 +289,6 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
             src="/quantum-q-logo.png"
             alt=""
             className={styles.logo}
-            style={{ filter: 'brightness(1.5) drop-shadow(0 0 20px rgba(20, 184, 166, 0.6))' }}
             draggable={false}
           />
         </motion.div>

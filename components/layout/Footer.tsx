@@ -93,7 +93,7 @@ export default function Footer({
           {/* Brand - spans full width on mobile, 1 col on desktop */}
           <div className="footer-brand" style={{ gridColumn: 'span 1' }}>
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none', marginBottom: '1rem' }}>
-              <QuantumLogo width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(20, 184, 166, 0.45))' }} />
+              <QuantumLogo width={42} height={42} />
               <span style={{
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 700,

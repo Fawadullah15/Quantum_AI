@@ -151,7 +151,7 @@ export function AdminShell({
                     letterSpacing: '0.04em',
                   }}
                 >
-                  <QuantumLogo width={24} height={24} style={{ filter: 'drop-shadow(0 0 8px rgba(56, 189, 248, 0.5))' }} />
+                  <QuantumLogo width={24} height={24} />
                   <span>QUANTUM ADMIN</span>
                 </Link>
 

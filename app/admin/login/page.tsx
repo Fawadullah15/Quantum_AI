@@ -42,7 +42,7 @@ export default function AdminLogin() {
     <div className={styles.container}>
       <div className={styles.card}>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
-          <QuantumLogo width={64} height={64} style={{ filter: 'drop-shadow(0 0 20px rgba(56, 189, 248, 0.6))' }} />
+          <QuantumLogo width={64} height={64} />
         </div>
         <h1 className={styles.title}>ADMIN PANEL</h1>
         
