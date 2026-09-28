@@ -252,18 +252,12 @@ export function PremiumGlobe() {
         scrollRef.current.velocity *= 0.90;
       }
 
-      // ── Smooth Near / Far 3D Scroll Depth ──
-      // Top of Page (progress = 0):
-      // Earth is near, large, front and center (z = 0, y = -0.5, scale = 1.0)
-      // As user scrolls down (progress -> 1):
-      // 1. Z recedes deeply into the background (targetZ = -progress * 11.0) -> Goes far away!
-      // 2. Scale eases down smoothly (targetScale = 1.0 - progress * 0.35)
-      // 3. Y stays centered in the viewport with subtle settling (targetY = -0.5 - progress * 0.6)
-      // When user scrolls up (progress -> 0):
-      // Earth smoothly zooms forward from deep space and returns close to the screen!
-      const targetZ = -progress * 11.0;
-      const targetY = -0.5 - progress * 0.6;
-      const targetScale = Math.max(0.55, 1.0 - progress * 0.35);
+      // ── Smooth 3D Presence Alongside Website Content ──
+      // Earth remains prominent, clearly visible, and smoothly responsive to scroll and mouse
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+      const targetZ = -progress * 2.0;
+      const targetY = -0.35;
+      const targetScale = isMobile ? 0.95 : 1.05;
 
       groupRef.current.position.z = THREE.MathUtils.lerp(groupRef.current.position.z, targetZ, 0.06);
       groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.06);

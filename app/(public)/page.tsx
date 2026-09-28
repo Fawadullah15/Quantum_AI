@@ -17,6 +17,7 @@ import WhyQuantumSection from '@/components/sections/WhyQuantumSection';
 const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr: false });
 const GlobalMapSection = dynamic(() => import('@/components/sections/GlobalMapSection'), { ssr: false });
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
+import MarsHeroVideo from '@/components/ui/MarsHeroVideo';
 
 export default function HomePage() {
   const { setScrollProgress } = useGlobalStore();
@@ -338,74 +339,8 @@ export default function HomePage() {
             overflow: 'hidden',
           }}
         >
-          {/* ── Mars Video Background (Spacex-style revolving Mars on the far right) ── */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              zIndex: 0,
-              overflow: 'hidden',
-              pointerEvents: 'none',
-              backgroundColor: '#020708',
-            }}
-          >
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
-              style={{
-                position: 'absolute',
-                top: 0,
-                right: 0,
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'right center',
-              }}
-            >
-              <source src="/Mars_Rotation.mp4" type="video/mp4" />
-            </video>
-
-            {/* Left Deep Space Void: provides clean background contrast for text on the left */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(90deg, #020708 0%, rgba(2, 7, 8, 0.94) 30%, rgba(2, 7, 8, 0.6) 55%, rgba(2, 7, 8, 0.08) 78%, transparent 100%)',
-                pointerEvents: 'none',
-              }}
-            />
-
-            {/* Top Fade into Header */}
-            <div
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '120px',
-                background: 'linear-gradient(180deg, #020708 0%, transparent 100%)',
-                pointerEvents: 'none',
-              }}
-            />
-
-            {/* Bottom Atmospheric Fade: smoothly dissolves into the section below */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: '220px',
-                background: 'linear-gradient(0deg, #020708 0%, rgba(2, 7, 8, 0.85) 45%, transparent 100%)',
-                pointerEvents: 'none',
-              }}
-            />
-          </div>
+          {/* ── Mars Video Background (Spacex-style revolving Mars with instant poster & mobile responsive framing) ── */}
+          <MarsHeroVideo />
 
           {/* Semantic H1 for SEO & accessibility — visually hidden */}
           <h1 className="sr-only">We Build Intelligent Software — Quantum AI</h1>

@@ -15,7 +15,6 @@ function EarthSceneContainer({ isHome }: { isHome: boolean }) {
 
     if (!isHome) {
       el.style.opacity = '1';
-      el.style.visibility = 'visible';
       return;
     }
 
@@ -26,23 +25,19 @@ function EarthSceneContainer({ isHome }: { isHome: boolean }) {
           if (!containerRef.current) return;
           const y = window.scrollY || document.documentElement.scrollTop || 0;
 
-          // Fade Earth in as user scrolls out of the Mars hero section
-          // Top of page (y <= 60): completely hidden, Mars video has exclusive focus
-          // Between 60 and 460: smoothly emerges into deep space
-          // Beyond 460: 100% visible and follows along the entire website
-          const fadeStart = 60;
-          const fadeEnd = 460;
+          // As user begins scrolling (from 15px to 200px), Earth smoothly emerges into deep space
+          // Top of page (y <= 15): opacity 0 (Mars in hero takes focus)
+          // As soon as user scrolls past 15px: Earth appears and stays with user along the website!
+          const fadeStart = 15;
+          const fadeEnd = 200;
 
           if (y <= fadeStart) {
             containerRef.current.style.opacity = '0';
-            containerRef.current.style.visibility = 'hidden';
           } else if (y >= fadeEnd) {
             containerRef.current.style.opacity = '1';
-            containerRef.current.style.visibility = 'visible';
           } else {
             const progress = (y - fadeStart) / (fadeEnd - fadeStart);
             containerRef.current.style.opacity = progress.toFixed(3);
-            containerRef.current.style.visibility = 'visible';
           }
           ticking = false;
         });
@@ -63,8 +58,7 @@ function EarthSceneContainer({ isHome }: { isHome: boolean }) {
         inset: 0,
         zIndex: 0,
         opacity: isHome ? 0 : 1,
-        visibility: isHome ? 'hidden' : 'visible',
-        transition: 'opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'opacity 0.3s ease-out',
         pointerEvents: 'none',
       }}
     >
