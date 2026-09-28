@@ -180,6 +180,18 @@ export default function ParticleText({
       }
 
       offCtx.font = `${fontWeight} ${actualFontSize}px ${fontFamily}`;
+      
+      // Safety check: ensure the longest word fits within canvas width
+      let maxLineWidth = 0;
+      lines.forEach(line => {
+        const metrics = offCtx.measureText(line);
+        if (metrics.width > maxLineWidth) maxLineWidth = metrics.width;
+      });
+      if (maxLineWidth > cw * 0.95 && maxLineWidth > 0) {
+        actualFontSize = actualFontSize * ((cw * 0.95) / maxLineWidth);
+        offCtx.font = `${fontWeight} ${actualFontSize}px ${fontFamily}`;
+      }
+
       offCtx.fillStyle = textColor;
       offCtx.textAlign = 'left';
       offCtx.textBaseline = 'top';

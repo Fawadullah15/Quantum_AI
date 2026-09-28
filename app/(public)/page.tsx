@@ -323,51 +323,137 @@ export default function HomePage() {
         @media (prefers-reduced-motion: reduce) {
           canvas { display: none !important; }
         }
+        /* ── Hero Desktop & Mobile Composition ── */
+        .hero-section {
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          padding: clamp(4.5rem, 8vh, 6.5rem) clamp(1.25rem, 5vw, 5rem) clamp(2.5rem, 5vh, 4rem);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .hero-content {
+          max-width: 860px;
+          pointer-events: auto;
+          position: relative;
+          z-index: 2;
+        }
+
+        .hero-eyebrow {
+          font-family: var(--font-mono, monospace);
+          font-size: 0.72rem;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: #FFFFFF;
+          margin-bottom: 0.85rem;
+          font-weight: 600;
+        }
+
+        .hero-particle-wrap {
+          height: clamp(190px, 30vw, 300px);
+          width: clamp(280px, 90vw, 840px);
+          margin-bottom: 1.25rem;
+          filter: drop-shadow(0 4px 24px rgba(2, 7, 8, 0.95));
+        }
+
+        .hero-desc {
+          font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+          color: #FFFFFF;
+          line-height: 1.6;
+          margin-bottom: 1.75rem;
+          max-width: 620px;
+          font-weight: 300;
+        }
+
+        .hero-ctas {
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+          align-items: center;
+        }
+
+        /* Mobile specific art direction */
+        @media (max-width: 768px) {
+          .main-navbar-container {
+            padding: 0 clamp(0.75rem, 4vw, 1.25rem) !important;
+            top: clamp(0.5rem, 2vh, 1rem) !important;
+          }
+          
+          .hero-section {
+            padding-top: max(85px, calc(60px + env(safe-area-inset-top))) !important;
+            padding-left: max(1.25rem, env(safe-area-inset-left)) !important;
+            padding-right: max(1.25rem, env(safe-area-inset-right)) !important;
+            padding-bottom: max(2.5rem, calc(2rem + env(safe-area-inset-bottom))) !important;
+            min-height: 100svh !important; 
+            align-items: flex-end !important; /* anchors the content to the bottom */
+          }
+          
+          .hero-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+          }
+
+          .hero-eyebrow {
+            font-size: 0.65rem !important; 
+            letter-spacing: 0.2em !important;
+            margin-bottom: 0.75rem !important; /* closer to headline */
+            line-height: 1.6 !important;
+            max-width: 100% !important;
+            /* Control wrapping to balance lines */
+            word-spacing: 0.1em;
+          }
+
+          .hero-particle-wrap {
+            /* We want a tight box around the text */
+            height: clamp(150px, 42vw, 200px) !important;
+            width: 100% !important;
+            margin-bottom: 1rem !important; 
+          }
+
+          .hero-desc {
+            font-size: 0.92rem !important;
+            line-height: 1.45 !important;
+            margin-bottom: 2rem !important;
+            max-width: 100% !important;
+            color: rgba(255, 255, 255, 0.85) !important;
+          }
+
+          .hero-ctas {
+            flex-direction: column !important;
+            gap: 0.85rem !important;
+            align-items: stretch !important; /* full width */
+            width: 100%;
+          }
+
+          /* Force buttons to fill width */
+          .hero-btn-primary, .hero-btn-secondary {
+            width: 100% !important;
+            display: flex !important;
+          }
+        }
       `}</style>
       <div style={{ position: 'relative', width: '100%', maxWidth: '100%', overflowX: 'hidden', pointerEvents: 'none' }}>
 
         {/* ═══════════════════════════════════════════════════════════
             HERO SECTION — MARS SPACE ARRIVAL
         ═══════════════════════════════════════════════════════════ */}
-        <section
-          style={{
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            padding: 'clamp(4.5rem, 8vh, 6.5rem) clamp(1.25rem, 5vw, 5rem) clamp(2.5rem, 5vh, 4rem)',
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
+        <section className="hero-section">
           {/* ── Mars Video Background (Spacex-style revolving Mars with instant poster & mobile responsive framing) ── */}
           <MarsHeroVideo />
 
           {/* Semantic H1 for SEO & accessibility — visually hidden */}
           <h1 className="sr-only">We Build Intelligent Software — Quantum AI</h1>
 
-          <div style={{ maxWidth: 860, pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
-            <p
-              className="hero-eyebrow"
-              style={{
-                fontFamily: 'var(--font-mono, monospace)',
-                fontSize: '0.72rem',
-                letterSpacing: '0.22em',
-                textTransform: 'uppercase',
-                color: '#FFFFFF',
-                marginBottom: '0.85rem',
-                fontWeight: 600,
-              }}
-            >
+          <div className="hero-content">
+            <p className="hero-eyebrow">
               [SYS.01] AI SYSTEMS · BUSINESS SOFTWARE · AUTOMATION
             </p>
 
             {/* ParticleText visual headline */}
-            <div style={{
-              height: 'clamp(190px, 30vw, 300px)',
-              width: 'clamp(280px, 90vw, 840px)',
-              marginBottom: '1.25rem',
-              filter: 'drop-shadow(0 4px 24px rgba(2, 7, 8, 0.95))',
-            }}>
+            <div className="hero-particle-wrap">
               <ParticleText
                 text={`WE BUILD\nINTELLIGENT\nSOFTWARE`}
                 fontSize={95}
@@ -383,21 +469,14 @@ export default function HomePage() {
             </div>
 
             {/* Supporting copy */}
-            <p style={{
-              fontSize: 'clamp(0.9rem, 1.3vw, 1.05rem)',
-              color: '#FFFFFF',
-              lineHeight: 1.6,
-              marginBottom: '1.75rem',
-              maxWidth: 620,
-              fontWeight: 300,
-            }}>
+            <p className="hero-desc">
               Quantum AI builds AI systems, custom business software, and automation designed around the way your organization actually works.
             </p>
 
             {/* CTAs */}
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-              <NovaButton href="/contact">START A PROJECT</NovaButton>
-              <GalaxyButton href="/work">EXPLORE OUR WORK</GalaxyButton>
+            <div className="hero-ctas">
+              <NovaButton href="/contact" className="hero-btn-primary">START A PROJECT</NovaButton>
+              <GalaxyButton href="/work" className="hero-btn-secondary">EXPLORE OUR WORK</GalaxyButton>
             </div>
           </div>
         </section>
