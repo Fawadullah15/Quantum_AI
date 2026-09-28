@@ -186,10 +186,10 @@ export default function CustomCursor() {
           height: isLink ? '38px' : '22px',
           borderRadius: '50%',
           border: isLink
-            ? '1.5px solid #38BDF8'
-            : '1px solid rgba(56, 189, 248, 0.35)',
-          backgroundColor: isLink ? 'rgba(22, 119, 255, 0.15)' : 'transparent',
-          boxShadow: isLink ? '0 0 16px rgba(56, 189, 248, 0.5)' : 'none',
+            ? '1.5px solid #14B8A6'
+            : '1px solid rgba(20, 184, 166, 0.35)',
+          backgroundColor: isLink ? 'rgba(20, 184, 166, 0.15)' : 'transparent',
+          boxShadow: isLink ? '0 0 16px rgba(20, 184, 166, 0.5)' : 'none',
           transform: `translate3d(${leadPos.current.x}px, ${leadPos.current.y}px, 0) translate(-50%, -50%) scale(${isClicking ? 0.85 : 1})`,
           transition: 'width 0.22s cubic-bezier(0.16, 1, 0.3, 1), height 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, background-color 0.2s, box-shadow 0.2s',
           pointerEvents: 'none',
@@ -206,10 +206,10 @@ export default function CustomCursor() {
           width: isLink ? '4px' : '6px',
           height: isLink ? '4px' : '6px',
           borderRadius: '50%',
-          backgroundColor: isInvert ? '#FFFFFF' : '#38BDF8',
+          backgroundColor: isInvert ? '#FFFFFF' : '#14B8A6',
           boxShadow: isInvert
             ? '0 0 8px #FFFFFF'
-            : '0 0 10px #55D6FF, 0 0 20px rgba(22, 119, 255, 0.8)',
+            : '0 0 10px #67E8F9, 0 0 20px rgba(20, 184, 166, 0.8)',
           transform: `translate3d(${leadPos.current.x}px, ${leadPos.current.y}px, 0) translate(-50%, -50%) scale(${isClicking ? 0.7 : 1})`,
           transition: 'width 0.15s, height 0.15s, background-color 0.2s',
           pointerEvents: 'none',
@@ -238,9 +238,9 @@ export default function CustomCursor() {
               width: `${size}px`,
               height: `${size}px`,
               borderRadius: '50%',
-              backgroundColor: isInvert ? '#FFFFFF' : index % 2 === 0 ? '#55D6FF' : '#1677FF',
+              backgroundColor: isInvert ? '#FFFFFF' : index % 2 === 0 ? '#67E8F9' : '#0F766E',
               opacity,
-              boxShadow: `0 0 ${4 + (TRAIL_LENGTH - index)}px rgba(56, 189, 248, ${opacity * 0.8})`,
+              boxShadow: `0 0 ${4 + (TRAIL_LENGTH - index)}px rgba(20, 184, 166, ${opacity * 0.8})`,
               transform: `translate3d(${trailPoints.current[index].x}px, ${trailPoints.current[index].y}px, 0) translate(-50%, -50%)`,
               pointerEvents: 'none',
             }}

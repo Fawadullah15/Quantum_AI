@@ -53,9 +53,9 @@ export default function WhoWeHelpSection() {
       style={{
         padding: 'clamp(2.5rem, 5vh, 4rem) clamp(0.75rem, 4vw, 6rem)',
         pointerEvents: 'auto',
-        backgroundColor: 'rgba(4, 14, 36, 0.4)',
-        borderTop: '1px solid rgba(22, 119, 255, 0.08)',
-        borderBottom: '1px solid rgba(22, 119, 255, 0.08)',
+        backgroundColor: 'rgba(5, 12, 14, 0.4)',
+        borderTop: '1px solid rgba(20, 184, 166, 0.08)',
+        borderBottom: '1px solid rgba(20, 184, 166, 0.08)',
         width: '100%',
         boxSizing: 'border-box',
       }}
@@ -67,7 +67,7 @@ export default function WhoWeHelpSection() {
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: '#38BDF8',
+            color: '#14B8A6',
             marginBottom: '0.5rem',
             fontWeight: 600,
           }}
@@ -81,7 +81,7 @@ export default function WhoWeHelpSection() {
             fontSize: 'clamp(2.25rem, 4.5vw, 3.65rem)',
             fontWeight: 700,
             lineHeight: 1.05,
-            color: '#F8FAFF',
+            color: '#F0FDFA',
             marginBottom: '0.65rem',
             letterSpacing: '-0.035em',
             textTransform: 'uppercase',
@@ -94,7 +94,7 @@ export default function WhoWeHelpSection() {
           className="section-desc"
           style={{
             fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-            color: '#94A3B8',
+            color: '#A7C7C5',
             lineHeight: 1.6,
             marginBottom: 'clamp(1.75rem, 3.5vh, 2.75rem)',
             maxWidth: 680,
@@ -118,8 +118,8 @@ export default function WhoWeHelpSection() {
               key={item.code}
               href={item.link}
               style={{
-                backgroundColor: 'rgba(6, 21, 43, 0.65)',
-                border: '1px solid rgba(22, 119, 255, 0.16)',
+                backgroundColor: 'rgba(7, 18, 20, 0.65)',
+                border: '1px solid rgba(20, 184, 166, 0.16)',
                 borderRadius: '12px',
                 padding: '1.35rem',
                 textDecoration: 'none',
@@ -131,14 +131,14 @@ export default function WhoWeHelpSection() {
                 minWidth: 0,
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(8, 28, 58, 0.85)';
-                e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.45)';
+                e.currentTarget.style.backgroundColor = 'rgba(10, 24, 27, 0.85)';
+                e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.45)';
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 12px 30px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(56, 189, 248, 0.2)';
+                e.currentTarget.style.boxShadow = '0 12px 30px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(20, 184, 166, 0.2)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(6, 21, 43, 0.65)';
-                e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.16)';
+                e.currentTarget.style.backgroundColor = 'rgba(7, 18, 20, 0.65)';
+                e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.16)';
                 e.currentTarget.style.transform = 'none';
                 e.currentTarget.style.boxShadow = 'none';
               }}
@@ -148,7 +148,7 @@ export default function WhoWeHelpSection() {
                   style={{
                     fontFamily: 'var(--font-mono, monospace)',
                     fontSize: '0.72rem',
-                    color: '#38BDF8',
+                    color: '#14B8A6',
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                   }}
@@ -159,7 +159,7 @@ export default function WhoWeHelpSection() {
                   style={{
                     fontFamily: 'var(--font-mono, monospace)',
                     fontSize: '0.68rem',
-                    color: '#64748B',
+                    color: '#6F8F8D',
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
                   }}
@@ -172,7 +172,7 @@ export default function WhoWeHelpSection() {
                 style={{
                   fontSize: '1.15rem',
                   fontWeight: 600,
-                  color: '#F8FAFC',
+                  color: '#F0FDFA',
                   letterSpacing: '-0.015em',
                   margin: 0,
                   lineHeight: 1.3,
@@ -183,7 +183,7 @@ export default function WhoWeHelpSection() {
 
               <p
                 style={{
-                  color: '#94A3B8',
+                  color: '#A7C7C5',
                   fontSize: '0.86rem',
                   lineHeight: 1.6,
                   margin: 0,
@@ -193,7 +193,7 @@ export default function WhoWeHelpSection() {
                 {item.description}
               </p>
 
-              <div style={{ marginTop: 'auto', paddingTop: '0.75rem', borderTop: '1px solid rgba(22, 119, 255, 0.1)' }}>
+              <div style={{ marginTop: 'auto', paddingTop: '0.75rem', borderTop: '1px solid rgba(20, 184, 166, 0.1)' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                   {item.deliverables.map((del) => (
                     <div
@@ -203,11 +203,11 @@ export default function WhoWeHelpSection() {
                         alignItems: 'center',
                         gap: '0.4rem',
                         fontSize: '0.76rem',
-                        color: '#CBD5E1',
+                        color: '#A7C7C5',
                         fontFamily: 'var(--font-mono, monospace)',
                       }}
                     >
-                      <span style={{ color: '#38BDF8', fontSize: '0.7rem' }}>▹</span>
+                      <span style={{ color: '#14B8A6', fontSize: '0.7rem' }}>▹</span>
                       <span>{del}</span>
                     </div>
                   ))}

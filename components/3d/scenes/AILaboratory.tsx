@@ -42,7 +42,7 @@ export function AILaboratory() {
         {/* Core Glow */}
         <mesh>
           <octahedronGeometry args={[1.6, 0]} />
-          <meshBasicMaterial color="#00e5ff" wireframe transparent opacity={0.3} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color="#14B8A6" wireframe transparent opacity={0.3} blending={THREE.AdditiveBlending} />
         </mesh>
       </mesh>
 
@@ -61,11 +61,11 @@ export function AILaboratory() {
         <bufferGeometry>
           <primitive object={new THREE.BufferAttribute(particles, 3)} attach="attributes-position" />
         </bufferGeometry>
-        <pointsMaterial size={0.05} color="#00e5ff" transparent opacity={0.6} sizeAttenuation />
+        <pointsMaterial size={0.05} color="#14B8A6" transparent opacity={0.6} sizeAttenuation />
       </points>
 
       {/* Lab Environment lighting */}
-      <pointLight position={[0, 0, 0]} intensity={3} color="#00e5ff" distance={20} decay={2} />
+      <pointLight position={[0, 0, 0]} intensity={3} color="#14B8A6" distance={20} decay={2} />
       <directionalLight position={[0, -10, 0]} intensity={1} color="#ffffff" />
     </group>
   );

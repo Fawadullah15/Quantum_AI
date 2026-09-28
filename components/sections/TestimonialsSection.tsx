@@ -314,12 +314,12 @@ export default function TestimonialsSection({
       <style>{`
         .test-marquee-section {
           padding: clamp(3.5rem, 6.5vh, 5.5rem) 0;
-          background: radial-gradient(circle at 50% 50%, rgba(10, 32, 68, 0.28) 0%, rgba(3, 7, 18, 0.98) 85%);
-          border-top: 1px solid rgba(22, 119, 255, 0.14);
-          border-bottom: 1px solid rgba(22, 119, 255, 0.14);
+          background: radial-gradient(circle at 50% 50%, rgba(7, 18, 20, 0.28) 0%, rgba(2, 7, 8, 0.98) 85%);
+          border-top: 1px solid rgba(20, 184, 166, 0.14);
+          border-bottom: 1px solid rgba(20, 184, 166, 0.14);
           position: relative;
           overflow: hidden;
-          color: #F8FAFC;
+          color: #F0FDFA;
         }
 
         /* ─── Header ─── */
@@ -335,7 +335,7 @@ export default function TestimonialsSection({
           font-size: 0.72rem;
           letter-spacing: 0.25em;
           text-transform: uppercase;
-          color: #1677FF;
+          color: #0F766E;
           margin-bottom: 0.5rem;
           font-weight: 600;
         }
@@ -344,13 +344,13 @@ export default function TestimonialsSection({
           font-weight: 700;
           line-height: 1.15;
           letter-spacing: -0.03em;
-          color: #F8FAFF;
+          color: #F0FDFA;
           margin: 0 0 0.65rem 0;
           text-transform: uppercase;
         }
         .test-subtitle {
           font-size: clamp(0.88rem, 1.2vw, 1.05rem);
-          color: #94A3B8;
+          color: #A7C7C5;
           max-width: 620px;
           margin: 0 auto 1.35rem auto;
           line-height: 1.6;
@@ -367,7 +367,7 @@ export default function TestimonialsSection({
           z-index: 20;
         }
         .test-submit-btn {
-          background-color: #1677FF !important;
+          background-color: #0F766E !important;
           color: #FFFFFF !important;
           border: none !important;
           padding: 0.7rem 1.65rem !important;
@@ -378,7 +378,7 @@ export default function TestimonialsSection({
           letter-spacing: 0.04em !important;
           cursor: pointer !important;
           transition: background 0.2s, transform 0.2s, box-shadow 0.2s !important;
-          box-shadow: 0 4px 18px rgba(22, 119, 255, 0.45) !important;
+          box-shadow: 0 4px 18px rgba(20, 184, 166, 0.45) !important;
           display: inline-flex !important;
           align-items: center !important;
           gap: 0.5rem !important;
@@ -390,7 +390,7 @@ export default function TestimonialsSection({
         .test-submit-btn:hover {
           background-color: #2563EB !important;
           transform: translateY(-2px) !important;
-          box-shadow: 0 6px 24px rgba(22, 119, 255, 0.6) !important;
+          box-shadow: 0 6px 24px rgba(20, 184, 166, 0.6) !important;
         }
         .test-submit-btn:active {
           transform: translateY(0) !important;
@@ -448,9 +448,9 @@ export default function TestimonialsSection({
         .test-square-card {
           width: clamp(270px, 28vw, 320px);
           aspect-ratio: 1 / 1;
-          background: rgba(6, 21, 43, 0.78);
+          background: rgba(7, 18, 20, 0.78);
           backdrop-filter: blur(14px);
-          border: 1px solid rgba(22, 119, 255, 0.18);
+          border: 1px solid rgba(20, 184, 166, 0.18);
           border-radius: 18px;
           padding: clamp(1.25rem, 2.2vw, 1.65rem);
           display: flex;
@@ -468,10 +468,10 @@ export default function TestimonialsSection({
         }
 
         .test-square-card:hover {
-          background-color: rgba(8, 28, 58, 0.95);
-          border-color: rgba(56, 189, 248, 0.6);
+          background-color: rgba(10, 24, 27, 0.95);
+          border-color: rgba(20, 184, 166, 0.6);
           transform: scale(1.05) translateY(-4px);
-          box-shadow: 0 20px 44px -10px rgba(22, 119, 255, 0.4), 0 0 0 1px rgba(56, 189, 248, 0.4);
+          box-shadow: 0 20px 44px -10px rgba(20, 184, 166, 0.4), 0 0 0 1px rgba(20, 184, 166, 0.4);
           z-index: 50;
         }
 
@@ -481,9 +481,9 @@ export default function TestimonialsSection({
           right: 12px;
           font-family: var(--font-mono, monospace);
           font-size: 0.58rem;
-          color: rgba(56, 189, 248, 0.6);
-          background: rgba(22, 119, 255, 0.12);
-          border: 1px solid rgba(56, 189, 248, 0.2);
+          color: rgba(20, 184, 166, 0.6);
+          background: rgba(20, 184, 166, 0.12);
+          border: 1px solid rgba(20, 184, 166, 0.2);
           padding: 2px 6px;
           border-radius: 4px;
           opacity: 0;
@@ -504,7 +504,7 @@ export default function TestimonialsSection({
           font-family: serif;
           font-size: 2.25rem;
           line-height: 1;
-          color: #1677FF;
+          color: #0F766E;
           opacity: 0.6;
           user-select: none;
         }
@@ -524,7 +524,7 @@ export default function TestimonialsSection({
         }
         .test-quote-text {
           font-size: clamp(0.82rem, 1.1vw, 0.88rem);
-          color: #CBD5E1;
+          color: #A7C7C5;
           line-height: 1.55;
           margin: 0;
           font-weight: 300;
@@ -539,15 +539,15 @@ export default function TestimonialsSection({
           display: flex;
           align-items: center;
           gap: 0.75rem;
-          border-top: 1px solid rgba(22, 119, 255, 0.12);
+          border-top: 1px solid rgba(20, 184, 166, 0.12);
           padding-top: 0.75rem;
         }
         .test-avatar-box {
           width: 38px;
           height: 38px;
           border-radius: 50%;
-          background: rgba(22, 119, 255, 0.18);
-          border: 1px solid rgba(56, 189, 248, 0.3);
+          background: rgba(20, 184, 166, 0.18);
+          border: 1px solid rgba(20, 184, 166, 0.3);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -563,7 +563,7 @@ export default function TestimonialsSection({
           font-family: var(--font-mono, monospace);
           font-size: 0.75rem;
           font-weight: 700;
-          color: #38BDF8;
+          color: #14B8A6;
         }
 
         .test-author-details {
@@ -575,7 +575,7 @@ export default function TestimonialsSection({
         .test-author-name {
           font-size: 0.88rem;
           font-weight: 600;
-          color: #F8FAFC;
+          color: #F0FDFA;
           margin: 0;
           line-height: 1.25;
           white-space: normal;
@@ -583,7 +583,7 @@ export default function TestimonialsSection({
         .test-author-role {
           font-family: var(--font-mono, monospace);
           font-size: 0.62rem;
-          color: #38BDF8;
+          color: #14B8A6;
           letter-spacing: 0.03em;
           text-transform: uppercase;
           line-height: 1.3;
@@ -599,7 +599,7 @@ export default function TestimonialsSection({
           bottom: 0;
           width: 100%;
           height: 100%;
-          background: rgba(2, 6, 23, 0.88);
+          background: rgba(2, 7, 8, 0.88);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
           display: flex;
@@ -611,17 +611,17 @@ export default function TestimonialsSection({
         }
         .test-modal-card {
           background: #070E1E;
-          border: 1px solid rgba(56, 189, 248, 0.35);
+          border: 1px solid rgba(20, 184, 166, 0.35);
           border-radius: 16px;
           padding: clamp(1.5rem, 3vw, 2.25rem);
           max-width: 560px;
           width: 100%;
           position: relative;
-          box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(22, 119, 255, 0.25);
+          box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(20, 184, 166, 0.25);
           box-sizing: border-box;
           max-height: 90vh;
           overflow-y: auto;
-          color: #F8FAFC;
+          color: #F0FDFA;
         }
         .test-modal-close {
           position: absolute;
@@ -629,13 +629,13 @@ export default function TestimonialsSection({
           right: 18px;
           background: transparent;
           border: none;
-          color: #94A3B8;
+          color: #A7C7C5;
           font-size: 1.35rem;
           cursor: pointer;
           transition: color 0.2s;
         }
         .test-modal-close:hover {
-          color: #F8FAFC;
+          color: #F0FDFA;
         }
 
         /* Mobile View (< 768px) */
@@ -725,22 +725,22 @@ export default function TestimonialsSection({
             </button>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-              <span style={{ fontSize: '2.5rem', color: '#1677FF', opacity: 0.6, lineHeight: 1, fontFamily: 'serif' }}>“</span>
+              <span style={{ fontSize: '2.5rem', color: '#0F766E', opacity: 0.6, lineHeight: 1, fontFamily: 'serif' }}>“</span>
               {renderStars(activeReadingItem.rating || 5)}
             </div>
 
-            <p style={{ fontSize: '1.05rem', color: '#E2E8F0', lineHeight: 1.7, margin: '0 0 1.5rem 0', fontWeight: 300, fontStyle: 'italic' }}>
+            <p style={{ fontSize: '1.05rem', color: '#F0FDFA', lineHeight: 1.7, margin: '0 0 1.5rem 0', fontWeight: 300, fontStyle: 'italic' }}>
               &quot;{activeReadingItem.content}&quot;
             </p>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', borderTop: '1px solid rgba(22, 119, 255, 0.18)', paddingTop: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', borderTop: '1px solid rgba(20, 184, 166, 0.18)', paddingTop: '1rem' }}>
               <div
                 style={{
                   width: '46px',
                   height: '46px',
                   borderRadius: '50%',
-                  backgroundColor: 'rgba(22, 119, 255, 0.2)',
-                  border: '1px solid rgba(56, 189, 248, 0.35)',
+                  backgroundColor: 'rgba(20, 184, 166, 0.2)',
+                  border: '1px solid rgba(20, 184, 166, 0.35)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -751,18 +751,18 @@ export default function TestimonialsSection({
                 {activeReadingItem.photo ? (
                   <img src={activeReadingItem.photo} alt={activeReadingItem.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
-                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontWeight: 700, color: '#38BDF8', fontSize: '0.85rem' }}>
+                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontWeight: 700, color: '#14B8A6', fontSize: '0.85rem' }}>
                     {activeReadingItem.name.slice(0, 2).toUpperCase()}
                   </span>
                 )}
               </div>
 
               <div>
-                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: 0 }}>
+                <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F0FDFA', margin: 0 }}>
                   {activeReadingItem.name}
                 </h3>
                 {(activeReadingItem.role || activeReadingItem.company) && (
-                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', textTransform: 'uppercase' }}>
+                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#14B8A6', textTransform: 'uppercase' }}>
                     {[activeReadingItem.role, activeReadingItem.company].filter(Boolean).join(' · ')}
                   </span>
                 )}
@@ -794,17 +794,17 @@ export default function TestimonialsSection({
             {submitSuccess ? (
               <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
                 <div style={{ fontSize: '3rem', marginBottom: '0.75rem' }}>🎉</div>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.5rem 0' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#F0FDFA', margin: '0 0 0.5rem 0' }}>
                   Thank You for Your Feedback!
                 </h3>
-                <p style={{ color: '#94A3B8', fontSize: '0.92rem', lineHeight: 1.6, maxWidth: '420px', margin: '0 auto 1.5rem' }}>
+                <p style={{ color: '#A7C7C5', fontSize: '0.92rem', lineHeight: 1.6, maxWidth: '420px', margin: '0 auto 1.5rem' }}>
                   Your testimonial has been successfully received and sent to our team for administrative review. It will appear on the live slider once approved.
                 </p>
                 <button
                   type="button"
                   onClick={handleCloseSubmitModal}
                   style={{
-                    backgroundColor: '#1677FF',
+                    backgroundColor: '#0F766E',
                     color: '#FFFFFF',
                     border: 'none',
                     padding: '0.65rem 1.75rem',
@@ -818,13 +818,13 @@ export default function TestimonialsSection({
               </div>
             ) : (
               <div>
-                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#1677FF', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#0F766E', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
                   CLIENT REVIEW
                 </div>
-                <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.5rem 0' }}>
+                <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#F0FDFA', margin: '0 0 0.5rem 0' }}>
                   Share Your Experience
                 </h3>
-                <p style={{ color: '#94A3B8', fontSize: '0.82rem', margin: '0 0 1.25rem 0', lineHeight: 1.5 }}>
+                <p style={{ color: '#A7C7C5', fontSize: '0.82rem', margin: '0 0 1.25rem 0', lineHeight: 1.5 }}>
                   Submissions are sent to the admin panel for review before appearing on the public website.
                 </p>
 
@@ -836,7 +836,7 @@ export default function TestimonialsSection({
 
                 <form onSubmit={handleSubmitTestimonial} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#A7C7C5', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
                       Your Full Name *
                     </label>
                     <input
@@ -845,13 +845,13 @@ export default function TestimonialsSection({
                       placeholder="e.g. Muhammad Tariq"
                       value={submitForm.name}
                       onChange={(e) => setSubmitForm({ ...submitForm, name: e.target.value })}
-                      style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#030712', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, color: '#F8FAFC', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
+                      style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#020708', border: '1px solid rgba(20, 184, 166, 0.25)', borderRadius: 6, color: '#F0FDFA', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
                     />
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                      <label style={{ display: 'block', fontSize: '0.72rem', color: '#A7C7C5', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
                         Position / Role
                       </label>
                       <input
@@ -859,12 +859,12 @@ export default function TestimonialsSection({
                         placeholder="e.g. Director of Operations"
                         value={submitForm.role}
                         onChange={(e) => setSubmitForm({ ...submitForm, role: e.target.value })}
-                        style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#030712', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, color: '#F8FAFC', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#020708', border: '1px solid rgba(20, 184, 166, 0.25)', borderRadius: 6, color: '#F0FDFA', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
                       />
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                      <label style={{ display: 'block', fontSize: '0.72rem', color: '#A7C7C5', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
                         Company / Organization
                       </label>
                       <input
@@ -872,19 +872,19 @@ export default function TestimonialsSection({
                         placeholder="e.g. Eden School System"
                         value={submitForm.company}
                         onChange={(e) => setSubmitForm({ ...submitForm, company: e.target.value })}
-                        style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#030712', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, color: '#F8FAFC', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#020708', border: '1px solid rgba(20, 184, 166, 0.25)', borderRadius: 6, color: '#F0FDFA', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#A7C7C5', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
                       Rating
                     </label>
                     <select
                       value={submitForm.rating}
                       onChange={(e) => setSubmitForm({ ...submitForm, rating: Number(e.target.value) || 5 })}
-                      style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#030712', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, color: '#F8FAFC', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
+                      style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#020708', border: '1px solid rgba(20, 184, 166, 0.25)', borderRadius: 6, color: '#F0FDFA', fontSize: '0.875rem', outline: 'none', boxSizing: 'border-box' }}
                     >
                       <option value={5}>★★★★★ (5 Stars - Exceptional)</option>
                       <option value={4}>★★★★☆ (4 Stars - Great)</option>
@@ -895,7 +895,7 @@ export default function TestimonialsSection({
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#A7C7C5', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
                       Your Review / Testimonial *
                     </label>
                     <textarea
@@ -904,13 +904,13 @@ export default function TestimonialsSection({
                       placeholder="Share your experience working with Quantum AI, the systems engineered, and the results achieved..."
                       value={submitForm.content}
                       onChange={(e) => setSubmitForm({ ...submitForm, content: e.target.value })}
-                      style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#030712', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, color: '#F8FAFC', fontSize: '0.875rem', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
+                      style={{ width: '100%', padding: '0.65rem 0.85rem', backgroundColor: '#020708', border: '1px solid rgba(20, 184, 166, 0.25)', borderRadius: 6, color: '#F0FDFA', fontSize: '0.875rem', outline: 'none', resize: 'vertical', boxSizing: 'border-box' }}
                     />
                   </div>
 
                   {/* Photo Upload */}
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#A7C7C5', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
                       Your Photo / Avatar (Optional)
                     </label>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -919,8 +919,8 @@ export default function TestimonialsSection({
                           width: '46px',
                           height: '46px',
                           borderRadius: '50%',
-                          backgroundColor: '#030712',
-                          border: '1px solid rgba(56, 189, 248, 0.3)',
+                          backgroundColor: '#020708',
+                          border: '1px solid rgba(20, 184, 166, 0.3)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -931,7 +931,7 @@ export default function TestimonialsSection({
                         {submitForm.photo ? (
                           <img src={submitForm.photo} alt="Avatar Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
-                          <span style={{ fontSize: '0.65rem', color: '#64748B' }}>NO PHOTO</span>
+                          <span style={{ fontSize: '0.65rem', color: '#6F8F8D' }}>NO PHOTO</span>
                         )}
                       </div>
 
@@ -939,9 +939,9 @@ export default function TestimonialsSection({
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
                         style={{
-                          backgroundColor: 'rgba(22, 119, 255, 0.15)',
-                          border: '1px solid rgba(22, 119, 255, 0.35)',
-                          color: '#38BDF8',
+                          backgroundColor: 'rgba(20, 184, 166, 0.15)',
+                          border: '1px solid rgba(20, 184, 166, 0.35)',
+                          color: '#14B8A6',
                           padding: '0.45rem 0.85rem',
                           borderRadius: '6px',
                           fontSize: '0.78rem',
@@ -962,14 +962,14 @@ export default function TestimonialsSection({
                     {fileError && <p style={{ color: '#F87171', fontSize: '0.75rem', margin: '0.35rem 0 0 0' }}>{fileError}</p>}
                   </div>
 
-                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem', marginTop: '0.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)', paddingTop: '0.85rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem', marginTop: '0.5rem', borderTop: '1px solid rgba(20, 184, 166, 0.15)', paddingTop: '0.85rem' }}>
                     <button
                       type="button"
                       onClick={handleCloseSubmitModal}
                       style={{
                         backgroundColor: 'transparent',
                         border: '1px solid rgba(148, 163, 184, 0.3)',
-                        color: '#94A3B8',
+                        color: '#A7C7C5',
                         padding: '0.55rem 1.15rem',
                         borderRadius: 6,
                         cursor: 'pointer',
@@ -984,7 +984,7 @@ export default function TestimonialsSection({
                       type="submit"
                       disabled={isSubmitting}
                       style={{
-                        backgroundColor: '#1677FF',
+                        backgroundColor: '#0F766E',
                         border: 'none',
                         color: '#FFFFFF',
                         padding: '0.55rem 1.35rem',

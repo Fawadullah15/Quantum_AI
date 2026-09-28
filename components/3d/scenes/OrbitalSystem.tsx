@@ -5,11 +5,11 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 const ORBITS = [
-  { name: 'AI', radius: 6, speed: 0.3, count: 4, color: '#00e5ff' },
+  { name: 'AI', radius: 6, speed: 0.3, count: 4, color: '#14B8A6' },
   { name: 'ENGINEERING', radius: 9, speed: 0.2, count: 6, color: '#ffffff' },
-  { name: 'DESIGN', radius: 12, speed: 0.15, count: 5, color: '#8888ff' },
+  { name: 'DESIGN', radius: 12, speed: 0.15, count: 5, color: '#67E8F9' },
   { name: 'PRODUCT', radius: 15, speed: 0.1, count: 3, color: '#ffffff' },
-  { name: 'RESEARCH', radius: 18, speed: 0.08, count: 4, color: '#00e5ff' },
+  { name: 'RESEARCH', radius: 18, speed: 0.08, count: 4, color: '#14B8A6' },
 ];
 
 export function OrbitalSystem() {
@@ -26,9 +26,9 @@ export function OrbitalSystem() {
       {/* Central star */}
       <mesh>
         <sphereGeometry args={[1.5, 32, 32]} />
-        <meshStandardMaterial color="#030508" roughness={0} metalness={1} emissive="#00e5ff" emissiveIntensity={0.5} />
+        <meshStandardMaterial color="#020708" roughness={0} metalness={1} emissive="#14B8A6" emissiveIntensity={0.5} />
       </mesh>
-      <pointLight position={[0, 0, 0]} intensity={3} color="#00e5ff" distance={30} decay={2} />
+      <pointLight position={[0, 0, 0]} intensity={3} color="#14B8A6" distance={30} decay={2} />
 
       {ORBITS.map((orbit, i) => (
         <OrbitRing key={i} orbit={orbit} />

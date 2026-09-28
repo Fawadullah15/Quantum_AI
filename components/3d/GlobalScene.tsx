@@ -72,8 +72,8 @@ export function GlobalScene() {
 
   return (
     <>
-      <fog attach="fog" args={['#020817', 8, 80]} />
-      <ambientLight intensity={0.05} color="#F8FAFF" />
+      <fog attach="fog" args={['#020708', 8, 80]} />
+      <ambientLight intensity={0.05} color="#F0FDFA" />
 
       <Suspense fallback={null}>
         {/* Home 3D Earth */}

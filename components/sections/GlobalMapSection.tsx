@@ -57,14 +57,14 @@ function MapMarker({ marker }: { marker: Marker }) {
         <circle
           r="14"
           fill="none"
-          stroke="rgba(79, 70, 229, 0.6)"
+          stroke="rgba(15, 118, 110, 0.6)"
           strokeWidth="1"
           opacity="0.35"
           style={{ animation: 'mapRingPulse 2.8s ease-out infinite' }}
         />
       )}
       {/* Glow background */}
-      <circle r="8" fill="rgba(124, 58, 237, 0.2)" />
+      <circle r="8" fill="rgba(37, 99, 235, 0.2)" />
       {/* Outer ring */}
       <circle r="5.5" fill="none" stroke="#4F46E5" strokeWidth="1.5" />
       {/* Center dot */}
@@ -87,12 +87,12 @@ function MapMarker({ marker }: { marker: Marker }) {
               width="178" height="42"
               rx="7"
               fill="#07152F"
-              stroke="rgba(79,70,229,0.4)"
+              stroke="rgba(15, 118, 110,0.4)"
               strokeWidth="1"
             />
             <text
               x="12" y="16"
-              fill="#F8FAFF"
+              fill="#F0FDFA"
               fontSize="9.5"
               fontWeight="700"
               fontFamily="'Space Mono', monospace"
@@ -102,7 +102,7 @@ function MapMarker({ marker }: { marker: Marker }) {
             </text>
             <text
               x="12" y="31"
-              fill="#64748B"
+              fill="#6F8F8D"
               fontSize="8.5"
               fontFamily="'Space Mono', monospace"
               letterSpacing="0.5"
@@ -149,7 +149,7 @@ export default function GlobalMapSection() {
           fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
-          color: '#1677FF',
+          color: '#0F766E',
           marginBottom: '0.5rem',
           maxWidth: 'none',
           fontWeight: 600
@@ -164,7 +164,7 @@ export default function GlobalMapSection() {
             fontWeight: 700,
             lineHeight: 1.02,
             letterSpacing: '-0.035em',
-            color: '#F8FAFF',
+            color: '#F0FDFA',
             marginBottom: '0.65rem',
             textTransform: 'uppercase',
           }}
@@ -175,7 +175,7 @@ export default function GlobalMapSection() {
           className="section-desc"
           style={{
             fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-            color: '#94A3B8',
+            color: '#A7C7C5',
             lineHeight: 1.6,
             maxWidth: 580,
             margin: '0 auto',
@@ -194,8 +194,8 @@ export default function GlobalMapSection() {
           margin: '0 auto',
           borderRadius: 16,
           overflow: 'hidden',
-          border: '1px solid rgba(22, 119, 255, 0.15)',
-          boxShadow: '0 0 80px -30px rgba(22,119,255,0.18), inset 0 0 0 1px rgba(22,119,255,0.08)',
+          border: '1px solid rgba(20, 184, 166, 0.15)',
+          boxShadow: '0 0 80px -30px rgba(20, 184, 166,0.18), inset 0 0 0 1px rgba(20, 184, 166,0.08)',
         }}
       >
         {/* Grid overlay */}
@@ -204,8 +204,8 @@ export default function GlobalMapSection() {
           inset: 0,
           zIndex: 1,
           backgroundImage: [
-            'linear-gradient(rgba(22,119,255,0.05) 1px, transparent 1px)',
-            'linear-gradient(90deg, rgba(22,119,255,0.05) 1px, transparent 1px)',
+            'linear-gradient(rgba(20, 184, 166,0.05) 1px, transparent 1px)',
+            'linear-gradient(90deg, rgba(20, 184, 166,0.05) 1px, transparent 1px)',
           ].join(', '),
           backgroundSize: '65px 65px',
           pointerEvents: 'none',
@@ -230,8 +230,8 @@ export default function GlobalMapSection() {
           }
           .qai-world-map path:hover,
           .qai-world-map polygon:hover {
-            fill: rgba(22, 119, 255, 0.45);
-            stroke: rgba(85, 214, 255, 0.55);
+            fill: rgba(20, 184, 166, 0.45);
+            stroke: rgba(103, 232, 249, 0.55);
           }
           @media (prefers-reduced-motion: reduce) {
             .qai-world-map path,
@@ -278,7 +278,7 @@ export default function GlobalMapSection() {
                     <path
                       d={pathD}
                       fill="none"
-                      stroke="#1677FF"
+                      stroke="#0F766E"
                       strokeWidth="1"
                       opacity="0.25"
                     />
@@ -286,7 +286,7 @@ export default function GlobalMapSection() {
                     <path
                       d={pathD}
                       fill="none"
-                      stroke="#55D6FF"
+                      stroke="#67E8F9"
                       strokeWidth="1.5"
                       strokeDasharray="6, 12"
                       style={{
@@ -313,7 +313,7 @@ export default function GlobalMapSection() {
         marginTop: '1.5rem',
         fontSize: '0.75rem',
         fontFamily: 'var(--font-mono)',
-        color: '#334155',
+        color: '#3A5553',
         letterSpacing: '0.1em',
       }}>
         GLOBAL CONNECTIONS — VISUAL REPRESENTATION ONLY

@@ -68,7 +68,7 @@ export function ParticleSystem({ count = 800, scrollProgress, mousePosition }: P
   return (
     <points ref={pointsRef} geometry={geometry}>
       <pointsMaterial 
-        color="#00c8ff" 
+        color="#14B8A6" 
         size={0.05} 
         transparent 
         opacity={0.6}

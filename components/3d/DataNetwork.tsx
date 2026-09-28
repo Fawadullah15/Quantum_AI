@@ -76,8 +76,8 @@ export function DataNetwork({ visible, scrollProgress, labels }: DataNetworkProp
           <mesh>
             <sphereGeometry args={[0.08, 16, 16]} />
             <meshStandardMaterial 
-              color="#00c8ff" 
-              emissive="#00c8ff" 
+              color="#14B8A6" 
+              emissive="#14B8A6" 
               emissiveIntensity={1} 
               transparent 
               opacity={0.8} 
@@ -101,7 +101,7 @@ export function DataNetwork({ visible, scrollProgress, labels }: DataNetworkProp
         <Line 
           key={`edge-${i}`}
           points={[edge[0].toArray(), edge[1].toArray()]}
-          color="#00c8ff"
+          color="#14B8A6"
           lineWidth={0.5}
           transparent
           opacity={0.2}

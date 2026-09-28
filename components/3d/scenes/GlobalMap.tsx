@@ -46,16 +46,16 @@ export function GlobalMap() {
         <bufferGeometry>
           <primitive object={new THREE.BufferAttribute(dots, 3)} attach="attributes-position" />
         </bufferGeometry>
-        <pointsMaterial size={0.08} color="#00e5ff" transparent opacity={0.6} />
+        <pointsMaterial size={0.08} color="#14B8A6" transparent opacity={0.6} />
       </points>
       
       {/* Central glow */}
       <mesh>
         <sphereGeometry args={[9.5, 32, 32]} />
-        <meshBasicMaterial color="#010308" />
+        <meshBasicMaterial color="#020708" />
       </mesh>
       
-      <pointLight position={[0, 0, 0]} intensity={2} color="#00e5ff" distance={20} decay={2} />
+      <pointLight position={[0, 0, 0]} intensity={2} color="#14B8A6" distance={20} decay={2} />
     </group>
   );
 }

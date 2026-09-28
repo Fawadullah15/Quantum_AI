@@ -26,7 +26,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #6366f1;
+  color: #14B8A6;
   margin-bottom: 1rem;
   display: block;
 }
@@ -36,7 +36,7 @@
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: #ffffff;
+  color: #F0FDFA;
   line-height: 1.05;
   margin: 0;
 }
@@ -57,8 +57,8 @@
 /* ── Email link ──────────────────────────────────────────────────────────── */
 .email {
   font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.7);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(240, 253, 250, 0.7);
+  border-bottom: 1px solid rgba(20, 184, 166, 0.15);
   padding-bottom: 8px;
   text-decoration: none;
   display: inline-block;
@@ -66,13 +66,13 @@
 }
 
 .email:hover {
-  color: #ffffff;
+  color: #F0FDFA;
 }
 
 /* ── Fine-print note ─────────────────────────────────────────────────────── */
 .note {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(20, 184, 166, 0.25);
   font-family: 'Courier New', Courier, monospace;
   line-height: 1.6;
 }
@@ -105,9 +105,9 @@
 .input,
 .textarea,
 .select {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+  background: rgba(7, 18, 20, 0.5);
+  border: 1px solid rgba(20, 184, 166, 0.10);
+  color: #F0FDFA;
   padding: 14px 16px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.85rem;
@@ -123,14 +123,14 @@
 
 .input::placeholder,
 .textarea::placeholder {
-  color: rgba(255, 255, 255, 0.22);
+  color: rgba(20, 184, 166, 0.22);
 }
 
 .input:focus,
 .textarea:focus,
 .select:focus {
-  border: 1px solid #6366f1;
-  background: rgba(99, 102, 241, 0.04);
+  border: 1px solid #14B8A6;
+  background: rgba(20, 184, 166, 0.04);
 }
 
 /* ── Textarea ────────────────────────────────────────────────────────────── */
@@ -142,7 +142,7 @@
 
 /* ── Select dropdown arrow override ─────────────────────────────────────── */
 .select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(255,255,255,0.35)' stroke-width='1.5' fill='none' stroke-linecap='square'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='rgba(240, 253, 250, 0.35)' stroke-width='1.5' fill='none' stroke-linecap='square'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 14px center;
   background-size: 12px 8px;
@@ -150,14 +150,14 @@
 }
 
 .select option {
-  background: #0c0e14;
-  color: #ffffff;
+  background: #071214;
+  color: #F0FDFA;
 }
 
 /* ── Submit button ───────────────────────────────────────────────────────── */
 .submitBtn {
-  background: #6366f1;
-  color: #ffffff;
+  background: #14B8A6;
+  color: #F0FDFA;
   padding: 14px 32px;
   border: none;
   font-family: 'Courier New', Courier, monospace;
@@ -173,7 +173,7 @@
 }
 
 .submitBtn:hover {
-  background: #4f46e5;
+  background: #0F766E;
 }
 
 .submitBtn:active {
@@ -189,9 +189,9 @@
 .successMessage {
   text-align: center;
   padding: 3rem 2rem;
-  border: 1px solid rgba(99, 102, 241, 0.3);
-  background: rgba(99, 102, 241, 0.05);
-  color: #ffffff;
+  border: 1px solid rgba(20, 184, 166, 0.3);
+  background: rgba(20, 184, 166, 0.05);
+  color: #F0FDFA;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -210,8 +210,8 @@
 /* ── Reset / secondary action button ────────────────────────────────────── */
 .resetBtn {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(240, 253, 250, 0.2);
+  color: rgba(240, 253, 250, 0.6);
   padding: 10px 20px;
   cursor: pointer;
   font-family: 'Courier New', Courier, monospace;
@@ -222,8 +222,8 @@
 }
 
 .resetBtn:hover {
-  border-color: rgba(255, 255, 255, 0.5);
-  color: #ffffff;
+  border-color: rgba(240, 253, 250, 0.5);
+  color: #F0FDFA;
 }
 
 /* ── Input in error state ────────────────────────────────────────────────── */

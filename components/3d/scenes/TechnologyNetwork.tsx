@@ -56,7 +56,7 @@ export function TechnologyNetwork({ position }: { position: [number, number, num
                 <Line 
                   key={`${i}-${j}`} 
                   points={[n1.pos, n2.pos]} 
-                  color="#4f46e5" 
+                  color="#0F766E" 
                   transparent 
                   opacity={0.15} 
                   lineWidth={1}
@@ -89,11 +89,11 @@ function TechNode({ data }: { data: { label: string, pos: [number, number, numbe
       </mesh>
       <mesh>
         <sphereGeometry args={[0.2, 16, 16]} />
-        <meshBasicMaterial color="#7c3aed" transparent opacity={0.4} />
+        <meshBasicMaterial color="#2563EB" transparent opacity={0.4} />
       </mesh>
       
       <group ref={ref}>
-        <Text position={[0, -0.4, 0]} fontSize={0.25} color="#a5b4fc" anchorX="center">
+        <Text position={[0, -0.4, 0]} fontSize={0.25} color="#67E8F9" anchorX="center">
           {data.label}
         </Text>
       </group>

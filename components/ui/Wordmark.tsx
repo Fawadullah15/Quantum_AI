@@ -27,7 +27,7 @@ export function Wordmark({ className = '', style, ...props }: WordmarkProps) {
       <span style={{
         fontWeight: 900,
         letterSpacing: '0.05em',
-        background: 'linear-gradient(to bottom right, #20A8FF, #1677FF)',
+        background: 'linear-gradient(to bottom right, #14B8A6, #0F766E)',
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         textTransform: 'uppercase'

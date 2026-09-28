@@ -46,7 +46,7 @@ export function EarthNode() {
       <mesh>
         <sphereGeometry args={[earthRadius, 64, 64]} />
         <meshStandardMaterial 
-          color="#010308" 
+          color="#020708" 
           roughness={0.7} 
           metalness={0.3} 
         />
@@ -56,7 +56,7 @@ export function EarthNode() {
       <mesh>
         <sphereGeometry args={[earthRadius * 1.05, 64, 64]} />
         <meshBasicMaterial 
-          color="#00e5ff" 
+          color="#14B8A6" 
           transparent 
           opacity={0.08} 
           blending={THREE.AdditiveBlending}
@@ -79,7 +79,7 @@ export function EarthNode() {
       
       {/* Harsh technical lighting */}
       <directionalLight position={[-10, 5, 10]} intensity={1.5} color="#ffffff" />
-      <directionalLight position={[10, 0, -10]} intensity={3.0} color="#00e5ff" />
+      <directionalLight position={[10, 0, -10]} intensity={3.0} color="#14B8A6" />
       <pointLight position={[0, 0, 15]} intensity={0.5} color="#ffffff" />
     </group>
   );
@@ -110,7 +110,7 @@ function Node({ hub, radius, index }: { hub: any, radius: number, index: number 
       {/* Outer ring */}
       <mesh>
         <ringGeometry args={[0.1, 0.12, 16]} />
-        <meshBasicMaterial color="#00e5ff" transparent opacity={0.6} side={THREE.DoubleSide} />
+        <meshBasicMaterial color="#14B8A6" transparent opacity={0.6} side={THREE.DoubleSide} />
         {/* Billboard to camera */}
       </mesh>
     </group>
@@ -150,7 +150,7 @@ function Arc({ start, end, radius }: { start: any, end: any, radius: number }) {
 {/* @ts-expect-error React Three Fiber Line conflict */}
 
         <line ref={lineRef} geometry={geom}>
-      <lineBasicMaterial color="#00e5ff" transparent opacity={0.3} blending={THREE.AdditiveBlending} />
+      <lineBasicMaterial color="#14B8A6" transparent opacity={0.3} blending={THREE.AdditiveBlending} />
     </line>
 </>
   );

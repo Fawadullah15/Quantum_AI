@@ -89,8 +89,8 @@ export function SystemNodes({ active, scrollProgress, systems = DEFAULT_SYSTEMS 
           <mesh>
             <octahedronGeometry args={[0.3, 0]} />
             <meshStandardMaterial
-              color="#7c3aed"
-              emissive="#7c3aed"
+              color="#2563EB"
+              emissive="#2563EB"
               emissiveIntensity={1.5}
               wireframe={false}
             />
@@ -99,7 +99,7 @@ export function SystemNodes({ active, scrollProgress, systems = DEFAULT_SYSTEMS 
           <mesh scale={1.2}>
             <octahedronGeometry args={[0.3, 0]} />
             <meshStandardMaterial
-              color="#7c3aed"
+              color="#2563EB"
               wireframe={true}
               transparent
               opacity={0.5}
@@ -150,7 +150,7 @@ function ConnectingLine({ start, endPosRef, active }: ConnectingLineProps) {
     <Line
       ref={lineRef}
       points={[start.toArray(), endPosRef.toArray()]}
-      color="#7c3aed"
+      color="#2563EB"
       lineWidth={1}
       transparent
       opacity={opacity}

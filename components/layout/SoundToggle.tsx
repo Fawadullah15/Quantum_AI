@@ -60,11 +60,11 @@ export function SoundToggle() {
           pointer-events: auto;
           width: 275px;
           max-width: calc(100vw - 2.5rem);
-          background: rgba(6, 21, 43, 0.92);
-          border: 1px solid rgba(56, 189, 248, 0.22);
+          background: rgba(7, 18, 20, 0.92);
+          border: 1px solid rgba(20, 184, 166, 0.22);
           border-radius: 10px;
           padding: 13px 15px 14px;
-          box-shadow: 0 0 24px rgba(55, 48, 163, 0.2), 0 12px 32px -8px rgba(0, 0, 0, 0.85);
+          box-shadow: 0 0 24px rgba(15, 118, 110, 0.2), 0 12px 32px -8px rgba(0, 0, 0, 0.85);
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
           outline: none;
@@ -88,15 +88,15 @@ export function SoundToggle() {
           width: 6px;
           height: 6px;
           border-radius: 50%;
-          background: #38BDF8;
-          box-shadow: 0 0 8px rgba(56, 189, 248, 0.8);
+          background: #14B8A6;
+          box-shadow: 0 0 8px rgba(20, 184, 166, 0.8);
         }
 
         .qa-sound-prompt-title {
           font-family: var(--font-sans, sans-serif);
           font-size: 0.84rem;
           font-weight: 600;
-          color: #F8FAFC;
+          color: #F0FDFA;
           letter-spacing: -0.01em;
           line-height: 1.2;
         }
@@ -104,7 +104,7 @@ export function SoundToggle() {
         .qa-sound-prompt-close {
           background: transparent;
           border: none;
-          color: #64748B;
+          color: #6F8F8D;
           width: 22px;
           height: 22px;
           border-radius: 4px;
@@ -118,19 +118,19 @@ export function SoundToggle() {
         }
 
         .qa-sound-prompt-close:hover {
-          color: #F8FAFC;
+          color: #F0FDFA;
           background: rgba(255, 255, 255, 0.08);
         }
 
         .qa-sound-prompt-close:focus-visible {
-          outline: 2px solid #38BDF8;
+          outline: 2px solid #14B8A6;
           outline-offset: 1px;
         }
 
         .qa-sound-prompt-desc {
           font-family: var(--font-sans, sans-serif);
           font-size: 0.77rem;
-          color: #94A3B8;
+          color: #A7C7C5;
           line-height: 1.45;
           margin: 0 0 11px 0;
           font-weight: 400;
@@ -145,9 +145,9 @@ export function SoundToggle() {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          background: linear-gradient(135deg, #1677FF, #0050B3);
+          background: linear-gradient(135deg, #0F766E, #0D5A54);
           color: #FFFFFF;
-          border: 1px solid rgba(56, 189, 248, 0.4);
+          border: 1px solid rgba(20, 184, 166, 0.4);
           border-radius: 5px;
           padding: 6px 14px;
           font-family: var(--font-mono, monospace);
@@ -156,7 +156,7 @@ export function SoundToggle() {
           letter-spacing: 0.06em;
           text-transform: uppercase;
           cursor: pointer;
-          box-shadow: 0 2px 10px rgba(22, 119, 255, 0.35);
+          box-shadow: 0 2px 10px rgba(20, 184, 166, 0.35);
           transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease, background 0.2s ease;
           outline: none;
           white-space: nowrap;
@@ -165,8 +165,8 @@ export function SoundToggle() {
 
         .qa-sound-prompt-btn:hover {
           background: linear-gradient(135deg, #2563EB, #1D4ED8);
-          border-color: #38BDF8;
-          box-shadow: 0 4px 16px rgba(56, 189, 248, 0.5);
+          border-color: #14B8A6;
+          box-shadow: 0 4px 16px rgba(20, 184, 166, 0.5);
         }
 
         .qa-sound-prompt-btn:active {
@@ -174,7 +174,7 @@ export function SoundToggle() {
         }
 
         .qa-sound-prompt-btn:focus-visible {
-          outline: 2px solid #38BDF8;
+          outline: 2px solid #14B8A6;
           outline-offset: 2px;
         }
 
@@ -184,7 +184,7 @@ export function SoundToggle() {
           width: 40px;
           height: 40px;
           border-radius: 50%;
-          background: rgba(3, 7, 18, 0.85);
+          background: rgba(2, 7, 8, 0.85);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
           cursor: pointer;
@@ -193,8 +193,8 @@ export function SoundToggle() {
           justify-content: center;
           padding: 0;
           margin: 0;
-          border: 1px solid rgba(30, 58, 138, 0.4);
-          color: #94A3B8;
+          border: 1px solid rgba(15, 118, 110, 0.4);
+          color: #A7C7C5;
           box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
           transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
                       box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
@@ -206,34 +206,34 @@ export function SoundToggle() {
           user-select: none;
         }
         .qa-sound-btn--active {
-          border-color: rgba(56, 189, 248, 0.35);
-          color: #38BDF8;
-          box-shadow: 0 0 16px rgba(56, 189, 248, 0.12), 0 4px 16px -2px rgba(0, 0, 0, 0.6);
+          border-color: rgba(20, 184, 166, 0.35);
+          color: #14B8A6;
+          box-shadow: 0 0 16px rgba(20, 184, 166, 0.12), 0 4px 16px -2px rgba(0, 0, 0, 0.6);
         }
         .qa-sound-btn--silent {
-          border-color: rgba(30, 58, 138, 0.4);
-          color: #94A3B8;
+          border-color: rgba(15, 118, 110, 0.4);
+          color: #A7C7C5;
           box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
         }
         @media (hover: hover) and (pointer: fine) {
           .qa-sound-btn--active:hover {
-            border-color: rgba(56, 189, 248, 0.6);
-            color: #7DD3FC;
+            border-color: rgba(20, 184, 166, 0.6);
+            color: #67E8F9;
             background: rgba(7, 21, 47, 0.92);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.22), 0 4px 20px -2px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 20px rgba(20, 184, 166, 0.22), 0 4px 20px -2px rgba(0, 0, 0, 0.7);
           }
           .qa-sound-btn--silent:hover {
-            border-color: rgba(56, 189, 248, 0.35);
-            color: #F8FAFC;
+            border-color: rgba(20, 184, 166, 0.35);
+            color: #F0FDFA;
             background: rgba(7, 21, 47, 0.9);
-            box-shadow: 0 0 12px rgba(56, 189, 248, 0.1), 0 4px 16px -2px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 12px rgba(20, 184, 166, 0.1), 0 4px 16px -2px rgba(0, 0, 0, 0.6);
           }
         }
         .qa-sound-btn:active {
           transform: scale(0.95);
         }
         .qa-sound-btn:focus-visible {
-          outline: 2px solid #38BDF8;
+          outline: 2px solid #14B8A6;
           outline-offset: 3px;
         }
         @media (max-width: 768px) {

@@ -31,12 +31,12 @@ export function SoftwareSpace() {
   return (
     <group ref={groupRef} position={[0, -2, 0]}>
       {/* Central light source emitting from "the system" */}
-      <pointLight position={[0, 0, 0]} intensity={2} color="#00e5ff" distance={40} decay={2} />
+      <pointLight position={[0, 0, 0]} intensity={2} color="#14B8A6" distance={40} decay={2} />
       
       {/* Central processing pillar */}
       <mesh position={[0, 0, 0]}>
         <cylinderGeometry args={[1, 1, 40, 16]} />
-        <meshStandardMaterial color="#010204" roughness={0.1} metalness={0.9} />
+        <meshStandardMaterial color="#020708" roughness={0.1} metalness={0.9} />
       </mesh>
 
       {/* Floating software UI artifacts */}
@@ -57,11 +57,11 @@ function SoftwareArtifact({ pos, index }: { pos: any, index: number }) {
     canvas.height = 512;
     const ctx = canvas.getContext('2d')!;
     
-    ctx.fillStyle = '#05070a';
+    ctx.fillStyle = '#050C0E';
     ctx.fillRect(0, 0, 512, 512);
     
     // Grid
-    ctx.strokeStyle = '#1a2535';
+    ctx.strokeStyle = '#0D2023';
     ctx.lineWidth = 1;
     for (let i = 0; i < 512; i += 32) {
       ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 512); ctx.stroke();
@@ -69,7 +69,7 @@ function SoftwareArtifact({ pos, index }: { pos: any, index: number }) {
     }
 
     // Abstract data blocks
-    ctx.fillStyle = '#00e5ff';
+    ctx.fillStyle = '#14B8A6';
     ctx.globalAlpha = 0.5;
     ctx.fillRect(32, 32, 200, 40);
     ctx.fillRect(32, 88, 120, 20);
@@ -82,7 +82,7 @@ function SoftwareArtifact({ pos, index }: { pos: any, index: number }) {
 
     // Code lines
     ctx.font = '16px monospace';
-    ctx.fillStyle = '#445566';
+    ctx.fillStyle = '#3A5553';
     ctx.globalAlpha = 1.0;
     ctx.fillText(`SYS_MODULE // ${index}`, 32, 400);
     ctx.fillText('STATUS: OPERATIONAL', 32, 430);
@@ -103,7 +103,7 @@ function SoftwareArtifact({ pos, index }: { pos: any, index: number }) {
       {/* Frame */}
       <mesh>
         <boxGeometry args={[6.2, 6.2, 0.1]} />
-        <meshStandardMaterial color="#020304" roughness={0.3} metalness={0.7} />
+        <meshStandardMaterial color="#020708" roughness={0.3} metalness={0.7} />
       </mesh>
 
       {/* Screen */}

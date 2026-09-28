@@ -56,11 +56,11 @@ function DropdownMenu({ items, visible }: { items: DropdownItem[]; visible: bool
             left: '50%',
             transform: 'translateX(-50%)',
             minWidth: 260,
-            backgroundColor: 'rgba(6, 21, 43, 0.96)',
-            border: '1px solid rgba(22, 119, 255, 0.2)',
+            backgroundColor: 'rgba(7, 18, 20, 0.96)',
+            border: '1px solid rgba(20, 184, 166, 0.2)',
             borderRadius: 14,
             padding: '0.5rem',
-            boxShadow: '0 16px 48px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(22,119,255,0.08)',
+            boxShadow: '0 16px 48px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(20, 184, 166,0.08)',
             zIndex: 200,
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
@@ -78,17 +78,17 @@ function DropdownMenu({ items, visible }: { items: DropdownItem[]; visible: bool
                 transition: 'background-color 0.15s',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(79, 70, 229, 0.12)';
+                (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(15, 118, 110, 0.12)';
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
               }}
             >
-              <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#F8FAFF', marginBottom: item.desc ? '0.2rem' : 0 }}>
+              <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#F0FDFA', marginBottom: item.desc ? '0.2rem' : 0 }}>
                 {item.label}
               </div>
               {item.desc && (
-                <div style={{ fontSize: '0.75rem', color: '#64748B', lineHeight: 1.4 }}>{item.desc}</div>
+                <div style={{ fontSize: '0.75rem', color: '#6F8F8D', lineHeight: 1.4 }}>{item.desc}</div>
               )}
             </Link>
           ))}
@@ -219,7 +219,7 @@ export default function Navigation({
               justifyContent: 'space-between',
               padding: '0 1.25rem 0 0.85rem',
               transition: 'height 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s',
-              backgroundColor: scrolled ? 'rgba(10, 15, 45, 0.94)' : 'rgba(10, 15, 45, 0.65)',
+              backgroundColor: scrolled ? 'rgba(5, 12, 14, 0.94)' : 'rgba(5, 12, 14, 0.65)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
               zIndex: 1,
@@ -237,13 +237,13 @@ export default function Navigation({
                 flexShrink: 0,
               }}
             >
-              <QuantumLogo id="navbar-quantum-logo" width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(56, 189, 248, 0.45))' }} />
+              <QuantumLogo id="navbar-quantum-logo" width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(20, 184, 166, 0.45))' }} />
               <span className="nav-wordmark-text" style={{
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 700,
                 fontSize: '0.92rem',
                 letterSpacing: '0.12em',
-                color: '#F8FAFF',
+                color: '#F0FDFA',
                 textTransform: 'uppercase',
               }}>
                 {companyName || 'QUANTUM AI'}
@@ -279,7 +279,7 @@ export default function Navigation({
                       fontWeight: 400,
                       letterSpacing: '0.1em',
                       textTransform: 'uppercase',
-                      color: isActive(item.href) ? '#F8FAFF' : '#94A3B8',
+                      color: isActive(item.href) ? '#F0FDFA' : '#A7C7C5',
                       textDecoration: 'none',
                       transition: 'color 0.2s',
                       whiteSpace: 'nowrap',
@@ -305,10 +305,10 @@ export default function Navigation({
                         position: 'absolute',
                         inset: 0,
                         borderRadius: 999,
-                        backgroundColor: 'rgba(79, 70, 229, 0.13)',
-                        border: '1px solid rgba(79, 70, 229, 0.25)',
+                        backgroundColor: 'rgba(15, 118, 110, 0.13)',
+                        border: '1px solid rgba(15, 118, 110, 0.25)',
                         zIndex: 0,
-                        boxShadow: '0 0 12px rgba(79, 70, 229, 0.15)',
+                        boxShadow: '0 0 12px rgba(15, 118, 110, 0.15)',
                       }}
                     />
                   )}
@@ -338,21 +338,21 @@ export default function Navigation({
                   fontWeight: 600,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: '#F8FAFF',
+                  color: '#F0FDFA',
                   textDecoration: 'none',
                   borderRadius: 999,
-                  border: '1px solid rgba(56, 189, 248, 0.4)',
-                  backgroundColor: 'rgba(56, 189, 248, 0.08)',
+                  border: '1px solid rgba(20, 184, 166, 0.4)',
+                  backgroundColor: 'rgba(20, 184, 166, 0.08)',
                   transition: 'background-color 0.2s, border-color 0.2s',
                   whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.22)';
-                  e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.8)';
+                  e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.22)';
+                  e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.8)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.08)';
-                  e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+                  e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.4)';
                 }}
               >
                 Join our team
@@ -371,21 +371,21 @@ export default function Navigation({
                   fontWeight: 600,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: '#F8FAFF',
+                  color: '#F0FDFA',
                   textDecoration: 'none',
                   borderRadius: 999,
-                  border: '1px solid rgba(22, 119, 255, 0.5)',
-                  backgroundColor: 'rgba(22, 119, 255, 0.12)',
+                  border: '1px solid rgba(20, 184, 166, 0.5)',
+                  backgroundColor: 'rgba(20, 184, 166, 0.12)',
                   transition: 'background-color 0.2s, border-color 0.2s',
                   whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.25)';
-                  e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.8)';
+                  e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.25)';
+                  e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.8)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.12)';
-                  e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.5)';
+                  e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.12)';
+                  e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.5)';
                 }}
               >
                 {ctaLabel || 'Start a Project'}
@@ -401,7 +401,7 @@ export default function Navigation({
                   display: 'none',
                   background: 'transparent',
                   border: 'none',
-                  color: '#F8FAFF',
+                  color: '#F0FDFA',
                   cursor: 'pointer',
                   padding: '0.5rem',
                   borderRadius: 8,
@@ -431,7 +431,7 @@ export default function Navigation({
                 position: 'fixed',
                 inset: 0,
                 zIndex: 990,
-                backgroundColor: 'rgba(2, 8, 23, 0.6)',
+                backgroundColor: 'rgba(2, 7, 8, 0.6)',
                 backdropFilter: 'blur(4px)',
                 WebkitBackdropFilter: 'blur(4px)',
               }}
@@ -452,10 +452,10 @@ export default function Navigation({
                 left: 0,
                 right: 0,
                 zIndex: 1000,
-                backgroundColor: 'rgba(6, 21, 43, 0.97)',
+                backgroundColor: 'rgba(7, 18, 20, 0.97)',
                 backdropFilter: 'blur(24px)',
                 WebkitBackdropFilter: 'blur(24px)',
-                borderBottom: '1px solid rgba(22, 119, 255, 0.2)',
+                borderBottom: '1px solid rgba(20, 184, 166, 0.2)',
                 padding: '1.5rem 1.5rem 2rem',
                 overflowY: 'auto',
                 maxHeight: '100dvh',
@@ -464,15 +464,15 @@ export default function Navigation({
               {/* Top bar */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <Link href="/" onClick={() => setMobileOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
-                  <QuantumLogo width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(56, 189, 248, 0.45))' }} />
-                  <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '0.12em', color: '#F8FAFF', textTransform: 'uppercase' }}>
+                  <QuantumLogo width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(20, 184, 166, 0.45))' }} />
+                  <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '0.12em', color: '#F0FDFA', textTransform: 'uppercase' }}>
                     QUANTUM AI
                   </span>
                 </Link>
                 <button
                   onClick={() => setMobileOpen(false)}
                   aria-label="Close menu"
-                  style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '0.5rem', borderRadius: 8 }}
+                  style={{ background: 'transparent', border: 'none', color: '#A7C7C5', cursor: 'pointer', padding: '0.5rem', borderRadius: 8 }}
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M18 6L6 18M6 6l12 12" />
@@ -483,7 +483,7 @@ export default function Navigation({
               {/* Nav Links */}
               <nav aria-label="Mobile navigation" style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                 {NAV_ITEMS.map((item) => (
-                  <div key={item.href} style={{ borderBottom: '1px solid rgba(22, 119, 255, 0.08)' }}>
+                  <div key={item.href} style={{ borderBottom: '1px solid rgba(20, 184, 166, 0.08)' }}>
                     <button
                       onClick={() => {
                         if (item.dropdown) {
@@ -502,7 +502,7 @@ export default function Navigation({
                         border: 'none',
                         padding: '1.125rem 0',
                         cursor: 'pointer',
-                        color: '#F8FAFF',
+                        color: '#F0FDFA',
                         fontSize: '1.05rem',
                         fontFamily: 'var(--font-sans)',
                         fontWeight: 600,
@@ -520,7 +520,7 @@ export default function Navigation({
                         <motion.div
                           animate={{ rotate: mobileAccordion === item.href ? 180 : 0 }}
                           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                          style={{ color: '#1677FF', flexShrink: 0, marginLeft: '0.5rem' }}
+                          style={{ color: '#0F766E', flexShrink: 0, marginLeft: '0.5rem' }}
                         >
                           <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
                             <path d="M1 1l7 7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -539,15 +539,15 @@ export default function Navigation({
                           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                           style={{ overflow: 'hidden' }}
                         >
-                          <div style={{ paddingBottom: '1rem', paddingLeft: '1rem', borderLeft: '2px solid rgba(22, 119, 255, 0.3)', marginLeft: '0.25rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                          <div style={{ paddingBottom: '1rem', paddingLeft: '1rem', borderLeft: '2px solid rgba(20, 184, 166, 0.3)', marginLeft: '0.25rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                             {item.dropdown.map((drop) => (
                               <Link
                                 key={drop.href}
                                 href={drop.href}
                                 onClick={() => setMobileOpen(false)}
-                                style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '1rem', padding: '0.5rem 0.75rem', borderRadius: 8, transition: 'color 0.15s' }}
-                                onMouseEnter={(e) => (e.currentTarget.style.color = '#F8FAFF')}
-                                onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+                                style={{ color: '#A7C7C5', textDecoration: 'none', fontSize: '1rem', padding: '0.5rem 0.75rem', borderRadius: 8, transition: 'color 0.15s' }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = '#F0FDFA')}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = '#A7C7C5')}
                               >
                                 {drop.label}
                               </Link>
@@ -569,9 +569,9 @@ export default function Navigation({
                     display: 'block',
                     textAlign: 'center',
                     padding: '0.7rem',
-                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                    border: '1px solid rgba(56, 189, 248, 0.35)',
-                    color: '#38BDF8',
+                    backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                    border: '1px solid rgba(20, 184, 166, 0.35)',
+                    color: '#14B8A6',
                     borderRadius: 10,
                     textDecoration: 'none',
                     fontWeight: 600,
@@ -591,7 +591,7 @@ export default function Navigation({
                     display: 'block',
                     textAlign: 'center',
                     padding: '0.75rem',
-                    backgroundColor: '#1677FF',
+                    backgroundColor: '#0F766E',
                     color: '#fff',
                     borderRadius: 10,
                     textDecoration: 'none',
@@ -626,17 +626,17 @@ export default function Navigation({
           inset: 0;
           background: conic-gradient(
             from var(--gradient-angle),
-            rgba(2,8,23,0) 0%,
-            rgba(2,8,23,0) 65%,
-            #1677FF 82%,
-            #55D6FF 92%,
-            rgba(2,8,23,0) 100%
+            rgba(2, 7, 8,0) 0%,
+            rgba(2, 7, 8,0) 65%,
+            #0F766E 82%,
+            #67E8F9 92%,
+            rgba(2, 7, 8,0) 100%
           );
           animation: navbarSpin 5s linear infinite;
           border-radius: inherit;
         }
         @media (prefers-reduced-motion: reduce) {
-          .liquid-gradient { animation: none; background: rgba(22,119,255,0.15); }
+          .liquid-gradient { animation: none; background: rgba(20, 184, 166,0.15); }
         }
         @media (max-width: 1120px) {
           .nav-careers-btn { display: none !important; }

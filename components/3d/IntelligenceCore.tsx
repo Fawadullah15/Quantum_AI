@@ -96,7 +96,7 @@ export function IntelligenceCore({ mousePosition, scrollProgress }: Intelligence
       <mesh ref={outerShellRef}>
         <icosahedronGeometry args={[2, 2]} />
         <meshStandardMaterial 
-          color="#00c8ff" 
+          color="#14B8A6" 
           wireframe 
           transparent 
           opacity={0.15} 
@@ -107,7 +107,7 @@ export function IntelligenceCore({ mousePosition, scrollProgress }: Intelligence
       <mesh ref={innerShellRef}>
         <icosahedronGeometry args={[1.7, 1]} />
         <meshStandardMaterial 
-          color="#7c3aed" 
+          color="#2563EB" 
           wireframe 
           transparent 
           opacity={0.25} 
@@ -119,7 +119,7 @@ export function IntelligenceCore({ mousePosition, scrollProgress }: Intelligence
         <sphereGeometry args={[0.5, 32, 32]} />
         <meshPhysicalMaterial 
           color="#ffffff"
-          emissive="#00c8ff"
+          emissive="#14B8A6"
           emissiveIntensity={2}
           roughness={0.2}
           metalness={0.8}
@@ -132,10 +132,10 @@ export function IntelligenceCore({ mousePosition, scrollProgress }: Intelligence
           <mesh key={i} rotation={[0, (angle * Math.PI) / 180, 0]}>
             <torusGeometry args={[1.2, 0.01, 16, 100]} />
             <meshStandardMaterial 
-              color="#00c8ff" 
+              color="#14B8A6" 
               transparent 
               opacity={0.5} 
-              emissive="#00c8ff" 
+              emissive="#14B8A6" 
               emissiveIntensity={0.5} 
             />
           </mesh>
@@ -149,7 +149,7 @@ export function IntelligenceCore({ mousePosition, scrollProgress }: Intelligence
             <mesh position={pos}>
               <planeGeometry args={[0.2, 0.08]} />
               <meshStandardMaterial 
-                color="#00c8ff" 
+                color="#14B8A6" 
                 transparent 
                 opacity={0.8}
                 side={THREE.DoubleSide} 
@@ -157,7 +157,7 @@ export function IntelligenceCore({ mousePosition, scrollProgress }: Intelligence
             </mesh>
             <Line
               points={[[0, 0, 0], pos.toArray()]}
-              color="#00c8ff"
+              color="#14B8A6"
               transparent
               opacity={0.15}
               lineWidth={1}

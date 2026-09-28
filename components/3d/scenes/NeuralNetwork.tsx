@@ -58,12 +58,12 @@ export function NeuralNetwork() {
       {/* Central Core */}
       <mesh>
         <sphereGeometry args={[2, 32, 32]} />
-        <meshStandardMaterial color="#02050a" roughness={0.2} metalness={0.8} />
+        <meshStandardMaterial color="#020708" roughness={0.2} metalness={0.8} />
       </mesh>
       
       <mesh>
         <sphereGeometry args={[2.2, 32, 32]} />
-        <meshBasicMaterial color="#00e5ff" transparent opacity={0.1} blending={THREE.AdditiveBlending} depthWrite={false} />
+        <meshBasicMaterial color="#14B8A6" transparent opacity={0.1} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
 
       {/* Scattered Nodes */}
@@ -76,10 +76,10 @@ export function NeuralNetwork() {
 
       {/* Network Lines */}
       <lineSegments ref={linesRef} geometry={lineGeometry}>
-        <lineBasicMaterial color="#00e5ff" transparent opacity={0.15} blending={THREE.AdditiveBlending} />
+        <lineBasicMaterial color="#14B8A6" transparent opacity={0.15} blending={THREE.AdditiveBlending} />
       </lineSegments>
       
-      <pointLight position={[0, 0, 0]} intensity={4} color="#00e5ff" distance={30} decay={2} />
+      <pointLight position={[0, 0, 0]} intensity={4} color="#14B8A6" distance={30} decay={2} />
     </group>
   );
 }

@@ -1,7 +1,7 @@
 .section {
   padding: clamp(3rem, 7vh, 5rem) clamp(1.25rem, 4vw, 3rem);
-  background-color: var(--color-bg-primary, #030508);
-  color: var(--color-text-primary, #ffffff);
+  background-color: var(--color-bg-primary, #020708);
+  color: var(--color-text-primary, #F0FDFA);
   font-family: 'Space Grotesk', sans-serif;
   min-height: auto;
   display: flex;
@@ -28,7 +28,7 @@
   font-family: 'Space Mono', monospace;
   font-size: 0.72rem;
   letter-spacing: 0.15em;
-  color: var(--color-text-muted, #8a8f98);
+  color: var(--color-text-muted, #A7C7C5);
   display: flex;
   align-items: center;
 }
@@ -55,7 +55,7 @@
   font-size: clamp(1rem, 1.5vw, 1.25rem);
   line-height: 1.6;
   max-width: 400px;
-  color: var(--color-text-muted, #8a8f98);
+  color: var(--color-text-muted, #A7C7C5);
   margin: 0;
   opacity: 0;
   transform: translateY(20px);
@@ -81,26 +81,26 @@
 }
 
 .chip {
-  border: 1px solid var(--color-border, #1a1e23);
+  border: 1px solid var(--color-border, #0A181B);
   padding: 1rem;
   font-family: 'Space Mono', monospace;
   font-size: 0.875rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(20, 184, 166, 0.02);
   transition: all 0.3s ease;
   opacity: 0;
   transform: translateY(20px);
 }
 
 .chip:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--color-text-muted, #8a8f98);
+  background: rgba(20, 184, 166, 0.05);
+  border-color: var(--color-text-muted, #A7C7C5);
 }
 
 .chipNumber {
-  color: var(--color-brand-cyan, #00f0ff);
+  color: var(--color-brand-cyan, #14B8A6);
   font-size: 0.75rem;
   opacity: 0.7;
 }

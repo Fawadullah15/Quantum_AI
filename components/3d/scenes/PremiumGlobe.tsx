@@ -100,7 +100,7 @@ function GlobeDots() {
       </bufferGeometry>
       <pointsMaterial
         size={DOT_SIZE}
-        color="#48D7FF"
+        color="#67E8F9"
         transparent
         opacity={0.85}
         sizeAttenuation
@@ -149,12 +149,12 @@ function HubNode({ lat, lng, idx }: { lat: number; lng: number; idx: number }) {
     <group position={pos}>
       <mesh ref={meshRef}>
         <sphereGeometry args={[0.035, 12, 12]} />
-        <meshBasicMaterial color="#22D3EE" transparent opacity={0.9} />
+        <meshBasicMaterial color="#14B8A6" transparent opacity={0.9} />
       </mesh>
       <mesh ref={ringRef} rotation={euler}>
         <ringGeometry args={[0.055, 0.075, 24]} />
         <meshBasicMaterial
-          color="#3B82F6"
+          color="#2563EB"
           transparent
           opacity={0.3}
           side={THREE.DoubleSide}
@@ -190,7 +190,7 @@ function ConnectionArc({
     // @ts-expect-error R3F line intrinsic
     <line ref={lineRef} geometry={geom}>
       <lineBasicMaterial
-        color="#4F46E5"
+        color="#0F766E"
         transparent
         opacity={0.12}
         blending={THREE.AdditiveBlending}
@@ -287,7 +287,7 @@ export function PremiumGlobe() {
       <mesh>
         <sphereGeometry args={[EARTH_RADIUS, 64, 64]} />
         <meshStandardMaterial
-          color="#040f24"
+          color="#050C0E"
           roughness={0.65}
           metalness={0.15}
         />
@@ -315,7 +315,7 @@ export function PremiumGlobe() {
       <mesh>
         <sphereGeometry args={[EARTH_RADIUS * 1.015, 64, 64]} />
         <meshBasicMaterial
-          color="#3730A3"
+          color="#0F766E"
           transparent
           opacity={0.18}
           side={THREE.BackSide}
@@ -327,7 +327,7 @@ export function PremiumGlobe() {
       <mesh>
         <sphereGeometry args={[EARTH_RADIUS * 1.1, 64, 64]} />
         <meshBasicMaterial
-          color="#4F46E5"
+          color="#0F766E"
           transparent
           opacity={0.06}
           blending={THREE.AdditiveBlending}
@@ -340,7 +340,7 @@ export function PremiumGlobe() {
       <mesh>
         <sphereGeometry args={[EARTH_RADIUS * 1.2, 32, 32]} />
         <meshBasicMaterial
-          color="#24A8FF"
+          color="#67E8F9"
           transparent
           opacity={0.025}
           blending={THREE.AdditiveBlending}
@@ -350,13 +350,13 @@ export function PremiumGlobe() {
       </mesh>
 
       {/* ── Lighting ── */}
-      <ambientLight intensity={0.15} color="#F8FAFC" />
+      <ambientLight intensity={0.15} color="#F0FDFA" />
       {/* Blue primary light */}
       <directionalLight position={[-12, 6, 10]} intensity={1.5} color="#2563EB" />
       {/* Deep indigo secondary light */}
-      <directionalLight position={[12, -4, -10]} intensity={1.2} color="#3730A3" />
+      <directionalLight position={[12, -4, -10]} intensity={1.2} color="#0F766E" />
       {/* Very subtle violet rim light */}
-      <directionalLight position={[0, 10, -15]} intensity={0.6} color="#7C3AED" />
+      <directionalLight position={[0, 10, -15]} intensity={0.6} color="#2563EB" />
     </group>
   );
 }

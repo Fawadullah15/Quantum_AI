@@ -57,7 +57,7 @@ export function SignalNetwork() {
       {nodePositions.map((pos, i) => (
         <mesh key={i} position={pos}>
           <sphereGeometry args={[0.15, 8, 8]} />
-          <meshStandardMaterial color="#ffffff" roughness={0} metalness={1} emissive="#00e5ff" emissiveIntensity={0.3} />
+          <meshStandardMaterial color="#ffffff" roughness={0} metalness={1} emissive="#14B8A6" emissiveIntensity={0.3} />
         </mesh>
       ))}
 
@@ -66,15 +66,15 @@ export function SignalNetwork() {
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[lineSegments, 3]} />
         </bufferGeometry>
-        <lineBasicMaterial color="#00e5ff" transparent opacity={0.2} blending={THREE.AdditiveBlending} />
+        <lineBasicMaterial color="#14B8A6" transparent opacity={0.2} blending={THREE.AdditiveBlending} />
       </lineSegments>
 
       {/* Central transmitter */}
       <mesh position={[0, 0, 0]}>
         <sphereGeometry args={[0.8, 32, 32]} />
-        <meshStandardMaterial color="#000000" roughness={0} metalness={1} emissive="#00e5ff" emissiveIntensity={1} />
+        <meshStandardMaterial color="#000000" roughness={0} metalness={1} emissive="#14B8A6" emissiveIntensity={1} />
       </mesh>
-      <pointLight position={[0, 0, 0]} intensity={2} color="#00e5ff" distance={25} decay={2} />
+      <pointLight position={[0, 0, 0]} intensity={2} color="#14B8A6" distance={25} decay={2} />
     </group>
   );
 }

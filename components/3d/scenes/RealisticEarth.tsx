@@ -52,7 +52,7 @@ export function RealisticEarth() {
       <mesh ref={earthRef}>
         <sphereGeometry args={[radius, 64, 64]} />
         <meshStandardMaterial 
-          color="#06152B" 
+          color="#050C0E" 
           roughness={0.6} 
           metalness={0.1} 
         />
@@ -64,7 +64,7 @@ export function RealisticEarth() {
           <bufferGeometry>
             <primitive object={new THREE.BufferAttribute(dots, 3)} attach="attributes-position" />
           </bufferGeometry>
-          <pointsMaterial size={0.04} color="#48D7FF" transparent opacity={0.6} />
+          <pointsMaterial size={0.04} color="#67E8F9" transparent opacity={0.6} />
         </points>
       </group>
 
@@ -72,7 +72,7 @@ export function RealisticEarth() {
       <mesh ref={atmosphereRef}>
         <sphereGeometry args={[radius * 1.08, 64, 64]} />
         <meshBasicMaterial 
-          color="#1677FF" 
+          color="#14B8A6" 
           transparent 
           opacity={0.1} 
           blending={THREE.AdditiveBlending}
@@ -82,9 +82,9 @@ export function RealisticEarth() {
       </mesh>
 
       {/* Lighting to create the day/night terminator line */}
-      <ambientLight intensity={0.2} color="#F8FAFF" />
-      <directionalLight position={[-15, 5, 10]} intensity={1.5} color="#F8FAFF" />
-      <directionalLight position={[15, 0, -15]} intensity={0.5} color="#1677FF" />
+      <ambientLight intensity={0.2} color="#F0FDFA" />
+      <directionalLight position={[-15, 5, 10]} intensity={1.5} color="#F0FDFA" />
+      <directionalLight position={[15, 0, -15]} intensity={0.5} color="#14B8A6" />
     </group>
   );
 }

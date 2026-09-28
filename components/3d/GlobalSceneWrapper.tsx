@@ -27,7 +27,7 @@ export function GlobalSceneWrapper() {
   }
 
   if (hasWebGL === null) {
-    return <div style={{ position: 'absolute', inset: 0, backgroundColor: '#020817' }} />;
+    return <div style={{ position: 'absolute', inset: 0, backgroundColor: '#020708' }} />;
   }
 
   return (
@@ -46,7 +46,7 @@ export function GlobalSceneWrapper() {
         style={{ width: '100%', height: '100%' }}
       >
         {/* Deep midnight blue background */}
-        <color attach="background" args={['#020817']} />
+        <color attach="background" args={['#020708']} />
 
         <Suspense fallback={null}>
           <GlobalScene />

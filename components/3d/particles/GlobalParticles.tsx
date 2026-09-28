@@ -52,7 +52,7 @@ export function GlobalParticles() {
       </bufferGeometry>
       <pointsMaterial
         size={0.04}
-        color="#c0d0e0"
+        color="#A7C7C5"
         transparent
         opacity={0.35}
         sizeAttenuation

@@ -1,32 +1,32 @@
 /* QUANTUM AI DESIGN TOKENS (Phase 1)
-   Future-ready visual foundation
+   Space Aurora visual foundation
 */
 
 :root {
   /* COLOR TOKENS */
-  --q-void: #050509;
-  --q-bg: #08080D;
-  --q-bg-2: #0C0B12;
-  --q-surface: #111018;
-  --q-surface-2: #17151F;
+  --q-void: #020708;
+  --q-bg: #050C0E;
+  --q-bg-2: #071214;
+  --q-surface: #0A181B;
+  --q-surface-2: #0D2023;
 
-  --q-violet: #7657FF;
-  --q-violet-deep: #4E36B8;
-  --q-violet-soft: #B8ABFF;
-  --q-silver: #E8E7EE;
+  --q-teal: #14B8A6;
+  --q-teal-deep: #0F766E;
+  --q-teal-soft: #67E8F9;
+  --q-silver: #F0FDFA;
 
-  --q-white: #FAF9FC;
-  --q-text: #F2F1F6;
-  --q-muted: #A39FAF;
-  --q-subtle: #777383;
+  --q-white: #F0FDFA;
+  --q-text: #F0FDFA;
+  --q-muted: #A7C7C5;
+  --q-subtle: #6F8F8D;
 
-  --q-border: #292631;
-  --q-border-soft: #1E1C25;
+  --q-border: #1A3533;
+  --q-border-soft: #122624;
 
-  --q-success: #42D392;
+  --q-success: #14B8A6;
   --q-warning: #E9B949;
   --q-error: #F06A7A;
-  --q-focus: #B6A3FF;
+  --q-focus: #67E8F9;
 
   /* RADIUS TOKENS */
   --q-radius-feature: 24px;
@@ -74,8 +74,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--q-violet);
-  color: var(--q-white);
+  background-color: var(--q-teal);
+  color: var(--q-void);
   border-radius: var(--q-radius-pill);
   padding: var(--q-space-3) var(--q-space-6);
   font-family: var(--font-space-mono, monospace);
@@ -85,7 +85,8 @@
   cursor: pointer;
 }
 .q-btn-primary:hover {
-  background-color: var(--q-violet-deep);
+  background-color: var(--q-teal-soft);
+  color: var(--q-void);
 }
 
 .q-btn-secondary {
@@ -104,7 +105,7 @@
 }
 .q-btn-secondary:hover {
   background-color: var(--q-surface);
-  border-color: var(--q-border-soft);
+  border-color: var(--q-border);
 }
 
 .q-btn-tertiary {
@@ -124,9 +125,7 @@
   color: var(--q-white);
 }
 
-/* TYPOGRAPHY CLASSES
-   Created as reusable classes for future adoption.
-*/
+/* TYPOGRAPHY CLASSES */
 
 .q-display {
   font-family: var(--font-space-grotesk, sans-serif);
@@ -217,22 +216,22 @@
 /* GRADIENTS AND SHADOWS */
 .q-bg-gradient {
   background: var(--q-bg);
-  background-image: radial-gradient(circle at top center, rgba(78, 54, 184, 0.15) 0%, transparent 70%);
+  background-image: radial-gradient(circle at top center, rgba(15, 118, 110, 0.12) 0%, transparent 70%);
 }
 
 .q-text-gradient {
-  background: linear-gradient(90deg, var(--q-violet-deep), var(--q-violet), var(--q-silver));
+  background: linear-gradient(90deg, #0F766E, #14B8A6, #67E8F9);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .q-shadow-elevation-1 {
-  box-shadow: 0 4px 12px rgba(5, 5, 9, 0.5);
+  box-shadow: 0 4px 12px rgba(2, 7, 8, 0.5);
 }
 
 .q-shadow-elevation-2 {
-  box-shadow: 0 8px 24px rgba(5, 5, 9, 0.6), 0 2px 4px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 24px rgba(2, 7, 8, 0.6), 0 2px 4px rgba(0,0,0,0.4);
 }
 
 /* ACCESSIBILITY & REDUCED MOTION */

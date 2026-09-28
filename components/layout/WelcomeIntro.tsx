@@ -211,7 +211,7 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
     <>
       <script dangerouslySetInnerHTML={{ __html: ANTI_FOUC_SCRIPT }} suppressHydrationWarning />
       <style dangerouslySetInnerHTML={{ __html: `
-        .qa-intro-active body { background-color: #030712 !important; }
+        .qa-intro-active body { background-color: #020708 !important; }
         .qa-intro-active #qa-website-content { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
       `}} suppressHydrationWarning />
 
@@ -235,7 +235,7 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundColor: 'var(--color-void, #030712)',
+            backgroundColor: 'var(--color-void, #020708)',
             zIndex: 1
           }}
         />
@@ -289,7 +289,7 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
             src="/quantum-q-logo.png"
             alt=""
             className={styles.logo}
-            style={{ filter: 'brightness(1.5) drop-shadow(0 0 20px rgba(59, 130, 246, 0.8))' }}
+            style={{ filter: 'brightness(1.5) drop-shadow(0 0 20px rgba(20, 184, 166, 0.6))' }}
             draggable={false}
           />
         </motion.div>

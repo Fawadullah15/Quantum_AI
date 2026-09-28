@@ -66,8 +66,8 @@ export default function SolutionsSection() {
 
         .solution-tab-card {
           position: relative;
-          background-color: rgba(6, 21, 43, 0.65);
-          border: 1px solid rgba(22, 119, 255, 0.14);
+          background-color: rgba(7, 18, 20, 0.65);
+          border: 1px solid rgba(20, 184, 166, 0.14);
           border-radius: 10px;
           padding: 0.85rem clamp(1rem, 2.5vw, 1.75rem);
           text-decoration: none;
@@ -82,14 +82,14 @@ export default function SolutionsSection() {
         }
 
         .solution-tab-card:focus-visible {
-          border-color: #38BDF8;
-          box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+          border-color: #14B8A6;
+          box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
         }
 
         .solution-tab-card.is-expanded {
-          background-color: rgba(8, 28, 58, 0.85);
-          border-color: rgba(56, 189, 248, 0.4);
-          box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.25);
+          background-color: rgba(10, 24, 27, 0.85);
+          border-color: rgba(20, 184, 166, 0.4);
+          box-shadow: 0 8px 24px -6px rgba(20, 184, 166, 0.25);
           transform: translateY(-1px);
         }
 
@@ -112,7 +112,7 @@ export default function SolutionsSection() {
         .solution-card-num {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
-          color: #38BDF8;
+          color: #14B8A6;
           font-weight: 600;
           letter-spacing: 0.05em;
           flex-shrink: 0;
@@ -124,7 +124,7 @@ export default function SolutionsSection() {
         .solution-card-title {
           font-size: clamp(1rem, 1.8vw, 1.15rem);
           font-weight: 600;
-          color: #F8FAFF;
+          color: #F0FDFA;
           letter-spacing: -0.01em;
           margin: 0;
           text-transform: none;
@@ -136,7 +136,7 @@ export default function SolutionsSection() {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #64748B;
+          color: #6F8F8D;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -148,7 +148,7 @@ export default function SolutionsSection() {
         }
 
         .solution-tab-card.is-expanded .solution-card-indicator {
-          color: #38BDF8;
+          color: #14B8A6;
         }
 
         /* ─── Smooth CSS Grid Expansion for Collapsible Body ─── */
@@ -174,7 +174,7 @@ export default function SolutionsSection() {
         }
 
         .solution-card-desc {
-          color: #94A3B8;
+          color: #A7C7C5;
           font-size: 0.875rem;
           line-height: 1.55;
           margin: 0;
@@ -186,7 +186,7 @@ export default function SolutionsSection() {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #1677FF;
+          color: #0F766E;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -197,7 +197,7 @@ export default function SolutionsSection() {
         }
 
         .solution-tab-card:hover .solution-card-cta {
-          color: #38BDF8;
+          color: #14B8A6;
           transform: translateX(3px);
         }
 
@@ -219,8 +219,8 @@ export default function SolutionsSection() {
           }
 
           .mobile-solution-tile {
-            background: rgba(6, 21, 43, 0.75);
-            border: 1px solid rgba(22, 119, 255, 0.16);
+            background: rgba(7, 18, 20, 0.75);
+            border: 1px solid rgba(20, 184, 166, 0.16);
             border-radius: 8px;
             padding: 0.75rem 0.75rem;
             text-decoration: none;
@@ -235,14 +235,14 @@ export default function SolutionsSection() {
           }
 
           .mobile-solution-tile:active {
-            background-color: rgba(8, 28, 58, 0.95);
-            border-color: rgba(56, 189, 248, 0.4);
+            background-color: rgba(10, 24, 27, 0.95);
+            border-color: rgba(20, 184, 166, 0.4);
           }
 
           .mobile-solution-num {
             font-family: var(--font-mono, monospace);
             font-size: 0.62rem;
-            color: #38BDF8;
+            color: #14B8A6;
             font-weight: 600;
             letter-spacing: 0.05em;
             margin-bottom: 0.25rem;
@@ -252,7 +252,7 @@ export default function SolutionsSection() {
           .mobile-solution-title {
             font-size: 0.82rem;
             font-weight: 600;
-            color: #F8FAFC;
+            color: #F0FDFA;
             letter-spacing: -0.01em;
             margin: 0;
             line-height: 1.25;
@@ -264,7 +264,7 @@ export default function SolutionsSection() {
           .mobile-solution-arrow {
             font-family: var(--font-mono, monospace);
             font-size: 0.68rem;
-            color: #64748B;
+            color: #6F8F8D;
             align-self: flex-end;
             margin-top: 0.2rem;
           }
@@ -292,7 +292,7 @@ export default function SolutionsSection() {
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: '#1677FF',
+            color: '#0F766E',
             marginBottom: '0.5rem',
             fontWeight: 600,
           }}
@@ -306,7 +306,7 @@ export default function SolutionsSection() {
             fontWeight: 700,
             lineHeight: 1.02,
             letterSpacing: '-0.035em',
-            color: '#F8FAFF',
+            color: '#F0FDFA',
             marginBottom: '0.65rem',
             textTransform: 'uppercase',
           }}
@@ -317,7 +317,7 @@ export default function SolutionsSection() {
           className="section-desc"
           style={{
             fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-            color: '#94A3B8',
+            color: '#A7C7C5',
             lineHeight: 1.6,
             marginBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
             maxWidth: 600,
@@ -390,34 +390,34 @@ export default function SolutionsSection() {
               alignItems: 'center',
               gap: '0.65rem',
               padding: '0.8rem 1.85rem',
-              backgroundColor: 'rgba(22, 119, 255, 0.1)',
-              border: '1px solid rgba(56, 189, 248, 0.4)',
+              backgroundColor: 'rgba(20, 184, 166, 0.1)',
+              border: '1px solid rgba(20, 184, 166, 0.4)',
               borderRadius: 999,
-              color: '#F8FAFC',
+              color: '#F0FDFA',
               fontFamily: 'var(--font-mono, monospace)',
               fontSize: '0.8rem',
               fontWeight: 600,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',
               textDecoration: 'none',
-              boxShadow: '0 0 20px -5px rgba(22, 119, 255, 0.3)',
+              boxShadow: '0 0 20px -5px rgba(20, 184, 166, 0.3)',
               transition: 'all 0.25s ease',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.25)';
-              e.currentTarget.style.borderColor = '#38BDF8';
+              e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.25)';
+              e.currentTarget.style.borderColor = '#14B8A6';
               e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 0 30px -4px rgba(56, 189, 248, 0.5)';
+              e.currentTarget.style.boxShadow = '0 0 30px -4px rgba(20, 184, 166, 0.5)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(22, 119, 255, 0.1)';
-              e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+              e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.1)';
+              e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.4)';
               e.currentTarget.style.transform = 'none';
-              e.currentTarget.style.boxShadow = '0 0 20px -5px rgba(22, 119, 255, 0.3)';
+              e.currentTarget.style.boxShadow = '0 0 20px -5px rgba(20, 184, 166, 0.3)';
             }}
           >
             <span>VIEW ALL SOLUTIONS &amp; ARCHITECTURES</span>
-            <span style={{ color: '#38BDF8' }}>→</span>
+            <span style={{ color: '#14B8A6' }}>→</span>
           </Link>
         </div>
       </div>

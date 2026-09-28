@@ -24,7 +24,7 @@ const styles: Record<string, React.CSSProperties> = {
   container: {
     width: '100%',
     height: '100vh',
-    backgroundColor: '#030508',
+    backgroundColor: '#020708',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -66,9 +66,9 @@ const styles: Record<string, React.CSSProperties> = {
     position: 'absolute',
     width: '20%',
     height: '20%',
-    backgroundColor: '#00c8ff',
+    backgroundColor: '#14B8A6',
     borderRadius: '50%',
-    boxShadow: '0 0 30px #00c8ff, 0 0 60px #7c3aed',
+    boxShadow: '0 0 30px #14B8A6, 0 0 60px #2563EB',
     animation: 'pulse 2s ease-in-out infinite',
   }
 };

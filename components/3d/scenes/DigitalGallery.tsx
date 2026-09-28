@@ -209,7 +209,7 @@ function Installation({
         {/* TV Frame Housing: 16x9x1 enclosure */}
         <mesh position={[0, 0, 0]}>
           <boxGeometry args={[16, 9, 1]} />
-          <meshStandardMaterial color="#020304" roughness={0.1} metalness={0.9} />
+          <meshStandardMaterial color="#020708" roughness={0.1} metalness={0.9} />
         </mesh>
 
         {/* Front Screen Display Surface:
@@ -223,7 +223,7 @@ function Installation({
           <meshBasicMaterial
             key={texture ? texture.uuid : 'empty-screen'}
             map={texture || undefined}
-            color={texture ? '#ffffff' : '#040d21'}
+            color={texture ? '#ffffff' : '#050C0E'}
             side={THREE.DoubleSide}
             toneMapped={false}
             transparent={false}
@@ -247,7 +247,7 @@ function Installation({
           <meshBasicMaterial
             key={texture ? `${texture.uuid}-back` : 'empty-screen-back'}
             map={texture || undefined}
-            color={texture ? '#ffffff' : '#040d21'}
+            color={texture ? '#ffffff' : '#050C0E'}
             side={THREE.DoubleSide}
             toneMapped={false}
             transparent={false}
@@ -264,7 +264,7 @@ function Installation({
           ref={lightRef}
           position={[0, 0, 2]}
           intensity={1.5}
-          color="#00e5ff"
+          color="#14B8A6"
           distance={15}
           decay={2}
         />

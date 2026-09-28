@@ -25,7 +25,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     desc: 'Built for educational institutions to eliminate fragmented paper records and spreadsheets by centralizing student registries, attendance, fee collection, and administrative reporting into one real-time platform.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Node.js'],
     slug: 'school-operations-manager',
-    gradient: 'linear-gradient(135deg, #061A3A 0%, #0F2B5C 100%)',
+    gradient: 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)',
     accentIcon: '🎓',
   },
   {
@@ -36,7 +36,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     desc: 'Built for retail businesses operating in areas with unstable internet to ensure point-of-sale transactions, product inventory, and daily sales tracking work seamlessly offline with automatic cloud sync.',
     technologies: ['Python', 'FastAPI', 'SQLAlchemy', 'SQLite', 'React'],
     slug: 'offline-shop-management-system',
-    gradient: 'linear-gradient(135deg, #091C36 0%, #113665 100%)',
+    gradient: 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
     accentIcon: '🛍️',
   },
   {
@@ -47,7 +47,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     desc: 'Designed as a high-performance corporate platform to showcase deployed software systems, interactive technology demos, and live client inquiry pipelines with zero layout latency.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Prisma'],
     slug: 'quantum-ai-corporate-website',
-    gradient: 'linear-gradient(135deg, #071630 0%, #133B70 100%)',
+    gradient: 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)',
     accentIcon: '⚡',
   },
   {
@@ -58,7 +58,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     desc: 'Engineered for community organizations to centralize leadership registries, regional chapter initiatives, and public announcements into a secure, accessible web portal.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Prisma'],
     slug: 'youth-development-program-website',
-    gradient: 'linear-gradient(135deg, #051A2E 0%, #0A3258 100%)',
+    gradient: 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)',
     accentIcon: '🌐',
   },
 ];
@@ -85,7 +85,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 : ['Next.js', 'TypeScript', 'Prisma'],
               slug: s.slug,
               image: s.heroImage || undefined,
-              gradient: i % 2 === 0 ? 'linear-gradient(135deg, #061A3A 0%, #0F2B5C 100%)' : 'linear-gradient(135deg, #091C36 0%, #113665 100%)',
+              gradient: i % 2 === 0 ? 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)' : 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
               accentIcon: '⚡',
             }));
             setStudies(mapped);
@@ -100,9 +100,9 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
       style={{
         padding: 'clamp(2.5rem, 5vh, 4rem) clamp(0.75rem, 4vw, 6rem)',
         pointerEvents: 'auto',
-        backgroundColor: 'rgba(6, 21, 43, 0.25)',
-        borderTop: '1px solid rgba(22, 119, 255, 0.08)',
-        borderBottom: '1px solid rgba(22, 119, 255, 0.08)',
+        backgroundColor: 'rgba(7, 18, 20, 0.25)',
+        borderTop: '1px solid rgba(20, 184, 166, 0.08)',
+        borderBottom: '1px solid rgba(20, 184, 166, 0.08)',
         width: '100%',
         boxSizing: 'border-box',
       }}
@@ -124,8 +124,8 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
 
         .cs-tab-card {
           position: relative;
-          background-color: rgba(6, 21, 43, 0.65);
-          border: 1px solid rgba(22, 119, 255, 0.14);
+          background-color: rgba(7, 18, 20, 0.65);
+          border: 1px solid rgba(20, 184, 166, 0.14);
           border-radius: 12px;
           padding: 0.85rem clamp(1rem, 2.5vw, 1.75rem);
           text-decoration: none;
@@ -140,14 +140,14 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
         }
 
         .cs-tab-card:focus-visible {
-          border-color: #38BDF8;
-          box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+          border-color: #14B8A6;
+          box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
         }
 
         .cs-tab-card.is-expanded {
-          background-color: rgba(8, 28, 58, 0.88);
-          border-color: rgba(56, 189, 248, 0.4);
-          box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.25);
+          background-color: rgba(10, 24, 27, 0.88);
+          border-color: rgba(20, 184, 166, 0.4);
+          box-shadow: 0 8px 24px -6px rgba(20, 184, 166, 0.25);
           transform: translateY(-1px);
         }
 
@@ -166,7 +166,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           overflow: hidden;
           flex-shrink: 0;
           position: relative;
-          border: 1px solid rgba(56, 189, 248, 0.2);
+          border: 1px solid rgba(20, 184, 166, 0.2);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -187,7 +187,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           align-items: center;
           justify-content: center;
           gap: 0.2rem;
-          color: #38BDF8;
+          color: #14B8A6;
           font-family: var(--font-mono, monospace);
           font-size: 0.65rem;
           font-weight: 700;
@@ -209,24 +209,24 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           gap: 0.5rem;
           font-family: var(--font-mono, monospace);
           font-size: 0.65rem;
-          color: #38BDF8;
+          color: #14B8A6;
           letter-spacing: 0.12em;
           text-transform: uppercase;
           font-weight: 600;
         }
 
         .cs-card-meta-dot {
-          color: #64748B;
+          color: #6F8F8D;
         }
 
         .cs-card-meta-year {
-          color: #94A3B8;
+          color: #A7C7C5;
         }
 
         .cs-card-title {
           font-size: clamp(1.05rem, 1.8vw, 1.25rem);
           font-weight: 600;
-          color: #F8FAFC;
+          color: #F0FDFA;
           letter-spacing: -0.015em;
           margin: 0;
           text-transform: none;
@@ -238,7 +238,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #64748B;
+          color: #6F8F8D;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -250,7 +250,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
         }
 
         .cs-tab-card.is-expanded .cs-card-indicator {
-          color: #38BDF8;
+          color: #14B8A6;
         }
 
         /* ─── Smooth Expandable Content ─── */
@@ -274,11 +274,11 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           flex-direction: column;
           gap: 0.75rem;
           padding-top: 0.25rem;
-          border-top: 1px solid rgba(22, 119, 255, 0.1);
+          border-top: 1px solid rgba(20, 184, 166, 0.1);
         }
 
         .cs-card-desc {
-          color: #94A3B8;
+          color: #A7C7C5;
           font-size: 0.875rem;
           line-height: 1.55;
           margin: 0;
@@ -302,9 +302,9 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
 
         .cs-tech-pill {
           font-size: 0.68rem;
-          color: #55D6FF;
-          background-color: rgba(22, 119, 255, 0.08);
-          border: 1px solid rgba(22, 119, 255, 0.18);
+          color: #67E8F9;
+          background-color: rgba(20, 184, 166, 0.08);
+          border: 1px solid rgba(20, 184, 166, 0.18);
           padding: 0.12rem 0.45rem;
           border-radius: 4px;
           font-family: var(--font-mono, monospace);
@@ -314,7 +314,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #38BDF8;
+          color: #14B8A6;
           font-family: var(--font-mono, monospace);
           font-size: 0.75rem;
           letter-spacing: 0.08em;
@@ -324,7 +324,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
         }
 
         .cs-tab-card:hover .cs-card-cta {
-          color: #55D6FF;
+          color: #67E8F9;
           transform: translateX(3px);
         }
 
@@ -346,8 +346,8 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           }
 
           .mobile-cs-tile {
-            background: rgba(6, 21, 43, 0.75);
-            border: 1px solid rgba(22, 119, 255, 0.16);
+            background: rgba(7, 18, 20, 0.75);
+            border: 1px solid rgba(20, 184, 166, 0.16);
             border-radius: 8px;
             padding: 0.55rem;
             text-decoration: none;
@@ -362,8 +362,8 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           }
 
           .mobile-cs-tile:active {
-            background-color: rgba(8, 28, 58, 0.95);
-            border-color: rgba(56, 189, 248, 0.4);
+            background-color: rgba(10, 24, 27, 0.95);
+            border-color: rgba(20, 184, 166, 0.4);
           }
 
           .mobile-cs-img-wrap {
@@ -371,7 +371,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
             aspect-ratio: 16 / 10;
             border-radius: 6px;
             overflow: hidden;
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            border: 1px solid rgba(20, 184, 166, 0.2);
             position: relative;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
           }
@@ -389,7 +389,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
             gap: 0.25rem;
             font-family: var(--font-mono, monospace);
             font-size: 0.56rem;
-            color: #38BDF8;
+            color: #14B8A6;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             font-weight: 600;
@@ -403,7 +403,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           .mobile-cs-title {
             font-size: 0.78rem;
             font-weight: 600;
-            color: #F8FAFC;
+            color: #F0FDFA;
             letter-spacing: -0.01em;
             margin: 0;
             line-height: 1.25;
@@ -415,7 +415,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           .mobile-cs-arrow {
             font-family: var(--font-mono, monospace);
             font-size: 0.65rem;
-            color: #38BDF8;
+            color: #14B8A6;
             font-weight: 700;
             display: inline-flex;
             align-items: center;
@@ -458,7 +458,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: '#1677FF',
+                color: '#0F766E',
                 marginBottom: '0.5rem',
                 fontWeight: 600,
               }}
@@ -472,7 +472,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 fontWeight: 700,
                 lineHeight: 1.02,
                 letterSpacing: '-0.035em',
-                color: '#F8FAFF',
+                color: '#F0FDFA',
                 textTransform: 'uppercase',
                 margin: 0,
               }}
@@ -484,7 +484,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           <Link
             href="/work"
             style={{
-              color: '#38BDF8',
+              color: '#14B8A6',
               textDecoration: 'none',
               fontSize: '0.75rem',
               fontWeight: 600,
@@ -585,8 +585,8 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
 
               <div className="mobile-cs-meta">
                 <span>{study.industry}</span>
-                <span style={{ color: '#64748B' }}>·</span>
-                <span style={{ color: '#94A3B8' }}>{study.year}</span>
+                <span style={{ color: '#6F8F8D' }}>·</span>
+                <span style={{ color: '#A7C7C5' }}>{study.year}</span>
               </div>
 
               <h3 className="mobile-cs-title">{study.title}</h3>

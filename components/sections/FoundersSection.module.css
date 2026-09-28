@@ -1,8 +1,8 @@
 .section {
   display: flex;
   flex-direction: column;
-  background-color: var(--color-bg-primary, #030508);
-  color: var(--color-text-primary, #ffffff);
+  background-color: var(--color-bg-primary, #020708);
+  color: var(--color-text-primary, #F0FDFA);
   font-family: 'Space Grotesk', sans-serif;
   min-height: 100vh;
 }
@@ -18,7 +18,7 @@
   font-family: 'Space Mono', monospace;
   font-size: 0.72rem;
   letter-spacing: 0.15em;
-  color: var(--color-text-muted, #8a8f98);
+  color: var(--color-text-muted, #A7C7C5);
   margin-bottom: 1rem;
 }
 
@@ -42,12 +42,12 @@
   display: flex;
   flex-direction: column;
   padding: clamp(2rem, 5vw, 4rem);
-  border-top: 1px solid var(--color-border, #1a1e23);
+  border-top: 1px solid var(--color-border, #0A181B);
 }
 
 .panelLeft {
-  background-color: rgba(255, 255, 255, 0.02);
-  border-right: 1px solid var(--color-border, #1a1e23);
+  background-color: rgba(20, 184, 166, 0.02);
+  border-right: 1px solid var(--color-border, #0A181B);
 }
 
 .panelRight {
@@ -60,7 +60,7 @@
   margin-bottom: 3rem;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, #11141a, #080a0e);
+  background: linear-gradient(135deg, #071214, #050C0E);
 }
 
 .photo {
@@ -84,7 +84,7 @@
   font-family: 'Space Grotesk', sans-serif;
   font-size: 4rem;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.1);
+  color: rgba(20, 184, 166, 0.08);
   letter-spacing: 0.1em;
 }
 
@@ -106,7 +106,7 @@
 .role {
   font-family: 'Space Mono', monospace;
   font-size: 1rem;
-  color: var(--color-brand-cyan, #00f0ff);
+  color: var(--color-brand-cyan, #14B8A6);
   margin-bottom: 2rem;
   letter-spacing: 0.05em;
 }
@@ -114,7 +114,7 @@
 .bio {
   font-size: 1.125rem;
   line-height: 1.6;
-  color: var(--color-text-muted, #8a8f98);
+  color: var(--color-text-muted, #A7C7C5);
   margin: 0 0 3rem 0;
   max-width: 500px;
 }
@@ -128,7 +128,7 @@
 .socials a {
   font-family: 'Space Mono', monospace;
   font-size: 0.875rem;
-  color: var(--color-text-primary, #ffffff);
+  color: var(--color-text-primary, #F0FDFA);
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -136,7 +136,7 @@
 }
 
 .socials a:hover {
-  color: var(--color-brand-cyan, #00f0ff);
+  color: var(--color-brand-cyan, #14B8A6);
 }
 
 @media (max-width: 900px) {
@@ -146,7 +146,7 @@
   
   .panelLeft {
     border-right: none;
-    border-bottom: 1px solid var(--color-border, #1a1e23);
+    border-bottom: 1px solid var(--color-border, #0A181B);
   }
   
   .photoArea {

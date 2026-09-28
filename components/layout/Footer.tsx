@@ -30,7 +30,7 @@ const footerLinks = {
 };
 
 const lnk: React.CSSProperties = {
-  color: '#64748B',
+  color: '#6F8F8D',
   textDecoration: 'none',
   transition: 'color 0.2s',
   display: 'block',
@@ -66,7 +66,7 @@ export default function Footer({
       position: 'relative',
       zIndex: 20,
       padding: 'clamp(3rem, 6vh, 5rem) clamp(1.25rem, 4vw, 4rem) 2rem',
-      borderTop: '1px solid rgba(22, 119, 255, 0.1)',
+      borderTop: '1px solid rgba(20, 184, 166, 0.1)',
       backgroundColor: 'var(--color-void)',
     }}>
       {/* Subtle Indigo Top Gradient */}
@@ -76,7 +76,7 @@ export default function Footer({
         left: 0,
         right: 0,
         height: '1px',
-        boxShadow: '0 0 40px 15px rgba(55, 48, 163, 0.15)',
+        boxShadow: '0 0 40px 15px rgba(15, 118, 110, 0.15)',
         pointerEvents: 'none',
       }} />
       <div style={{ position: 'relative', maxWidth: 1280, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2.25rem' }}>
@@ -93,20 +93,20 @@ export default function Footer({
           {/* Brand - spans full width on mobile, 1 col on desktop */}
           <div className="footer-brand" style={{ gridColumn: 'span 1' }}>
             <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none', marginBottom: '1rem' }}>
-              <QuantumLogo width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(56, 189, 248, 0.45))' }} />
+              <QuantumLogo width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(20, 184, 166, 0.45))' }} />
               <span style={{
                 fontFamily: 'var(--font-sans)',
                 fontWeight: 700,
                 fontSize: '0.875rem',
                 letterSpacing: '0.15em',
-                color: '#F8FAFF',
+                color: '#F0FDFA',
                 textTransform: 'uppercase',
               }}>
                 {companyName}
               </span>
             </Link>
             <p style={{
-              color: '#64748B',
+              color: '#6F8F8D',
               fontSize: '0.8125rem',
               lineHeight: 1.6,
               maxWidth: 240,
@@ -125,9 +125,9 @@ export default function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Quantum AI GitHub Repository"
-                    style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#38BDF8')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+                    style={{ color: '#A7C7C5', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#14B8A6')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#A7C7C5')}
                     title="GitHub"
                   >
                     GitHub
@@ -139,9 +139,9 @@ export default function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Quantum AI LinkedIn Company Page"
-                    style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#38BDF8')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+                    style={{ color: '#A7C7C5', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#14B8A6')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#A7C7C5')}
                     title="LinkedIn"
                   >
                     LinkedIn
@@ -153,9 +153,9 @@ export default function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Quantum AI Twitter / X Profile"
-                    style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#38BDF8')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
+                    style={{ color: '#A7C7C5', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#14B8A6')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#A7C7C5')}
                     title="Twitter / X"
                   >
                     Twitter
@@ -172,7 +172,7 @@ export default function Footer({
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.65rem',
                 letterSpacing: '0.2em',
-                color: '#94A3B8',
+                color: '#A7C7C5',
                 marginBottom: '1rem',
                 textTransform: 'uppercase',
                 fontWeight: 600,
@@ -185,8 +185,8 @@ export default function Footer({
                     key={l.href}
                     href={l.href}
                     style={lnk}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#F8FAFF')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#64748B')}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#F0FDFA')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#6F8F8D')}
                   >
                     {l.label}
                   </Link>
@@ -201,19 +201,19 @@ export default function Footer({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderTop: '1px solid rgba(22, 119, 255, 0.08)',
+          borderTop: '1px solid rgba(20, 184, 166, 0.08)',
           paddingTop: '1.5rem',
           flexWrap: 'wrap',
           gap: '1rem',
         }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', letterSpacing: '0.08em' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#6F8F8D', letterSpacing: '0.08em' }}>
             {displayCopyright}
           </span>
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
             <a href={`mailto:${email || 'hello@quantumai.dev'}`} style={{ 
               fontFamily: 'var(--font-mono)', 
               fontSize: '0.75rem', 
-              color: '#38BDF8', 
+              color: '#14B8A6', 
               textDecoration: 'none', 
               letterSpacing: '0.05em' 
             }}>

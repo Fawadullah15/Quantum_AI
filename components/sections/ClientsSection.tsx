@@ -185,12 +185,12 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
       <style>{`
         .continuous-clients-section {
           padding: clamp(3.5rem, 6.5vh, 5.5rem) 0;
-          background: radial-gradient(circle at 50% 50%, rgba(10, 32, 68, 0.28) 0%, rgba(3, 7, 18, 0.98) 80%);
-          border-top: 1px solid rgba(22, 119, 255, 0.14);
-          border-bottom: 1px solid rgba(22, 119, 255, 0.14);
+          background: radial-gradient(circle at 50% 50%, rgba(7, 18, 20, 0.28) 0%, rgba(2, 7, 8, 0.98) 80%);
+          border-top: 1px solid rgba(20, 184, 166, 0.14);
+          border-bottom: 1px solid rgba(20, 184, 166, 0.14);
           position: relative;
           overflow: hidden;
-          color: #F8FAFC;
+          color: #F0FDFA;
         }
 
         /* ─── Header ─── */
@@ -204,7 +204,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           font-size: 0.72rem;
           letter-spacing: 0.25em;
           text-transform: uppercase;
-          color: #1677FF;
+          color: #0F766E;
           margin-bottom: 0.5rem;
           font-weight: 600;
         }
@@ -213,13 +213,13 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           font-weight: 700;
           line-height: 1.15;
           letter-spacing: -0.03em;
-          color: #F8FAFF;
+          color: #F0FDFA;
           margin: 0 0 0.65rem 0;
           text-transform: uppercase;
         }
         .clients-marquee-subtitle {
           font-size: clamp(0.88rem, 1.2vw, 1.05rem);
-          color: #94A3B8;
+          color: #A7C7C5;
           max-width: 620px;
           margin: 0 auto;
           line-height: 1.6;
@@ -271,9 +271,9 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         /* ─── Logo Card ─── */
         .marquee-card {
           position: relative;
-          background: rgba(6, 21, 43, 0.75);
+          background: rgba(7, 18, 20, 0.75);
           backdrop-filter: blur(12px);
-          border: 1px solid rgba(22, 119, 255, 0.18);
+          border: 1px solid rgba(20, 184, 166, 0.18);
           border-radius: 14px;
           padding: 0.85rem clamp(1.5rem, 3vw, 2.25rem);
           display: flex;
@@ -293,10 +293,10 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         }
 
         .marquee-card:hover {
-          background-color: rgba(8, 28, 58, 0.95);
-          border-color: rgba(56, 189, 248, 0.6);
+          background-color: rgba(10, 24, 27, 0.95);
+          border-color: rgba(20, 184, 166, 0.6);
           transform: scale(1.06) translateY(-3px);
-          box-shadow: 0 18px 40px -8px rgba(22, 119, 255, 0.4), 0 0 0 1px rgba(56, 189, 248, 0.4);
+          box-shadow: 0 18px 40px -8px rgba(20, 184, 166, 0.4), 0 0 0 1px rgba(20, 184, 166, 0.4);
           z-index: 50;
         }
 
@@ -318,13 +318,13 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
 
         .marquee-card:hover .marquee-logo-img {
           transform: scale(1.04);
-          filter: drop-shadow(0 4px 14px rgba(56, 189, 248, 0.35));
+          filter: drop-shadow(0 4px 14px rgba(20, 184, 166, 0.35));
         }
 
         .marquee-placeholder {
           font-family: var(--font-mono, monospace);
           font-size: 0.76rem;
-          color: #38BDF8;
+          color: #14B8A6;
           display: flex;
           align-items: center;
           gap: 0.45rem;
@@ -336,8 +336,8 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           bottom: -34px;
           left: 50%;
           transform: translateX(-50%) translateY(4px);
-          background: rgba(3, 7, 18, 0.95);
-          border: 1px solid rgba(56, 189, 248, 0.4);
+          background: rgba(2, 7, 8, 0.95);
+          border: 1px solid rgba(20, 184, 166, 0.4);
           border-radius: 6px;
           padding: 0.25rem 0.7rem;
           display: flex;
@@ -359,13 +359,13 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         .marquee-tooltip-name {
           font-size: 0.72rem;
           font-weight: 600;
-          color: #F8FAFC;
+          color: #F0FDFA;
         }
 
         .marquee-tooltip-ind {
           font-family: var(--font-mono, monospace);
           font-size: 0.6rem;
-          color: #38BDF8;
+          color: #14B8A6;
           text-transform: uppercase;
         }
 

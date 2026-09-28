@@ -36,7 +36,7 @@ export function PhilosophyCore() {
       <mesh ref={outerRef}>
         <icosahedronGeometry args={[3.2, 1]} />
         <meshPhysicalMaterial 
-          color="#001122" 
+          color="#050C0E" 
           transmission={0.9} 
           opacity={1} 
           metalness={0} 
@@ -49,10 +49,10 @@ export function PhilosophyCore() {
       {/* Wireframe abstraction */}
       <mesh ref={wireRef}>
         <icosahedronGeometry args={[4, 2]} />
-        <meshBasicMaterial color="#00e5ff" wireframe transparent opacity={0.15} blending={THREE.AdditiveBlending} />
+        <meshBasicMaterial color="#14B8A6" wireframe transparent opacity={0.15} blending={THREE.AdditiveBlending} />
       </mesh>
 
-      <pointLight position={[0, 0, 0]} intensity={2} color="#00e5ff" distance={15} decay={2} />
+      <pointLight position={[0, 0, 0]} intensity={2} color="#14B8A6" distance={15} decay={2} />
       <directionalLight position={[10, 10, 10]} intensity={1.5} color="#ffffff" />
     </group>
   );

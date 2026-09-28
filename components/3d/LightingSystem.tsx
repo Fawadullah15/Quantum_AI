@@ -31,19 +31,19 @@ export function LightingSystem({ scrollProgress }: LightingSystemProps) {
 
   return (
     <>
-      <ambientLight intensity={0.1 + scrollProgress * 0.1} color="#030508" />
+      <ambientLight intensity={0.1 + scrollProgress * 0.1} color="#020708" />
       <hemisphereLight 
-        args={["#0d1e35", "#030508", 0.3 + scrollProgress * 0.2]} 
+        args={["#071214", "#020708", 0.3 + scrollProgress * 0.2]} 
       />
       <pointLight 
         ref={cyanLightRef}
-        color="#00c8ff" 
+        color="#14B8A6" 
         intensity={1.5} 
         position={[5, 5, 5]} 
       />
       <pointLight 
         ref={violetLightRef}
-        color="#7c3aed" 
+        color="#2563EB" 
         intensity={1.0} 
         position={[-5, -3, -5]} 
       />

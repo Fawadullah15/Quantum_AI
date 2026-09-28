@@ -19,11 +19,11 @@ function CEOPresence() {
       {/* Abstract human-like monolith - CEO visual */}
       <mesh position={[0, 3, 0]}>
         <cylinderGeometry args={[0.6, 0.5, 10, 8]} />
-        <meshStandardMaterial color="#010203" roughness={0.5} metalness={0.9} />
+        <meshStandardMaterial color="#020708" roughness={0.5} metalness={0.9} />
       </mesh>
       <mesh position={[0, 8.5, 0]}>
         <sphereGeometry args={[0.9, 16, 16]} />
-        <meshStandardMaterial color="#010203" roughness={0.3} metalness={0.9} />
+        <meshStandardMaterial color="#020708" roughness={0.3} metalness={0.9} />
       </mesh>
 
       {/* Strategic light for CEO — white, cold */}
@@ -49,11 +49,11 @@ function CTOPresence() {
       {/* Abstract human-like monolith - CTO visual */}
       <mesh position={[0, 3, 0]}>
         <cylinderGeometry args={[0.6, 0.5, 10, 8]} />
-        <meshStandardMaterial color="#010203" roughness={0.5} metalness={0.9} />
+        <meshStandardMaterial color="#020708" roughness={0.5} metalness={0.9} />
       </mesh>
       <mesh position={[0, 8.5, 0]}>
         <sphereGeometry args={[0.9, 16, 16]} />
-        <meshStandardMaterial color="#010203" roughness={0.3} metalness={0.9} />
+        <meshStandardMaterial color="#020708" roughness={0.3} metalness={0.9} />
       </mesh>
 
       {/* Rotating data / tech rings — CTO's domain */}
@@ -61,13 +61,13 @@ function CTOPresence() {
         {[3, 4.5, 6].map((r, i) => (
           <mesh key={i} rotation={[i * 0.5, 0, i * 0.8]}>
             <ringGeometry args={[r, r + 0.06, 64]} />
-            <meshBasicMaterial color="#00e5ff" transparent opacity={0.3 - i * 0.05} side={THREE.DoubleSide} />
+            <meshBasicMaterial color="#14B8A6" transparent opacity={0.3 - i * 0.05} side={THREE.DoubleSide} />
           </mesh>
         ))}
       </group>
 
       {/* Strategic light for CTO — cyan, technical */}
-      <pointLight position={[0, 10, 5]} intensity={1.5} color="#00e5ff" distance={20} decay={2} />
+      <pointLight position={[0, 10, 5]} intensity={1.5} color="#14B8A6" distance={20} decay={2} />
     </group>
   );
 }
@@ -99,7 +99,7 @@ function IntelligenceCore() {
       {/* Central icosahedron core */}
       <mesh ref={coreRef} position={[0, 5, 0]}>
         <octahedronGeometry args={[1.5, 0]} />
-        <meshStandardMaterial color="#000000" roughness={0} metalness={1} emissive="#00e5ff" emissiveIntensity={0.3} />
+        <meshStandardMaterial color="#000000" roughness={0} metalness={1} emissive="#14B8A6" emissiveIntensity={0.3} />
       </mesh>
 
       {/* Connection line */}
@@ -107,12 +107,12 @@ function IntelligenceCore() {
 {/* @ts-expect-error React Three Fiber Line conflict */}
 
       <line geometry={lineGeom}>
-        <lineBasicMaterial color="#00e5ff" transparent opacity={0.4} blending={THREE.AdditiveBlending} />
+        <lineBasicMaterial color="#14B8A6" transparent opacity={0.4} blending={THREE.AdditiveBlending} />
       </line>
 </>
 
       {/* Core glow */}
-      <pointLight position={[0, 5, 0]} intensity={5} color="#00e5ff" distance={30} decay={2} />
+      <pointLight position={[0, 5, 0]} intensity={5} color="#14B8A6" distance={30} decay={2} />
     </group>
   );
 }
@@ -131,7 +131,7 @@ export function LeadershipCore() {
       {/* Vast dark floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]}>
         <planeGeometry args={[100, 100]} />
-        <meshStandardMaterial color="#010203" roughness={0.05} metalness={0.95} />
+        <meshStandardMaterial color="#020708" roughness={0.05} metalness={0.95} />
       </mesh>
 
       <CEOPresence />

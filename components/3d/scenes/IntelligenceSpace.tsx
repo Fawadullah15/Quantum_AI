@@ -31,7 +31,7 @@ export function IntelligenceSpace({ position }: { position: [number, number, num
       ))}
       
       {/* Distant light core */}
-      <pointLight position={[0, 0, -180]} intensity={10} color="#00e5ff" distance={100} decay={2} />
+      <pointLight position={[0, 0, -180]} intensity={10} color="#14B8A6" distance={100} decay={2} />
     </group>
   );
 }
@@ -54,17 +54,17 @@ function SystemMonolith({
     canvas.height = 1024;
     const ctx = canvas.getContext('2d')!;
     
-    ctx.fillStyle = '#050505';
+    ctx.fillStyle = '#050C0E';
     ctx.fillRect(0, 0, 1024, 1024);
     
     // Abstract sharp tech rings
-    ctx.strokeStyle = '#111111';
+    ctx.strokeStyle = '#0A181B';
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(512, 512, 400, 0, Math.PI * 2);
     ctx.stroke();
     
-    ctx.strokeStyle = '#00e5ff';
+    ctx.strokeStyle = '#14B8A6';
     ctx.globalAlpha = 0.5;
     ctx.beginPath();
     ctx.arc(512, 512, 420, Math.PI * 1.5, Math.PI * 1.7);
@@ -78,7 +78,7 @@ function SystemMonolith({
     ctx.fillText(`0${index + 1}`, 512, 420);
     
     ctx.font = 'bold 60px sans-serif';
-    ctx.fillStyle = '#888888';
+    ctx.fillStyle = '#6F8F8D';
     ctx.fillText(label, 512, 530);
 
     const tex = new THREE.CanvasTexture(canvas);
@@ -101,7 +101,7 @@ function SystemMonolith({
       <mesh>
         <boxGeometry args={[14, 14, 0.2]} />
         <meshStandardMaterial 
-          color="#020202"
+          color="#020708"
           roughness={0.1}
           metalness={0.9}
           transparent={true}
@@ -123,7 +123,7 @@ function SystemMonolith({
       </mesh>
       
       {/* Subdued monolithic lighting */}
-      <pointLight position={[0, 0, 2]} intensity={2} color="#00e5ff" distance={15} decay={2} />
+      <pointLight position={[0, 0, 2]} intensity={2} color="#14B8A6" distance={15} decay={2} />
     </group>
   );
 }

@@ -38,7 +38,7 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
     fontFamily: 'var(--font-sans)',
     fontWeight: 600,
     letterSpacing: '0.06em',
-    color: '#F8FAFF',
+    color: '#F0FDFA',
     borderRadius: 999,
     border: 'none',
     cursor: disabled ? 'not-allowed' : 'pointer',
@@ -68,10 +68,10 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
           inset: 0,
           borderRadius: 'inherit',
           background: reduce
-            ? 'rgba(79, 70, 229, 0.6)'
+            ? 'rgba(15, 118, 110, 0.6)'
             : undefined,
           animation: reduce ? 'none' : 'novaSpin 3s linear infinite',
-          backgroundImage: reduce ? undefined : 'conic-gradient(from var(--nova-angle, 0deg), transparent 0%, transparent 60%, #4F46E5 80%, #3B82F6 90%, transparent 100%)',
+          backgroundImage: reduce ? undefined : 'conic-gradient(from var(--nova-angle, 0deg), transparent 0%, transparent 60%, #0F766E 80%, #14B8A6 90%, transparent 100%)',
         }} />
       </span>
 
@@ -80,7 +80,7 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
         position: 'absolute',
         inset: '1.5px',
         borderRadius: 999,
-        backgroundColor: '#020F25',
+        backgroundColor: '#020708',
         zIndex: 1,
         overflow: 'hidden',
       }}>
@@ -88,7 +88,7 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
         <span className="nova-shine" style={{
           position: 'absolute',
           inset: 0,
-          background: 'linear-gradient(120deg, transparent 30%, rgba(85,214,255,0.12) 50%, transparent 70%)',
+          background: 'linear-gradient(120deg, transparent 30%, rgba(103, 232, 249,0.12) 50%, transparent 70%)',
           transform: 'translateX(-100%)',
           transition: 'transform 0.6s ease',
         }} />
@@ -114,7 +114,7 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
       const shine = e.target?.closest?.('.nova-btn')?.querySelector?.('.nova-shine');
       if (shine) shine.style.transform = 'translateX(100%)';
       const el = e.target?.closest?.('.nova-btn');
-      if (el) el.style.boxShadow = '0 0 20px rgba(79, 70, 229, 0.4)';
+      if (el) el.style.boxShadow = '0 0 20px rgba(15, 118, 110, 0.4)';
     },
     onHoverEnd: (e: any) => {
       const shine = e.target?.closest?.('.nova-btn')?.querySelector?.('.nova-shine');
@@ -170,7 +170,7 @@ export function GalaxyButton({ href, children, onClick, className = '', style, t
     fontFamily: 'var(--font-sans)',
     fontWeight: 600,
     letterSpacing: '0.06em',
-    color: '#E2E8F0',
+    color: '#F0FDFA',
     borderRadius: 999,
     border: '1px solid rgba(255,255,255,0.1)',
     cursor: disabled ? 'not-allowed' : 'pointer',
@@ -178,7 +178,7 @@ export function GalaxyButton({ href, children, onClick, className = '', style, t
     overflow: 'hidden',
     outline: 'none',
     opacity: disabled ? 0.5 : 1,
-    background: '#06152B',
+    background: '#050C0E',
     boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
     transition: 'box-shadow 0.3s, border-color 0.3s',
     maxWidth: '100%',
@@ -198,7 +198,7 @@ export function GalaxyButton({ href, children, onClick, className = '', style, t
         transition: reduce ? 'none' : 'opacity 0.5s ease',
         backgroundImage: [
           'radial-gradient(circle at 30% 40%, rgba(124, 58, 237, 0.25) 0%, transparent 50%)',
-          'radial-gradient(circle at 70% 60%, rgba(79, 70, 229, 0.2) 0%, transparent 50%)',
+          'radial-gradient(circle at 70% 60%, rgba(15, 118, 110, 0.2) 0%, transparent 50%)',
           'radial-gradient(1.5px 1.5px at 18% 22%, rgba(255,255,255,0.85), transparent)',
           'radial-gradient(1px 1px at 75% 35%, rgba(255,255,255,0.7), transparent)',
           'radial-gradient(2px 2px at 55% 78%, rgba(255,255,255,0.6), transparent)',

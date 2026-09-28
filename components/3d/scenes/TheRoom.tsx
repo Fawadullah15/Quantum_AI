@@ -54,13 +54,13 @@ export function TheRoom({ position }: { position: [number, number, number] }) {
       {/* Left wall */}
       <mesh rotation={[0, Math.PI / 2, 0]} position={[-30, 3, -40]}>
         <planeGeometry args={[200, 40]} />
-        <meshStandardMaterial color="#020202" roughness={0.95} />
+        <meshStandardMaterial color="#020708" roughness={0.95} />
       </mesh>
 
       {/* Right wall */}
       <mesh rotation={[0, -Math.PI / 2, 0]} position={[30, 3, -40]}>
         <planeGeometry args={[200, 40]} />
-        <meshStandardMaterial color="#020202" roughness={0.95} />
+        <meshStandardMaterial color="#020708" roughness={0.95} />
       </mesh>
 
       {/* Human silhouette — realistic scale (small) */}
@@ -74,9 +74,9 @@ export function TheRoom({ position }: { position: [number, number, number] }) {
       </group>
 
       {/* Harsh minimal lighting from TV wall */}
-      <pointLight position={[0, 1, 3]} intensity={4} color="#00e5ff" distance={25} decay={2} />
+      <pointLight position={[0, 1, 3]} intensity={4} color="#14B8A6" distance={25} decay={2} />
       <pointLight position={[-10, -2, 2]} intensity={2} color="#ffffff" distance={15} decay={2} />
-      <pointLight position={[10, 4, 2]} intensity={2} color="#00e5ff" distance={15} decay={2} />
+      <pointLight position={[10, 4, 2]} intensity={2} color="#14B8A6" distance={15} decay={2} />
     </group>
   );
 }
@@ -125,7 +125,7 @@ function TvScreen({
     
     // Abstract sharp UI elements (cyan/white)
     ctx.lineWidth = 1;
-    ctx.strokeStyle = index % 2 === 0 ? '#00e5ff' : '#ffffff';
+    ctx.strokeStyle = index % 2 === 0 ? '#14B8A6' : '#ffffff';
     ctx.globalAlpha = 0.4;
     
     // Grid
@@ -177,7 +177,7 @@ function TvScreen({
       {/* Matte black industrial bezel */}
       <mesh position={[0, 0, -0.05]}>
         <boxGeometry args={[TV_W + 0.05, TV_H + 0.05, 0.1]} />
-        <meshStandardMaterial color="#020202" roughness={0.9} metalness={0.5} />
+        <meshStandardMaterial color="#020708" roughness={0.9} metalness={0.5} />
       </mesh>
 
       {/* Screen glass */}

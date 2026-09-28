@@ -50,7 +50,7 @@ function ProductPlane({ label, position }: { label: string, position: [number, n
       <mesh>
         <planeGeometry args={[3, 4]} />
         <meshStandardMaterial 
-          color="#1e1e2f" 
+          color="#0A181B" 
           transparent 
           opacity={0.7} 
           roughness={0.1} 
@@ -61,21 +61,21 @@ function ProductPlane({ label, position }: { label: string, position: [number, n
       {/* Back glow */}
       <mesh position={[0, 0, -0.05]}>
         <planeGeometry args={[3.1, 4.1]} />
-        <meshBasicMaterial color="#4f46e5" />
+        <meshBasicMaterial color="#0F766E" />
       </mesh>
 
       {/* Interface Mockup Elements */}
       <mesh position={[0, 1.2, 0.01]}>
         <planeGeometry args={[2.6, 1]} />
-        <meshBasicMaterial color="#2d2d44" />
+        <meshBasicMaterial color="#1A3533" />
       </mesh>
       <mesh position={[-0.65, -0.5, 0.01]}>
         <planeGeometry args={[1.2, 2]} />
-        <meshBasicMaterial color="#2d2d44" />
+        <meshBasicMaterial color="#1A3533" />
       </mesh>
       <mesh position={[0.65, -0.5, 0.01]}>
         <planeGeometry args={[1.2, 2]} />
-        <meshBasicMaterial color="#2d2d44" />
+        <meshBasicMaterial color="#1A3533" />
       </mesh>
 
       <Text position={[0, -2.5, 0]} fontSize={0.25} color="#ffffff" anchorX="center">

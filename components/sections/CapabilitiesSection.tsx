@@ -45,9 +45,9 @@ export default function CapabilitiesSection() {
       style={{
         padding: 'clamp(2rem, 4.5vh, 3.5rem) clamp(0.75rem, 4vw, 6rem)',
         pointerEvents: 'auto',
-        backgroundColor: 'rgba(6, 21, 43, 0.3)',
-        borderTop: '1px solid rgba(22, 119, 255, 0.08)',
-        borderBottom: '1px solid rgba(22, 119, 255, 0.08)',
+        backgroundColor: 'rgba(7, 18, 20, 0.3)',
+        borderTop: '1px solid rgba(20, 184, 166, 0.08)',
+        borderBottom: '1px solid rgba(20, 184, 166, 0.08)',
         width: '100%',
         boxSizing: 'border-box',
       }}
@@ -69,8 +69,8 @@ export default function CapabilitiesSection() {
 
         .tech-tab-card {
           position: relative;
-          background-color: rgba(6, 21, 43, 0.65);
-          border: 1px solid rgba(22, 119, 255, 0.14);
+          background-color: rgba(7, 18, 20, 0.65);
+          border: 1px solid rgba(20, 184, 166, 0.14);
           border-radius: 10px;
           padding: 0.85rem clamp(1rem, 2.5vw, 1.75rem);
           display: flex;
@@ -85,14 +85,14 @@ export default function CapabilitiesSection() {
         }
 
         .tech-tab-card:focus-visible {
-          border-color: #38BDF8;
-          box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3);
+          border-color: #14B8A6;
+          box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
         }
 
         .tech-tab-card.is-expanded {
-          background-color: rgba(8, 28, 58, 0.85);
-          border-color: rgba(56, 189, 248, 0.4);
-          box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.25);
+          background-color: rgba(10, 24, 27, 0.85);
+          border-color: rgba(20, 184, 166, 0.4);
+          box-shadow: 0 8px 24px -6px rgba(20, 184, 166, 0.25);
           transform: translateY(-1px);
         }
 
@@ -115,7 +115,7 @@ export default function CapabilitiesSection() {
         .tech-card-num {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
-          color: #38BDF8;
+          color: #14B8A6;
           font-weight: 600;
           letter-spacing: 0.1em;
           flex-shrink: 0;
@@ -127,7 +127,7 @@ export default function CapabilitiesSection() {
         .tech-card-title {
           font-size: clamp(1rem, 1.8vw, 1.15rem);
           font-weight: 600;
-          color: #F8FAFF;
+          color: #F0FDFA;
           letter-spacing: 0.02em;
           margin: 0;
           text-transform: uppercase;
@@ -139,7 +139,7 @@ export default function CapabilitiesSection() {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #64748B;
+          color: #6F8F8D;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -151,7 +151,7 @@ export default function CapabilitiesSection() {
         }
 
         .tech-tab-card.is-expanded .tech-card-indicator {
-          color: #38BDF8;
+          color: #14B8A6;
         }
 
         /* ─── Smooth Expandable Content ─── */
@@ -175,11 +175,11 @@ export default function CapabilitiesSection() {
           flex-direction: column;
           gap: 0.75rem;
           padding-top: 0.35rem;
-          border-top: 1px solid rgba(22, 119, 255, 0.1);
+          border-top: 1px solid rgba(20, 184, 166, 0.1);
         }
 
         .tech-card-desc {
-          color: #94A3B8;
+          color: #A7C7C5;
           font-size: 0.875rem;
           line-height: 1.55;
           margin: 0;
@@ -197,10 +197,10 @@ export default function CapabilitiesSection() {
           font-size: 0.7rem;
           font-family: var(--font-mono, monospace);
           padding: 0.15rem 0.5rem;
-          background-color: rgba(22, 119, 255, 0.08);
-          border: 1px solid rgba(22, 119, 255, 0.18);
+          background-color: rgba(20, 184, 166, 0.08);
+          border: 1px solid rgba(20, 184, 166, 0.18);
           border-radius: 4px;
-          color: #55D6FF;
+          color: #67E8F9;
           white-space: nowrap;
         }
 
@@ -222,8 +222,8 @@ export default function CapabilitiesSection() {
           }
 
           .mobile-tech-tile {
-            background: rgba(6, 21, 43, 0.75);
-            border: 1px solid rgba(22, 119, 255, 0.16);
+            background: rgba(7, 18, 20, 0.75);
+            border: 1px solid rgba(20, 184, 166, 0.16);
             border-radius: 8px;
             padding: 0.75rem 0.75rem;
             display: flex;
@@ -239,7 +239,7 @@ export default function CapabilitiesSection() {
           .mobile-tech-num {
             font-family: var(--font-mono, monospace);
             font-size: 0.62rem;
-            color: #38BDF8;
+            color: #14B8A6;
             font-weight: 600;
             letter-spacing: 0.1em;
             margin-bottom: 0.25rem;
@@ -249,7 +249,7 @@ export default function CapabilitiesSection() {
           .mobile-tech-title {
             font-size: 0.8rem;
             font-weight: 600;
-            color: #F8FAFC;
+            color: #F0FDFA;
             letter-spacing: 0.02em;
             margin: 0;
             text-transform: uppercase;
@@ -293,7 +293,7 @@ export default function CapabilitiesSection() {
                 fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: '#1677FF',
+                color: '#0F766E',
                 marginBottom: '0.5rem',
                 fontWeight: 600,
               }}
@@ -306,7 +306,7 @@ export default function CapabilitiesSection() {
                 fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
                 fontWeight: 700,
                 lineHeight: 1.02,
-                color: '#F8FAFF',
+                color: '#F0FDFA',
                 marginBottom: '0.65rem',
                 letterSpacing: '-0.035em',
                 textTransform: 'uppercase',
@@ -318,7 +318,7 @@ export default function CapabilitiesSection() {
               className="section-desc"
               style={{
                 fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-                color: '#94A3B8',
+                color: '#A7C7C5',
                 lineHeight: 1.6,
                 margin: 0,
                 maxWidth: 580,
@@ -332,7 +332,7 @@ export default function CapabilitiesSection() {
           <Link
             href="/technology"
             style={{
-              color: '#38BDF8',
+              color: '#14B8A6',
               textDecoration: 'none',
               fontSize: '0.75rem',
               fontWeight: 600,

@@ -54,8 +54,8 @@ function SystemNode({ label, position }: { label: string, position: [number, num
           <octahedronGeometry args={[0.8, 0]} />
           <meshStandardMaterial 
             ref={materialRef} 
-            color="#7c3aed" 
-            emissive="#7c3aed" 
+            color="#2563EB" 
+            emissive="#2563EB" 
             emissiveIntensity={0.5} 
             wireframe 
           />
@@ -69,7 +69,7 @@ function SystemNode({ label, position }: { label: string, position: [number, num
       {/* Connection line back to center */}
       <Line 
         points={[[0, 0, 0], [0 - position[0], 0 - position[1], 0]]} 
-        color="#4f46e5" 
+        color="#0F766E" 
         transparent 
         opacity={0.3} 
         lineWidth={1}

@@ -1,59 +1,81 @@
 /* ============================================================
-   INTELLIGENCE CORE — Premium Cinematic Design Tokens
+   QUANTUM AI — Space Aurora Design Tokens
+   ============================================================
+   Black Space + Deep Teal + Aurora Blue
    ============================================================ */
 
 :root {
-  /* ─── Colors ─────────────────────────────────────────────── */
-  --color-void:       #030712;   /* Deep midnight background */
-  --color-deep:       #07152F;   /* Secondary navy background */
-  --color-surface:    #0A2347;   /* Elevated surface */
-  --color-surface-2:  #112E5C;   /* Higher elevated surface */
-  --color-border:     #1E3A8A;   /* Subtle blue border */
-  --color-border-2:   #2563EB;   /* Active border / Blue */
+  /* ─── Core Palette ─────────────────────────────────────────── */
+  --color-void:       #020708;   /* Black space background */
+  --color-deep:       #050C0E;   /* Secondary space background */
+  --color-surface:    #071214;   /* Elevated surface */
+  --color-surface-2:  #0A181B;   /* Higher elevated surface */
+  --color-border:     rgba(20, 184, 166, 0.10);  /* Subtle teal border */
+  --color-border-2:   rgba(20, 184, 166, 0.30);  /* Active teal border */
 
-  --color-text-primary:   #F8FAFC;   /* White / Off-white */
-  --color-text-secondary: #94A3B8;   /* Muted slate text */
-  --color-text-tertiary:  #64748B;   /* Very muted */
-  --color-text-disabled:  #334155;   /* Disabled */
+  /* ─── Space Aurora Accents ─────────────────────────────────── */
+  --space-black:      #020708;
+  --space-surface:    #071214;
+  --deep-teal:        #0F766E;
+  --aurora-cyan:      #14B8A6;
+  --space-blue:       #2563EB;
+  --ice-blue:         #67E8F9;
 
-  /* Global Technology Accents */
-  --color-core:       #3B82F6;   /* Electric Blue */
-  --color-core-dim:   #2563EB;   /* Blue */
-  
-  /* New Indigo/Violet Atmosphere */
-  --color-indigo:     #4F46E5;
-  --color-indigo-deep:#3730A3;
-  --color-violet:     #7C3AED;
-  --color-violet-soft:#8B5CF6;
-  --color-cyan:       #22D3EE;
-  
+  /* ─── Text ─────────────────────────────────────────────────── */
+  --color-text-primary:   #F0FDFA;
+  --color-text-secondary: #A7C7C5;
+  --color-text-tertiary:  #6F8F8D;
+  --color-text-disabled:  #3A5553;
+
+  /* ─── Semantic ─────────────────────────────────────────────── */
+  --color-core:       #14B8A6;   /* Aurora Cyan — primary accent */
+  --color-core-dim:   #0F766E;   /* Deep Teal */
+  --color-indigo:     #2563EB;   /* Space Blue */
+  --color-indigo-deep:#1D4ED8;
+  --color-violet:     #2563EB;   /* Mapped to Space Blue */
+  --color-violet-soft:#3B82F6;
+  --color-cyan:       #67E8F9;   /* Ice Blue */
+
   --color-warm:       #F59E0B;
-  --color-success:    #10B981;
+  --color-success:    #14B8A6;
   --color-error:      #EF4444;
   --color-warning:    #F59E0B;
 
-  /* Gradients - Used for atmospheric lighting */
-  --gradient-core:    linear-gradient(135deg, #3B82F6 0%, #4F46E5 100%);
-  --gradient-surface: linear-gradient(180deg, #07152F 0%, #030712 100%);
-  --gradient-hero:    radial-gradient(ellipse at 50% 40%, #0A2347 0%, #030712 70%);
+  /* ─── Gradients ────────────────────────────────────────────── */
+  --gradient-core:    linear-gradient(135deg, #0F766E 0%, #14B8A6 100%);
+  --gradient-surface: linear-gradient(180deg, #050C0E 0%, #020708 100%);
+  --gradient-hero:    radial-gradient(ellipse at 50% 40%, #071214 0%, #020708 70%);
 
-  /* ─── Typography ─────────────────────────────────────────── */
+  /* ─── Glows ────────────────────────────────────────────────── */
+  --glow-teal-sm:     rgba(20, 184, 166, 0.15);
+  --glow-teal-md:     rgba(20, 184, 166, 0.25);
+  --glow-teal-lg:     rgba(103, 232, 249, 0.30);
+  --glow-blue:        rgba(37, 99, 235, 0.20);
+
+  /* ─── Borders ──────────────────────────────────────────────── */
+  --border-subtle:    rgba(20, 184, 166, 0.10);
+  --border-default:   rgba(20, 184, 166, 0.15);
+  --border-hover:     rgba(20, 184, 166, 0.30);
+  --border-active:    rgba(103, 232, 249, 0.50);
+  --border-blue:      rgba(37, 99, 235, 0.35);
+
+  /* ─── Typography ───────────────────────────────────────────── */
   --font-sans:  'Space Grotesk', system-ui, -apple-system, sans-serif;
   --font-mono:  'Space Mono', 'Courier New', monospace;
 
-  --text-xs:    0.65rem;    /* Technical data label */
-  --text-sm:    0.85rem;    /* Small body */
-  --text-base:  1.0rem;     /* Standard body */
-  --text-lg:    1.25rem;    /* Large body */
-  --text-xl:    1.5rem;     /* Subhead */
-  --text-2xl:   2.0rem;     /* Section Head */
-  --text-3xl:   2.5rem;     /* 40px */
-  --text-4xl:   3.25rem;    /* 52px */
-  --text-5xl:   3.5rem;     /* 56px — Hero headline */
-  --text-6xl:   4rem;       /* 64px — Large display */
-  --text-7xl:   5rem;       /* 80px — Desktop hero max */
-  --text-8xl:   6rem;       /* 96px — Architectural */
-  --text-9xl:   7rem;       /* 112px — Max hero cap */
+  --text-xs:    0.65rem;
+  --text-sm:    0.85rem;
+  --text-base:  1.0rem;
+  --text-lg:    1.25rem;
+  --text-xl:    1.5rem;
+  --text-2xl:   2.0rem;
+  --text-3xl:   2.5rem;
+  --text-4xl:   3.25rem;
+  --text-5xl:   3.5rem;
+  --text-6xl:   4rem;
+  --text-7xl:   5rem;
+  --text-8xl:   6rem;
+  --text-9xl:   7rem;
 
   --weight-light:     300;
   --weight-regular:   400;
@@ -73,7 +95,7 @@
   --tracking-wider:    0.15em;
   --tracking-widest:   0.3em;
 
-  /* ─── Spacing ────────────────────────────────────────────── */
+  /* ─── Spacing ──────────────────────────────────────────────── */
   --space-1:    0.25rem;
   --space-2:    0.5rem;
   --space-3:    0.75rem;
@@ -91,38 +113,38 @@
   --space-48:   12rem;
   --space-64:   16rem;
 
-  /* ─── Layout ─────────────────────────────────────────────── */
+  /* ─── Layout ───────────────────────────────────────────────── */
   --max-width:        1400px;
   --max-width-text:   640px;
   --nav-height:       72px;
   --container-px:     clamp(1.5rem, 5vw, 5rem);
 
-  /* ─── Borders ────────────────────────────────────────────── */
-  --radius-sm:  0px;  /* Sharp edges for architectural feel */
+  /* ─── Borders ──────────────────────────────────────────────── */
+  --radius-sm:  0px;
   --radius-md:  0px;
   --radius-lg:  0px;
   --radius-xl:  0px;
   --radius-2xl: 0px;
-  --radius-full:9999px; /* Only for specific pills/circles */
+  --radius-full:9999px;
 
-  /* ─── Shadows ────────────────────────────────────────────── */
+  /* ─── Shadows ──────────────────────────────────────────────── */
   --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.8);
   --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.9);
   --shadow-lg:  0 12px 48px rgba(0, 0, 0, 1);
-  --shadow-core:0 0 20px rgba(0, 229, 255, 0.1), 0 0 60px rgba(0, 229, 255, 0.05);
+  --shadow-core:0 0 20px rgba(20, 184, 166, 0.1), 0 0 60px rgba(20, 184, 166, 0.05);
 
-  /* ─── Easing ─────────────────────────────────────────────── */
+  /* ─── Easing ───────────────────────────────────────────────── */
   --ease-out-expo:   cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out:     cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring:     cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-precise:    cubic-bezier(0.25, 0.1, 0.25, 1);
 
-  /* ─── Transitions ────────────────────────────────────────── */
+  /* ─── Transitions ──────────────────────────────────────────── */
   --transition-fast:   200ms var(--ease-in-out);
   --transition-normal: 400ms var(--ease-out-expo);
   --transition-slow:   800ms var(--ease-out-expo);
 
-  /* ─── Z-Index ────────────────────────────────────────────── */
+  /* ─── Z-Index ──────────────────────────────────────────────── */
   --z-below:    -1;
   --z-base:      0;
   --z-above:     1;
