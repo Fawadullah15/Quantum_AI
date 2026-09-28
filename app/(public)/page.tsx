@@ -329,7 +329,53 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             HERO SECTION — MARS SPACE ARRIVAL
         ═══════════════════════════════════════════════════════════ */}
+        <style>{`
+          @media (max-width: 768px) {
+            .hero-mobile-section {
+              align-items: center !important;
+              padding: 0 1.5rem !important;
+              min-height: 100svh !important;
+            }
+            .hero-mobile-content {
+              margin-top: 2rem;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              width: 100%;
+              max-width: 320px; /* Force text to wrap nicely on the left */
+            }
+            .hero-mobile-eyebrow {
+              font-size: 0.6rem !important;
+              letter-spacing: 0.15em !important;
+              line-height: 1.6 !important;
+              margin-bottom: 1.5rem !important;
+              max-width: 250px; /* Forces exactly the wrapping seen in the screenshot */
+            }
+            .hero-mobile-particle {
+              height: 140px !important;
+              width: 100% !important;
+              margin-bottom: 1.5rem !important;
+            }
+            .hero-mobile-desc {
+              font-size: 0.85rem !important;
+              color: rgba(255,255,255,0.8) !important;
+              margin-bottom: 2.5rem !important;
+              line-height: 1.5 !important;
+            }
+            .hero-mobile-ctas {
+              flex-direction: column !important;
+              align-items: flex-start !important;
+              gap: 1rem !important;
+            }
+            .hero-mobile-ctas > * {
+              width: auto !important;
+              padding: 0.65rem 1.5rem !important;
+              font-size: 0.75rem !important;
+            }
+          }
+        `}</style>
         <section
+          className="hero-mobile-section"
           style={{
             minHeight: '100vh',
             display: 'flex',
@@ -345,9 +391,9 @@ export default function HomePage() {
           {/* Semantic H1 for SEO & accessibility — visually hidden */}
           <h1 className="sr-only">We Build Intelligent Software — Quantum AI</h1>
 
-          <div style={{ maxWidth: 860, pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
+          <div className="hero-mobile-content" style={{ maxWidth: 860, pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
             <p
-              className="hero-eyebrow"
+              className="hero-eyebrow hero-mobile-eyebrow"
               style={{
                 fontFamily: 'var(--font-mono, monospace)',
                 fontSize: '0.72rem',
@@ -362,7 +408,7 @@ export default function HomePage() {
             </p>
 
             {/* ParticleText visual headline */}
-            <div style={{
+            <div className="hero-mobile-particle" style={{
               height: 'clamp(190px, 30vw, 300px)',
               width: 'clamp(280px, 90vw, 840px)',
               marginBottom: '1.25rem',
@@ -383,7 +429,7 @@ export default function HomePage() {
             </div>
 
             {/* Supporting copy */}
-            <p style={{
+            <p className="hero-mobile-desc" style={{
               fontSize: 'clamp(0.9rem, 1.3vw, 1.05rem)',
               color: '#FFFFFF',
               lineHeight: 1.6,
@@ -395,9 +441,9 @@ export default function HomePage() {
             </p>
 
             {/* CTAs */}
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
-              <NovaButton href="/contact">START A PROJECT</NovaButton>
-              <GalaxyButton href="/work">EXPLORE OUR WORK</GalaxyButton>
+            <div className="hero-mobile-ctas" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              <NovaButton href="/contact">START A PROJECT &nbsp;→</NovaButton>
+              <GalaxyButton href="/work">EXPLORE OUR WORK &nbsp;→</GalaxyButton>
             </div>
           </div>
         </section>
