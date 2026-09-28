@@ -41,7 +41,7 @@ export default function PageHeader({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.4rem',
-              color: '#38BDF8',
+              color: '#FFFFFF',
               backgroundColor: 'rgba(22, 119, 255, 0.1)',
               border: '1px solid rgba(22, 119, 255, 0.25)',
               padding: '0.35rem 0.75rem',
@@ -63,7 +63,7 @@ export default function PageHeader({
               fontFamily: 'var(--font-mono, monospace)',
               fontSize: '0.68rem',
               letterSpacing: '0.18em',
-              color: '#1677FF',
+              color: '#FFFFFF',
               textTransform: 'uppercase',
               marginBottom: '0.3rem',
               fontWeight: 600,
@@ -77,7 +77,7 @@ export default function PageHeader({
           style={{
             fontSize: 'clamp(1.4rem, 2.5vw, 1.85rem)',
             fontWeight: 700,
-            color: '#F8FAFC',
+            color: '#FFFFFF',
             margin: '0 0 0.35rem 0',
             letterSpacing: '-0.02em',
             lineHeight: 1.2,
@@ -90,7 +90,7 @@ export default function PageHeader({
           <p
             style={{
               fontSize: '0.85rem',
-              color: '#94A3B8',
+              color: '#FFFFFF',
               maxWidth: '680px',
               margin: 0,
               lineHeight: 1.5,

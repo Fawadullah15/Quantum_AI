@@ -67,7 +67,7 @@ export default function WhoWeHelpSection() {
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: '#14B8A6',
+            color: '#FFFFFF',
             marginBottom: '0.5rem',
             fontWeight: 600,
           }}
@@ -81,7 +81,7 @@ export default function WhoWeHelpSection() {
             fontSize: 'clamp(2.25rem, 4.5vw, 3.65rem)',
             fontWeight: 700,
             lineHeight: 1.05,
-            color: '#F0FDFA',
+            color: '#FFFFFF',
             marginBottom: '0.65rem',
             letterSpacing: '-0.035em',
             textTransform: 'uppercase',
@@ -94,7 +94,7 @@ export default function WhoWeHelpSection() {
           className="section-desc"
           style={{
             fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-            color: '#A7C7C5',
+            color: '#FFFFFF',
             lineHeight: 1.6,
             marginBottom: 'clamp(1.75rem, 3.5vh, 2.75rem)',
             maxWidth: 680,
@@ -148,7 +148,7 @@ export default function WhoWeHelpSection() {
                   style={{
                     fontFamily: 'var(--font-mono, monospace)',
                     fontSize: '0.72rem',
-                    color: '#14B8A6',
+                    color: '#FFFFFF',
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                   }}
@@ -159,7 +159,7 @@ export default function WhoWeHelpSection() {
                   style={{
                     fontFamily: 'var(--font-mono, monospace)',
                     fontSize: '0.68rem',
-                    color: '#6F8F8D',
+                    color: '#FFFFFF',
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
                   }}
@@ -172,7 +172,7 @@ export default function WhoWeHelpSection() {
                 style={{
                   fontSize: '1.15rem',
                   fontWeight: 600,
-                  color: '#F0FDFA',
+                  color: '#FFFFFF',
                   letterSpacing: '-0.015em',
                   margin: 0,
                   lineHeight: 1.3,
@@ -183,7 +183,7 @@ export default function WhoWeHelpSection() {
 
               <p
                 style={{
-                  color: '#A7C7C5',
+                  color: '#FFFFFF',
                   fontSize: '0.86rem',
                   lineHeight: 1.6,
                   margin: 0,
@@ -203,11 +203,11 @@ export default function WhoWeHelpSection() {
                         alignItems: 'center',
                         gap: '0.4rem',
                         fontSize: '0.76rem',
-                        color: '#A7C7C5',
+                        color: '#FFFFFF',
                         fontFamily: 'var(--font-mono, monospace)',
                       }}
                     >
-                      <span style={{ color: '#14B8A6', fontSize: '0.7rem' }}>▹</span>
+                      <span style={{ color: '#FFFFFF', fontSize: '0.7rem' }}>▹</span>
                       <span>{del}</span>
                     </div>
                   ))}

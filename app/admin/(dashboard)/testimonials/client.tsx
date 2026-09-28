@@ -226,7 +226,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
     backgroundColor: '#070B14',
     border: '1px solid rgba(22, 119, 255, 0.22)',
     borderRadius: 6,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: '0.875rem',
     outline: 'none',
     boxSizing: 'border-box',
@@ -236,7 +236,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
     display: 'block',
     fontSize: '0.75rem',
     fontWeight: 600,
-    color: '#94A3B8',
+    color: '#FFFFFF',
     marginBottom: '0.35rem',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
@@ -244,7 +244,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
   };
 
   return (
-    <div style={{ color: '#F8FAFC', width: '100%' }}>
+    <div style={{ color: '#FFFFFF', width: '100%' }}>
       {!isEditing ? (
         <>
           {/* Top Controls Toolbar */}
@@ -272,7 +272,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                     borderRadius: '8px',
                     padding: '0.6rem 0.95rem',
                     fontSize: '0.85rem',
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     outline: 'none',
                     boxSizing: 'border-box',
                   }}
@@ -288,7 +288,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                   borderRadius: '8px',
                   padding: '0.6rem 0.85rem',
                   fontSize: '0.82rem',
-                  color: '#CBD5E1',
+                  color: '#FFFFFF',
                   outline: 'none',
                   fontFamily: 'var(--font-mono, monospace)',
                 }}
@@ -308,7 +308,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                     style={{
                       backgroundColor: statusFilter === st ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
                       border: statusFilter === st ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
-                      color: statusFilter === st ? '#FFFFFF' : '#94A3B8',
+                      color: statusFilter === st ? '#FFFFFF' : '#FFFFFF',
                       padding: '0.45rem 0.75rem',
                       borderRadius: 6,
                       fontSize: '0.75rem',
@@ -330,7 +330,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                 style={{
                   backgroundColor: 'rgba(22, 119, 255, 0.12)',
                   border: '1px solid rgba(22, 119, 255, 0.25)',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   padding: '0.55rem 1rem',
                   borderRadius: 6,
                   fontSize: '0.82rem',
@@ -414,22 +414,22 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
                   <thead>
                     <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', width: '70px' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', width: '70px' }}>
                         Order
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Client &amp; Company
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Testimonial Quote
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Rating
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Status / Approval
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
                         Actions
                       </th>
                     </tr>
@@ -456,7 +456,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                             >
                               ▲
                             </button>
-                            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#94A3B8', minWidth: '16px', textAlign: 'center' }}>
+                            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF', minWidth: '16px', textAlign: 'center' }}>
                               {index + 1}
                             </span>
                             <button
@@ -493,7 +493,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                                 justifyContent: 'center',
                                 fontSize: '0.9rem',
                                 fontWeight: 700,
-                                color: '#38BDF8',
+                                color: '#FFFFFF',
                                 flexShrink: 0,
                                 overflow: 'hidden',
                                 position: 'relative',
@@ -513,10 +513,10 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                             </div>
 
                             <div style={{ minWidth: 0 }}>
-                              <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.92rem' }}>
+                              <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.92rem' }}>
                                 {item.name}
                               </div>
-                              <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.15rem' }}>
+                              <div style={{ fontSize: '0.75rem', color: '#FFFFFF', marginTop: '0.15rem' }}>
                                 {item.role ? `${item.role}, ` : ''}{item.company || 'Client'}
                               </div>
                             </div>
@@ -525,7 +525,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
 
                         {/* Quote */}
                         <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', maxWidth: '380px' }}>
-                          <div style={{ fontSize: '0.82rem', color: '#CBD5E1', lineHeight: 1.45, fontStyle: 'italic' }}>
+                          <div style={{ fontSize: '0.82rem', color: '#FFFFFF', lineHeight: 1.45, fontStyle: 'italic' }}>
                             "{item.content}"
                           </div>
                         </td>
@@ -578,7 +578,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                               style={{
                                 backgroundColor: 'rgba(22, 119, 255, 0.15)',
                                 border: '1px solid rgba(22, 119, 255, 0.35)',
-                                color: '#38BDF8',
+                                color: '#FFFFFF',
                                 padding: '0.3rem 0.65rem',
                                 borderRadius: '4px',
                                 fontSize: '0.72rem',
@@ -629,13 +629,13 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', paddingBottom: '0.75rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#F8FAFC' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#FFFFFF' }}>
               {currentId ? `Edit Testimonial: ${formData.name}` : 'Add Client Testimonial'}
             </h2>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              style={{ background: 'transparent', border: 'none', color: '#94A3B8', fontSize: '1.1rem', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '1.1rem', cursor: 'pointer' }}
             >
               ✕
             </button>
@@ -644,7 +644,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {/* Section 1: Client Overview */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 1. Client &amp; Organization Details
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
@@ -699,7 +699,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
 
             {/* Section 2: Avatar & Media */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 2. Client Photo (Optional)
               </div>
 
@@ -728,7 +728,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                       style={{ objectFit: 'cover' }}
                     />
                   ) : (
-                    <span style={{ fontSize: '1.2rem', color: '#64748B' }}>👤</span>
+                    <span style={{ fontSize: '1.2rem', color: '#FFFFFF' }}>👤</span>
                   )}
                 </div>
 
@@ -748,7 +748,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                       style={{
                         backgroundColor: 'rgba(22, 119, 255, 0.15)',
                         border: '1px solid rgba(22, 119, 255, 0.35)',
-                        color: '#38BDF8',
+                        color: '#FFFFFF',
                         padding: '0.4rem 0.75rem',
                         borderRadius: '6px',
                         fontSize: '0.78rem',
@@ -790,7 +790,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
 
             {/* Section 3: Testimonial Quote */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 3. Testimonial Quote *
               </div>
 
@@ -812,8 +812,8 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                 checked={formData.published}
                 onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
               />
-              <label htmlFor="testPublished" style={{ fontSize: '0.85rem', color: '#CBD5E1', cursor: 'pointer' }}>
-                Approve &amp; display immediately in the continuous horizontal marquee on the homepage (<span style={{ color: '#38BDF8' }}>/#testimonials</span>)
+              <label htmlFor="testPublished" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
+                Approve &amp; display immediately in the continuous horizontal marquee on the homepage (<span style={{ color: '#FFFFFF' }}>/#testimonials</span>)
               </label>
             </div>
 
@@ -825,7 +825,7 @@ export default function TestimonialsClient({ testimonials: initialTestimonials =
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   padding: '0.55rem 1.15rem',
                   borderRadius: '6px',
                   fontWeight: 600,

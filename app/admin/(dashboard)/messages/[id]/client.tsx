@@ -118,7 +118,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: 1100, margin: '0 auto', color: '#F8FAFC', width: '100%', boxSizing: 'border-box' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', maxWidth: 1100, margin: '0 auto', color: '#FFFFFF', width: '100%', boxSizing: 'border-box' }}>
       
       {/* Top Breadcrumb & Action Toolbar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', paddingBottom: '1.25rem' }}>
@@ -129,7 +129,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.4rem',
-              color: '#38BDF8',
+              color: '#FFFFFF',
               backgroundColor: 'rgba(22, 119, 255, 0.12)',
               border: '1px solid rgba(22, 119, 255, 0.25)',
               padding: '0.45rem 0.85rem',
@@ -143,8 +143,8 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
             ← Back to Inquiries
           </Link>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ color: '#64748B', fontSize: '0.85rem' }}>/</span>
-            <span style={{ fontSize: '0.85rem', color: '#CBD5E1', fontWeight: 500 }}>{message.name}</span>
+            <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>/</span>
+            <span style={{ fontSize: '0.85rem', color: '#FFFFFF', fontWeight: 500 }}>{message.name}</span>
           </div>
         </div>
 
@@ -155,7 +155,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
             style={{
               backgroundColor: 'rgba(56, 189, 248, 0.12)',
               border: '1px solid rgba(56, 189, 248, 0.3)',
-              color: '#38BDF8',
+              color: '#FFFFFF',
               padding: '0.48rem 0.95rem',
               borderRadius: 6,
               fontSize: '0.8rem',
@@ -220,7 +220,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
           {/* Contact Information Card */}
           <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 12, padding: '1.5rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.15rem', borderBottom: '1px solid rgba(22, 119, 255, 0.12)', paddingBottom: '0.65rem' }}>
-              <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: 0 }}>
+              <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#FFFFFF', margin: 0 }}>
                 Contact Information
               </h2>
               <StatusBadge status={status} />
@@ -228,42 +228,42 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
                   Name
                 </div>
-                <div style={{ color: '#F8FAFC', fontWeight: 600, fontSize: '0.95rem' }}>{message.name}</div>
+                <div style={{ color: '#FFFFFF', fontWeight: 600, fontSize: '0.95rem' }}>{message.name}</div>
               </div>
 
               <div>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
                   Email Address
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <a href={`mailto:${message.email}`} style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.88rem', wordBreak: 'break-all' }}>
+                  <a href={`mailto:${message.email}`} style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.88rem', wordBreak: 'break-all' }}>
                     {message.email}
                   </a>
                 </div>
               </div>
 
               <div>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
                   Company / Organization
                 </div>
-                <div style={{ color: '#F8FAFC', fontSize: '0.88rem' }}>{message.company || '-'}</div>
+                <div style={{ color: '#FFFFFF', fontSize: '0.88rem' }}>{message.company || '-'}</div>
               </div>
 
               <div>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
                   Phone Number
                 </div>
-                <div style={{ color: '#F8FAFC', fontSize: '0.88rem' }}>{message.phone || '-'}</div>
+                <div style={{ color: '#FFFFFF', fontSize: '0.88rem' }}>{message.phone || '-'}</div>
               </div>
 
               <div style={{ gridColumn: 'span 2' }}>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
                   Date Received
                 </div>
-                <div style={{ color: '#CBD5E1', fontSize: '0.825rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.825rem' }}>
                   {new Date(message.createdAt).toLocaleString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -279,28 +279,28 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
 
           {/* Project Details & Body */}
           <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 12, padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 1rem 0', borderBottom: '1px solid rgba(22, 119, 255, 0.12)', paddingBottom: '0.65rem' }}>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#FFFFFF', margin: '0 0 1rem 0', borderBottom: '1px solid rgba(22, 119, 255, 0.12)', paddingBottom: '0.65rem' }}>
               Project Details &amp; Message
             </h2>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }}>
               <div>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
                   Project Type
                 </div>
-                <div style={{ color: '#38BDF8', fontWeight: 500, fontSize: '0.88rem' }}>{message.projectType || 'General Inquiry'}</div>
+                <div style={{ color: '#FFFFFF', fontWeight: 500, fontSize: '0.88rem' }}>{message.projectType || 'General Inquiry'}</div>
               </div>
 
               <div>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.25rem' }}>
                   Estimated Budget
                 </div>
-                <div style={{ color: '#F8FAFC', fontSize: '0.88rem' }}>{message.budget || '-'}</div>
+                <div style={{ color: '#FFFFFF', fontSize: '0.88rem' }}>{message.budget || '-'}</div>
               </div>
             </div>
 
             <div>
-              <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.45rem' }}>
+              <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.45rem' }}>
                 Client Message
               </div>
               <div
@@ -309,7 +309,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
                   border: '1px solid rgba(22, 119, 255, 0.2)',
                   borderRadius: 8,
                   padding: '1.15rem',
-                  color: '#F8FAFC',
+                  color: '#FFFFFF',
                   fontSize: '0.92rem',
                   lineHeight: 1.6,
                   whiteSpace: 'pre-wrap',
@@ -327,7 +327,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
           
           {/* Status Updater Card */}
           <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 12, padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 1rem 0' }}>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#FFFFFF', margin: '0 0 1rem 0' }}>
               Inquiry Status
             </h2>
 
@@ -339,7 +339,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
                   width: '100%',
                   padding: '0.7rem 0.85rem',
                   backgroundColor: '#070B14',
-                  color: '#F8FAFC',
+                  color: '#FFFFFF',
                   border: '1px solid rgba(22, 119, 255, 0.25)',
                   borderRadius: 6,
                   fontSize: '0.88rem',
@@ -361,7 +361,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
                   padding: '0.65rem',
                   backgroundColor: 'rgba(22, 119, 255, 0.2)',
                   border: '1px solid rgba(22, 119, 255, 0.4)',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   borderRadius: 6,
                   cursor: isUpdatingStatus ? 'not-allowed' : 'pointer',
                   fontWeight: 600,
@@ -378,7 +378,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
 
           {/* Internal Notes Card */}
           <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 12, padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 1rem 0' }}>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#FFFFFF', margin: '0 0 1rem 0' }}>
               Internal Admin Notes
             </h2>
 
@@ -392,7 +392,7 @@ export default function MessageDetailClient({ message }: { message: MessageDetai
                   width: '100%',
                   padding: '0.75rem',
                   backgroundColor: '#070B14',
-                  color: '#F8FAFC',
+                  color: '#FFFFFF',
                   border: '1px solid rgba(22, 119, 255, 0.25)',
                   borderRadius: 6,
                   fontSize: '0.88rem',

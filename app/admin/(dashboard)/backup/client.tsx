@@ -167,14 +167,14 @@ export default function BackupClient() {
   };
 
   return (
-    <div style={{ color: '#F8FAFC' }}>
+    <div style={{ color: '#FFFFFF' }}>
       {(isCreating || isRestoring || isUploading) && (
         <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(3, 7, 18, 0.8)', zIndex: 9999, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ width: '40px', height: '40px', border: '3px solid rgba(22, 119, 255, 0.2)', borderTopColor: '#38BDF8', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-          <h2 style={{ marginTop: '1.5rem', fontFamily: 'var(--font-mono, monospace)', color: '#38BDF8' }}>
+          <h2 style={{ marginTop: '1.5rem', fontFamily: 'var(--font-mono, monospace)', color: '#FFFFFF' }}>
             {isCreating ? 'CREATING BACKUP...' : isRestoring ? 'RESTORING DATABASE...' : 'UPLOADING...'}
           </h2>
-          <p style={{ color: '#94A3B8', fontSize: '0.85rem' }}>Please do not close this window.</p>
+          <p style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>Please do not close this window.</p>
           <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       )}
@@ -195,7 +195,7 @@ export default function BackupClient() {
             disabled={isCreating || isRestoring || isUploading}
             style={{
               backgroundColor: 'transparent',
-              color: '#38BDF8',
+              color: '#FFFFFF',
               padding: '0.5rem 1rem',
               borderRadius: '6px',
               fontSize: '0.85rem',
@@ -235,28 +235,28 @@ export default function BackupClient() {
         <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
           <thead>
             <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.6)', borderBottom: '1px solid rgba(22, 119, 255, 0.15)' }}>
-              <th style={{ padding: '0.85rem 1rem', fontSize: '0.75rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600 }}>BACKUP DATE</th>
-              <th style={{ padding: '0.85rem 1rem', fontSize: '0.75rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600 }}>SIZE</th>
-              <th style={{ padding: '0.85rem 1rem', fontSize: '0.75rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600, textAlign: 'right' }}>ACTIONS</th>
+              <th style={{ padding: '0.85rem 1rem', fontSize: '0.75rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600 }}>BACKUP DATE</th>
+              <th style={{ padding: '0.85rem 1rem', fontSize: '0.75rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600 }}>SIZE</th>
+              <th style={{ padding: '0.85rem 1rem', fontSize: '0.75rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600, textAlign: 'right' }}>ACTIONS</th>
             </tr>
           </thead>
           <tbody>
             {isLoading ? (
               <tr>
-                <td colSpan={3} style={{ padding: '2rem', textAlign: 'center', color: '#94A3B8' }}>Loading backups...</td>
+                <td colSpan={3} style={{ padding: '2rem', textAlign: 'center', color: '#FFFFFF' }}>Loading backups...</td>
               </tr>
             ) : backups.length === 0 ? (
               <tr>
-                <td colSpan={3} style={{ padding: '2rem', textAlign: 'center', color: '#64748B' }}>No backups found. Create one to get started.</td>
+                <td colSpan={3} style={{ padding: '2rem', textAlign: 'center', color: '#FFFFFF' }}>No backups found. Create one to get started.</td>
               </tr>
             ) : (
               backups.map((b) => (
                 <tr key={b.pathname} style={{ borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
                   <td style={{ padding: '0.85rem 1rem' }}>
-                    <div style={{ fontWeight: 600, color: '#E2E8F0' }}>{new Date(b.uploadedAt).toLocaleString()}</div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748B', fontFamily: 'var(--font-mono, monospace)', marginTop: '0.2rem' }}>{b.pathname.split('/').pop()}</div>
+                    <div style={{ fontWeight: 600, color: '#FFFFFF' }}>{new Date(b.uploadedAt).toLocaleString()}</div>
+                    <div style={{ fontSize: '0.75rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', marginTop: '0.2rem' }}>{b.pathname.split('/').pop()}</div>
                   </td>
-                  <td style={{ padding: '0.85rem 1rem', color: '#CBD5E1', fontSize: '0.85rem' }}>
+                  <td style={{ padding: '0.85rem 1rem', color: '#FFFFFF', fontSize: '0.85rem' }}>
                     {formatSize(b.size)}
                   </td>
                   <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}>
@@ -266,7 +266,7 @@ export default function BackupClient() {
                         style={{
                           backgroundColor: 'rgba(56, 189, 248, 0.1)',
                           border: '1px solid rgba(56, 189, 248, 0.25)',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           padding: '0.35rem 0.65rem',
                           borderRadius: '4px',
                           fontSize: '0.75rem',
@@ -298,7 +298,7 @@ export default function BackupClient() {
                         style={{
                           backgroundColor: 'transparent',
                           border: 'none',
-                          color: '#64748B',
+                          color: '#FFFFFF',
                           padding: '0.35rem 0.5rem',
                           fontSize: '0.75rem',
                           fontFamily: 'var(--font-mono, monospace)',

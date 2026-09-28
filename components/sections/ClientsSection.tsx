@@ -190,7 +190,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           border-bottom: 1px solid rgba(20, 184, 166, 0.14);
           position: relative;
           overflow: hidden;
-          color: #F0FDFA;
+          color: #FFFFFF;
         }
 
         /* ─── Header ─── */
@@ -204,7 +204,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           font-size: 0.72rem;
           letter-spacing: 0.25em;
           text-transform: uppercase;
-          color: #0F766E;
+          color: #FFFFFF;
           margin-bottom: 0.5rem;
           font-weight: 600;
         }
@@ -213,13 +213,13 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           font-weight: 700;
           line-height: 1.15;
           letter-spacing: -0.03em;
-          color: #F0FDFA;
+          color: #FFFFFF;
           margin: 0 0 0.65rem 0;
           text-transform: uppercase;
         }
         .clients-marquee-subtitle {
           font-size: clamp(0.88rem, 1.2vw, 1.05rem);
-          color: #A7C7C5;
+          color: #FFFFFF;
           max-width: 620px;
           margin: 0 auto;
           line-height: 1.6;
@@ -324,7 +324,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         .marquee-placeholder {
           font-family: var(--font-mono, monospace);
           font-size: 0.76rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           display: flex;
           align-items: center;
           gap: 0.45rem;
@@ -359,13 +359,13 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         .marquee-tooltip-name {
           font-size: 0.72rem;
           font-weight: 600;
-          color: #F0FDFA;
+          color: #FFFFFF;
         }
 
         .marquee-tooltip-ind {
           font-family: var(--font-mono, monospace);
           font-size: 0.6rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           text-transform: uppercase;
         }
 

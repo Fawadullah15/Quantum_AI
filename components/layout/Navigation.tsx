@@ -84,11 +84,11 @@ function DropdownMenu({ items, visible }: { items: DropdownItem[]; visible: bool
                 (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
               }}
             >
-              <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#F0FDFA', marginBottom: item.desc ? '0.2rem' : 0 }}>
+              <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#FFFFFF', marginBottom: item.desc ? '0.2rem' : 0 }}>
                 {item.label}
               </div>
               {item.desc && (
-                <div style={{ fontSize: '0.75rem', color: '#6F8F8D', lineHeight: 1.4 }}>{item.desc}</div>
+                <div style={{ fontSize: '0.75rem', color: '#FFFFFF', lineHeight: 1.4 }}>{item.desc}</div>
               )}
             </Link>
           ))}
@@ -243,7 +243,7 @@ export default function Navigation({
                 fontWeight: 700,
                 fontSize: '0.92rem',
                 letterSpacing: '0.12em',
-                color: '#F0FDFA',
+                color: '#FFFFFF',
                 textTransform: 'uppercase',
               }}>
                 {companyName || 'QUANTUM AI'}
@@ -279,7 +279,7 @@ export default function Navigation({
                       fontWeight: 400,
                       letterSpacing: '0.1em',
                       textTransform: 'uppercase',
-                      color: isActive(item.href) ? '#F0FDFA' : '#A7C7C5',
+                      color: isActive(item.href) ? '#FFFFFF' : '#FFFFFF',
                       textDecoration: 'none',
                       transition: 'color 0.2s',
                       whiteSpace: 'nowrap',
@@ -338,7 +338,7 @@ export default function Navigation({
                   fontWeight: 600,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: '#F0FDFA',
+                  color: '#FFFFFF',
                   textDecoration: 'none',
                   borderRadius: 999,
                   border: '1px solid rgba(20, 184, 166, 0.4)',
@@ -371,7 +371,7 @@ export default function Navigation({
                   fontWeight: 600,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
-                  color: '#F0FDFA',
+                  color: '#FFFFFF',
                   textDecoration: 'none',
                   borderRadius: 999,
                   border: '1px solid rgba(20, 184, 166, 0.5)',
@@ -401,7 +401,7 @@ export default function Navigation({
                   display: 'none',
                   background: 'transparent',
                   border: 'none',
-                  color: '#F0FDFA',
+                  color: '#FFFFFF',
                   cursor: 'pointer',
                   padding: '0.5rem',
                   borderRadius: 8,
@@ -465,14 +465,14 @@ export default function Navigation({
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <Link href="/" onClick={() => setMobileOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
                   <QuantumLogo width={42} height={42} style={{ filter: 'drop-shadow(0 0 10px rgba(20, 184, 166, 0.45))' }} />
-                  <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '0.12em', color: '#F0FDFA', textTransform: 'uppercase' }}>
+                  <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '0.12em', color: '#FFFFFF', textTransform: 'uppercase' }}>
                     QUANTUM AI
                   </span>
                 </Link>
                 <button
                   onClick={() => setMobileOpen(false)}
                   aria-label="Close menu"
-                  style={{ background: 'transparent', border: 'none', color: '#A7C7C5', cursor: 'pointer', padding: '0.5rem', borderRadius: 8 }}
+                  style={{ background: 'transparent', border: 'none', color: '#FFFFFF', cursor: 'pointer', padding: '0.5rem', borderRadius: 8 }}
                 >
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M18 6L6 18M6 6l12 12" />
@@ -502,7 +502,7 @@ export default function Navigation({
                         border: 'none',
                         padding: '1.125rem 0',
                         cursor: 'pointer',
-                        color: '#F0FDFA',
+                        color: '#FFFFFF',
                         fontSize: '1.05rem',
                         fontFamily: 'var(--font-sans)',
                         fontWeight: 600,
@@ -520,7 +520,7 @@ export default function Navigation({
                         <motion.div
                           animate={{ rotate: mobileAccordion === item.href ? 180 : 0 }}
                           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                          style={{ color: '#0F766E', flexShrink: 0, marginLeft: '0.5rem' }}
+                          style={{ color: '#FFFFFF', flexShrink: 0, marginLeft: '0.5rem' }}
                         >
                           <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
                             <path d="M1 1l7 7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -545,9 +545,9 @@ export default function Navigation({
                                 key={drop.href}
                                 href={drop.href}
                                 onClick={() => setMobileOpen(false)}
-                                style={{ color: '#A7C7C5', textDecoration: 'none', fontSize: '1rem', padding: '0.5rem 0.75rem', borderRadius: 8, transition: 'color 0.15s' }}
-                                onMouseEnter={(e) => (e.currentTarget.style.color = '#F0FDFA')}
-                                onMouseLeave={(e) => (e.currentTarget.style.color = '#A7C7C5')}
+                                style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '1rem', padding: '0.5rem 0.75rem', borderRadius: 8, transition: 'color 0.15s' }}
+                                onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+                                onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}
                               >
                                 {drop.label}
                               </Link>
@@ -571,7 +571,7 @@ export default function Navigation({
                     padding: '0.7rem',
                     backgroundColor: 'rgba(20, 184, 166, 0.1)',
                     border: '1px solid rgba(20, 184, 166, 0.35)',
-                    color: '#14B8A6',
+                    color: '#FFFFFF',
                     borderRadius: 10,
                     textDecoration: 'none',
                     fontWeight: 600,

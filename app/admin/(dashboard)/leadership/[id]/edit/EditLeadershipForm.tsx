@@ -138,7 +138,7 @@ export default function EditLeadershipForm({ member }: { member: Member }) {
     border: "1px solid #374151",
     borderRadius: "6px",
     padding: "0.625rem 0.875rem",
-    color: "#F8FAFC",
+    color: "#FFFFFF",
     fontSize: "0.9rem",
     boxSizing: "border-box",
   };
@@ -153,7 +153,7 @@ export default function EditLeadershipForm({ member }: { member: Member }) {
   const grp: React.CSSProperties = { marginBottom: "1.25rem" };
 
   return (
-    <div style={{ padding: "2rem", color: "#F8FAFC", fontFamily: "system-ui", maxWidth: 800 }}>
+    <div style={{ padding: "2rem", color: "#FFFFFF", fontFamily: "system-ui", maxWidth: 800 }}>
       <div style={{ marginBottom: "2rem" }}>
         <h1 style={{ fontSize: "1.5rem", fontWeight: 700, margin: 0 }}>Edit: {member.name}</h1>
         <p style={{ color: "#6B7280", fontSize: "0.875rem", marginTop: "0.25rem" }}>{member.publicId}</p>
@@ -210,7 +210,7 @@ export default function EditLeadershipForm({ member }: { member: Member }) {
         {/* Custom Role Field (revealed dynamically) */}
         {selectedRole === "CUSTOM" && (
           <div style={{ ...grp, backgroundColor: "#0F172A", padding: "16px", borderRadius: "8px", border: "1px solid #1677FF" }}>
-            <label style={{ ...lbl, color: "#38BDF8" }}>
+            <label style={{ ...lbl, color: '#FFFFFF' }}>
               Custom Role Name * (e.g. Director of Strategic Partnerships / Chief AI Officer)
             </label>
             <input

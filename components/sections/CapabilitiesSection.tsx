@@ -85,7 +85,7 @@ export default function CapabilitiesSection() {
         }
 
         .tech-tab-card:focus-visible {
-          border-color: #14B8A6;
+          border-color: #FFFFFF;
           box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
         }
 
@@ -115,7 +115,7 @@ export default function CapabilitiesSection() {
         .tech-card-num {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           font-weight: 600;
           letter-spacing: 0.1em;
           flex-shrink: 0;
@@ -127,7 +127,7 @@ export default function CapabilitiesSection() {
         .tech-card-title {
           font-size: clamp(1rem, 1.8vw, 1.15rem);
           font-weight: 600;
-          color: #F0FDFA;
+          color: #FFFFFF;
           letter-spacing: 0.02em;
           margin: 0;
           text-transform: uppercase;
@@ -139,7 +139,7 @@ export default function CapabilitiesSection() {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #6F8F8D;
+          color: #FFFFFF;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -151,7 +151,7 @@ export default function CapabilitiesSection() {
         }
 
         .tech-tab-card.is-expanded .tech-card-indicator {
-          color: #14B8A6;
+          color: #FFFFFF;
         }
 
         /* ─── Smooth Expandable Content ─── */
@@ -179,7 +179,7 @@ export default function CapabilitiesSection() {
         }
 
         .tech-card-desc {
-          color: #A7C7C5;
+          color: #FFFFFF;
           font-size: 0.875rem;
           line-height: 1.55;
           margin: 0;
@@ -200,7 +200,7 @@ export default function CapabilitiesSection() {
           background-color: rgba(20, 184, 166, 0.08);
           border: 1px solid rgba(20, 184, 166, 0.18);
           border-radius: 4px;
-          color: #67E8F9;
+          color: #FFFFFF;
           white-space: nowrap;
         }
 
@@ -239,7 +239,7 @@ export default function CapabilitiesSection() {
           .mobile-tech-num {
             font-family: var(--font-mono, monospace);
             font-size: 0.62rem;
-            color: #14B8A6;
+            color: #FFFFFF;
             font-weight: 600;
             letter-spacing: 0.1em;
             margin-bottom: 0.25rem;
@@ -249,7 +249,7 @@ export default function CapabilitiesSection() {
           .mobile-tech-title {
             font-size: 0.8rem;
             font-weight: 600;
-            color: #F0FDFA;
+            color: #FFFFFF;
             letter-spacing: 0.02em;
             margin: 0;
             text-transform: uppercase;
@@ -293,7 +293,7 @@ export default function CapabilitiesSection() {
                 fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: '#0F766E',
+                color: '#FFFFFF',
                 marginBottom: '0.5rem',
                 fontWeight: 600,
               }}
@@ -306,7 +306,7 @@ export default function CapabilitiesSection() {
                 fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
                 fontWeight: 700,
                 lineHeight: 1.02,
-                color: '#F0FDFA',
+                color: '#FFFFFF',
                 marginBottom: '0.65rem',
                 letterSpacing: '-0.035em',
                 textTransform: 'uppercase',
@@ -318,7 +318,7 @@ export default function CapabilitiesSection() {
               className="section-desc"
               style={{
                 fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-                color: '#A7C7C5',
+                color: '#FFFFFF',
                 lineHeight: 1.6,
                 margin: 0,
                 maxWidth: 580,
@@ -332,7 +332,7 @@ export default function CapabilitiesSection() {
           <Link
             href="/technology"
             style={{
-              color: '#14B8A6',
+              color: '#FFFFFF',
               textDecoration: 'none',
               fontSize: '0.75rem',
               fontWeight: 600,

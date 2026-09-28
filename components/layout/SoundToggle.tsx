@@ -96,7 +96,7 @@ export function SoundToggle() {
           font-family: var(--font-sans, sans-serif);
           font-size: 0.84rem;
           font-weight: 600;
-          color: #F0FDFA;
+          color: #FFFFFF;
           letter-spacing: -0.01em;
           line-height: 1.2;
         }
@@ -104,7 +104,7 @@ export function SoundToggle() {
         .qa-sound-prompt-close {
           background: transparent;
           border: none;
-          color: #6F8F8D;
+          color: #FFFFFF;
           width: 22px;
           height: 22px;
           border-radius: 4px;
@@ -118,7 +118,7 @@ export function SoundToggle() {
         }
 
         .qa-sound-prompt-close:hover {
-          color: #F0FDFA;
+          color: #FFFFFF;
           background: rgba(255, 255, 255, 0.08);
         }
 
@@ -130,7 +130,7 @@ export function SoundToggle() {
         .qa-sound-prompt-desc {
           font-family: var(--font-sans, sans-serif);
           font-size: 0.77rem;
-          color: #A7C7C5;
+          color: #FFFFFF;
           line-height: 1.45;
           margin: 0 0 11px 0;
           font-weight: 400;
@@ -165,7 +165,7 @@ export function SoundToggle() {
 
         .qa-sound-prompt-btn:hover {
           background: linear-gradient(135deg, #2563EB, #1D4ED8);
-          border-color: #14B8A6;
+          border-color: #FFFFFF;
           box-shadow: 0 4px 16px rgba(20, 184, 166, 0.5);
         }
 
@@ -194,7 +194,7 @@ export function SoundToggle() {
           padding: 0;
           margin: 0;
           border: 1px solid rgba(15, 118, 110, 0.4);
-          color: #A7C7C5;
+          color: #FFFFFF;
           box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
           transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1),
                       box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1),
@@ -207,24 +207,24 @@ export function SoundToggle() {
         }
         .qa-sound-btn--active {
           border-color: rgba(20, 184, 166, 0.35);
-          color: #14B8A6;
+          color: #FFFFFF;
           box-shadow: 0 0 16px rgba(20, 184, 166, 0.12), 0 4px 16px -2px rgba(0, 0, 0, 0.6);
         }
         .qa-sound-btn--silent {
           border-color: rgba(15, 118, 110, 0.4);
-          color: #A7C7C5;
+          color: #FFFFFF;
           box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
         }
         @media (hover: hover) and (pointer: fine) {
           .qa-sound-btn--active:hover {
             border-color: rgba(20, 184, 166, 0.6);
-            color: #67E8F9;
+            color: #FFFFFF;
             background: rgba(7, 21, 47, 0.92);
             box-shadow: 0 0 20px rgba(20, 184, 166, 0.22), 0 4px 20px -2px rgba(0, 0, 0, 0.7);
           }
           .qa-sound-btn--silent:hover {
             border-color: rgba(20, 184, 166, 0.35);
-            color: #F0FDFA;
+            color: #FFFFFF;
             background: rgba(7, 21, 47, 0.9);
             box-shadow: 0 0 12px rgba(20, 184, 166, 0.1), 0 4px 16px -2px rgba(0, 0, 0, 0.6);
           }

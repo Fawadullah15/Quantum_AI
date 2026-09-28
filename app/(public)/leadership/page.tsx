@@ -142,7 +142,7 @@ export default async function LeadershipPage() {
           min-height: 100vh;
           background: var(--color-void, #030712);
           position: relative;
-          color: #F8FAFC;
+          color: #FFFFFF;
         }
         .ldr-container {
           max-width: 1160px;
@@ -161,7 +161,7 @@ export default async function LeadershipPage() {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.25em;
-          color: #1677FF;
+          color: #FFFFFF;
           text-transform: uppercase;
           margin-bottom: 0.65rem;
           font-weight: 600;
@@ -171,14 +171,14 @@ export default async function LeadershipPage() {
           font-weight: 700;
           line-height: 1.02;
           letter-spacing: -0.035em;
-          color: #F8FAFC;
+          color: #FFFFFF;
           text-transform: uppercase;
           margin: 0 0 1rem 0;
           max-width: 900px;
         }
         .ldr-lead {
           font-size: clamp(0.9rem, 1.1vw, 1.05rem);
-          color: #94A3B8;
+          color: #FFFFFF;
           max-width: 680px;
           line-height: 1.65;
           margin: 0;
@@ -192,7 +192,7 @@ export default async function LeadershipPage() {
         .ldr-section-tag {
           font-family: var(--font-mono, monospace);
           font-size: 0.68rem;
-          color: #1677FF;
+          color: #FFFFFF;
           letter-spacing: 0.2em;
           text-transform: uppercase;
           margin-bottom: 0.35rem;
@@ -202,13 +202,13 @@ export default async function LeadershipPage() {
           font-size: clamp(1.75rem, 3vw, 2.5rem);
           font-weight: 700;
           letter-spacing: -0.025em;
-          color: #F8FAFC;
+          color: #FFFFFF;
           text-transform: uppercase;
           margin: 0 0 0.5rem 0;
         }
         .ldr-section-intro {
           font-size: clamp(0.88rem, 1.25vw, 0.98rem);
-          color: #94A3B8;
+          color: #FFFFFF;
           max-width: 640px;
           line-height: 1.6;
           margin: 0;
@@ -264,7 +264,7 @@ export default async function LeadershipPage() {
           opacity: 1;
         }
         .exec-card:focus-visible {
-          border-color: #38BDF8;
+          border-color: #FFFFFF;
           box-shadow: 0 0 0 1px #38BDF8;
         }
 
@@ -331,7 +331,7 @@ export default async function LeadershipPage() {
           font-family: var(--font-mono, monospace);
           font-size: 0.62rem;
           letter-spacing: 0.15em;
-          color: #38BDF8;
+          color: #FFFFFF;
           background: rgba(3, 7, 18, 0.75);
           backdrop-filter: blur(8px);
           border: 1px solid rgba(56, 189, 248, 0.3);
@@ -353,7 +353,7 @@ export default async function LeadershipPage() {
         .exec-name {
           font-size: clamp(1.2rem, 2.2vw, 1.45rem);
           font-weight: 600;
-          color: #F8FAFC;
+          color: #FFFFFF;
           letter-spacing: -0.015em;
           margin: 0;
           line-height: 1.25;
@@ -361,7 +361,7 @@ export default async function LeadershipPage() {
         .exec-position {
           font-family: var(--font-mono, monospace);
           font-size: 0.68rem;
-          color: #38BDF8;
+          color: #FFFFFF;
           letter-spacing: 0.12em;
           text-transform: uppercase;
           font-weight: 600;
@@ -369,7 +369,7 @@ export default async function LeadershipPage() {
         }
         .exec-bio {
           font-size: 0.86rem;
-          color: #94A3B8;
+          color: #FFFFFF;
           line-height: 1.6;
           margin: 0;
           font-weight: 300;
@@ -393,16 +393,16 @@ export default async function LeadershipPage() {
           align-items: center;
           gap: 0.35rem;
           font-size: 0.72rem;
-          color: #64748B;
+          color: #FFFFFF;
           text-decoration: none;
           transition: color 0.2s;
         }
         .exec-social-link:hover {
-          color: #38BDF8;
+          color: #FFFFFF;
         }
         .exec-action-text {
           font-size: 0.72rem;
-          color: #1677FF;
+          color: #FFFFFF;
           font-weight: 600;
           letter-spacing: 0.08em;
           text-transform: uppercase;
@@ -413,7 +413,7 @@ export default async function LeadershipPage() {
           margin-left: auto;
         }
         .exec-card:hover .exec-action-text {
-          color: #38BDF8;
+          color: #FFFFFF;
           transform: translateX(3px);
         }
 
@@ -441,12 +441,12 @@ export default async function LeadershipPage() {
           font-weight: 700;
           letter-spacing: -0.025em;
           line-height: 1.3;
-          color: #F8FAFC;
+          color: #FFFFFF;
           margin: 0 0 1rem 0;
         }
         .ldr-philosophy-desc {
           font-size: 0.95rem;
-          color: #94A3B8;
+          color: #FFFFFF;
           line-height: 1.7;
           max-width: 800px;
           margin: 0;
@@ -462,7 +462,7 @@ export default async function LeadershipPage() {
         .ldr-cta-btn {
           display: inline-block;
           padding: 0.85rem 2rem;
-          background-color: #1677FF;
+          background-color: #FFFFFF;
           color: #fff;
           border-radius: 6px;
           text-decoration: none;
@@ -473,7 +473,7 @@ export default async function LeadershipPage() {
           transition: background-color 0.2s, transform 0.2s;
         }
         .ldr-cta-btn:hover {
-          background-color: #2563EB;
+          background-color: #FFFFFF;
           transform: translateY(-1px);
         }
         .ldr-cta-btn:focus-visible {
@@ -705,7 +705,7 @@ export default async function LeadershipPage() {
                       </a>
                     )}
                     {!leader.linkedin && !leader.github && (
-                      <span style={{ fontSize: "0.68rem", color: "#64748B" }}>QUANTUM AI</span>
+                      <span style={{ fontSize: "0.68rem", color: "#FFFFFF" }}>QUANTUM AI</span>
                     )}
                   </div>
                   <Link href={`/leadership/${leader.slug}`} className="exec-action-text">
@@ -794,7 +794,7 @@ export default async function LeadershipPage() {
                         </a>
                       )}
                       {!member.linkedin && !member.github && (
-                        <span style={{ fontSize: "0.68rem", color: "#64748B" }}>QUANTUM AI</span>
+                        <span style={{ fontSize: "0.68rem", color: "#FFFFFF" }}>QUANTUM AI</span>
                       )}
                     </div>
                     <Link href={`/leadership/${member.slug}`} className="exec-action-text">
@@ -809,7 +809,7 @@ export default async function LeadershipPage() {
 
         {/* ─── 4. LEADERSHIP PHILOSOPHY ─── */}
         <section className="ldr-philosophy-box">
-          <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#38BDF8", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem", fontWeight: 600 }}>
+          <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: '#FFFFFF', letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem", fontWeight: 600 }}>
             CORE PRINCIPLE
           </div>
           <h2 className="ldr-philosophy-quote">
@@ -822,13 +822,13 @@ export default async function LeadershipPage() {
 
         {/* ─── 5. FINAL CALL TO ACTION ─── */}
         <section className="ldr-bottom-cta">
-          <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#1677FF", letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem", fontWeight: 600 }}>
+          <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: '#FFFFFF', letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem", fontWeight: 600 }}>
             COLLABORATION & INQUIRIES
           </div>
-          <h2 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", color: "#F8FAFC", fontWeight: 700, textTransform: "uppercase", margin: "0 0 0.5rem 0", letterSpacing: "-0.02em" }}>
+          <h2 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", color: "#FFFFFF", fontWeight: 700, textTransform: "uppercase", margin: "0 0 0.5rem 0", letterSpacing: "-0.02em" }}>
             LET&apos;S BUILD WHAT&apos;S NEXT.
           </h2>
-          <p style={{ color: "#94A3B8", marginBottom: "1.75rem", maxWidth: 520, margin: "0 auto 1.75rem", fontSize: "0.92rem", lineHeight: 1.6, fontWeight: 300 }}>
+          <p style={{ color: "#FFFFFF", marginBottom: "1.75rem", maxWidth: 520, margin: "0 auto 1.75rem", fontSize: "0.92rem", lineHeight: 1.6, fontWeight: 300 }}>
             Have an idea, a challenge, or a system that needs intelligent technology? Connect directly with our leadership and engineering team.
           </p>
           <Link href="/contact" className="ldr-cta-btn">

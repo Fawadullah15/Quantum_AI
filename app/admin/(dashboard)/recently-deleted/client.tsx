@@ -53,10 +53,10 @@ const TYPE_BADGES: Record<string, { label: string; color: string; bg: string; bo
   SERVICE: { label: 'Service', color: '#10B981', bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.3)' },
   TECHNOLOGY: { label: 'Technology', color: '#6366F1', bg: 'rgba(99, 102, 241, 0.12)', border: 'rgba(99, 102, 241, 0.3)' },
   BLOG_POST: { label: 'Blog Article', color: '#F43F5E', bg: 'rgba(244, 63, 94, 0.12)', border: 'rgba(244, 63, 94, 0.3)' },
-  CLIENT: { label: 'Client', color: '#14B8A6', bg: 'rgba(20, 184, 166, 0.12)', border: 'rgba(20, 184, 166, 0.3)' },
+  CLIENT: { label: 'Client', color: '#FFFFFF', bg: 'rgba(20, 184, 166, 0.12)', border: 'rgba(20, 184, 166, 0.3)' },
   CAREER_APPLICATION: { label: 'Career App', color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.3)' },
   PARTNERSHIP_REQUEST: { label: 'Partnership', color: '#10B981', bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.3)' },
-  CAREER_POSITION: { label: 'Job Opening', color: '#38BDF8', bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.3)' },
+  CAREER_POSITION: { label: 'Job Opening', color: '#FFFFFF', bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.3)' },
   CONTACT_SUBMISSION: { label: 'Contact Msg', color: '#0284C7', bg: 'rgba(2, 132, 199, 0.12)', border: 'rgba(2, 132, 199, 0.3)' },
   MEDIA: { label: 'Media Asset', color: '#EC4899', bg: 'rgba(236, 72, 153, 0.12)', border: 'rgba(236, 72, 153, 0.3)' },
   NOTIFICATION: { label: 'Notification', color: '#F97316', bg: 'rgba(249, 115, 22, 0.12)', border: 'rgba(249, 115, 22, 0.3)' },
@@ -326,7 +326,7 @@ export default function RecentlyDeletedClient({
   };
 
   return (
-    <div style={{ color: '#F8FAFC', width: '100%', boxSizing: 'border-box' }}>
+    <div style={{ color: '#FFFFFF', width: '100%', boxSizing: 'border-box' }}>
       {/* Top Stat Cards */}
       <div
         style={{
@@ -337,13 +337,13 @@ export default function RecentlyDeletedClient({
         }}
       >
         <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.65)', border: '1px solid rgba(22, 119, 255, 0.2)', borderRadius: '12px', padding: '1.15rem 1.25rem' }}>
-          <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#64748B', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
             TOTAL IN BIN
           </div>
-          <div style={{ fontSize: '1.85rem', fontWeight: 700, color: '#F8FAFC', marginTop: '0.25rem' }}>
+          <div style={{ fontSize: '1.85rem', fontWeight: 700, color: '#FFFFFF', marginTop: '0.25rem' }}>
             {stats.total}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#FFFFFF', marginTop: '0.2rem' }}>
             Recoverable records
           </div>
         </div>
@@ -352,10 +352,10 @@ export default function RecentlyDeletedClient({
           <div style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', color: '#06B6D4', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
             RECOVERY STATUS
           </div>
-          <div style={{ fontSize: '1.85rem', fontWeight: 700, color: '#38BDF8', marginTop: '0.25rem' }}>
+          <div style={{ fontSize: '1.85rem', fontWeight: 700, color: '#FFFFFF', marginTop: '0.25rem' }}>
             100%
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#FFFFFF', marginTop: '0.2rem' }}>
             Zero data destroyed
           </div>
         </div>
@@ -367,7 +367,7 @@ export default function RecentlyDeletedClient({
           <div style={{ fontSize: '1.85rem', fontWeight: 700, color: '#F472B6', marginTop: '0.25rem' }}>
             {stats.mediaOnHold}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#FFFFFF', marginTop: '0.2rem' }}>
             Storage blobs safely preserved
           </div>
         </div>
@@ -379,7 +379,7 @@ export default function RecentlyDeletedClient({
           <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#C084FC', marginTop: '0.65rem' }}>
             {stats.newestDeletedAt ? formatRelativeTime(stats.newestDeletedAt) : 'None'}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#FFFFFF', marginTop: '0.2rem' }}>
             Automatic audit tracked
           </div>
         </div>
@@ -412,7 +412,7 @@ export default function RecentlyDeletedClient({
                 border: '1px solid rgba(22, 119, 255, 0.25)',
                 borderRadius: '8px',
                 padding: '0.55rem 0.85rem',
-                color: '#F8FAFC',
+                color: '#FFFFFF',
                 fontSize: '0.82rem',
                 outline: 'none',
                 fontFamily: 'var(--font-mono, monospace)',
@@ -424,7 +424,7 @@ export default function RecentlyDeletedClient({
               style={{
                 backgroundColor: 'rgba(22, 119, 255, 0.15)',
                 border: '1px solid rgba(22, 119, 255, 0.35)',
-                color: '#38BDF8',
+                color: '#FFFFFF',
                 borderRadius: '8px',
                 padding: '0.55rem 0.95rem',
                 fontSize: '0.8rem',
@@ -450,7 +450,7 @@ export default function RecentlyDeletedClient({
                 border: '1px solid rgba(22, 119, 255, 0.25)',
                 borderRadius: '8px',
                 padding: '0.55rem 0.85rem',
-                color: '#94A3B8',
+                color: '#FFFFFF',
                 fontSize: '0.8rem',
                 cursor: 'pointer',
                 fontFamily: 'var(--font-mono, monospace)',
@@ -474,7 +474,7 @@ export default function RecentlyDeletedClient({
                 border: '1px solid rgba(22, 119, 255, 0.25)',
                 borderRadius: '8px',
                 padding: '0.55rem 0.85rem',
-                color: '#94A3B8',
+                color: '#FFFFFF',
                 fontSize: '0.8rem',
                 cursor: 'pointer',
                 fontFamily: 'var(--font-mono, monospace)',
@@ -541,7 +541,7 @@ export default function RecentlyDeletedClient({
               style={{
                 backgroundColor: 'transparent',
                 border: '1px solid rgba(148, 163, 184, 0.25)',
-                color: '#94A3B8',
+                color: '#FFFFFF',
                 borderRadius: '8px',
                 padding: '0.55rem 0.75rem',
                 fontSize: '0.8rem',
@@ -571,7 +571,7 @@ export default function RecentlyDeletedClient({
                   borderRadius: '9999px',
                   border: isActive ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.15)',
                   backgroundColor: isActive ? 'rgba(22, 119, 255, 0.22)' : 'rgba(3, 7, 18, 0.5)',
-                  color: isActive ? '#FFFFFF' : '#94A3B8',
+                  color: isActive ? '#FFFFFF' : '#FFFFFF',
                   fontSize: '0.76rem',
                   fontWeight: isActive ? 600 : 400,
                   cursor: 'pointer',
@@ -583,7 +583,7 @@ export default function RecentlyDeletedClient({
                 <span
                   style={{
                     backgroundColor: isActive ? '#1677FF' : 'rgba(148, 163, 184, 0.15)',
-                    color: isActive ? '#FFFFFF' : '#CBD5E1',
+                    color: isActive ? '#FFFFFF' : '#FFFFFF',
                     padding: '0.05rem 0.45rem',
                     borderRadius: '9999px',
                     fontSize: '0.68rem',
@@ -615,13 +615,13 @@ export default function RecentlyDeletedClient({
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-            <span style={{ fontSize: '0.84rem', fontWeight: 600, color: '#38BDF8' }}>
+            <span style={{ fontSize: '0.84rem', fontWeight: 600, color: '#FFFFFF' }}>
               {selectedIds.size} item{selectedIds.size > 1 ? 's' : ''} selected
             </span>
             <button
               type="button"
               onClick={() => setSelectedIds(new Set())}
-              style={{ background: 'transparent', border: 'none', color: '#94A3B8', fontSize: '0.76rem', textDecoration: 'underline', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '0.76rem', textDecoration: 'underline', cursor: 'pointer' }}
             >
               Deselect All
             </button>
@@ -681,10 +681,10 @@ export default function RecentlyDeletedClient({
           }}
         >
           <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🛡️</div>
-          <h3 style={{ fontSize: '1.2rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 0.4rem 0' }}>
+          <h3 style={{ fontSize: '1.2rem', fontWeight: 600, color: '#FFFFFF', margin: '0 0 0.4rem 0' }}>
             Recently Deleted is Empty
           </h3>
-          <p style={{ color: '#94A3B8', fontSize: '0.85rem', maxWidth: '420px', margin: '0 auto' }}>
+          <p style={{ color: '#FFFFFF', fontSize: '0.85rem', maxWidth: '420px', margin: '0 auto' }}>
             All website content, projects, products, media assets, and team records are currently active and operational.
           </p>
         </div>
@@ -707,7 +707,7 @@ export default function RecentlyDeletedClient({
               borderBottom: '1px solid rgba(22, 119, 255, 0.15)',
               fontSize: '0.72rem',
               fontWeight: 700,
-              color: '#64748B',
+              color: '#FFFFFF',
               textTransform: 'uppercase',
               letterSpacing: '0.08em',
               fontFamily: 'var(--font-mono, monospace)',
@@ -734,7 +734,7 @@ export default function RecentlyDeletedClient({
             {items.map((item) => {
               const badge = TYPE_BADGES[item.entityType] || {
                 label: item.entityType,
-                color: '#94A3B8',
+                color: '#FFFFFF',
                 bg: 'rgba(148, 163, 184, 0.1)',
                 border: 'rgba(148, 163, 184, 0.2)',
               };
@@ -769,7 +769,7 @@ export default function RecentlyDeletedClient({
                       style={{
                         fontWeight: 600,
                         fontSize: '0.88rem',
-                        color: '#F8FAFC',
+                        color: '#FFFFFF',
                         cursor: 'pointer',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
@@ -783,7 +783,7 @@ export default function RecentlyDeletedClient({
                       <div
                         style={{
                           fontSize: '0.74rem',
-                          color: '#64748B',
+                          color: '#FFFFFF',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis',
@@ -813,16 +813,16 @@ export default function RecentlyDeletedClient({
                     >
                       {badge.label}
                     </span>
-                    <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+                    <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.2rem' }}>
                       {item.originalSection}
                     </div>
                   </div>
 
                   {/* Deleted By */}
-                  <div style={{ fontSize: '0.78rem', color: '#CBD5E1' }}>
+                  <div style={{ fontSize: '0.78rem', color: '#FFFFFF' }}>
                     <div>{item.adminName || 'Admin'}</div>
                     {item.adminEmail && (
-                      <div style={{ fontSize: '0.7rem', color: '#64748B', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <div style={{ fontSize: '0.7rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                         {item.adminEmail.split('@')[0]}
                       </div>
                     )}
@@ -830,10 +830,10 @@ export default function RecentlyDeletedClient({
 
                   {/* Deleted When */}
                   <div>
-                    <div style={{ fontSize: '0.78rem', color: '#E2E8F0', fontWeight: 500 }}>
+                    <div style={{ fontSize: '0.78rem', color: '#FFFFFF', fontWeight: 500 }}>
                       {formatRelativeTime(item.deletedAt)}
                     </div>
-                    <div style={{ fontSize: '0.68rem', color: '#64748B', fontFamily: 'var(--font-mono, monospace)' }}>
+                    <div style={{ fontSize: '0.68rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                       {new Date(item.deletedAt).toLocaleDateString()}
                     </div>
                   </div>
@@ -848,7 +848,7 @@ export default function RecentlyDeletedClient({
                       style={{
                         backgroundColor: 'rgba(22, 119, 255, 0.15)',
                         border: '1px solid rgba(22, 119, 255, 0.35)',
-                        color: '#38BDF8',
+                        color: '#FFFFFF',
                         padding: '0.35rem 0.75rem',
                         borderRadius: '6px',
                         fontSize: '0.74rem',
@@ -867,7 +867,7 @@ export default function RecentlyDeletedClient({
                       style={{
                         backgroundColor: 'transparent',
                         border: '1px solid rgba(148, 163, 184, 0.25)',
-                        color: '#94A3B8',
+                        color: '#FFFFFF',
                         padding: '0.35rem 0.55rem',
                         borderRadius: '6px',
                         fontSize: '0.74rem',
@@ -940,7 +940,7 @@ export default function RecentlyDeletedClient({
               display: 'flex',
               flexDirection: 'column',
               boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8)',
-              color: '#F8FAFC',
+              color: '#FFFFFF',
               overflow: 'hidden',
             }}
           >
@@ -954,7 +954,7 @@ export default function RecentlyDeletedClient({
               <button
                 type="button"
                 onClick={() => setShowAuditModal(false)}
-                style={{ background: 'transparent', border: 'none', color: '#94A3B8', fontSize: '1.25rem', cursor: 'pointer' }}
+                style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '1.25rem', cursor: 'pointer' }}
               >
                 ✕
               </button>
@@ -962,7 +962,7 @@ export default function RecentlyDeletedClient({
 
             <div style={{ padding: '1.25rem 1.5rem', overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
               {auditLogs.length === 0 ? (
-                <div style={{ textAlign: 'center', color: '#64748B', padding: '2rem' }}>
+                <div style={{ textAlign: 'center', color: '#FFFFFF', padding: '2rem' }}>
                   No recovery or deletion audit events recorded yet.
                 </div>
               ) : (
@@ -1005,13 +1005,13 @@ export default function RecentlyDeletedClient({
                         >
                           {log.action}
                         </span>
-                        <span style={{ fontSize: '0.76rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)' }}>
+                        <span style={{ fontSize: '0.76rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                           {log.entity}
                         </span>
                       </div>
-                      <div style={{ fontSize: '0.82rem', color: '#E2E8F0', marginTop: '0.2rem' }}>
+                      <div style={{ fontSize: '0.82rem', color: '#FFFFFF', marginTop: '0.2rem' }}>
                         {log.entityName ? (
-                          <span style={{ fontWeight: 600, color: '#F8FAFC' }}>{log.entityName} &bull; </span>
+                          <span style={{ fontWeight: 600, color: '#FFFFFF' }}>{log.entityName} &bull; </span>
                         ) : null}
                         {typeof log.details === 'string'
                           ? log.details
@@ -1026,10 +1026,10 @@ export default function RecentlyDeletedClient({
                     </div>
 
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                      <div style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>
                         {log.adminName || 'Admin'}
                       </div>
-                      <div style={{ fontSize: '0.68rem', color: '#64748B', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <div style={{ fontSize: '0.68rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                         {new Date(log.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {new Date(log.createdAt).toLocaleDateString()}
                       </div>
                     </div>

@@ -330,7 +330,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
     backgroundColor: 'rgba(3, 7, 18, 0.8)',
     border: '1px solid rgba(22, 119, 255, 0.25)',
     borderRadius: 4,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: '0.875rem',
     outline: 'none',
     boxSizing: 'border-box',
@@ -342,7 +342,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
     display: 'block',
     fontSize: '0.72rem',
     fontWeight: 600,
-    color: '#94A3B8',
+    color: '#FFFFFF',
     marginBottom: '0.35rem',
     textTransform: 'uppercase',
     letterSpacing: '0.1em',
@@ -350,7 +350,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
   };
 
   return (
-    <div style={{ color: '#F8FAFC', width: '100%' }}>
+    <div style={{ color: '#FFFFFF', width: '100%' }}>
       {!isEditing ? (
         <>
           {/* Top Controls Toolbar */}
@@ -378,7 +378,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                     borderRadius: '8px',
                     padding: '0.6rem 0.95rem',
                     fontSize: '0.85rem',
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     outline: 'none',
                     boxSizing: 'border-box',
                   }}
@@ -395,7 +395,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                     borderRadius: '8px',
                     padding: '0.6rem 0.85rem',
                     fontSize: '0.82rem',
-                    color: '#CBD5E1',
+                    color: '#FFFFFF',
                     outline: 'none',
                     fontFamily: 'var(--font-mono, monospace)',
                   }}
@@ -418,7 +418,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                     style={{
                       backgroundColor: statusFilter === st ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
                       border: statusFilter === st ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
-                      color: statusFilter === st ? '#FFFFFF' : '#94A3B8',
+                      color: statusFilter === st ? '#FFFFFF' : '#FFFFFF',
                       padding: '0.45rem 0.75rem',
                       borderRadius: 6,
                       fontSize: '0.75rem',
@@ -440,7 +440,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                 style={{
                   backgroundColor: 'rgba(22, 119, 255, 0.12)',
                   border: '1px solid rgba(22, 119, 255, 0.25)',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   padding: '0.55rem 1rem',
                   borderRadius: 6,
                   fontSize: '0.82rem',
@@ -524,22 +524,22 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
                   <thead>
                     <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', width: '70px' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', width: '70px' }}>
                         Order
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Member &amp; ID
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Position &amp; Department
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Social / Links
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Live Status
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
                         Actions
                       </th>
                     </tr>
@@ -582,7 +582,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                                 >
                                   ▲
                                 </button>
-                                <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#94A3B8', minWidth: '16px', textAlign: 'center', fontWeight: 600 }}>
+                                <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF', minWidth: '16px', textAlign: 'center', fontWeight: 600 }}>
                                   {orderNumber}
                                 </span>
                                 <button
@@ -627,7 +627,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                                 justifyContent: 'center',
                                 fontSize: '1rem',
                                 fontWeight: 700,
-                                color: '#38BDF8',
+                                color: '#FFFFFF',
                                 flexShrink: 0,
                                 overflow: 'hidden',
                                 position: 'relative',
@@ -648,14 +648,14 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
 
                             <div style={{ minWidth: 0 }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-                                <span style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.92rem' }}>
+                                <span style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.92rem' }}>
                                   {member.name}
                                 </span>
                                 <span
                                   style={{
                                     fontFamily: 'var(--font-mono, monospace)',
                                     fontSize: '0.68rem',
-                                    color: '#38BDF8',
+                                    color: '#FFFFFF',
                                     backgroundColor: 'rgba(22, 119, 255, 0.15)',
                                     padding: '0.1rem 0.35rem',
                                     borderRadius: '3px',
@@ -668,7 +668,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                                 <Link
                                   href={`/leadership/${member.slug}`}
                                   target="_blank"
-                                  style={{ fontSize: '0.72rem', color: '#38BDF8', textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
+                                  style={{ fontSize: '0.72rem', color: '#FFFFFF', textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
                                 >
                                   /leadership/{member.slug} ↗
                                 </Link>
@@ -679,11 +679,11 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
 
                         {/* Position & Department */}
                         <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
-                          <div style={{ fontWeight: 500, color: '#CBD5E1', fontSize: '0.85rem' }}>
+                          <div style={{ fontWeight: 500, color: '#FFFFFF', fontSize: '0.85rem' }}>
                             {member.position}
                           </div>
                           {member.department && (
-                            <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.2rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                            <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.2rem', fontFamily: 'var(--font-mono, monospace)' }}>
                               {member.department}
                             </div>
                           )}
@@ -698,7 +698,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                                 target="_blank"
                                 rel="noreferrer"
                                 title="LinkedIn"
-                                style={{ color: '#38BDF8', fontSize: '0.78rem', textDecoration: 'none', backgroundColor: 'rgba(22, 119, 255, 0.12)', padding: '0.2rem 0.45rem', borderRadius: 4 }}
+                                style={{ color: '#FFFFFF', fontSize: '0.78rem', textDecoration: 'none', backgroundColor: 'rgba(22, 119, 255, 0.12)', padding: '0.2rem 0.45rem', borderRadius: 4 }}
                               >
                                 in ↗
                               </a>
@@ -710,7 +710,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                                 rel="noreferrer"
                                 title="GitHub"
                                 aria-label={`View ${member.name}'s GitHub profile`}
-                                style={{ color: '#F8FAFC', fontSize: '0.78rem', textDecoration: 'none', backgroundColor: 'rgba(255, 255, 255, 0.08)', padding: '0.2rem 0.45rem', borderRadius: 4, display: 'inline-flex', alignItems: 'center' }}
+                                style={{ color: '#FFFFFF', fontSize: '0.78rem', textDecoration: 'none', backgroundColor: 'rgba(255, 255, 255, 0.08)', padding: '0.2rem 0.45rem', borderRadius: 4, display: 'inline-flex', alignItems: 'center' }}
                               >
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
                                   <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
@@ -721,13 +721,13 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                               <a
                                 href={`mailto:${member.email}`}
                                 title={member.email}
-                                style={{ color: '#94A3B8', fontSize: '0.78rem', textDecoration: 'none', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '0.2rem 0.45rem', borderRadius: 4 }}
+                                style={{ color: '#FFFFFF', fontSize: '0.78rem', textDecoration: 'none', backgroundColor: 'rgba(255, 255, 255, 0.05)', padding: '0.2rem 0.45rem', borderRadius: 4 }}
                               >
                                 ✉
                               </a>
                             )}
                             {!member.linkedin && !(member as any).github && !member.email && (
-                              <span style={{ color: '#64748B', fontSize: '0.75rem' }}>—</span>
+                              <span style={{ color: '#FFFFFF', fontSize: '0.75rem' }}>—</span>
                             )}
                           </div>
                         </td>
@@ -740,7 +740,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                             style={{
                               backgroundColor: member.isActive ? 'rgba(16, 185, 129, 0.15)' : 'rgba(100, 116, 139, 0.15)',
                               border: member.isActive ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(100, 116, 139, 0.35)',
-                              color: member.isActive ? '#34D399' : '#94A3B8',
+                              color: member.isActive ? '#34D399' : '#FFFFFF',
                               padding: '0.25rem 0.6rem',
                               borderRadius: '4px',
                               fontSize: '0.72rem',
@@ -757,7 +757,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                                 width: '5px',
                                 height: '5px',
                                 borderRadius: '50%',
-                                backgroundColor: member.isActive ? '#34D399' : '#94A3B8',
+                                backgroundColor: member.isActive ? '#34D399' : '#FFFFFF',
                               }}
                             />
                             {member.isActive ? 'ACTIVE / LIVE' : 'INACTIVE (HIDDEN)'}
@@ -773,7 +773,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                               style={{
                                 backgroundColor: 'rgba(22, 119, 255, 0.15)',
                                 border: '1px solid rgba(22, 119, 255, 0.35)',
-                                color: '#38BDF8',
+                                color: '#FFFFFF',
                                 padding: '0.3rem 0.65rem',
                                 borderRadius: '4px',
                                 fontSize: '0.72rem',
@@ -824,13 +824,13 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', paddingBottom: '0.75rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#F8FAFC' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#FFFFFF' }}>
               {currentId ? `Edit Profile: ${formData.name}` : 'Add Leadership & Team Member'}
             </h2>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              style={{ background: 'transparent', border: 'none', color: '#94A3B8', fontSize: '1.1rem', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '1.1rem', cursor: 'pointer' }}
             >
               ✕
             </button>
@@ -839,7 +839,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {/* Section 1: Identity */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 1. Member Identity &amp; Title
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
@@ -904,7 +904,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
 
             {/* Section 2: Avatar & Media */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 2. Profile Photo &amp; Location
               </div>
 
@@ -934,7 +934,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                         style={{ objectFit: 'cover' }}
                       />
                     ) : (
-                      <span style={{ fontSize: '1.2rem', color: '#64748B' }}>👤</span>
+                      <span style={{ fontSize: '1.2rem', color: '#FFFFFF' }}>👤</span>
                     )}
                   </div>
 
@@ -954,7 +954,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                         style={{
                           backgroundColor: 'rgba(22, 119, 255, 0.15)',
                           border: '1px solid rgba(22, 119, 255, 0.35)',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           padding: '0.4rem 0.75rem',
                           borderRadius: '6px',
                           fontSize: '0.78rem',
@@ -984,7 +984,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
 
             {/* Section 3: Biography */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 3. Biography &amp; Technical Focus
               </div>
 
@@ -1014,7 +1014,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
 
             {/* Section 4: Social Links & Contact */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 4. Social Links &amp; Contact
               </div>
 
@@ -1073,8 +1073,8 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                 checked={formData.isActive}
                 onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
               />
-              <label htmlFor="memberActive" style={{ fontSize: '0.85rem', color: '#CBD5E1', cursor: 'pointer' }}>
-                Active &amp; published on public directory (<span style={{ color: '#38BDF8' }}>/leadership</span> and <span style={{ color: '#38BDF8' }}>/leadership/[slug]</span>)
+              <label htmlFor="memberActive" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
+                Active &amp; published on public directory (<span style={{ color: '#FFFFFF' }}>/leadership</span> and <span style={{ color: '#FFFFFF' }}>/leadership/[slug]</span>)
               </label>
             </div>
 
@@ -1086,7 +1086,7 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   padding: '0.55rem 1.15rem',
                   borderRadius: '6px',
                   fontWeight: 600,

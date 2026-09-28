@@ -73,9 +73,9 @@ export default function AboutPage() {
           z-index: 0;
         }
         .abt-inner { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
-        .abt-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.25em; color: #1677FF; text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 600; }
-        .abt-h1 { font-size: clamp(2.5rem, 5vw, 4.25rem); font-weight: 700; line-height: 1.02; letter-spacing: -0.035em; color: #F8FAFC; text-transform: uppercase; margin-bottom: 0.75rem; }
-        .abt-lead { font-size: clamp(0.95rem, 1.2vw, 1.125rem); color: #94A3B8; max-width: 680px; line-height: 1.65; margin-bottom: 2.5rem; font-weight: 300; }
+        .abt-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.25em; color: #FFFFFF; text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 600; }
+        .abt-h1 { font-size: clamp(2.5rem, 5vw, 4.25rem); font-weight: 700; line-height: 1.02; letter-spacing: -0.035em; color: #FFFFFF; text-transform: uppercase; margin-bottom: 0.75rem; }
+        .abt-lead { font-size: clamp(0.95rem, 1.2vw, 1.125rem); color: #FFFFFF; max-width: 680px; line-height: 1.65; margin-bottom: 2.5rem; font-weight: 300; }
         
         .abt-grid-2 {
           display: grid;
@@ -92,27 +92,27 @@ export default function AboutPage() {
         .abt-card h3 {
           font-size: 1.1rem;
           font-weight: 600;
-          color: #F8FAFC;
+          color: #FFFFFF;
           margin: 0 0 0.5rem 0;
         }
         .abt-card p {
-          color: #94A3B8;
+          color: #FFFFFF;
           font-size: 0.875rem;
           line-height: 1.6;
           margin: 0;
           font-weight: 300;
         }
 
-        .abt-principles-header { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.2em; color: #64748B; text-transform: uppercase; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(30,58,138,0.22); margin-bottom: 0; }
+        .abt-principles-header { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.2em; color: #FFFFFF; text-transform: uppercase; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(30,58,138,0.22); margin-bottom: 0; }
         .principle { padding: 1.75rem 0; border-bottom: 1px solid rgba(30,58,138,0.22); display: grid; grid-template-columns: 60px 1fr 1.2fr; gap: 1.5rem; align-items: start; transition: border-bottom-color 0.3s; cursor: default; }
         .principle:hover { border-bottom-color: rgba(37,99,235,0.38); }
         @media (max-width: 640px) { .principle { grid-template-columns: 44px 1fr; } .principle-body { grid-column: 1 / -1; } }
         .principle-num { font-family: var(--font-mono, monospace); font-size: 0.75rem; color: #334155; letter-spacing: 0.08em; padding-top: 0.25rem; transition: color 0.3s; }
-        .principle:hover .principle-num { color: #38BDF8; }
-        .principle-title { font-size: clamp(1.2rem, 2vw, 1.55rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.025em; color: #F8FAFC; }
+        .principle:hover .principle-num { color: #FFFFFF; }
+        .principle-title { font-size: clamp(1.2rem, 2vw, 1.55rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.025em; color: #FFFFFF; }
         .principle-title span { display: block; }
-        .principle-body { font-size: 0.875rem; color: #94A3B8; line-height: 1.65; max-width: 540px; padding-top: 0.25rem; transition: color 0.3s; font-weight: 300; }
-        .principle:hover .principle-body { color: #CBD5E1; }
+        .principle-body { font-size: 0.875rem; color: #FFFFFF; line-height: 1.65; max-width: 540px; padding-top: 0.25rem; transition: color 0.3s; font-weight: 300; }
+        .principle:hover .principle-body { color: #FFFFFF; }
       `}</style>
       <div className="abt-page">
         <div className="abt-inner">
@@ -126,7 +126,7 @@ export default function AboutPage() {
 
           {/* What We Build Section */}
           <section style={{ marginBottom: '3.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#38BDF8', textTransform: 'uppercase', marginBottom: '0.85rem', fontWeight: 600 }}>
+            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.85rem', fontWeight: 600 }}>
               [01 — WHAT WE BUILD]
             </div>
             <div className="abt-grid-2">
@@ -141,7 +141,7 @@ export default function AboutPage() {
 
           {/* Who We Help Section */}
           <section style={{ marginBottom: '3.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#38BDF8', textTransform: 'uppercase', marginBottom: '0.85rem', fontWeight: 600 }}>
+            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.85rem', fontWeight: 600 }}>
               [02 — WHO WE SERVE]
             </div>
             <div className="abt-grid-2">
@@ -182,13 +182,13 @@ export default function AboutPage() {
           <section style={{ marginBottom: '3.5rem', backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.16)', borderRadius: '12px', padding: 'clamp(1.5rem, 3vw, 2rem)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.25rem' }}>
               <div>
-                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
+                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
                   [04 — THE TEAM]
                 </div>
-                <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.35rem 0', textTransform: 'uppercase' }}>
+                <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.35rem 0', textTransform: 'uppercase' }}>
                   Meet the People Building Quantum AI
                 </h2>
-                <p style={{ color: '#94A3B8', fontSize: '0.88rem', margin: 0, fontWeight: 300, maxWidth: '560px', lineHeight: 1.6 }}>
+                <p style={{ color: '#FFFFFF', fontSize: '0.88rem', margin: 0, fontWeight: 300, maxWidth: '560px', lineHeight: 1.6 }}>
                   Our leadership team and software engineers bring together artificial intelligence, systems engineering, and business understanding.
                 </p>
               </div>
@@ -200,7 +200,7 @@ export default function AboutPage() {
                   padding: '0.65rem 1.25rem',
                   border: '1px solid rgba(56, 189, 248, 0.35)',
                   background: 'rgba(56, 189, 248, 0.08)',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   borderRadius: '6px',
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: '0.75rem',
@@ -218,10 +218,10 @@ export default function AboutPage() {
 
           {/* CTA Box */}
           <section style={{ textAlign: 'center', paddingTop: '2.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)' }}>
-            <h2 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 2rem)', fontWeight: 700, color: '#F8FAFC', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '-0.02em' }}>
+            <h2 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 2rem)', fontWeight: 700, color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.75rem', letterSpacing: '-0.02em' }}>
               Ready to build with Quantum AI?
             </h2>
-            <p style={{ color: '#94A3B8', fontSize: '0.92rem', maxWidth: '520px', margin: '0 auto 1.75rem', lineHeight: 1.6, fontWeight: 300 }}>
+            <p style={{ color: '#FFFFFF', fontSize: '0.92rem', maxWidth: '520px', margin: '0 auto 1.75rem', lineHeight: 1.6, fontWeight: 300 }}>
               Tell us about your organization&apos;s operational challenges or software requirements.
             </p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -259,7 +259,7 @@ export default function AboutPage() {
                   letterSpacing: '0.08em',
                   borderRadius: '6px',
                   textDecoration: 'none',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   textTransform: 'uppercase',
                 }}
               >

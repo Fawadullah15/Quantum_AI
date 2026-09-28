@@ -80,7 +80,7 @@ export default function TrustSection() {
         }
 
         .trust-tab-card:focus-visible {
-          border-color: #14B8A6;
+          border-color: #FFFFFF;
           box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
         }
 
@@ -110,7 +110,7 @@ export default function TrustSection() {
         .trust-card-code {
           font-family: var(--font-mono, monospace);
           font-size: 0.68rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           font-weight: 600;
           letter-spacing: 0.12em;
           text-transform: uppercase;
@@ -123,7 +123,7 @@ export default function TrustSection() {
         .trust-card-title {
           font-size: clamp(1rem, 1.8vw, 1.15rem);
           font-weight: 600;
-          color: #F0FDFA;
+          color: #FFFFFF;
           letter-spacing: -0.01em;
           margin: 0;
           text-transform: none;
@@ -135,7 +135,7 @@ export default function TrustSection() {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #6F8F8D;
+          color: #FFFFFF;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -147,7 +147,7 @@ export default function TrustSection() {
         }
 
         .trust-tab-card.is-expanded .trust-card-indicator {
-          color: #14B8A6;
+          color: #FFFFFF;
         }
 
         /* ─── Smooth Expandable Content ─── */
@@ -173,7 +173,7 @@ export default function TrustSection() {
         }
 
         .trust-card-desc {
-          color: #A7C7C5;
+          color: #FFFFFF;
           font-size: 0.875rem;
           line-height: 1.55;
           margin: 0;
@@ -216,7 +216,7 @@ export default function TrustSection() {
           .mobile-trust-code {
             font-family: var(--font-mono, monospace);
             font-size: 0.56rem;
-            color: #14B8A6;
+            color: #FFFFFF;
             font-weight: 600;
             letter-spacing: 0.08em;
             margin-bottom: 0.25rem;
@@ -228,7 +228,7 @@ export default function TrustSection() {
           .mobile-trust-title {
             font-size: 0.8rem;
             font-weight: 600;
-            color: #F0FDFA;
+            color: #FFFFFF;
             letter-spacing: -0.01em;
             margin: 0;
             text-transform: none;
@@ -261,7 +261,7 @@ export default function TrustSection() {
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: '#0F766E',
+            color: '#FFFFFF',
             marginBottom: '0.5rem',
             fontWeight: 600,
           }}
@@ -275,7 +275,7 @@ export default function TrustSection() {
             fontWeight: 700,
             lineHeight: 1.02,
             letterSpacing: '-0.035em',
-            color: '#F0FDFA',
+            color: '#FFFFFF',
             marginBottom: '0.65rem',
             textTransform: 'uppercase',
           }}
@@ -286,7 +286,7 @@ export default function TrustSection() {
           className="section-desc"
           style={{
             fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-            color: '#A7C7C5',
+            color: '#FFFFFF',
             lineHeight: 1.6,
             marginBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
             maxWidth: 620,
@@ -347,7 +347,7 @@ export default function TrustSection() {
 
         {/* ─── Trust Next Step ─── */}
         <div style={{ marginTop: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', borderTop: '1px solid rgba(20, 184, 166, 0.12)', paddingTop: '1.25rem' }}>
-          <p style={{ color: '#A7C7C5', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
+          <p style={{ color: '#FFFFFF', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
             Ready to build secure, reliable software systems for your business?
           </p>
           <Link
@@ -355,7 +355,7 @@ export default function TrustSection() {
             style={{
               fontFamily: 'var(--font-mono, monospace)',
               fontSize: '0.75rem',
-              color: '#14B8A6',
+              color: '#FFFFFF',
               textDecoration: 'none',
               letterSpacing: '0.08em',
               fontWeight: 600,

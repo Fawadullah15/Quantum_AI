@@ -142,7 +142,7 @@ export default function MessagesListClient({
   };
 
   return (
-    <div style={{ color: '#F8FAFC', width: '100%' }}>
+    <div style={{ color: '#FFFFFF', width: '100%' }}>
       {/* Top Search & Filter Bar */}
       <div
         style={{
@@ -172,7 +172,7 @@ export default function MessagesListClient({
                 borderRadius: '8px',
                 padding: '0.6rem 0.95rem',
                 fontSize: '0.85rem',
-                color: '#F8FAFC',
+                color: '#FFFFFF',
                 outline: 'none',
                 boxSizing: 'border-box',
               }}
@@ -188,7 +188,7 @@ export default function MessagesListClient({
                   transform: 'translateY(-50%)',
                   background: 'transparent',
                   border: 'none',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   cursor: 'pointer',
                   fontSize: '0.85rem',
                 }}
@@ -207,7 +207,7 @@ export default function MessagesListClient({
               borderRadius: '8px',
               padding: '0.6rem 0.85rem',
               fontSize: '0.82rem',
-              color: '#CBD5E1',
+              color: '#FFFFFF',
               outline: 'none',
               fontFamily: 'var(--font-mono, monospace)',
             }}
@@ -238,7 +238,7 @@ export default function MessagesListClient({
                 style={{
                   backgroundColor: isActive ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
                   border: isActive ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
-                  color: isActive ? '#FFFFFF' : '#94A3B8',
+                  color: isActive ? '#FFFFFF' : '#FFFFFF',
                   padding: '0.45rem 0.8rem',
                   borderRadius: '6px',
                   fontSize: '0.78rem',
@@ -290,7 +290,7 @@ export default function MessagesListClient({
                 style={{
                   backgroundColor: 'rgba(22, 119, 255, 0.15)',
                   border: '1px solid rgba(22, 119, 255, 0.35)',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   padding: '0.45rem 1rem',
                   borderRadius: '6px',
                   fontSize: '0.8rem',
@@ -318,22 +318,22 @@ export default function MessagesListClient({
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
               <thead>
                 <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                     Sender &amp; Contact
                   </th>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                     Project Type
                   </th>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                     Message Preview
                   </th>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                     Date
                   </th>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                     Status
                   </th>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
                     Actions
                   </th>
                 </tr>
@@ -362,11 +362,11 @@ export default function MessagesListClient({
                     >
                       {/* Sender */}
                       <td style={{ padding: '0.95rem 1.15rem', verticalAlign: 'middle' }}>
-                        <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.92rem' }}>
+                        <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.92rem' }}>
                           {msg.name}
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.15rem' }}>
-                          <span style={{ fontSize: '0.75rem', color: '#38BDF8' }}>{msg.email}</span>
+                          <span style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>{msg.email}</span>
                           <button
                             type="button"
                             title="Copy email"
@@ -374,7 +374,7 @@ export default function MessagesListClient({
                             style={{
                               background: 'transparent',
                               border: 'none',
-                              color: '#64748B',
+                              color: '#FFFFFF',
                               cursor: 'pointer',
                               fontSize: '0.75rem',
                               padding: '0 0.2rem',
@@ -384,7 +384,7 @@ export default function MessagesListClient({
                           </button>
                         </div>
                         {msg.company && (
-                          <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '0.15rem' }}>
+                          <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.15rem' }}>
                             {msg.company}
                           </div>
                         )}
@@ -399,7 +399,7 @@ export default function MessagesListClient({
                             padding: '0.2rem 0.55rem',
                             borderRadius: '4px',
                             fontSize: '0.75rem',
-                            color: '#CBD5E1',
+                            color: '#FFFFFF',
                             fontFamily: 'var(--font-mono, monospace)',
                             whiteSpace: 'nowrap',
                           }}
@@ -413,7 +413,7 @@ export default function MessagesListClient({
                         <div
                           style={{
                             fontSize: '0.825rem',
-                            color: '#94A3B8',
+                            color: '#FFFFFF',
                             lineHeight: 1.45,
                             display: '-webkit-box',
                             WebkitLineClamp: 2,
@@ -426,7 +426,7 @@ export default function MessagesListClient({
                       </td>
 
                       {/* Date */}
-                      <td style={{ padding: '0.95rem 1.15rem', verticalAlign: 'middle', whiteSpace: 'nowrap', color: '#94A3B8', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <td style={{ padding: '0.95rem 1.15rem', verticalAlign: 'middle', whiteSpace: 'nowrap', color: '#FFFFFF', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)' }}>
                         {new Date(msg.createdAt).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -448,7 +448,7 @@ export default function MessagesListClient({
                             style={{
                               backgroundColor: 'rgba(22, 119, 255, 0.15)',
                               border: '1px solid rgba(22, 119, 255, 0.35)',
-                              color: '#38BDF8',
+                              color: '#FFFFFF',
                               padding: '0.3rem 0.65rem',
                               borderRadius: '4px',
                               fontSize: '0.72rem',
@@ -467,7 +467,7 @@ export default function MessagesListClient({
                             style={{
                               background: 'transparent',
                               border: '1px solid rgba(148, 163, 184, 0.25)',
-                              color: msg.status === 'NEW' ? '#FBBF24' : '#94A3B8',
+                              color: msg.status === 'NEW' ? '#FBBF24' : '#FFFFFF',
                               padding: '0.3rem 0.55rem',
                               borderRadius: '4px',
                               fontSize: '0.72rem',
@@ -516,7 +516,7 @@ export default function MessagesListClient({
               gap: '0.75rem',
               backgroundColor: 'rgba(3, 7, 18, 0.6)',
               fontSize: '0.8rem',
-              color: '#94A3B8',
+              color: '#FFFFFF',
             }}
           >
             <div>
@@ -536,7 +536,7 @@ export default function MessagesListClient({
                   borderRadius: '4px',
                   padding: '0.25rem 0.5rem',
                   fontSize: '0.75rem',
-                  color: '#CBD5E1',
+                  color: '#FFFFFF',
                   outline: 'none',
                 }}
               >
@@ -552,7 +552,7 @@ export default function MessagesListClient({
                 style={{
                   backgroundColor: 'rgba(22, 119, 255, 0.12)',
                   border: '1px solid rgba(22, 119, 255, 0.25)',
-                  color: currentPage === 1 ? '#64748B' : '#38BDF8',
+                  color: currentPage === 1 ? '#FFFFFF' : '#38BDF8',
                   padding: '0.25rem 0.65rem',
                   borderRadius: '4px',
                   cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
@@ -563,7 +563,7 @@ export default function MessagesListClient({
                 ← Prev
               </button>
 
-              <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#F8FAFC' }}>
+              <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF' }}>
                 Page {currentPage} of {totalPages}
               </span>
 
@@ -574,7 +574,7 @@ export default function MessagesListClient({
                 style={{
                   backgroundColor: 'rgba(22, 119, 255, 0.12)',
                   border: '1px solid rgba(22, 119, 255, 0.25)',
-                  color: currentPage >= totalPages ? '#64748B' : '#38BDF8',
+                  color: currentPage >= totalPages ? '#FFFFFF' : '#38BDF8',
                   padding: '0.25rem 0.65rem',
                   borderRadius: '4px',
                   cursor: currentPage >= totalPages ? 'not-allowed' : 'pointer',

@@ -26,7 +26,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: #14B8A6;
+  color: #FFFFFF;
   margin-bottom: 1rem;
   display: block;
 }
@@ -36,7 +36,7 @@
   font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 700;
   letter-spacing: -0.03em;
-  color: #F0FDFA;
+  color: #FFFFFF;
   line-height: 1.05;
   margin: 0;
 }
@@ -66,7 +66,7 @@
 }
 
 .email:hover {
-  color: #F0FDFA;
+  color: #FFFFFF;
 }
 
 /* ── Fine-print note ─────────────────────────────────────────────────────── */
@@ -107,7 +107,7 @@
 .select {
   background: rgba(7, 18, 20, 0.5);
   border: 1px solid rgba(20, 184, 166, 0.10);
-  color: #F0FDFA;
+  color: #FFFFFF;
   padding: 14px 16px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.85rem;
@@ -151,13 +151,13 @@
 
 .select option {
   background: #071214;
-  color: #F0FDFA;
+  color: #FFFFFF;
 }
 
 /* ── Submit button ───────────────────────────────────────────────────────── */
 .submitBtn {
   background: #14B8A6;
-  color: #F0FDFA;
+  color: #FFFFFF;
   padding: 14px 32px;
   border: none;
   font-family: 'Courier New', Courier, monospace;
@@ -191,7 +191,7 @@
   padding: 3rem 2rem;
   border: 1px solid rgba(20, 184, 166, 0.3);
   background: rgba(20, 184, 166, 0.05);
-  color: #F0FDFA;
+  color: #FFFFFF;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -223,7 +223,7 @@
 
 .resetBtn:hover {
   border-color: rgba(240, 253, 250, 0.5);
-  color: #F0FDFA;
+  color: #FFFFFF;
 }
 
 /* ── Input in error state ────────────────────────────────────────────────── */

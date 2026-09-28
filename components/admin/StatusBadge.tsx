@@ -50,7 +50,7 @@ export default function StatusBadge({ status, label, size = 'md' }: StatusBadgeP
       case 'REJECTED':
       case 'IGNORED':
       default:
-        return { bg: 'rgba(100, 116, 139, 0.15)', text: '#94A3B8', border: 'rgba(100, 116, 139, 0.35)' };
+        return { bg: 'rgba(100, 116, 139, 0.15)', text: '#FFFFFF', border: 'rgba(100, 116, 139, 0.35)' };
     }
   };
 

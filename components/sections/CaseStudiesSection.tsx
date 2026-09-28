@@ -140,7 +140,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
         }
 
         .cs-tab-card:focus-visible {
-          border-color: #14B8A6;
+          border-color: #FFFFFF;
           box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
         }
 
@@ -187,7 +187,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           align-items: center;
           justify-content: center;
           gap: 0.2rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           font-family: var(--font-mono, monospace);
           font-size: 0.65rem;
           font-weight: 700;
@@ -209,24 +209,24 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           gap: 0.5rem;
           font-family: var(--font-mono, monospace);
           font-size: 0.65rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           letter-spacing: 0.12em;
           text-transform: uppercase;
           font-weight: 600;
         }
 
         .cs-card-meta-dot {
-          color: #6F8F8D;
+          color: #FFFFFF;
         }
 
         .cs-card-meta-year {
-          color: #A7C7C5;
+          color: #FFFFFF;
         }
 
         .cs-card-title {
           font-size: clamp(1.05rem, 1.8vw, 1.25rem);
           font-weight: 600;
-          color: #F0FDFA;
+          color: #FFFFFF;
           letter-spacing: -0.015em;
           margin: 0;
           text-transform: none;
@@ -238,7 +238,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #6F8F8D;
+          color: #FFFFFF;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -250,7 +250,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
         }
 
         .cs-tab-card.is-expanded .cs-card-indicator {
-          color: #14B8A6;
+          color: #FFFFFF;
         }
 
         /* ─── Smooth Expandable Content ─── */
@@ -278,7 +278,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
         }
 
         .cs-card-desc {
-          color: #A7C7C5;
+          color: #FFFFFF;
           font-size: 0.875rem;
           line-height: 1.55;
           margin: 0;
@@ -302,7 +302,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
 
         .cs-tech-pill {
           font-size: 0.68rem;
-          color: #67E8F9;
+          color: #FFFFFF;
           background-color: rgba(20, 184, 166, 0.08);
           border: 1px solid rgba(20, 184, 166, 0.18);
           padding: 0.12rem 0.45rem;
@@ -314,7 +314,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           font-family: var(--font-mono, monospace);
           font-size: 0.75rem;
           letter-spacing: 0.08em;
@@ -324,7 +324,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
         }
 
         .cs-tab-card:hover .cs-card-cta {
-          color: #67E8F9;
+          color: #FFFFFF;
           transform: translateX(3px);
         }
 
@@ -389,7 +389,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
             gap: 0.25rem;
             font-family: var(--font-mono, monospace);
             font-size: 0.56rem;
-            color: #14B8A6;
+            color: #FFFFFF;
             letter-spacing: 0.08em;
             text-transform: uppercase;
             font-weight: 600;
@@ -403,7 +403,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           .mobile-cs-title {
             font-size: 0.78rem;
             font-weight: 600;
-            color: #F0FDFA;
+            color: #FFFFFF;
             letter-spacing: -0.01em;
             margin: 0;
             line-height: 1.25;
@@ -415,7 +415,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           .mobile-cs-arrow {
             font-family: var(--font-mono, monospace);
             font-size: 0.65rem;
-            color: #14B8A6;
+            color: #FFFFFF;
             font-weight: 700;
             display: inline-flex;
             align-items: center;
@@ -458,7 +458,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: '#0F766E',
+                color: '#FFFFFF',
                 marginBottom: '0.5rem',
                 fontWeight: 600,
               }}
@@ -472,7 +472,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 fontWeight: 700,
                 lineHeight: 1.02,
                 letterSpacing: '-0.035em',
-                color: '#F0FDFA',
+                color: '#FFFFFF',
                 textTransform: 'uppercase',
                 margin: 0,
               }}
@@ -484,7 +484,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           <Link
             href="/work"
             style={{
-              color: '#14B8A6',
+              color: '#FFFFFF',
               textDecoration: 'none',
               fontSize: '0.75rem',
               fontWeight: 600,
@@ -585,8 +585,8 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
 
               <div className="mobile-cs-meta">
                 <span>{study.industry}</span>
-                <span style={{ color: '#6F8F8D' }}>·</span>
-                <span style={{ color: '#A7C7C5' }}>{study.year}</span>
+                <span style={{ color: '#FFFFFF' }}>·</span>
+                <span style={{ color: '#FFFFFF' }}>{study.year}</span>
               </div>
 
               <h3 className="mobile-cs-title">{study.title}</h3>

@@ -76,7 +76,7 @@ export default function NewServicePage() {
     backgroundColor: '#070B14',
     border: '1px solid rgba(22, 119, 255, 0.25)',
     borderRadius: 8,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: '0.875rem',
     outline: 'none',
     boxSizing: 'border-box',
@@ -86,7 +86,7 @@ export default function NewServicePage() {
     display: 'block',
     fontSize: '0.72rem',
     fontWeight: 600,
-    color: '#94A3B8',
+    color: '#FFFFFF',
     marginBottom: '0.35rem',
     letterSpacing: '0.04em',
     fontFamily: 'var(--font-mono, monospace)',
@@ -94,10 +94,10 @@ export default function NewServicePage() {
   };
 
   return (
-    <div style={{ maxWidth: 750, margin: '0 auto', color: '#F8FAFC' }}>
+    <div style={{ maxWidth: 750, margin: '0 auto', color: '#FFFFFF' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <div>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.15em', color: '#1677FF', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.15em', color: '#FFFFFF', textTransform: 'uppercase', fontWeight: 600 }}>
             SERVICES // CREATE
           </div>
           <h1 style={{ fontSize: '1.65rem', fontWeight: 700, margin: '0.25rem 0 0 0' }}>Add New Service</h1>
@@ -109,7 +109,7 @@ export default function NewServicePage() {
             backgroundColor: 'rgba(22, 119, 255, 0.1)',
             border: '1px solid rgba(22, 119, 255, 0.3)',
             borderRadius: 6,
-            color: '#38BDF8',
+            color: '#FFFFFF',
             fontSize: '0.8rem',
             textDecoration: 'none',
             fontFamily: 'var(--font-mono, monospace)',
@@ -163,7 +163,7 @@ export default function NewServicePage() {
               style={inputStyle}
             >
               {categories.map((c) => (
-                <option key={c} value={c} style={{ backgroundColor: '#070B14', color: '#F8FAFC' }}>
+                <option key={c} value={c} style={{ backgroundColor: '#070B14', color: '#FFFFFF' }}>
                   {c}
                 </option>
               ))}
@@ -214,7 +214,7 @@ export default function NewServicePage() {
             onChange={(e) => setPublished(e.target.checked)}
             style={{ width: 18, height: 18, accentColor: '#1677FF', cursor: 'pointer' }}
           />
-          <label htmlFor="published" style={{ fontSize: '0.85rem', color: '#F8FAFC', cursor: 'pointer' }}>
+          <label htmlFor="published" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
             Publish live to public website
           </label>
         </div>
@@ -246,7 +246,7 @@ export default function NewServicePage() {
               backgroundColor: 'rgba(100, 116, 139, 0.15)',
               border: '1px solid rgba(100, 116, 139, 0.3)',
               borderRadius: 8,
-              color: '#94A3B8',
+              color: '#FFFFFF',
               fontSize: '0.85rem',
               textDecoration: 'none',
               fontFamily: 'var(--font-mono, monospace)',

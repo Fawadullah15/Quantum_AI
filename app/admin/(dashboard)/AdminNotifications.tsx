@@ -284,7 +284,7 @@ export function AdminNotifications() {
           label: type === 'PROJECT_INQUIRY' ? 'INQUIRY' : 'CONTACT',
           bg: 'rgba(56, 189, 248, 0.14)',
           border: 'rgba(56, 189, 248, 0.35)',
-          color: '#38BDF8',
+          color: '#FFFFFF',
         }
       case 'CAREER':
         return {
@@ -312,7 +312,7 @@ export function AdminNotifications() {
           label: type,
           bg: 'rgba(148, 163, 184, 0.14)',
           border: 'rgba(148, 163, 184, 0.35)',
-          color: '#CBD5E1',
+          color: '#FFFFFF',
         }
     }
   }
@@ -370,7 +370,7 @@ export function AdminNotifications() {
               style={{
                 backgroundColor: 'rgba(56, 189, 248, 0.15)',
                 border: '1px solid rgba(56, 189, 248, 0.35)',
-                color: '#38BDF8',
+                color: '#FFFFFF',
                 borderRadius: 4,
                 padding: '1px 5px',
                 fontSize: '0.6rem',
@@ -498,7 +498,7 @@ export function AdminNotifications() {
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#F8FAFC', letterSpacing: '-0.01em' }}>
+                <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '-0.01em' }}>
                   Notifications Inbox
                 </span>
                 {unreadCount > 0 ? (
@@ -506,7 +506,7 @@ export function AdminNotifications() {
                     style={{
                       fontSize: '0.65rem',
                       backgroundColor: 'rgba(56, 189, 248, 0.15)',
-                      color: '#38BDF8',
+                      color: '#FFFFFF',
                       padding: '0.15rem 0.5rem',
                       borderRadius: 12,
                       fontWeight: 700,
@@ -516,7 +516,7 @@ export function AdminNotifications() {
                     {unreadCount} unread
                   </span>
                 ) : (
-                  <span style={{ fontSize: '0.65rem', color: '#64748B' }}>All caught up</span>
+                  <span style={{ fontSize: '0.65rem', color: '#FFFFFF' }}>All caught up</span>
                 )}
               </div>
 
@@ -528,7 +528,7 @@ export function AdminNotifications() {
                     style={{
                       background: 'transparent',
                       border: 'none',
-                      color: '#38BDF8',
+                      color: '#FFFFFF',
                       fontSize: '0.75rem',
                       fontWeight: 500,
                       cursor: 'pointer',
@@ -548,7 +548,7 @@ export function AdminNotifications() {
                   style={{
                     background: 'transparent',
                     border: 'none',
-                    color: '#64748B',
+                    color: '#FFFFFF',
                     fontSize: '0.75rem',
                     cursor: 'pointer',
                     display: 'flex',
@@ -589,7 +589,7 @@ export function AdminNotifications() {
                     onClick={() => handleFilterChange(tab.key as any)}
                     style={{
                       background: isActive ? 'rgba(56, 189, 248, 0.15)' : 'transparent',
-                      color: isActive ? '#38BDF8' : '#94A3B8',
+                      color: isActive ? '#38BDF8' : '#FFFFFF',
                       border: isActive ? '1px solid rgba(56, 189, 248, 0.35)' : '1px solid transparent',
                       borderRadius: 6,
                       fontSize: '0.7rem',
@@ -634,11 +634,11 @@ export function AdminNotifications() {
             {/* Notifications Scrollable List */}
             <div style={{ maxHeight: 380, overflowY: 'auto' }}>
               {loading && notifications.length === 0 ? (
-                <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: '#64748B', fontSize: '0.825rem' }}>
+                <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: '#FFFFFF', fontSize: '0.825rem' }}>
                   Loading notifications...
                 </div>
               ) : notifications.length === 0 ? (
-                <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: '#64748B', fontSize: '0.825rem' }}>
+                <div style={{ padding: '2.5rem 1rem', textAlign: 'center', color: '#FFFFFF', fontSize: '0.825rem' }}>
                   <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>📫</div>
                   No notifications in this filter.
                 </div>
@@ -688,7 +688,7 @@ export function AdminNotifications() {
                               style={{
                                 fontSize: '0.65rem',
                                 fontFamily: 'var(--font-mono, monospace)',
-                                color: '#94A3B8',
+                                color: '#FFFFFF',
                               }}
                             >
                               {n.referenceId}
@@ -710,7 +710,7 @@ export function AdminNotifications() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                           <span
                             title={formatFullDate(n.createdAt)}
-                            style={{ fontSize: '0.68rem', color: '#64748B', whiteSpace: 'nowrap' }}
+                            style={{ fontSize: '0.68rem', color: '#FFFFFF', whiteSpace: 'nowrap' }}
                           >
                             {formatTime(n.createdAt)}
                           </span>
@@ -744,7 +744,7 @@ export function AdminNotifications() {
 
                       {/* Subtitle / Sender details */}
                       {(n.senderName || n.subtitle) && (
-                        <div style={{ fontSize: '0.74rem', color: '#38BDF8', marginBottom: 4, fontWeight: 500 }}>
+                        <div style={{ fontSize: '0.74rem', color: '#FFFFFF', marginBottom: 4, fontWeight: 500 }}>
                           {n.senderName ? `${n.senderName} ${n.subtitle ? '• ' + n.subtitle : ''}` : n.subtitle}
                         </div>
                       )}
@@ -753,7 +753,7 @@ export function AdminNotifications() {
                       <div
                         style={{
                           fontSize: '0.74rem',
-                          color: '#94A3B8',
+                          color: '#FFFFFF',
                           lineHeight: 1.45,
                           marginBottom: 6,
                           display: '-webkit-box',
@@ -768,7 +768,7 @@ export function AdminNotifications() {
                       {/* Bottom status row: Email status + Retry + Link */}
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4, flexWrap: 'wrap', gap: 4 }}>
                         {renderEmailStatusPill(n.emailStatus, n.emailError, n.id)}
-                        <span style={{ fontSize: '0.68rem', color: '#38BDF8', fontWeight: 500 }}>
+                        <span style={{ fontSize: '0.68rem', color: '#FFFFFF', fontWeight: 500 }}>
                           Click to open submission →
                         </span>
                       </div>
@@ -792,14 +792,14 @@ export function AdminNotifications() {
               <Link
                 href="/admin/messages"
                 onClick={() => setOpen(false)}
-                style={{ fontSize: '0.75rem', color: '#38BDF8', textDecoration: 'none', fontWeight: 500 }}
+                style={{ fontSize: '0.75rem', color: '#FFFFFF', textDecoration: 'none', fontWeight: 500 }}
               >
                 Inquiries & Messages →
               </Link>
               <Link
                 href="/admin/careers-partnerships"
                 onClick={() => setOpen(false)}
-                style={{ fontSize: '0.75rem', color: '#94A3B8', textDecoration: 'none', fontWeight: 500 }}
+                style={{ fontSize: '0.75rem', color: '#FFFFFF', textDecoration: 'none', fontWeight: 500 }}
               >
                 Careers & Partners →
               </Link>
@@ -882,7 +882,7 @@ export function AdminNotifications() {
                         fontSize: '0.75rem',
                         fontFamily: 'var(--font-mono, monospace)',
                         fontWeight: 700,
-                        color: '#38BDF8',
+                        color: '#FFFFFF',
                         backgroundColor: 'rgba(56, 189, 248, 0.1)',
                         padding: '2px 8px',
                         borderRadius: 4,
@@ -892,16 +892,16 @@ export function AdminNotifications() {
                     </span>
                   )}
 
-                  <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                  <span style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>
                     {formatFullDate(selectedNotification.createdAt)}
                   </span>
                 </div>
 
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#F8FAFC', margin: 0, letterSpacing: '-0.01em' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#FFFFFF', margin: 0, letterSpacing: '-0.01em' }}>
                   {selectedNotification.title}
                 </h2>
                 {selectedNotification.subtitle && (
-                  <p style={{ fontSize: '0.82rem', color: '#38BDF8', margin: '4px 0 0 0' }}>
+                  <p style={{ fontSize: '0.82rem', color: '#FFFFFF', margin: '4px 0 0 0' }}>
                     {selectedNotification.subtitle}
                   </p>
                 )}
@@ -913,7 +913,7 @@ export function AdminNotifications() {
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(255, 255, 255, 0.1)',
                   borderRadius: 6,
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   width: 32,
                   height: 32,
                   display: 'flex',
@@ -929,7 +929,7 @@ export function AdminNotifications() {
                   e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)'
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#94A3B8'
+                  e.currentTarget.style.color = '#FFFFFF'
                   e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)'
                 }}
               >
@@ -1000,8 +1000,8 @@ export function AdminNotifications() {
                           ? 'Email Copy Delivery Failed'
                           : 'Email Copy Pending Dispatch'}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
-                        Target: <span style={{ color: '#38BDF8', fontWeight: 600 }}>{selectedNotification.emailRecipient || 'quantumai.cmp@gmail.com'}</span>
+                      <div style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>
+                        Target: <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{selectedNotification.emailRecipient || 'quantumai.cmp@gmail.com'}</span>
                       </div>
                     </div>
                   </div>
@@ -1073,7 +1073,7 @@ export function AdminNotifications() {
                     padding: '0.65rem 0.85rem',
                     borderRadius: 6,
                     fontSize: '0.74rem',
-                    color: '#94A3B8',
+                    color: '#FFFFFF',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 4,
@@ -1081,21 +1081,21 @@ export function AdminNotifications() {
                 >
                   {selectedNotification.emailSentAt && (
                     <div>
-                      <span style={{ color: '#64748B' }}>Sent timestamp:</span>{' '}
+                      <span style={{ color: '#FFFFFF' }}>Sent timestamp:</span>{' '}
                       <span style={{ color: '#34D399', fontWeight: 500 }}>{formatFullDate(selectedNotification.emailSentAt)}</span>
                     </div>
                   )}
 
                   {selectedNotification.emailFailedAt && (
                     <div>
-                      <span style={{ color: '#64748B' }}>Last failed attempt:</span>{' '}
+                      <span style={{ color: '#FFFFFF' }}>Last failed attempt:</span>{' '}
                       <span style={{ color: '#F87171', fontWeight: 500 }}>{formatFullDate(selectedNotification.emailFailedAt)}</span>
                     </div>
                   )}
 
                   {(selectedNotification.emailRetryCount || 0) > 0 && (
                     <div>
-                      <span style={{ color: '#64748B' }}>Retry attempts:</span>{' '}
+                      <span style={{ color: '#FFFFFF' }}>Retry attempts:</span>{' '}
                       <span style={{ color: '#F1F5F9', fontWeight: 500 }}>{selectedNotification.emailRetryCount}</span>
                     </div>
                   )}
@@ -1118,22 +1118,22 @@ export function AdminNotifications() {
                   padding: '1rem 1.25rem',
                 }}
               >
-                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#38BDF8', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 700 }}>
+                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 700 }}>
                   CONTACT INFORMATION
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.85rem' }}>
                   {selectedNotification.senderName && (
                     <div>
-                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Full Name</div>
+                      <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Full Name</div>
                       <div style={{ fontSize: '0.88rem', color: '#FFFFFF', fontWeight: 600 }}>{selectedNotification.senderName}</div>
                     </div>
                   )}
 
                   {selectedNotification.senderEmail && (
                     <div>
-                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Email Address</div>
-                      <a href={`mailto:${selectedNotification.senderEmail}`} style={{ fontSize: '0.88rem', color: '#38BDF8', textDecoration: 'none', fontWeight: 500 }}>
+                      <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Email Address</div>
+                      <a href={`mailto:${selectedNotification.senderEmail}`} style={{ fontSize: '0.88rem', color: '#FFFFFF', textDecoration: 'none', fontWeight: 500 }}>
                         {selectedNotification.senderEmail} ↗
                       </a>
                     </div>
@@ -1141,8 +1141,8 @@ export function AdminNotifications() {
 
                   {selectedNotification.details?.phone && (
                     <div>
-                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Phone</div>
-                      <a href={`tel:${selectedNotification.details.phone}`} style={{ fontSize: '0.88rem', color: '#38BDF8', textDecoration: 'none' }}>
+                      <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Phone</div>
+                      <a href={`tel:${selectedNotification.details.phone}`} style={{ fontSize: '0.88rem', color: '#FFFFFF', textDecoration: 'none' }}>
                         {selectedNotification.details.phone}
                       </a>
                     </div>
@@ -1150,26 +1150,26 @@ export function AdminNotifications() {
 
                   {selectedNotification.details?.company && (
                     <div>
-                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Company / Org</div>
+                      <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Company / Org</div>
                       <div style={{ fontSize: '0.88rem', color: '#F1F5F9' }}>{selectedNotification.details.company}</div>
                     </div>
                   )}
 
                   {selectedNotification.details?.country && (
                     <div>
-                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Location / Country</div>
+                      <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Location / Country</div>
                       <div style={{ fontSize: '0.88rem', color: '#F1F5F9' }}>{selectedNotification.details.country}</div>
                     </div>
                   )}
 
                   {selectedNotification.details?.website && (
                     <div>
-                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Website</div>
+                      <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Website</div>
                       <a
                         href={selectedNotification.details.website.startsWith('http') ? selectedNotification.details.website : `https://${selectedNotification.details.website}`}
                         target="_blank"
                         rel="noreferrer"
-                        style={{ fontSize: '0.88rem', color: '#38BDF8', textDecoration: 'none' }}
+                        style={{ fontSize: '0.88rem', color: '#FFFFFF', textDecoration: 'none' }}
                       >
                         {selectedNotification.details.website} ↗
                       </a>
@@ -1188,70 +1188,70 @@ export function AdminNotifications() {
                     padding: '1rem 1.25rem',
                   }}
                 >
-                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#38BDF8', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 700 }}>
+                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', letterSpacing: '0.15em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 700 }}>
                     SUBMISSION ATTRIBUTES
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.85rem' }}>
                     {selectedNotification.details.position && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Applied Position</div>
+                        <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Applied Position</div>
                         <div style={{ fontSize: '0.88rem', color: '#C084FC', fontWeight: 600 }}>{selectedNotification.details.position}</div>
                       </div>
                     )}
 
                     {selectedNotification.details.experienceLevel && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Experience Level</div>
+                        <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Experience Level</div>
                         <div style={{ fontSize: '0.88rem', color: '#F1F5F9' }}>{selectedNotification.details.experienceLevel}</div>
                       </div>
                     )}
 
                     {selectedNotification.details.workType && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Work Type</div>
+                        <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Work Type</div>
                         <div style={{ fontSize: '0.88rem', color: '#F1F5F9' }}>{selectedNotification.details.workType}</div>
                       </div>
                     )}
 
                     {selectedNotification.details.partnershipType && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Partnership Type</div>
+                        <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Partnership Type</div>
                         <div style={{ fontSize: '0.88rem', color: '#34D399', fontWeight: 600 }}>{selectedNotification.details.partnershipType}</div>
                       </div>
                     )}
 
                     {selectedNotification.details.projectType && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Project Type</div>
-                        <div style={{ fontSize: '0.88rem', color: '#38BDF8', fontWeight: 600 }}>{selectedNotification.details.projectType}</div>
+                        <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Project Type</div>
+                        <div style={{ fontSize: '0.88rem', color: '#FFFFFF', fontWeight: 600 }}>{selectedNotification.details.projectType}</div>
                       </div>
                     )}
 
                     {selectedNotification.details.budget && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Budget</div>
+                        <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Budget</div>
                         <div style={{ fontSize: '0.88rem', color: '#FBBF24', fontWeight: 600 }}>{selectedNotification.details.budget}</div>
                       </div>
                     )}
 
                     {selectedNotification.details.budgetRange && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Budget Range</div>
+                        <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Budget Range</div>
                         <div style={{ fontSize: '0.88rem', color: '#FBBF24', fontWeight: 600 }}>{selectedNotification.details.budgetRange}</div>
                       </div>
                     )}
 
                     {selectedNotification.details.timeline && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Timeline</div>
+                        <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Timeline</div>
                         <div style={{ fontSize: '0.88rem', color: '#F1F5F9' }}>{selectedNotification.details.timeline}</div>
                       </div>
                     )}
 
                     {selectedNotification.details.rating && (
                       <div>
-                        <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase' }}>Rating</div>
+                        <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase' }}>Rating</div>
                         <div style={{ fontSize: '0.88rem', color: '#FBBF24', fontWeight: 700 }}>{'★'.repeat(selectedNotification.details.rating)} ({selectedNotification.details.rating}/5)</div>
                       </div>
                     )}
@@ -1260,7 +1260,7 @@ export function AdminNotifications() {
                   {/* Skills Tags */}
                   {selectedNotification.details.skills && (
                     <div style={{ marginTop: '0.85rem' }}>
-                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>Skills & Expertise</div>
+                      <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: 4 }}>Skills & Expertise</div>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
                         {selectedNotification.details.skills.split(',').map((skill: string, idx: number) => (
                           <span
@@ -1284,8 +1284,8 @@ export function AdminNotifications() {
                   {/* Message / Introduction */}
                   {(selectedNotification.details.message || selectedNotification.details.introduction || selectedNotification.preview) && (
                     <div style={{ marginTop: '1rem', borderTop: '1px solid rgba(30, 41, 59, 0.5)', paddingTop: '0.75rem' }}>
-                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>Full Message / Statement</div>
-                      <div style={{ fontSize: '0.86rem', color: '#E2E8F0', lineHeight: 1.6, whiteSpace: 'pre-wrap', backgroundColor: '#0A101D', padding: '0.75rem', borderRadius: 6, border: '1px solid rgba(30, 41, 59, 0.5)' }}>
+                      <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: 4 }}>Full Message / Statement</div>
+                      <div style={{ fontSize: '0.86rem', color: '#FFFFFF', lineHeight: 1.6, whiteSpace: 'pre-wrap', backgroundColor: '#0A101D', padding: '0.75rem', borderRadius: 6, border: '1px solid rgba(30, 41, 59, 0.5)' }}>
                         {selectedNotification.details.message || selectedNotification.details.introduction || selectedNotification.preview}
                       </div>
                     </div>
@@ -1294,8 +1294,8 @@ export function AdminNotifications() {
                   {/* Why Quantum AI */}
                   {selectedNotification.details.whyQuantumAI && (
                     <div style={{ marginTop: '0.85rem' }}>
-                      <div style={{ fontSize: '0.68rem', color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>Why Quantum AI?</div>
-                      <div style={{ fontSize: '0.84rem', color: '#CBD5E1', lineHeight: 1.5, backgroundColor: '#0A101D', padding: '0.65rem 0.75rem', borderRadius: 6, border: '1px solid rgba(30, 41, 59, 0.5)' }}>
+                      <div style={{ fontSize: '0.68rem', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: 4 }}>Why Quantum AI?</div>
+                      <div style={{ fontSize: '0.84rem', color: '#FFFFFF', lineHeight: 1.5, backgroundColor: '#0A101D', padding: '0.65rem 0.75rem', borderRadius: 6, border: '1px solid rgba(30, 41, 59, 0.5)' }}>
                         {selectedNotification.details.whyQuantumAI}
                       </div>
                     </div>
@@ -1359,7 +1359,7 @@ export function AdminNotifications() {
                           alignItems: 'center',
                           gap: 6,
                           backgroundColor: '#1E293B',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           border: '1px solid rgba(56, 189, 248, 0.4)',
                           padding: '0.5rem 1rem',
                           borderRadius: 6,
@@ -1462,7 +1462,7 @@ export function AdminNotifications() {
                     }}
                     style={{
                       fontSize: '0.78rem',
-                      color: '#38BDF8',
+                      color: '#FFFFFF',
                       textDecoration: 'none',
                       fontWeight: 600,
                       padding: '0.45rem 0.65rem',
@@ -1477,7 +1477,7 @@ export function AdminNotifications() {
                   style={{
                     backgroundColor: 'transparent',
                     border: '1px solid rgba(255, 255, 255, 0.15)',
-                    color: '#94A3B8',
+                    color: '#FFFFFF',
                     borderRadius: 6,
                     padding: '0.45rem 0.85rem',
                     fontSize: '0.78rem',

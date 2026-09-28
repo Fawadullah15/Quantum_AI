@@ -147,7 +147,7 @@ export default function DetailClient({
   };
 
   return (
-    <div style={{ maxWidth: '1100px', margin: '0 auto', color: '#F8FAFC', width: '100%', boxSizing: 'border-box' }}>
+    <div style={{ maxWidth: '1100px', margin: '0 auto', color: '#FFFFFF', width: '100%', boxSizing: 'border-box' }}>
       {/* Top Header & Breadcrumb Toolbar */}
       <div
         style={{
@@ -168,7 +168,7 @@ export default function DetailClient({
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.4rem',
-              color: '#38BDF8',
+              color: '#FFFFFF',
               backgroundColor: 'rgba(22, 119, 255, 0.12)',
               border: '1px solid rgba(22, 119, 255, 0.25)',
               padding: '0.45rem 0.85rem',
@@ -181,8 +181,8 @@ export default function DetailClient({
           >
             ← Back to Submissions
           </Link>
-          <span style={{ color: '#64748B' }}>/</span>
-          <span style={{ fontFamily: 'var(--font-mono, monospace)', color: '#CBD5E1', fontSize: '0.85rem' }}>
+          <span style={{ color: '#FFFFFF' }}>/</span>
+          <span style={{ fontFamily: 'var(--font-mono, monospace)', color: '#FFFFFF', fontSize: '0.85rem' }}>
             {submission.referenceId}
           </span>
         </div>
@@ -194,7 +194,7 @@ export default function DetailClient({
             style={{
               backgroundColor: 'transparent',
               border: '1px solid rgba(56, 189, 248, 0.25)',
-              color: '#38BDF8',
+              color: '#FFFFFF',
               padding: '0.45rem 0.85rem',
               borderRadius: 4,
               fontSize: '0.75rem',
@@ -212,7 +212,7 @@ export default function DetailClient({
             style={{
               backgroundColor: 'rgba(22, 119, 255, 0.1)',
               border: '1px solid rgba(22, 119, 255, 0.3)',
-              color: '#38BDF8',
+              color: '#FFFFFF',
               padding: '0.45rem 0.85rem',
               borderRadius: 4,
               fontSize: '0.75rem',
@@ -271,7 +271,7 @@ export default function DetailClient({
               style={{
                 backgroundColor: 'transparent',
                 border: '1px solid rgba(148, 163, 184, 0.25)',
-                color: '#94A3B8',
+                color: '#FFFFFF',
                 padding: '0.45rem 0.85rem',
                 borderRadius: 4,
                 fontSize: '0.75rem',
@@ -291,7 +291,7 @@ export default function DetailClient({
               style={{
                 backgroundColor: 'transparent',
                 border: '1px solid rgba(148, 163, 184, 0.25)',
-                color: '#94A3B8',
+                color: '#FFFFFF',
                 padding: '0.45rem 0.85rem',
                 borderRadius: 4,
                 fontSize: '0.75rem',
@@ -310,7 +310,7 @@ export default function DetailClient({
             style={{
               backgroundColor: 'transparent',
               border: 'none',
-              color: '#64748B',
+              color: '#FFFFFF',
               padding: '0.45rem 0.65rem',
               fontSize: '0.75rem',
               fontWeight: 600,
@@ -342,10 +342,10 @@ export default function DetailClient({
                   />
                 )}
                 <div>
-                  <div style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase', fontWeight: 600 }}>
+                  <div style={{ fontSize: '0.72rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase', fontWeight: 600 }}>
                     {type === 'PARTNERSHIP' ? 'ENTERPRISE PROPOSAL' : 'TALENT APPLICATION'}
                   </div>
-                  <h1 style={{ fontSize: '1.35rem', fontWeight: 700, margin: '0.2rem 0 0 0', color: '#F8FAFC' }}>
+                  <h1 style={{ fontSize: '1.35rem', fontWeight: 700, margin: '0.2rem 0 0 0', color: '#FFFFFF' }}>
                     {submission.fullName}
                   </h1>
                 </div>
@@ -355,102 +355,102 @@ export default function DetailClient({
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               <div>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                   Email
                 </div>
-                <a href={`mailto:${submission.email}`} style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.88rem', wordBreak: 'break-all' }}>
+                <a href={`mailto:${submission.email}`} style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.88rem', wordBreak: 'break-all' }}>
                   {submission.email}
                 </a>
               </div>
 
               <div>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                   Phone
                 </div>
-                <div style={{ color: '#F8FAFC', fontSize: '0.88rem' }}>{submission.phone || '-'}</div>
+                <div style={{ color: '#FFFFFF', fontSize: '0.88rem' }}>{submission.phone || '-'}</div>
               </div>
 
               {type === 'PARTNERSHIP' ? (
                 <>
                   <div>
-                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       Company
                     </div>
-                    <div style={{ color: '#F8FAFC', fontSize: '0.88rem', fontWeight: 600 }}>{submission.company || '-'}</div>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.88rem', fontWeight: 600 }}>{submission.company || '-'}</div>
                   </div>
                   <div>
-                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       Country
                     </div>
-                    <div style={{ color: '#F8FAFC', fontSize: '0.88rem' }}>{submission.country || 'Global'}</div>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.88rem' }}>{submission.country || 'Global'}</div>
                   </div>
                   <div>
-                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       Partnership Type
                     </div>
-                    <div style={{ color: '#38BDF8', fontSize: '0.85rem' }}>{submission.partnershipType}</div>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>{submission.partnershipType}</div>
                   </div>
                   <div>
-                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       Website
                     </div>
                     {submission.website ? (
-                      <a href={submission.website.startsWith('http') ? submission.website : `https://${submission.website}`} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.85rem' }}>
+                      <a href={submission.website.startsWith('http') ? submission.website : `https://${submission.website}`} target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.85rem' }}>
                         {submission.website} ↗
                       </a>
                     ) : (
-                      <span style={{ color: '#64748B', fontSize: '0.85rem' }}>-</span>
+                      <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>-</span>
                     )}
                   </div>
                 </>
               ) : (
                 <>
                   <div>
-                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       Position Applied
                     </div>
-                    <div style={{ color: '#38BDF8', fontSize: '0.88rem', fontWeight: 600 }}>{submission.position}</div>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.88rem', fontWeight: 600 }}>{submission.position}</div>
                   </div>
                   <div>
-                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       Experience Level
                     </div>
-                    <div style={{ color: '#F8FAFC', fontSize: '0.88rem' }}>{submission.experienceLevel || 'Mid Level'}</div>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.88rem' }}>{submission.experienceLevel || 'Mid Level'}</div>
                   </div>
                   <div>
-                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       Work Type
                     </div>
-                    <div style={{ color: '#F8FAFC', fontSize: '0.85rem' }}>{submission.workType || 'Full Time'}</div>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>{submission.workType || 'Full Time'}</div>
                   </div>
                   <div>
-                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       Current Location
                     </div>
-                    <div style={{ color: '#F8FAFC', fontSize: '0.85rem' }}>{submission.currentLocation || 'Not provided'}</div>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>{submission.currentLocation || 'Not provided'}</div>
                   </div>
                   <div>
-                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       CV / Resume Document
                     </div>
                     {submission.resumeUrl ? (
-                      <a href={submission.resumeUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.82rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <a href={submission.resumeUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.82rem', fontFamily: 'var(--font-mono, monospace)' }}>
                         📄 View Attached CV ↗
                       </a>
                     ) : (
-                      <span style={{ color: '#64748B', fontSize: '0.85rem' }}>Not provided</span>
+                      <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>Not provided</span>
                     )}
                   </div>
                   <div>
-                    <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                       Additional Portfolio
                     </div>
                     {submission.additionalDocsUrl ? (
-                      <a href={submission.additionalDocsUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.82rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <a href={submission.additionalDocsUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.82rem', fontFamily: 'var(--font-mono, monospace)' }}>
                         📁 View Attached Docs ↗
                       </a>
                     ) : (
-                      <span style={{ color: '#64748B', fontSize: '0.85rem' }}>Not provided</span>
+                      <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>Not provided</span>
                     )}
                   </div>
                 </>
@@ -460,52 +460,52 @@ export default function DetailClient({
 
           {/* Submission Details / Message Body */}
           <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 12, padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 0.85rem 0', borderBottom: '1px solid rgba(22, 119, 255, 0.12)', paddingBottom: '0.5rem' }}>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#FFFFFF', margin: '0 0 0.85rem 0', borderBottom: '1px solid rgba(22, 119, 255, 0.12)', paddingBottom: '0.5rem' }}>
               {type === 'PARTNERSHIP' ? 'Proposal Details & Message' : 'Candidate Profile & Details'}
             </h2>
 
             {type === 'CAREER' && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.25rem' }}>
                 <div>
-                  <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                  <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                     LinkedIn
                   </div>
                   {submission.linkedinUrl ? (
-                    <a href={submission.linkedinUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.85rem' }}>{submission.linkedinUrl}</a>
-                  ) : <span style={{ color: '#64748B', fontSize: '0.85rem' }}>Not provided</span>}
+                    <a href={submission.linkedinUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.85rem' }}>{submission.linkedinUrl}</a>
+                  ) : <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>Not provided</span>}
                 </div>
                 <div>
-                  <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                  <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                     GitHub
                   </div>
                   {submission.githubUrl ? (
-                    <a href={submission.githubUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.85rem' }}>{submission.githubUrl}</a>
-                  ) : <span style={{ color: '#64748B', fontSize: '0.85rem' }}>Not provided</span>}
+                    <a href={submission.githubUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.85rem' }}>{submission.githubUrl}</a>
+                  ) : <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>Not provided</span>}
                 </div>
                 <div>
-                  <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                  <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
                     Portfolio Website
                   </div>
                   {submission.portfolioUrl ? (
-                    <a href={submission.portfolioUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.85rem' }}>{submission.portfolioUrl}</a>
-                  ) : <span style={{ color: '#64748B', fontSize: '0.85rem' }}>Not provided</span>}
+                    <a href={submission.portfolioUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.85rem' }}>{submission.portfolioUrl}</a>
+                  ) : <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>Not provided</span>}
                 </div>
               </div>
             )}
 
             {type === 'CAREER' && submission.skills && (
               <div style={{ marginBottom: '1.25rem' }}>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
                   Core Technical Skills
                 </div>
-                <div style={{ backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.2)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#38BDF8', fontSize: '0.85rem' }}>
+                <div style={{ backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.2)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#FFFFFF', fontSize: '0.85rem' }}>
                   {submission.skills}
                 </div>
               </div>
             )}
 
             <div style={{ marginBottom: '1.25rem' }}>
-              <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
+              <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
                 {type === 'PARTNERSHIP' ? 'Message' : 'Introduction & Engineering Background'}
               </div>
               <div
@@ -514,7 +514,7 @@ export default function DetailClient({
                   border: '1px solid rgba(22, 119, 255, 0.2)',
                   borderRadius: 8,
                   padding: '1.15rem',
-                  color: '#F8FAFC',
+                  color: '#FFFFFF',
                   fontSize: '0.92rem',
                   lineHeight: 1.6,
                   whiteSpace: 'pre-wrap',
@@ -527,7 +527,7 @@ export default function DetailClient({
 
             {type === 'CAREER' && submission.whyQuantumAI && (
               <div>
-                <div style={{ color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
                   Why Quantum AI
                 </div>
                 <div
@@ -536,7 +536,7 @@ export default function DetailClient({
                     border: '1px solid rgba(22, 119, 255, 0.2)',
                     borderRadius: 8,
                     padding: '1.15rem',
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     fontSize: '0.92rem',
                     lineHeight: 1.6,
                     whiteSpace: 'pre-wrap',
@@ -555,13 +555,13 @@ export default function DetailClient({
           
           {/* Status & Assignment Card */}
           <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 12, padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 1rem 0' }}>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#FFFFFF', margin: '0 0 1rem 0' }}>
               Submission Lifecycle
             </h2>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
               <div>
-                <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
+                <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
                   Update Review Status
                 </label>
                 <select
@@ -572,7 +572,7 @@ export default function DetailClient({
                     width: '100%',
                     padding: '0.65rem 0.85rem',
                     backgroundColor: '#070B14',
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     border: '1px solid rgba(22, 119, 255, 0.25)',
                     borderRadius: 6,
                     fontSize: '0.85rem',
@@ -588,7 +588,7 @@ export default function DetailClient({
               </div>
 
               <form onSubmit={handleAssignUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
-                <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
+                <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
                   Assign to Team Member
                 </label>
                 <input
@@ -600,7 +600,7 @@ export default function DetailClient({
                     width: '100%',
                     padding: '0.6rem 0.85rem',
                     backgroundColor: '#070B14',
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     border: '1px solid rgba(22, 119, 255, 0.25)',
                     borderRadius: 6,
                     fontSize: '0.85rem',
@@ -614,7 +614,7 @@ export default function DetailClient({
                   style={{
                     backgroundColor: 'rgba(22, 119, 255, 0.15)',
                     border: '1px solid rgba(22, 119, 255, 0.35)',
-                    color: '#38BDF8',
+                    color: '#FFFFFF',
                     padding: '0.5rem',
                     borderRadius: 6,
                     cursor: 'pointer',
@@ -631,7 +631,7 @@ export default function DetailClient({
 
           {/* Internal Notes History */}
           <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 12, padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 1rem 0' }}>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#FFFFFF', margin: '0 0 1rem 0' }}>
               Internal Admin Notes
             </h2>
 
@@ -645,7 +645,7 @@ export default function DetailClient({
                   width: '100%',
                   padding: '0.65rem 0.85rem',
                   backgroundColor: '#070B14',
-                  color: '#F8FAFC',
+                  color: '#FFFFFF',
                   border: '1px solid rgba(22, 119, 255, 0.25)',
                   borderRadius: 6,
                   fontSize: '0.85rem',
@@ -675,7 +675,7 @@ export default function DetailClient({
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
               {(!submission.notes || submission.notes.length === 0) ? (
-                <div style={{ color: '#64748B', fontSize: '0.8rem', fontStyle: 'italic', textAlign: 'center', padding: '1rem 0' }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.8rem', fontStyle: 'italic', textAlign: 'center', padding: '1rem 0' }}>
                   No internal notes recorded yet.
                 </div>
               ) : (
@@ -690,11 +690,11 @@ export default function DetailClient({
                       fontSize: '0.825rem',
                     }}
                   >
-                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#94A3B8', fontSize: '0.7rem', marginBottom: '0.25rem', fontFamily: 'var(--font-mono, monospace)' }}>
-                      <span style={{ color: '#38BDF8', fontWeight: 600 }}>{n.authorName}</span>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#FFFFFF', fontSize: '0.7rem', marginBottom: '0.25rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{n.authorName}</span>
                       <span>{new Date(n.createdAt).toLocaleDateString()}</span>
                     </div>
-                    <div style={{ color: '#CBD5E1', lineHeight: 1.45 }}>{n.content}</div>
+                    <div style={{ color: '#FFFFFF', lineHeight: 1.45 }}>{n.content}</div>
                   </div>
                 ))
               )}

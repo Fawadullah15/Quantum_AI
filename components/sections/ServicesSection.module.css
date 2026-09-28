@@ -1,7 +1,7 @@
 .section {
   padding: clamp(3rem, 7vh, 5rem) clamp(1.25rem, 4vw, 3rem);
   background-color: var(--color-bg-primary, #020708);
-  color: var(--color-text-primary, #F0FDFA);
+  color: var(--color-text-primary, #FFFFFF);
   font-family: 'Space Grotesk', sans-serif;
 }
 
@@ -18,7 +18,7 @@
   font-family: 'Space Mono', monospace;
   font-size: 0.72rem;
   letter-spacing: 0.15em;
-  color: var(--color-text-muted, #A7C7C5);
+  color: var(--color-text-muted, #FFFFFF);
   margin-bottom: 1rem;
 }
 
@@ -35,7 +35,7 @@
   font-size: clamp(0.92rem, 1.3vw, 1.05rem);
   line-height: 1.6;
   max-width: 600px;
-  color: var(--color-text-muted, #A7C7C5);
+  color: var(--color-text-muted, #FFFFFF);
   margin: 0;
 }
 
@@ -49,7 +49,7 @@
   font-family: 'Space Mono', monospace;
   font-size: 1rem;
   letter-spacing: 0.05em;
-  color: var(--color-text-primary, #F0FDFA);
+  color: var(--color-text-primary, #FFFFFF);
   border-bottom: 1px solid var(--color-border, #0A181B);
   padding-bottom: 1rem;
   margin-bottom: 2rem;
@@ -90,7 +90,7 @@
 
 .serviceDesc {
   font-size: 0.875rem;
-  color: var(--color-text-muted, #A7C7C5);
+  color: var(--color-text-muted, #FFFFFF);
   margin: 0;
   line-height: 1.5;
 }

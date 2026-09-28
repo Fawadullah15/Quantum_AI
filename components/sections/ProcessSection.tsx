@@ -85,7 +85,7 @@ export default function ProcessSection() {
         }
 
         .process-tab-card:focus-visible {
-          border-color: #14B8A6;
+          border-color: #FFFFFF;
           box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
         }
 
@@ -115,7 +115,7 @@ export default function ProcessSection() {
         .process-step-label {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           font-weight: 600;
           letter-spacing: 0.1em;
           flex-shrink: 0;
@@ -127,7 +127,7 @@ export default function ProcessSection() {
         .process-card-title {
           font-size: clamp(1rem, 1.8vw, 1.15rem);
           font-weight: 600;
-          color: #F0FDFA;
+          color: #FFFFFF;
           letter-spacing: 0.04em;
           margin: 0;
           text-transform: uppercase;
@@ -139,7 +139,7 @@ export default function ProcessSection() {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #6F8F8D;
+          color: #FFFFFF;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -151,7 +151,7 @@ export default function ProcessSection() {
         }
 
         .process-tab-card.is-expanded .process-card-indicator {
-          color: #14B8A6;
+          color: #FFFFFF;
         }
 
         /* ─── Smooth Expandable Content ─── */
@@ -177,7 +177,7 @@ export default function ProcessSection() {
         }
 
         .process-card-desc {
-          color: #A7C7C5;
+          color: #FFFFFF;
           font-size: 0.875rem;
           line-height: 1.55;
           margin: 0;
@@ -227,7 +227,7 @@ export default function ProcessSection() {
           .mobile-step-num {
             font-family: var(--font-mono, monospace);
             font-size: 0.62rem;
-            color: #14B8A6;
+            color: #FFFFFF;
             font-weight: 600;
             letter-spacing: 0.1em;
             margin-bottom: 0.25rem;
@@ -237,7 +237,7 @@ export default function ProcessSection() {
           .mobile-step-title {
             font-size: 0.82rem;
             font-weight: 600;
-            color: #F0FDFA;
+            color: #FFFFFF;
             letter-spacing: 0.03em;
             margin: 0;
             text-transform: uppercase;
@@ -277,7 +277,7 @@ export default function ProcessSection() {
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: '#0F766E',
+            color: '#FFFFFF',
             marginBottom: '0.5rem',
             fontWeight: 600,
           }}
@@ -291,7 +291,7 @@ export default function ProcessSection() {
             fontWeight: 700,
             lineHeight: 1.02,
             letterSpacing: '-0.035em',
-            color: '#F0FDFA',
+            color: '#FFFFFF',
             marginBottom: '0.65rem',
             textTransform: 'uppercase',
           }}
@@ -302,7 +302,7 @@ export default function ProcessSection() {
           className="section-desc"
           style={{
             fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-            color: '#A7C7C5',
+            color: '#FFFFFF',
             lineHeight: 1.6,
             marginBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
             maxWidth: 600,
@@ -367,7 +367,7 @@ export default function ProcessSection() {
 
         {/* ─── Process Next Step ─── */}
         <div style={{ marginTop: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', borderTop: '1px solid rgba(20, 184, 166, 0.12)', paddingTop: '1.25rem' }}>
-          <p style={{ color: '#A7C7C5', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
+          <p style={{ color: '#FFFFFF', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
             Have a system to engineer or operational workflow to automate?
           </p>
           <Link
@@ -375,7 +375,7 @@ export default function ProcessSection() {
             style={{
               fontFamily: 'var(--font-mono, monospace)',
               fontSize: '0.75rem',
-              color: '#14B8A6',
+              color: '#FFFFFF',
               textDecoration: 'none',
               letterSpacing: '0.08em',
               fontWeight: 600,

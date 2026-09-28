@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   background-color: var(--color-bg-primary, #020708);
-  color: var(--color-text-primary, #F0FDFA);
+  color: var(--color-text-primary, #FFFFFF);
   font-family: 'Space Grotesk', sans-serif;
   min-height: 100vh;
 }
@@ -18,7 +18,7 @@
   font-family: 'Space Mono', monospace;
   font-size: 0.72rem;
   letter-spacing: 0.15em;
-  color: var(--color-text-muted, #A7C7C5);
+  color: var(--color-text-muted, #FFFFFF);
   margin-bottom: 1rem;
 }
 
@@ -114,7 +114,7 @@
 .bio {
   font-size: 1.125rem;
   line-height: 1.6;
-  color: var(--color-text-muted, #A7C7C5);
+  color: var(--color-text-muted, #FFFFFF);
   margin: 0 0 3rem 0;
   max-width: 500px;
 }
@@ -128,7 +128,7 @@
 .socials a {
   font-family: 'Space Mono', monospace;
   font-size: 0.875rem;
-  color: var(--color-text-primary, #F0FDFA);
+  color: var(--color-text-primary, #FFFFFF);
   text-decoration: none;
   text-transform: uppercase;
   letter-spacing: 0.05em;

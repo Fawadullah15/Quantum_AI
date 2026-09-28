@@ -159,7 +159,7 @@ body {
   line-height: 1.02;
   letter-spacing: -0.035em;
   text-transform: uppercase;
-  color: #F0FDFA;
+  color: #FFFFFF;
 }
 
 /* Level 2: Main Section Headings (H2) - Dominant, Bold, Focal Point */
@@ -171,7 +171,7 @@ body {
   line-height: 1.05;
   letter-spacing: -0.03em;
   text-transform: uppercase;
-  color: #F0FDFA;
+  color: #FFFFFF;
 }
 
 /* Level 4: Subsection / Accordion / Card Headings (H3) - Subordinate to Section Headings */
@@ -184,16 +184,16 @@ body {
   line-height: 1.25;
   letter-spacing: -0.015em;
   text-transform: uppercase;
-  color: #F0FDFA;
+  color: #FFFFFF;
 }
 
 /* Level 5: Minor Headings (H4, H5, H6) */
-.public-layout h4 { font-size: clamp(0.95rem, 1.3vw, 1.15rem); font-weight: 600; letter-spacing: -0.01em; }
-.public-layout h5 { font-size: 0.875rem; font-weight: 600; }
-.public-layout h6 { font-size: 0.75rem; letter-spacing: var(--tracking-widest); }
+.public-layout h4 { font-size: clamp(0.95rem, 1.3vw, 1.15rem); font-weight: 600; letter-spacing: -0.01em; color: #FFFFFF; }
+.public-layout h5 { font-size: 0.875rem; font-weight: 600; color: #FFFFFF; }
+.public-layout h6 { font-size: 0.75rem; letter-spacing: var(--tracking-widest); color: #FFFFFF; }
 
 .public-layout p {
-  color: var(--color-text-secondary);
+  color: #FFFFFF;
   margin-bottom: var(--space-4);
   max-width: var(--max-width-text);
   font-weight: var(--weight-light);
@@ -203,6 +203,31 @@ a {
   color: inherit;
   text-decoration: none;
   transition: color var(--transition-fast);
+}
+
+/* Ensure all public website text is crisp, bright white */
+.public-layout {
+  color: #FFFFFF;
+}
+
+.public-layout p,
+.public-layout span:not([class*="badge-warn"]):not([class*="badge-err"]):not([class*="status-dot"]),
+.public-layout h1,
+.public-layout h2,
+.public-layout h3,
+.public-layout h4,
+.public-layout h5,
+.public-layout h6,
+.public-layout li,
+.public-layout label,
+.public-layout .section-desc,
+.public-layout .card-desc,
+.public-layout .section-heading,
+.public-layout .hero-eyebrow,
+.public-layout .nav-link,
+.public-layout .footer-col a,
+.public-layout .footer-brand p {
+  color: #FFFFFF !important;
 }
 
 /* ============================================================
@@ -299,7 +324,7 @@ a {
 
 .btn-secondary {
   background: rgba(7, 18, 20, 0.8);
-  color: #F0FDFA;
+  color: #FFFFFF;
   border-color: rgba(20, 184, 166, 0.20);
 }
 
@@ -310,7 +335,7 @@ a {
 
 .btn-outline {
   background: transparent;
-  color: #67E8F9;
+  color: #FFFFFF;
   border-color: rgba(20, 184, 166, 0.35);
 }
 
@@ -321,24 +346,24 @@ a {
 
 .btn-ghost {
   background: transparent;
-  color: #A7C7C5;
+  color: #FFFFFF;
   border-color: transparent;
 }
 
 .btn-ghost:hover {
-  color: #F0FDFA;
+  color: #FFFFFF;
   background: rgba(20, 184, 166, 0.05);
 }
 
 .btn-link {
   background: transparent;
-  color: #67E8F9;
+  color: #FFFFFF;
   border: none;
   padding: 0;
 }
 
 .btn-link:hover {
-  color: #14B8A6;
+  color: #FFFFFF;
   text-decoration: underline;
 }
 
@@ -376,12 +401,12 @@ a {
 .card-title {
   font-size: 1.15rem;
   font-weight: 600;
-  color: #F0FDFA;
+  color: #FFFFFF;
   margin-bottom: 0.35rem;
 }
 
 .card-description {
-  color: #A7C7C5;
+  color: #FFFFFF;
   font-size: 0.875rem;
   line-height: 1.6;
   margin: 0;
@@ -414,25 +439,25 @@ a {
 
 .badge-default {
   background: rgba(167, 199, 197, 0.1);
-  color: #A7C7C5;
+  color: #FFFFFF;
   border-color: rgba(167, 199, 197, 0.2);
 }
 
 .badge-primary {
   background: rgba(20, 184, 166, 0.08);
-  color: #14B8A6;
+  color: #FFFFFF;
   border-color: rgba(20, 184, 166, 0.25);
 }
 
 .badge-accent {
   background: rgba(37, 99, 235, 0.12);
-  color: #67E8F9;
+  color: #FFFFFF;
   border-color: rgba(37, 99, 235, 0.3);
 }
 
 .badge-success {
   background: rgba(20, 184, 166, 0.1);
-  color: #14B8A6;
+  color: #FFFFFF;
   border-color: rgba(20, 184, 166, 0.25);
 }
 
@@ -455,7 +480,7 @@ a {
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #A7C7C5;
+  color: #FFFFFF;
   font-weight: 500;
 }
 
@@ -466,19 +491,19 @@ a {
   border-radius: 8px;
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
-  color: #F0FDFA;
+  color: #FFFFFF;
   font-family: var(--font-sans, sans-serif);
   transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
   min-height: 44px;
 }
 
 .form-input::placeholder, .form-textarea::placeholder {
-  color: #6F8F8D;
+  color: #FFFFFF;
 }
 
 .form-input:focus, .form-textarea:focus, .form-select:focus {
   outline: none;
-  border-color: #14B8A6;
+  border-color: #FFFFFF;
   background: rgba(10, 24, 27, 0.9);
   box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.12);
 }
@@ -497,7 +522,7 @@ a {
 
 .form-hint {
   font-size: 0.75rem;
-  color: #6F8F8D;
+  color: #FFFFFF;
   margin-top: 0.25rem;
 }
 

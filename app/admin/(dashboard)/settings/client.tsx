@@ -222,7 +222,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
     backgroundColor: '#070B14',
     border: '1px solid rgba(22, 119, 255, 0.25)',
     borderRadius: 8,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: '0.875rem',
     outline: 'none',
     boxSizing: 'border-box',
@@ -233,7 +233,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
     display: 'block',
     fontSize: '0.72rem',
     fontWeight: 600,
-    color: '#94A3B8',
+    color: '#FFFFFF',
     marginBottom: '0.35rem',
     letterSpacing: '0.04em',
     fontFamily: 'var(--font-mono, monospace)',
@@ -276,7 +276,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
               fontFamily: 'var(--font-mono, monospace)',
               fontSize: '0.68rem',
               letterSpacing: '0.18em',
-              color: '#1677FF',
+              color: '#FFFFFF',
               textTransform: 'uppercase',
               marginBottom: '0.25rem',
               fontWeight: 600,
@@ -284,10 +284,10 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
           >
             SYSTEM CONFIGURATION
           </div>
-          <h1 style={{ fontSize: '1.65rem', fontWeight: 700, color: '#F8FAFC', margin: 0, letterSpacing: '-0.02em' }}>
+          <h1 style={{ fontSize: '1.65rem', fontWeight: 700, color: '#FFFFFF', margin: 0, letterSpacing: '-0.02em' }}>
             Website Settings
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.85rem', marginTop: '0.25rem', maxWidth: 600, lineHeight: 1.5 }}>
+          <p style={{ color: '#FFFFFF', fontSize: '0.85rem', marginTop: '0.25rem', maxWidth: 600, lineHeight: 1.5 }}>
             Configure global branding, official company information, contact routing, social links, SEO metadata, and hero content.
           </p>
         </div>
@@ -360,7 +360,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 backgroundColor: isActive ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
                 border: isActive ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.15)',
                 borderRadius: 8,
-                color: isActive ? '#FFFFFF' : '#94A3B8',
+                color: isActive ? '#FFFFFF' : '#FFFFFF',
                 fontSize: '0.82rem',
                 fontWeight: isActive ? 600 : 500,
                 cursor: 'pointer',
@@ -385,14 +385,14 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 <span style={{ fontSize: '1.2rem' }}>🏢</span>
                 <div>
                   <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#F1F5F9', margin: 0 }}>Company Profile</h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0.15rem 0 0 0' }}>Main organizational identity across the website</p>
+                  <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.15rem 0 0 0' }}>Main organizational identity across the website</p>
                 </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                 <div>
                   <label style={labelStyle}>
-                    Company Name <span style={{ color: '#38BDF8' }}>*</span>
+                    Company Name <span style={{ color: '#FFFFFF' }}>*</span>
                   </label>
                   <input
                     type="text"
@@ -466,7 +466,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 <span style={{ fontSize: '1.2rem' }}>🎨</span>
                 <div>
                   <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#F1F5F9', margin: 0 }}>Branding Assets &amp; Media</h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0.15rem 0 0 0' }}>Control brand logos, site icons, and social share graphics</p>
+                  <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.15rem 0 0 0' }}>Control brand logos, site icons, and social share graphics</p>
                 </div>
               </div>
 
@@ -531,7 +531,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                       style={{
                         backgroundColor: 'rgba(22, 119, 255, 0.15)',
                         border: '1px solid rgba(22, 119, 255, 0.3)',
-                        color: '#38BDF8',
+                        color: '#FFFFFF',
                         padding: '0.4rem 0.65rem',
                         borderRadius: 6,
                         fontSize: '0.75rem',
@@ -623,7 +623,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                       style={{
                         backgroundColor: 'rgba(22, 119, 255, 0.15)',
                         border: '1px solid rgba(22, 119, 255, 0.3)',
-                        color: '#38BDF8',
+                        color: '#FFFFFF',
                         padding: '0.4rem 0.65rem',
                         borderRadius: 6,
                         fontSize: '0.75rem',
@@ -716,7 +716,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                       style={{
                         backgroundColor: 'rgba(22, 119, 255, 0.15)',
                         border: '1px solid rgba(22, 119, 255, 0.3)',
-                        color: '#38BDF8',
+                        color: '#FFFFFF',
                         padding: '0.4rem 0.65rem',
                         borderRadius: 6,
                         fontSize: '0.75rem',
@@ -774,7 +774,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                       style={inputStyle}
                     />
                   </div>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0.5rem 0 0 0' }}>
+                  <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.5rem 0 0 0' }}>
                     Used for glowing accents, primary buttons, and visual highlights.
                   </p>
                 </div>
@@ -791,7 +791,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 <span style={{ fontSize: '1.2rem' }}>📞</span>
                 <div>
                   <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#F1F5F9', margin: 0 }}>Contact &amp; Notification Routing</h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0.15rem 0 0 0' }}>Manage public contact channels and admin notification dispatch emails</p>
+                  <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.15rem 0 0 0' }}>Manage public contact channels and admin notification dispatch emails</p>
                 </div>
               </div>
 
@@ -806,7 +806,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                     style={{ ...inputStyle, borderColor: errors.company_email ? '#EF4444' : undefined }}
                   />
                   {errors.company_email && <p style={errorTextStyle}>{errors.company_email}</p>}
-                  <p style={{ fontSize: '0.72rem', color: '#64748B', margin: '0.3rem 0 0 0' }}>Displayed on the Contact page, Header, and Footer.</p>
+                  <p style={{ fontSize: '0.72rem', color: '#FFFFFF', margin: '0.3rem 0 0 0' }}>Displayed on the Contact page, Header, and Footer.</p>
                 </div>
 
                 <div>
@@ -819,7 +819,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                     style={{ ...inputStyle, borderColor: errors.company_routing_email ? '#EF4444' : undefined }}
                   />
                   {errors.company_routing_email && <p style={errorTextStyle}>{errors.company_routing_email}</p>}
-                  <p style={{ fontSize: '0.72rem', color: '#64748B', margin: '0.3rem 0 0 0' }}>Receives automated notifications when new project inquiries are submitted.</p>
+                  <p style={{ fontSize: '0.72rem', color: '#FFFFFF', margin: '0.3rem 0 0 0' }}>Receives automated notifications when new project inquiries are submitted.</p>
                 </div>
 
                 <div>
@@ -867,7 +867,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 <span style={{ fontSize: '1.2rem' }}>🌐</span>
                 <div>
                   <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#F1F5F9', margin: 0 }}>Social Media &amp; Repositories</h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0.15rem 0 0 0' }}>Connect official corporate channels with live URL test actions</p>
+                  <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.15rem 0 0 0' }}>Connect official corporate channels with live URL test actions</p>
                 </div>
               </div>
 
@@ -891,7 +891,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                         style={{
                           backgroundColor: 'rgba(22, 119, 255, 0.15)',
                           border: '1px solid rgba(22, 119, 255, 0.3)',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           padding: '0.65rem 0.85rem',
                           borderRadius: 8,
                           textDecoration: 'none',
@@ -927,7 +927,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                         style={{
                           backgroundColor: 'rgba(22, 119, 255, 0.15)',
                           border: '1px solid rgba(22, 119, 255, 0.3)',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           padding: '0.65rem 0.85rem',
                           borderRadius: 8,
                           textDecoration: 'none',
@@ -963,7 +963,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                         style={{
                           backgroundColor: 'rgba(22, 119, 255, 0.15)',
                           border: '1px solid rgba(22, 119, 255, 0.3)',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           padding: '0.65rem 0.85rem',
                           borderRadius: 8,
                           textDecoration: 'none',
@@ -999,7 +999,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                         style={{
                           backgroundColor: 'rgba(22, 119, 255, 0.15)',
                           border: '1px solid rgba(22, 119, 255, 0.3)',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           padding: '0.65rem 0.85rem',
                           borderRadius: 8,
                           textDecoration: 'none',
@@ -1035,7 +1035,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                         style={{
                           backgroundColor: 'rgba(22, 119, 255, 0.15)',
                           border: '1px solid rgba(22, 119, 255, 0.3)',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           padding: '0.65rem 0.85rem',
                           borderRadius: 8,
                           textDecoration: 'none',
@@ -1071,7 +1071,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                         style={{
                           backgroundColor: 'rgba(22, 119, 255, 0.15)',
                           border: '1px solid rgba(22, 119, 255, 0.3)',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           padding: '0.65rem 0.85rem',
                           borderRadius: 8,
                           textDecoration: 'none',
@@ -1100,7 +1100,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 <span style={{ fontSize: '1.2rem' }}>🔍</span>
                 <div>
                   <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#F1F5F9', margin: 0 }}>Search Engine Optimization (SEO)</h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0.15rem 0 0 0' }}>Global meta titles, descriptions, indexing directives, and keywords</p>
+                  <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.15rem 0 0 0' }}>Global meta titles, descriptions, indexing directives, and keywords</p>
                 </div>
               </div>
 
@@ -1108,7 +1108,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <label style={labelStyle}>Default Meta Title</label>
-                    <span style={{ fontSize: '0.7rem', color: '#64748B', fontFamily: 'var(--font-mono, monospace)' }}>
+                    <span style={{ fontSize: '0.7rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                       {formData.meta_title?.length || 0} / 60 characters recommended
                     </span>
                   </div>
@@ -1124,7 +1124,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <label style={labelStyle}>Default Meta Description</label>
-                    <span style={{ fontSize: '0.7rem', color: '#64748B', fontFamily: 'var(--font-mono, monospace)' }}>
+                    <span style={{ fontSize: '0.7rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                       {formData.meta_description?.length || 0} / 160 characters recommended
                     </span>
                   </div>
@@ -1150,8 +1150,8 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 8, padding: '0.85rem 1.15rem' }}>
                   <div>
-                    <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.88rem' }}>Search Engine Indexing (Robots)</div>
-                    <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>Allow Google and other search engines to index and rank this site</div>
+                    <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.88rem' }}>Search Engine Indexing (Robots)</div>
+                    <div style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>Allow Google and other search engines to index and rank this site</div>
                   </div>
                   <label style={{ position: 'relative', display: 'inline-block', width: 44, height: 24, cursor: 'pointer' }}>
                     <input
@@ -1197,7 +1197,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 <span style={{ fontSize: '1.2rem' }}>🏠</span>
                 <div>
                   <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#F1F5F9', margin: 0 }}>Hero &amp; Homepage Headlines</h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0.15rem 0 0 0' }}>Configure main hero text, subtitles, and call-to-action buttons</p>
+                  <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.15rem 0 0 0' }}>Configure main hero text, subtitles, and call-to-action buttons</p>
                 </div>
               </div>
 
@@ -1239,7 +1239,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem', marginTop: '1.25rem', borderTop: '1px solid #1E293B', paddingTop: '1.25rem' }}>
                 {/* Primary CTA */}
                 <div>
-                  <div style={{ fontWeight: 600, color: '#38BDF8', fontSize: '0.82rem', marginBottom: '0.5rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                  <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.82rem', marginBottom: '0.5rem', fontFamily: 'var(--font-mono, monospace)' }}>
                     PRIMARY CALL TO ACTION
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -1268,7 +1268,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
 
                 {/* Secondary CTA */}
                 <div>
-                  <div style={{ fontWeight: 600, color: '#94A3B8', fontSize: '0.82rem', marginBottom: '0.5rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                  <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.82rem', marginBottom: '0.5rem', fontFamily: 'var(--font-mono, monospace)' }}>
                     SECONDARY CALL TO ACTION
                   </div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -1307,7 +1307,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 <span style={{ fontSize: '1.2rem' }}>🧭</span>
                 <div>
                   <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#F1F5F9', margin: 0 }}>Header Navigation &amp; Global Footer</h2>
-                  <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0.15rem 0 0 0' }}>Configure global header CTA buttons, footer copyright, and notices</p>
+                  <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.15rem 0 0 0' }}>Configure global header CTA buttons, footer copyright, and notices</p>
                 </div>
               </div>
 
@@ -1415,7 +1415,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                   style={{
                     backgroundColor: 'rgba(148, 163, 184, 0.1)',
                     border: '1px solid rgba(148, 163, 184, 0.25)',
-                    color: '#CBD5E1',
+                    color: '#FFFFFF',
                     padding: '0.55rem 1rem',
                     borderRadius: 8,
                     fontSize: '0.8rem',
@@ -1436,7 +1436,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                   backgroundColor: isDirty ? '#1677FF' : '#1E293B',
                   border: 'none',
                   borderRadius: 8,
-                  color: isDirty ? '#FFFFFF' : '#64748B',
+                  color: isDirty ? '#FFFFFF' : '#FFFFFF',
                   padding: '0.6rem 1.85rem',
                   fontSize: '0.85rem',
                   fontWeight: 600,
@@ -1497,10 +1497,10 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', paddingBottom: '0.85rem', marginBottom: '1.25rem' }}>
               <div>
-                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#F8FAFC' }}>
+                <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF' }}>
                   Select Asset for {mediaModalField}
                 </h3>
-                <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.75rem', color: '#94A3B8' }}>
+                <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.75rem', color: '#FFFFFF' }}>
                   Click an image from your Media Library to assign it to this branding field
                 </p>
               </div>
@@ -1510,7 +1510,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   fontSize: '1.25rem',
                   cursor: 'pointer',
                   padding: '0.25rem',

@@ -183,7 +183,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
           display: 'inline-flex',
           alignItems: 'center',
           gap: '0.4rem',
-          color: '#64748B',
+          color: '#FFFFFF',
           textDecoration: 'none',
           fontFamily: 'var(--font-mono, monospace)',
           fontSize: '0.75rem',
@@ -204,7 +204,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
             fontFamily: 'var(--font-mono, monospace)',
             fontSize: '0.72rem',
             letterSpacing: '0.2em',
-            color: '#38BDF8',
+            color: '#FFFFFF',
             textTransform: 'uppercase',
             marginBottom: '0.75rem',
             padding: '0.2rem 0.65rem',
@@ -220,7 +220,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
             fontWeight: 700,
             lineHeight: 1.1,
             letterSpacing: '-0.03em',
-            color: '#F8FAFF',
+            color: '#FFFFFF',
             marginBottom: '1rem',
             textTransform: 'uppercase',
           }}>
@@ -229,7 +229,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
 
           <p style={{
             fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)',
-            color: '#94A3B8',
+            color: '#FFFFFF',
             lineHeight: 1.65,
             maxWidth: '700px',
             fontWeight: 300,
@@ -245,7 +245,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
             marginBottom: '3rem',
             fontSize: '0.95rem',
             lineHeight: 1.75,
-            color: '#CBD5E1',
+            color: '#FFFFFF',
             maxWidth: '780px',
             borderLeft: '2px solid rgba(22, 119, 255, 0.4)',
             paddingLeft: '1.25rem',
@@ -257,13 +257,13 @@ export default async function TechnologyDetailPage({ params }: Props) {
         {/* Key Capabilities / Features */}
         {features.length > 0 && (
           <section style={{ marginBottom: '3.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.2em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
               SYS.CAPABILITIES
             </div>
             <h2 style={{
               fontSize: 'clamp(1.25rem, 2.5vw, 1.6rem)',
               fontWeight: 700,
-              color: '#F8FAFF',
+              color: '#FFFFFF',
               marginBottom: '1.5rem',
               textTransform: 'uppercase',
               letterSpacing: '-0.02em',
@@ -283,18 +283,18 @@ export default async function TechnologyDetailPage({ params }: Props) {
                   borderRadius: '10px',
                   boxShadow: '0 4px 20px -4px rgba(0,0,0,0.5)',
                 }}>
-                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', marginBottom: '0.5rem', fontWeight: 600 }}>
+                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', marginBottom: '0.5rem', fontWeight: 600 }}>
                     {String(index + 1).padStart(2, '0')} // FEATURE
                   </div>
                   <h3 style={{
                     fontSize: '1.05rem',
                     fontWeight: 600,
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     marginBottom: '0.4rem',
                   }}>
                     {feature.title}
                   </h3>
-                  <p style={{ fontSize: '0.875rem', color: '#94A3B8', lineHeight: 1.55, margin: 0 }}>
+                  <p style={{ fontSize: '0.875rem', color: '#FFFFFF', lineHeight: 1.55, margin: 0 }}>
                     {feature.description}
                   </p>
                 </div>
@@ -306,13 +306,13 @@ export default async function TechnologyDetailPage({ params }: Props) {
         {/* Use Cases */}
         {useCases.length > 0 && (
           <section style={{ marginBottom: '3.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.2em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
               SYS.DEPLOYMENTS
             </div>
             <h2 style={{
               fontSize: 'clamp(1.25rem, 2.5vw, 1.6rem)',
               fontWeight: 700,
-              color: '#F8FAFF',
+              color: '#FFFFFF',
               marginBottom: '1.5rem',
               textTransform: 'uppercase',
               letterSpacing: '-0.02em',
@@ -331,12 +331,12 @@ export default async function TechnologyDetailPage({ params }: Props) {
                   <h3 style={{
                     fontSize: '1.05rem',
                     fontWeight: 600,
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     marginBottom: '0.35rem',
                   }}>
                     {useCase.title}
                   </h3>
-                  <p style={{ fontSize: '0.875rem', color: '#94A3B8', lineHeight: 1.55, margin: 0 }}>
+                  <p style={{ fontSize: '0.875rem', color: '#FFFFFF', lineHeight: 1.55, margin: 0 }}>
                     {useCase.description}
                   </p>
                 </div>
@@ -381,7 +381,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
               fontFamily: 'var(--font-mono, monospace)',
               fontSize: '0.75rem',
               letterSpacing: '0.3em',
-              color: '#38BDF8',
+              color: '#FFFFFF',
               textTransform: 'uppercase',
               marginBottom: '1rem',
               fontWeight: 600,
@@ -393,7 +393,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
               fontSize: 'clamp(1.85rem, 4vw, 2.75rem)',
               fontWeight: 700,
               lineHeight: 1.15,
-              color: '#F8FAFF',
+              color: '#FFFFFF',
               marginBottom: '1rem',
               letterSpacing: '-0.02em',
             }}>
@@ -402,7 +402,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
 
             <p style={{
               fontSize: 'clamp(1rem, 1.8vw, 1.15rem)',
-              color: '#94A3B8',
+              color: '#FFFFFF',
               lineHeight: 1.7,
               maxWidth: '640px',
               margin: '0 auto 2.25rem',
@@ -468,7 +468,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
         {/* Footer Navigation */}
         <div style={{ paddingTop: '2rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <Link href="/technology" style={{
-            color: '#64748B',
+            color: '#FFFFFF',
             textDecoration: 'none',
             fontFamily: 'var(--font-mono, monospace)',
             fontSize: '0.8125rem',
@@ -478,7 +478,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
             ← VIEW ALL TECHNOLOGIES
           </Link>
           <Link href="/contact" style={{
-            color: '#38BDF8',
+            color: '#FFFFFF',
             textDecoration: 'none',
             fontFamily: 'var(--font-mono, monospace)',
             fontSize: '0.8125rem',

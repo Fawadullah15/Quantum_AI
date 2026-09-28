@@ -15,8 +15,8 @@ export default async function CaseStudiesPage() {
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto' }}>
       <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>Works & Case Studies</h1>
-        <p style={{ color: '#64748B', fontSize: '0.825rem', marginTop: '0.25rem' }}>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>Works & Case Studies</h1>
+        <p style={{ color: '#FFFFFF', fontSize: '0.825rem', marginTop: '0.25rem' }}>
           Manage your client projects, portfolio deployments, and detailed case studies shown on the public Works page.
         </p>
       </div>

@@ -39,7 +39,7 @@ export default function AdminButton({
       case 'secondary':
         return {
           backgroundColor: 'rgba(22, 119, 255, 0.15)',
-          color: '#38BDF8',
+          color: '#FFFFFF',
           border: '1px solid rgba(22, 119, 255, 0.35)',
         };
       case 'danger':
@@ -51,14 +51,14 @@ export default function AdminButton({
       case 'outline':
         return {
           backgroundColor: 'transparent',
-          color: '#CBD5E1',
+          color: '#FFFFFF',
           border: '1px solid rgba(148, 163, 184, 0.3)',
         };
       case 'ghost':
       default:
         return {
           backgroundColor: 'transparent',
-          color: '#94A3B8',
+          color: '#FFFFFF',
           border: '1px solid transparent',
         };
     }

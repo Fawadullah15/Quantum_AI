@@ -136,7 +136,7 @@ export function AdminToastProvider({ children }: { children: React.ReactNode }) 
                 display: 'flex',
                 alignItems: 'flex-start',
                 gap: '0.75rem',
-                color: '#F8FAFC',
+                color: '#FFFFFF',
                 pointerEvents: 'auto',
                 animation: 'slideInToast 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                 backdropFilter: 'blur(8px)',
@@ -167,7 +167,7 @@ export function AdminToastProvider({ children }: { children: React.ReactNode }) 
                     {toast.title}
                   </div>
                 )}
-                <div style={{ fontSize: '0.8rem', color: '#E2E8F0', lineHeight: 1.45, wordBreak: 'break-word' }}>
+                <div style={{ fontSize: '0.8rem', color: '#FFFFFF', lineHeight: 1.45, wordBreak: 'break-word' }}>
                   {toast.message}
                 </div>
               </div>
@@ -178,7 +178,7 @@ export function AdminToastProvider({ children }: { children: React.ReactNode }) 
                 style={{
                   background: 'transparent',
                   border: 'none',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   cursor: 'pointer',
                   fontSize: '0.9rem',
                   padding: 0,

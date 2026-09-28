@@ -95,7 +95,7 @@ export default function ChallengesSection() {
         }
 
         .challenge-tab-card:focus-visible {
-          border-color: #14B8A6;
+          border-color: #FFFFFF;
           box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
         }
 
@@ -125,7 +125,7 @@ export default function ChallengesSection() {
         .challenge-card-code {
           font-family: var(--font-mono, monospace);
           font-size: 0.68rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           letter-spacing: 0.15em;
           font-weight: 600;
           text-transform: uppercase;
@@ -138,7 +138,7 @@ export default function ChallengesSection() {
         .challenge-card-title {
           font-size: clamp(1rem, 1.8vw, 1.15rem);
           font-weight: 600;
-          color: #F0FDFA;
+          color: #FFFFFF;
           letter-spacing: -0.01em;
           margin: 0;
           text-transform: none;
@@ -150,7 +150,7 @@ export default function ChallengesSection() {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #6F8F8D;
+          color: #FFFFFF;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -162,7 +162,7 @@ export default function ChallengesSection() {
         }
 
         .challenge-tab-card.is-expanded .challenge-card-indicator {
-          color: #14B8A6;
+          color: #FFFFFF;
         }
 
         .challenge-card-expandable {
@@ -187,7 +187,7 @@ export default function ChallengesSection() {
         }
 
         .challenge-card-desc {
-          color: #A7C7C5;
+          color: #FFFFFF;
           font-size: 0.875rem;
           line-height: 1.55;
           margin: 0;
@@ -199,7 +199,7 @@ export default function ChallengesSection() {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           font-family: var(--font-mono, monospace);
           font-size: 0.75rem;
           letter-spacing: 0.1em;
@@ -210,7 +210,7 @@ export default function ChallengesSection() {
         }
 
         .challenge-tab-card:hover .challenge-card-cta {
-          color: #67E8F9;
+          color: #FFFFFF;
           transform: translateX(3px);
         }
 
@@ -254,7 +254,7 @@ export default function ChallengesSection() {
           .mobile-block-code {
             font-family: var(--font-mono, monospace);
             font-size: 0.56rem;
-            color: #14B8A6;
+            color: #FFFFFF;
             letter-spacing: 0.08em;
             font-weight: 600;
             text-transform: uppercase;
@@ -265,7 +265,7 @@ export default function ChallengesSection() {
           .mobile-block-title {
             font-size: 0.8rem;
             font-weight: 600;
-            color: #F0FDFA;
+            color: #FFFFFF;
             letter-spacing: -0.01em;
             margin: 0;
             line-height: 1.25;
@@ -276,7 +276,7 @@ export default function ChallengesSection() {
 
           .mobile-block-desc {
             font-size: 0.68rem;
-            color: #A7C7C5;
+            color: #FFFFFF;
             line-height: 1.35;
             margin: 0;
             font-weight: 300;
@@ -292,7 +292,7 @@ export default function ChallengesSection() {
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
-            color: #14B8A6;
+            color: #FFFFFF;
             font-family: var(--font-mono, monospace);
             font-size: 0.62rem;
             font-weight: 700;
@@ -328,7 +328,7 @@ export default function ChallengesSection() {
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: '#0F766E',
+            color: '#FFFFFF',
             marginBottom: '0.5rem',
             fontWeight: 600,
           }}
@@ -342,7 +342,7 @@ export default function ChallengesSection() {
             fontWeight: 700,
             lineHeight: 1.02,
             letterSpacing: '-0.035em',
-            color: '#F0FDFA',
+            color: '#FFFFFF',
             marginBottom: '0.65rem',
             textTransform: 'uppercase',
           }}
@@ -353,7 +353,7 @@ export default function ChallengesSection() {
           className="section-desc"
           style={{
             fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-            color: '#A7C7C5',
+            color: '#FFFFFF',
             lineHeight: 1.6,
             marginBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
             maxWidth: 640,

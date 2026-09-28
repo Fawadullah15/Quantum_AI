@@ -97,24 +97,24 @@ export default async function BlogPage() {
           margin-bottom: 0.65rem;
         }
         .blog-card-cat {
-          color: #38BDF8;
+          color: #FFFFFF;
           letter-spacing: 0.12em;
           text-transform: uppercase;
           font-weight: 600;
         }
         .blog-card-date {
-          color: #64748B;
+          color: #FFFFFF;
         }
         .blog-card-title {
           font-size: 1.1rem;
           font-weight: 600;
-          color: #F8FAFC;
+          color: #FFFFFF;
           line-height: 1.35;
           margin: 0 0 0.5rem 0;
           letter-spacing: -0.01em;
         }
         .blog-card-excerpt {
-          color: #94A3B8;
+          color: #FFFFFF;
           font-size: 0.86rem;
           line-height: 1.55;
           margin: 0 0 1rem 0;
@@ -123,7 +123,7 @@ export default async function BlogPage() {
         .blog-card-action {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
-          color: #1677FF;
+          color: #FFFFFF;
           font-weight: 600;
           letter-spacing: 0.08em;
           text-transform: uppercase;
@@ -133,11 +133,11 @@ export default async function BlogPage() {
       `}</style>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.09 / ARTICLES & RESEARCH</div>
-          <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', color: '#F8FAFC', margin: '0 0 0.5rem 0' }}>
+          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.09 / ARTICLES & RESEARCH</div>
+          <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', color: '#FFFFFF', margin: '0 0 0.5rem 0' }}>
             ENGINEERING INSIGHTS & STRATEGY.
           </h1>
-          <p style={{ fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)', color: '#94A3B8', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+          <p style={{ fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)', color: '#FFFFFF', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
             Practical blueprints on artificial intelligence, business automation, and custom software architecture from Quantum AI engineers.
           </p>
         </div>

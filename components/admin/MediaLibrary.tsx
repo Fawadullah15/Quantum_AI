@@ -173,7 +173,7 @@ export default function MediaLibrary({
     });
 
   return (
-    <div style={{ color: '#F8FAFC', width: '100%' }}>
+    <div style={{ color: '#FFFFFF', width: '100%' }}>
       {/* Top Toolbar */}
       <div
         style={{
@@ -199,7 +199,7 @@ export default function MediaLibrary({
                 borderRadius: '8px',
                 padding: '0.6rem 0.95rem',
                 fontSize: '0.85rem',
-                color: '#F8FAFC',
+                color: '#FFFFFF',
                 outline: 'none',
                 boxSizing: 'border-box',
               }}
@@ -215,7 +215,7 @@ export default function MediaLibrary({
                 style={{
                   backgroundColor: typeFilter === t ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
                   border: typeFilter === t ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
-                  color: typeFilter === t ? '#FFFFFF' : '#94A3B8',
+                  color: typeFilter === t ? '#FFFFFF' : '#FFFFFF',
                   padding: '0.45rem 0.75rem',
                   borderRadius: 6,
                   fontSize: '0.75rem',
@@ -238,7 +238,7 @@ export default function MediaLibrary({
               borderRadius: '8px',
               padding: '0.6rem 0.85rem',
               fontSize: '0.82rem',
-              color: '#CBD5E1',
+              color: '#FFFFFF',
               outline: 'none',
               fontFamily: 'var(--font-mono, monospace)',
             }}
@@ -260,7 +260,7 @@ export default function MediaLibrary({
               style={{
                 background: viewMode === 'GRID' ? '#1677FF' : 'transparent',
                 border: 'none',
-                color: viewMode === 'GRID' ? '#FFFFFF' : '#94A3B8',
+                color: viewMode === 'GRID' ? '#FFFFFF' : '#FFFFFF',
                 padding: '0.45rem 0.75rem',
                 fontSize: '0.8rem',
                 cursor: 'pointer',
@@ -275,7 +275,7 @@ export default function MediaLibrary({
               style={{
                 background: viewMode === 'LIST' ? '#1677FF' : 'transparent',
                 border: 'none',
-                color: viewMode === 'LIST' ? '#FFFFFF' : '#94A3B8',
+                color: viewMode === 'LIST' ? '#FFFFFF' : '#FFFFFF',
                 padding: '0.45rem 0.75rem',
                 fontSize: '0.8rem',
                 cursor: 'pointer',
@@ -346,18 +346,18 @@ export default function MediaLibrary({
             {selectedFile ? (
               <div>
                 <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📄</div>
-                <p style={{ fontWeight: 600, color: '#F8FAFC', margin: '0 0 0.25rem 0' }}>{selectedFile.name}</p>
-                <p style={{ fontSize: '0.8rem', color: '#94A3B8', margin: 0, fontFamily: 'var(--font-mono, monospace)' }}>
+                <p style={{ fontWeight: 600, color: '#FFFFFF', margin: '0 0 0.25rem 0' }}>{selectedFile.name}</p>
+                <p style={{ fontSize: '0.8rem', color: '#FFFFFF', margin: 0, fontFamily: 'var(--font-mono, monospace)' }}>
                   {formatBytes(selectedFile.size)} · Click or Drop another file to change
                 </p>
               </div>
             ) : (
               <div>
                 <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>☁️</div>
-                <p style={{ fontWeight: 600, color: '#F8FAFC', margin: '0 0 0.25rem 0' }}>
+                <p style={{ fontWeight: 600, color: '#FFFFFF', margin: '0 0 0.25rem 0' }}>
                   Drag &amp; Drop media files here, or click to browse
                 </p>
-                <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: 0, fontFamily: 'var(--font-mono, monospace)' }}>
+                <p style={{ fontSize: '0.78rem', color: '#FFFFFF', margin: 0, fontFamily: 'var(--font-mono, monospace)' }}>
                   Supports JPEG, PNG, WebP, GIF, SVG, MP4, WebM, PDF up to 10MB
                 </p>
               </div>
@@ -372,7 +372,7 @@ export default function MediaLibrary({
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   padding: '0.5rem 1rem',
                   borderRadius: 6,
                   fontSize: '0.82rem',
@@ -507,7 +507,7 @@ export default function MediaLibrary({
                     title={item.filename}
                     style={{
                       fontWeight: 600,
-                      color: '#F8FAFC',
+                      color: '#FFFFFF',
                       fontSize: '0.82rem',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
@@ -516,7 +516,7 @@ export default function MediaLibrary({
                   >
                     {item.filename}
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.25rem', fontSize: '0.72rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.25rem', fontSize: '0.72rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                     <span>{formatBytes(item.size)}</span>
                     <span>{new Date(item.createdAt).toLocaleDateString()}</span>
                   </div>
@@ -532,7 +532,7 @@ export default function MediaLibrary({
                       flex: 1,
                       backgroundColor: 'rgba(22, 119, 255, 0.12)',
                       border: '1px solid rgba(22, 119, 255, 0.25)',
-                      color: '#38BDF8',
+                      color: '#FFFFFF',
                       padding: '0.3rem 0.45rem',
                       borderRadius: 4,
                       fontSize: '0.72rem',
@@ -551,7 +551,7 @@ export default function MediaLibrary({
                     style={{
                       backgroundColor: 'rgba(22, 119, 255, 0.12)',
                       border: '1px solid rgba(22, 119, 255, 0.25)',
-                      color: '#CBD5E1',
+                      color: '#FFFFFF',
                       padding: '0.3rem 0.55rem',
                       borderRadius: 4,
                       fontSize: '0.72rem',
@@ -596,19 +596,19 @@ export default function MediaLibrary({
             <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
               <thead>
                 <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                     Asset &amp; Preview
                   </th>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                     Type
                   </th>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                     Size
                   </th>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                     Uploaded
                   </th>
-                  <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
+                  <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
                     Actions
                   </th>
                 </tr>
@@ -645,10 +645,10 @@ export default function MediaLibrary({
                           )}
                         </div>
                         <div style={{ minWidth: 0 }}>
-                          <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.88rem' }}>
+                          <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.88rem' }}>
                             {item.filename}
                           </div>
-                          <div style={{ fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'var(--font-mono, monospace)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '300px' }}>
+                          <div style={{ fontSize: '0.72rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '300px' }}>
                             {item.url}
                           </div>
                         </div>
@@ -656,16 +656,16 @@ export default function MediaLibrary({
                     </td>
 
                     <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
-                      <span style={{ backgroundColor: 'rgba(22, 119, 255, 0.12)', border: '1px solid rgba(22, 119, 255, 0.25)', padding: '0.2rem 0.5rem', borderRadius: 4, fontSize: '0.75rem', color: '#CBD5E1', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <span style={{ backgroundColor: 'rgba(22, 119, 255, 0.12)', border: '1px solid rgba(22, 119, 255, 0.25)', padding: '0.2rem 0.5rem', borderRadius: 4, fontSize: '0.75rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                         {item.type}
                       </span>
                     </td>
 
-                    <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8rem', color: '#94A3B8' }}>
+                    <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8rem', color: '#FFFFFF' }}>
                       {formatBytes(item.size)}
                     </td>
 
-                    <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8rem', color: '#94A3B8' }}>
+                    <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8rem', color: '#FFFFFF' }}>
                       {new Date(item.createdAt).toLocaleDateString()}
                     </td>
 
@@ -677,7 +677,7 @@ export default function MediaLibrary({
                           style={{
                             backgroundColor: 'rgba(22, 119, 255, 0.15)',
                             border: '1px solid rgba(22, 119, 255, 0.35)',
-                            color: '#38BDF8',
+                            color: '#FFFFFF',
                             padding: '0.3rem 0.65rem',
                             borderRadius: 4,
                             fontSize: '0.72rem',
@@ -693,7 +693,7 @@ export default function MediaLibrary({
                           style={{
                             backgroundColor: 'rgba(22, 119, 255, 0.15)',
                             border: '1px solid rgba(22, 119, 255, 0.35)',
-                            color: '#CBD5E1',
+                            color: '#FFFFFF',
                             padding: '0.3rem 0.55rem',
                             borderRadius: 4,
                             fontSize: '0.72rem',
@@ -759,13 +759,13 @@ export default function MediaLibrary({
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', paddingBottom: '0.75rem' }}>
-              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#F8FAFC', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: '#FFFFFF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {previewItem.filename}
               </h3>
               <button
                 type="button"
                 onClick={() => setPreviewItem(null)}
-                style={{ background: 'transparent', border: 'none', color: '#94A3B8', fontSize: '1.1rem', cursor: 'pointer' }}
+                style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '1.1rem', cursor: 'pointer' }}
               >
                 ✕
               </button>
@@ -795,7 +795,7 @@ export default function MediaLibrary({
               ) : previewItem.type.startsWith('video/') ? (
                 <video src={previewItem.url} controls style={{ maxWidth: '100%', maxHeight: '340px' }} />
               ) : (
-                <div style={{ padding: '3rem', textAlign: 'center', color: '#94A3B8' }}>
+                <div style={{ padding: '3rem', textAlign: 'center', color: '#FFFFFF' }}>
                   <div style={{ fontSize: '3rem' }}>📄</div>
                   <p style={{ marginTop: '0.5rem' }}>Document Asset ({previewItem.type})</p>
                 </div>
@@ -805,22 +805,22 @@ export default function MediaLibrary({
             {/* Asset Details */}
             <div style={{ backgroundColor: 'rgba(3, 7, 18, 0.6)', padding: '0.85rem 1rem', borderRadius: '6px', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '0.5rem' }}>
               <div>
-                <span style={{ color: '#64748B' }}>Size: </span>
-                <span style={{ color: '#F8FAFC' }}>{formatBytes(previewItem.size)}</span>
+                <span style={{ color: '#FFFFFF' }}>Size: </span>
+                <span style={{ color: '#FFFFFF' }}>{formatBytes(previewItem.size)}</span>
               </div>
               <div>
-                <span style={{ color: '#64748B' }}>MIME: </span>
-                <span style={{ color: '#38BDF8' }}>{previewItem.type}</span>
+                <span style={{ color: '#FFFFFF' }}>MIME: </span>
+                <span style={{ color: '#FFFFFF' }}>{previewItem.type}</span>
               </div>
               <div>
-                <span style={{ color: '#64748B' }}>Uploaded: </span>
-                <span style={{ color: '#F8FAFC' }}>{new Date(previewItem.createdAt).toLocaleDateString()}</span>
+                <span style={{ color: '#FFFFFF' }}>Uploaded: </span>
+                <span style={{ color: '#FFFFFF' }}>{new Date(previewItem.createdAt).toLocaleDateString()}</span>
               </div>
             </div>
 
             {/* Public URL Box */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.72rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+              <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
                 Direct CDN / Storage URL
               </label>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -835,7 +835,7 @@ export default function MediaLibrary({
                     borderRadius: 6,
                     padding: '0.5rem 0.75rem',
                     fontSize: '0.78rem',
-                    color: '#38BDF8',
+                    color: '#FFFFFF',
                     fontFamily: 'var(--font-mono, monospace)',
                   }}
                 />
@@ -866,7 +866,7 @@ export default function MediaLibrary({
                 target="_blank"
                 rel="noreferrer"
                 style={{
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   fontSize: '0.8rem',
                   textDecoration: 'none',
                   fontFamily: 'var(--font-mono, monospace)',
@@ -898,7 +898,7 @@ export default function MediaLibrary({
                   style={{
                     backgroundColor: 'transparent',
                     border: '1px solid rgba(148, 163, 184, 0.3)',
-                    color: '#94A3B8',
+                    color: '#FFFFFF',
                     padding: '0.45rem 0.95rem',
                     borderRadius: 6,
                     fontSize: '0.78rem',

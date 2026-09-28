@@ -92,7 +92,7 @@ function MapMarker({ marker }: { marker: Marker }) {
             />
             <text
               x="12" y="16"
-              fill="#F0FDFA"
+              fill="#FFFFFF"
               fontSize="9.5"
               fontWeight="700"
               fontFamily="'Space Mono', monospace"
@@ -102,7 +102,7 @@ function MapMarker({ marker }: { marker: Marker }) {
             </text>
             <text
               x="12" y="31"
-              fill="#6F8F8D"
+              fill="#FFFFFF"
               fontSize="8.5"
               fontFamily="'Space Mono', monospace"
               letterSpacing="0.5"
@@ -149,7 +149,7 @@ export default function GlobalMapSection() {
           fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
-          color: '#0F766E',
+          color: '#FFFFFF',
           marginBottom: '0.5rem',
           maxWidth: 'none',
           fontWeight: 600
@@ -164,7 +164,7 @@ export default function GlobalMapSection() {
             fontWeight: 700,
             lineHeight: 1.02,
             letterSpacing: '-0.035em',
-            color: '#F0FDFA',
+            color: '#FFFFFF',
             marginBottom: '0.65rem',
             textTransform: 'uppercase',
           }}
@@ -175,7 +175,7 @@ export default function GlobalMapSection() {
           className="section-desc"
           style={{
             fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-            color: '#A7C7C5',
+            color: '#FFFFFF',
             lineHeight: 1.6,
             maxWidth: 580,
             margin: '0 auto',

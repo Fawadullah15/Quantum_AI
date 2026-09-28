@@ -94,7 +94,7 @@ export default function WhyQuantumSection() {
         .think-card-num {
           font-family: var(--font-mono, monospace);
           font-size: 0.68rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           font-weight: 600;
           letter-spacing: 0.1em;
           flex-shrink: 0;
@@ -103,7 +103,7 @@ export default function WhyQuantumSection() {
         .think-card-title {
           font-size: clamp(0.92rem, 1.5vw, 1.08rem);
           font-weight: 600;
-          color: #F0FDFA;
+          color: #FFFFFF;
           letter-spacing: -0.01em;
           margin: 0;
           text-transform: none;
@@ -114,7 +114,7 @@ export default function WhyQuantumSection() {
         }
 
         .think-card-desc {
-          color: #A7C7C5;
+          color: #FFFFFF;
           font-size: 0.84rem;
           line-height: 1.45;
           margin: 0;
@@ -189,7 +189,7 @@ export default function WhyQuantumSection() {
               fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
-              color: '#0F766E',
+              color: '#FFFFFF',
               marginBottom: '0.5rem',
               fontWeight: 600,
             }}
@@ -203,7 +203,7 @@ export default function WhyQuantumSection() {
               fontWeight: 700,
               lineHeight: 1.05,
               letterSpacing: '-0.03em',
-              color: '#F0FDFA',
+              color: '#FFFFFF',
               marginBottom: '0.65rem',
               textTransform: 'uppercase',
               maxWidth: 560,
@@ -218,7 +218,7 @@ export default function WhyQuantumSection() {
             className="section-desc"
             style={{
               fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-              color: '#A7C7C5',
+              color: '#FFFFFF',
               lineHeight: 1.6,
               marginBottom: '1.35rem',
               fontWeight: 300,
@@ -239,7 +239,7 @@ export default function WhyQuantumSection() {
             style={{
               fontFamily: 'var(--font-mono)',
               fontSize: '0.68rem',
-              color: '#14B8A6',
+              color: '#FFFFFF',
               letterSpacing: '0.2em',
               textTransform: 'uppercase',
               fontWeight: 600,
@@ -254,7 +254,7 @@ export default function WhyQuantumSection() {
             }}
           >
             <span>THINK DEEPER</span>
-            <span style={{ color: '#6F8F8D', fontSize: '0.6rem' }}>[PHILOSOPHY]</span>
+            <span style={{ color: '#FFFFFF', fontSize: '0.6rem' }}>[PHILOSOPHY]</span>
           </div>
 
           <div className="why-right-cards">

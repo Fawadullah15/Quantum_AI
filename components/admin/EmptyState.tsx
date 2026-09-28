@@ -35,14 +35,14 @@ export default function EmptyState({
         {icon}
       </div>
 
-      <h3 style={{ fontSize: '1.15rem', fontWeight: 600, color: '#F8FAFC', margin: '0 0 0.4rem 0' }}>
+      <h3 style={{ fontSize: '1.15rem', fontWeight: 600, color: '#FFFFFF', margin: '0 0 0.4rem 0' }}>
         {title}
       </h3>
 
       {description && (
         <p
           style={{
-            color: '#94A3B8',
+            color: '#FFFFFF',
             fontSize: '0.85rem',
             maxWidth: '440px',
             margin: '0 auto 1.5rem',

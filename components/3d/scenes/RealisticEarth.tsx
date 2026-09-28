@@ -82,8 +82,8 @@ export function RealisticEarth() {
       </mesh>
 
       {/* Lighting to create the day/night terminator line */}
-      <ambientLight intensity={0.2} color="#F0FDFA" />
-      <directionalLight position={[-15, 5, 10]} intensity={1.5} color="#F0FDFA" />
+      <ambientLight intensity={0.2} color="#FFFFFF" />
+      <directionalLight position={[-15, 5, 10]} intensity={1.5} color="#FFFFFF" />
       <directionalLight position={[15, 0, -15]} intensity={0.5} color="#14B8A6" />
     </group>
   );

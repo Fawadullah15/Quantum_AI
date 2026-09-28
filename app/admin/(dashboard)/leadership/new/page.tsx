@@ -111,7 +111,7 @@ export default function NewLeadershipPage() {
     border: "1px solid #374151",
     borderRadius: "6px",
     padding: "0.625rem 0.875rem",
-    color: "#F8FAFC",
+    color: "#FFFFFF",
     fontSize: "0.9rem",
     boxSizing: "border-box",
   };
@@ -126,7 +126,7 @@ export default function NewLeadershipPage() {
   const grp: React.CSSProperties = { marginBottom: "1.25rem" };
 
   return (
-    <div style={{ padding: "2rem", color: "#F8FAFC", fontFamily: "system-ui", maxWidth: 800 }}>
+    <div style={{ padding: "2rem", color: "#FFFFFF", fontFamily: "system-ui", maxWidth: 800 }}>
       <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "2rem" }}>Add Leadership Member</h1>
       {error && (
         <div style={{ background: "#7F1D1D", color: "#FCA5A5", padding: "0.75rem 1rem", borderRadius: "6px", marginBottom: "1.5rem" }}>
@@ -180,7 +180,7 @@ export default function NewLeadershipPage() {
         {/* Custom Role Field (revealed dynamically) */}
         {selectedRole === "CUSTOM" && (
           <div style={{ ...grp, backgroundColor: "#0F172A", padding: "16px", borderRadius: "8px", border: "1px solid #1677FF" }}>
-            <label style={{ ...lbl, color: "#38BDF8" }}>
+            <label style={{ ...lbl, color: '#FFFFFF' }}>
               Custom Role Name * (e.g. Director of Strategic Partnerships / Chief AI Officer)
             </label>
             <input

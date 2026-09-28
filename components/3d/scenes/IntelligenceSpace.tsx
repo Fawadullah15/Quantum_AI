@@ -78,7 +78,7 @@ function SystemMonolith({
     ctx.fillText(`0${index + 1}`, 512, 420);
     
     ctx.font = 'bold 60px sans-serif';
-    ctx.fillStyle = '#6F8F8D';
+    ctx.fillStyle = '#FFFFFF';
     ctx.fillText(label, 512, 530);
 
     const tex = new THREE.CanvasTexture(canvas);

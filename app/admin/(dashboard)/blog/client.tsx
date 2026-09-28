@@ -221,7 +221,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
     backgroundColor: '#070B14',
     border: '1px solid rgba(22, 119, 255, 0.22)',
     borderRadius: 6,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: '0.875rem',
     outline: 'none',
     boxSizing: 'border-box',
@@ -231,7 +231,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
     display: 'block',
     fontSize: '0.75rem',
     fontWeight: 600,
-    color: '#94A3B8',
+    color: '#FFFFFF',
     marginBottom: '0.35rem',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
@@ -239,7 +239,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
   };
 
   return (
-    <div style={{ color: '#F8FAFC', width: '100%' }}>
+    <div style={{ color: '#FFFFFF', width: '100%' }}>
       {!isEditing ? (
         <>
           {/* Top Controls Toolbar */}
@@ -267,7 +267,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                     borderRadius: '8px',
                     padding: '0.6rem 0.95rem',
                     fontSize: '0.85rem',
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     outline: 'none',
                     boxSizing: 'border-box',
                   }}
@@ -284,7 +284,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                     borderRadius: '8px',
                     padding: '0.6rem 0.85rem',
                     fontSize: '0.82rem',
-                    color: '#CBD5E1',
+                    color: '#FFFFFF',
                     outline: 'none',
                     fontFamily: 'var(--font-mono, monospace)',
                   }}
@@ -307,7 +307,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                     style={{
                       backgroundColor: statusFilter === st ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
                       border: statusFilter === st ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
-                      color: statusFilter === st ? '#FFFFFF' : '#94A3B8',
+                      color: statusFilter === st ? '#FFFFFF' : '#FFFFFF',
                       padding: '0.45rem 0.75rem',
                       borderRadius: 6,
                       fontSize: '0.75rem',
@@ -329,7 +329,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                 style={{
                   backgroundColor: 'rgba(22, 119, 255, 0.12)',
                   border: '1px solid rgba(22, 119, 255, 0.25)',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   padding: '0.55rem 1rem',
                   borderRadius: 6,
                   fontSize: '0.82rem',
@@ -413,19 +413,19 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
                   <thead>
                     <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Article &amp; URL
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Category &amp; Author
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Date
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Live Status
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
                         Actions
                       </th>
                     </tr>
@@ -475,14 +475,14 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                             )}
 
                             <div style={{ minWidth: 0 }}>
-                              <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.92rem' }}>
+                              <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.92rem' }}>
                                 {post.title}
                               </div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.15rem' }}>
                                 <Link
                                   href={`/blog/${post.slug}`}
                                   target="_blank"
-                                  style={{ fontSize: '0.72rem', color: '#38BDF8', textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
+                                  style={{ fontSize: '0.72rem', color: '#FFFFFF', textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
                                 >
                                   /blog/{post.slug} ↗
                                 </Link>
@@ -500,20 +500,20 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                               padding: '0.2rem 0.55rem',
                               borderRadius: '4px',
                               fontSize: '0.75rem',
-                              color: '#CBD5E1',
+                              color: '#FFFFFF',
                               fontFamily: 'var(--font-mono, monospace)',
                             }}
                           >
                             {post.category || 'General'}
                           </span>
-                          <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                          <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.25rem', fontFamily: 'var(--font-mono, monospace)' }}>
                             By {post.author}
                           </div>
                         </td>
 
                         {/* Date */}
                         <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
-                          <div style={{ fontSize: '0.78rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)' }}>
+                          <div style={{ fontSize: '0.78rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                             {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : 'Unpublished'}
                           </div>
                         </td>
@@ -526,7 +526,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                             style={{
                               backgroundColor: post.published ? 'rgba(16, 185, 129, 0.15)' : 'rgba(100, 116, 139, 0.15)',
                               border: post.published ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(100, 116, 139, 0.35)',
-                              color: post.published ? '#34D399' : '#94A3B8',
+                              color: post.published ? '#34D399' : '#FFFFFF',
                               padding: '0.25rem 0.6rem',
                               borderRadius: '4px',
                               fontSize: '0.72rem',
@@ -543,7 +543,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                                 width: '5px',
                                 height: '5px',
                                 borderRadius: '50%',
-                                backgroundColor: post.published ? '#34D399' : '#94A3B8',
+                                backgroundColor: post.published ? '#34D399' : '#FFFFFF',
                               }}
                             />
                             {post.published ? 'LIVE / PUBLISHED' : 'DRAFT (HIDDEN)'}
@@ -559,7 +559,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                               style={{
                                 backgroundColor: 'rgba(22, 119, 255, 0.15)',
                                 border: '1px solid rgba(22, 119, 255, 0.35)',
-                                color: '#38BDF8',
+                                color: '#FFFFFF',
                                 padding: '0.3rem 0.65rem',
                                 borderRadius: '4px',
                                 fontSize: '0.72rem',
@@ -610,13 +610,13 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', paddingBottom: '0.75rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#F8FAFC' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#FFFFFF' }}>
               {currentId ? `Edit Article: ${formData.title}` : 'Write New Editorial Article'}
             </h2>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              style={{ background: 'transparent', border: 'none', color: '#94A3B8', fontSize: '1.1rem', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '1.1rem', cursor: 'pointer' }}
             >
               ✕
             </button>
@@ -625,7 +625,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {/* Section 1: Overview */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 1. Article Classification &amp; Identity
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
@@ -679,7 +679,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
 
             {/* Section 2: Media & Excerpt */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 2. Imagery &amp; Summary Excerpt
               </div>
 
@@ -722,7 +722,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                           style={{ objectFit: 'cover' }}
                         />
                       ) : (
-                        <span style={{ fontSize: '1.1rem', color: '#64748B' }}>🖼️</span>
+                        <span style={{ fontSize: '1.1rem', color: '#FFFFFF' }}>🖼️</span>
                       )}
                     </div>
 
@@ -741,7 +741,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                         style={{
                           backgroundColor: 'rgba(22, 119, 255, 0.15)',
                           border: '1px solid rgba(22, 119, 255, 0.35)',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           padding: '0.35rem 0.65rem',
                           borderRadius: '6px',
                           fontSize: '0.75rem',
@@ -772,7 +772,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
 
             {/* Section 3: Article Content */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 3. Article Content (HTML / Markdown Supported)
               </div>
 
@@ -794,8 +794,8 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                 checked={formData.published}
                 onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
               />
-              <label htmlFor="blogPublished" style={{ fontSize: '0.85rem', color: '#CBD5E1', cursor: 'pointer' }}>
-                Publish immediately to the public Blog directory (<span style={{ color: '#38BDF8' }}>/blog</span> and <span style={{ color: '#38BDF8' }}>/blog/[slug]</span>)
+              <label htmlFor="blogPublished" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
+                Publish immediately to the public Blog directory (<span style={{ color: '#FFFFFF' }}>/blog</span> and <span style={{ color: '#FFFFFF' }}>/blog/[slug]</span>)
               </label>
             </div>
 
@@ -807,7 +807,7 @@ export default function BlogPostClient({ initialPosts }: { initialPosts: BlogPos
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   padding: '0.55rem 1.15rem',
                   borderRadius: '6px',
                   fontWeight: 600,

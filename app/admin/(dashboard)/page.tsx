@@ -88,7 +88,7 @@ export default async function AdminDashboardPage() {
       total: `${totalMessagesCount} total logged`,
       subtext: unreadMessagesCount > 0 ? `${unreadMessagesCount} unread / new` : 'All inquiries reviewed',
       icon: '💬',
-      color: '#38BDF8',
+      color: '#FFFFFF',
       href: '/admin/messages',
       alert: unreadMessagesCount > 0,
     },
@@ -145,7 +145,7 @@ export default async function AdminDashboardPage() {
       total: 'Frameworks & ML models',
       subtext: 'Active tech items',
       icon: '💻',
-      color: '#38BDF8',
+      color: '#FFFFFF',
       href: '/admin/technology',
     },
     {
@@ -230,7 +230,7 @@ export default async function AdminDashboardPage() {
               fontFamily: 'var(--font-mono, monospace)',
               fontSize: '0.68rem',
               letterSpacing: '0.2em',
-              color: '#1677FF',
+              color: '#FFFFFF',
               textTransform: 'uppercase',
               marginBottom: '0.25rem',
               fontWeight: 600,
@@ -238,10 +238,10 @@ export default async function AdminDashboardPage() {
           >
             QUANTUM AI // CENTRAL COMMAND
           </div>
-          <h1 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.35rem 0' }}>
+          <h1 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.35rem 0' }}>
             Dashboard &amp; Operations
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
+          <p style={{ color: '#FFFFFF', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
             Real-time operations, client communications, and live content metrics for Quantum AI.
           </p>
         </div>
@@ -277,7 +277,7 @@ export default async function AdminDashboardPage() {
 
       {/* ─── Real Database KPI Stats Grid (12 Cards) ─── */}
       <div>
-        <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', color: '#94A3B8', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', fontWeight: 600 }}>
+        <div style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', fontWeight: 600 }}>
           Live System Metrics
         </div>
         <div
@@ -313,7 +313,7 @@ export default async function AdminDashboardPage() {
                   style={{
                     fontSize: '0.72rem',
                     fontWeight: 600,
-                    color: '#94A3B8',
+                    color: '#FFFFFF',
                     textTransform: 'uppercase',
                     letterSpacing: '0.05em',
                     fontFamily: 'var(--font-mono, monospace)',
@@ -325,13 +325,13 @@ export default async function AdminDashboardPage() {
               </div>
 
               <div>
-                <div style={{ fontSize: '1.85rem', fontWeight: 700, color: '#F8FAFC', lineHeight: 1 }}>
+                <div style={{ fontSize: '1.85rem', fontWeight: 700, color: '#FFFFFF', lineHeight: 1 }}>
                   {stat.count}
                 </div>
-                <div style={{ fontSize: '0.72rem', color: '#38BDF8', marginTop: '0.35rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.35rem', fontFamily: 'var(--font-mono, monospace)' }}>
                   {stat.total}
                 </div>
-                <div style={{ fontSize: '0.68rem', color: '#64748B', marginTop: '0.15rem' }}>
+                <div style={{ fontSize: '0.68rem', color: '#FFFFFF', marginTop: '0.15rem' }}>
                   {stat.subtext}
                 </div>
               </div>
@@ -367,12 +367,12 @@ export default async function AdminDashboardPage() {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.95rem' }}>💬</span>
-              <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#F8FAFC' }}>Recent Contact Inquiries</h2>
+              <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#FFFFFF' }}>Recent Contact Inquiries</h2>
             </div>
             <Link
               href="/admin/messages"
               style={{
-                color: '#38BDF8',
+                color: '#FFFFFF',
                 textDecoration: 'none',
                 fontSize: '0.78rem',
                 fontWeight: 600,
@@ -385,7 +385,7 @@ export default async function AdminDashboardPage() {
 
           <div style={{ overflowX: 'auto', flex: 1 }}>
             {recentMessages.length === 0 ? (
-              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#94A3B8', fontSize: '0.85rem' }}>
+              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#FFFFFF', fontSize: '0.85rem' }}>
                 <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📭</div>
                 No client inquiries submitted yet.
               </div>
@@ -407,15 +407,15 @@ export default async function AdminDashboardPage() {
                   >
                     <div style={{ minWidth: 0, flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.88rem' }}>{msg.name}</span>
+                        <span style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.88rem' }}>{msg.name}</span>
                         {msg.status === 'NEW' && (
                           <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#38BDF8', display: 'inline-block' }} />
                         )}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#38BDF8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: '0.75rem', color: '#FFFFFF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {msg.email}
                       </div>
-                      <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '0.15rem' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.15rem' }}>
                         {msg.projectType || 'General Inquiry'}
                       </div>
                     </div>
@@ -430,13 +430,13 @@ export default async function AdminDashboardPage() {
                           fontFamily: 'var(--font-mono, monospace)',
                           letterSpacing: '0.04em',
                           backgroundColor: msg.status === 'NEW' ? 'rgba(56, 189, 248, 0.15)' : 'rgba(100, 116, 139, 0.15)',
-                          color: msg.status === 'NEW' ? '#38BDF8' : '#94A3B8',
+                          color: msg.status === 'NEW' ? '#38BDF8' : '#FFFFFF',
                           border: msg.status === 'NEW' ? '1px solid rgba(56, 189, 248, 0.3)' : '1px solid rgba(100, 116, 139, 0.3)',
                         }}
                       >
                         {msg.status}
                       </span>
-                      <span style={{ color: '#64748B', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <span style={{ color: '#FFFFFF', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)' }}>
                         {formatDate(msg.createdAt)}
                       </span>
                     </div>
@@ -471,12 +471,12 @@ export default async function AdminDashboardPage() {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.95rem' }}>🤝</span>
-              <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#F8FAFC' }}>Recent Career Applications</h2>
+              <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#FFFFFF' }}>Recent Career Applications</h2>
             </div>
             <Link
               href="/admin/careers-partnerships"
               style={{
-                color: '#38BDF8',
+                color: '#FFFFFF',
                 textDecoration: 'none',
                 fontSize: '0.78rem',
                 fontWeight: 600,
@@ -489,7 +489,7 @@ export default async function AdminDashboardPage() {
 
           <div style={{ overflowX: 'auto', flex: 1 }}>
             {recentApplications.length === 0 ? (
-              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#94A3B8', fontSize: '0.85rem' }}>
+              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#FFFFFF', fontSize: '0.85rem' }}>
                 <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📄</div>
                 No career applications received yet.
               </div>
@@ -511,15 +511,15 @@ export default async function AdminDashboardPage() {
                   >
                     <div style={{ minWidth: 0, flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <span style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.88rem' }}>{app.fullName}</span>
+                        <span style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.88rem' }}>{app.fullName}</span>
                         {app.status === 'NEW' && (
                           <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#34D399', display: 'inline-block' }} />
                         )}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: '#38BDF8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: '0.75rem', color: '#FFFFFF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {app.position} ({app.workType})
                       </div>
-                      <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '0.15rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.15rem', fontFamily: 'var(--font-mono, monospace)' }}>
                         Ref: {app.referenceId}
                       </div>
                     </div>
@@ -534,13 +534,13 @@ export default async function AdminDashboardPage() {
                           fontFamily: 'var(--font-mono, monospace)',
                           letterSpacing: '0.04em',
                           backgroundColor: app.status === 'NEW' ? 'rgba(52, 211, 153, 0.15)' : 'rgba(100, 116, 139, 0.15)',
-                          color: app.status === 'NEW' ? '#34D399' : '#94A3B8',
+                          color: app.status === 'NEW' ? '#34D399' : '#FFFFFF',
                           border: app.status === 'NEW' ? '1px solid rgba(52, 211, 153, 0.3)' : '1px solid rgba(100, 116, 139, 0.3)',
                         }}
                       >
                         {app.status}
                       </span>
-                      <span style={{ color: '#64748B', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <span style={{ color: '#FFFFFF', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)' }}>
                         {formatDate(app.createdAt)}
                       </span>
                     </div>
@@ -580,16 +580,16 @@ export default async function AdminDashboardPage() {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.95rem' }}>🛡️</span>
-              <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#F8FAFC' }}>System Activity Audit Trail</h2>
+              <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#FFFFFF' }}>System Activity Audit Trail</h2>
             </div>
-            <span style={{ fontSize: '0.72rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)' }}>
+            <span style={{ fontSize: '0.72rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
               Real-time Logs
             </span>
           </div>
 
           <div style={{ overflowX: 'auto', flex: 1 }}>
             {recentActivity.length === 0 ? (
-              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#94A3B8', fontSize: '0.85rem' }}>
+              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#FFFFFF', fontSize: '0.85rem' }}>
                 <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📜</div>
                 No administrative activity logged yet.
               </div>
@@ -617,23 +617,23 @@ export default async function AdminDashboardPage() {
                             fontWeight: 700,
                             fontFamily: 'var(--font-mono, monospace)',
                             backgroundColor: 'rgba(22, 119, 255, 0.15)',
-                            color: '#38BDF8',
+                            color: '#FFFFFF',
                             border: '1px solid rgba(22, 119, 255, 0.3)',
                           }}
                         >
                           {log.action}
                         </span>
-                        <span style={{ fontSize: '0.75rem', color: '#64748B', fontFamily: 'var(--font-mono, monospace)' }}>
+                        <span style={{ fontSize: '0.75rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                           by {log.user?.name || 'Admin'}
                         </span>
                       </div>
-                      <div style={{ fontSize: '0.8rem', color: '#E2E8F0', marginTop: '0.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: '0.8rem', color: '#FFFFFF', marginTop: '0.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {log.details || log.entity}
                       </div>
                     </div>
 
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <div style={{ color: '#64748B', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                      <div style={{ color: '#FFFFFF', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)' }}>
                         {formatDate(log.createdAt)}
                       </div>
                       <div style={{ color: '#475569', fontSize: '0.68rem', fontFamily: 'var(--font-mono, monospace)' }}>
@@ -671,12 +671,12 @@ export default async function AdminDashboardPage() {
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span style={{ fontSize: '0.95rem' }}>📝</span>
-              <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#F8FAFC' }}>Recent Articles &amp; Insights</h2>
+              <h2 style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, color: '#FFFFFF' }}>Recent Articles &amp; Insights</h2>
             </div>
             <Link
               href="/admin/blog"
               style={{
-                color: '#38BDF8',
+                color: '#FFFFFF',
                 textDecoration: 'none',
                 fontSize: '0.78rem',
                 fontWeight: 600,
@@ -689,7 +689,7 @@ export default async function AdminDashboardPage() {
 
           <div style={{ overflowX: 'auto', flex: 1 }}>
             {recentPosts.length === 0 ? (
-              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#94A3B8', fontSize: '0.85rem' }}>
+              <div style={{ padding: '3rem 1.5rem', textAlign: 'center', color: '#FFFFFF', fontSize: '0.85rem' }}>
                 <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📝</div>
                 No blog articles published yet.
               </div>
@@ -713,7 +713,7 @@ export default async function AdminDashboardPage() {
                       <div style={{ fontWeight: 500, color: '#F1F5F9', fontSize: '0.88rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                         {post.title}
                       </div>
-                      <div style={{ color: '#64748B', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', marginTop: '0.15rem' }}>
+                      <div style={{ color: '#FFFFFF', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', marginTop: '0.15rem' }}>
                         {formatDate(post.createdAt)}
                       </div>
                     </div>

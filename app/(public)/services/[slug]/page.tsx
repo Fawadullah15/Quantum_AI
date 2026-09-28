@@ -441,7 +441,7 @@ export default async function ServiceDetailPage({ params }: Props) {
         .svc-header-back {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
-          color: #38BDF8;
+          color: #FFFFFF;
           text-decoration: none;
           letter-spacing: 0.1em;
           display: inline-flex;
@@ -453,7 +453,7 @@ export default async function ServiceDetailPage({ params }: Props) {
           transition: color 0.2s;
         }
         .svc-header-back:hover {
-          color: #1677FF;
+          color: #FFFFFF;
         }
         .svc-card {
           background-color: rgba(6, 21, 43, 0.65);
@@ -474,12 +474,12 @@ export default async function ServiceDetailPage({ params }: Props) {
         .svc-card-title {
           font-size: 1.05rem;
           font-weight: 600;
-          color: #F8FAFC;
+          color: #FFFFFF;
           margin: 0;
           letter-spacing: -0.01em;
         }
         .svc-card-desc {
-          color: #94A3B8;
+          color: #FFFFFF;
           font-size: 0.86rem;
           line-height: 1.55;
           margin: 0;
@@ -528,13 +528,13 @@ export default async function ServiceDetailPage({ params }: Props) {
 
         {/* Hero Section */}
         <div style={{ marginBottom: 'clamp(2rem, 4vw, 3rem)' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
             {service.categoryTag}
           </div>
-          <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: '#F8FAFC', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
             {service.h1}
           </h1>
-          <p style={{ fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)', color: '#94A3B8', maxWidth: 720, lineHeight: 1.65, margin: '0 0 1.5rem 0', fontWeight: 300 }}>
+          <p style={{ fontSize: 'clamp(0.92rem, 1.3vw, 1.05rem)', color: '#FFFFFF', maxWidth: 720, lineHeight: 1.65, margin: '0 0 1.5rem 0', fontWeight: 300 }}>
             {service.lead}
           </p>
 
@@ -563,7 +563,7 @@ export default async function ServiceDetailPage({ params }: Props) {
                 padding: '0.75rem 1.5rem',
                 backgroundColor: 'rgba(22, 119, 255, 0.08)',
                 border: '1px solid rgba(22, 119, 255, 0.3)',
-                color: '#38BDF8',
+                color: '#FFFFFF',
                 borderRadius: 6,
                 textDecoration: 'none',
                 fontWeight: 600,
@@ -579,15 +579,15 @@ export default async function ServiceDetailPage({ params }: Props) {
 
         {/* ─── Problems We Solve ─── */}
         <div style={{ marginBottom: 'clamp(2.5rem, 5vw, 3.5rem)', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.25rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>CHALLENGES</div>
-          <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#F8FAFC', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
+          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>CHALLENGES</div>
+          <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#FFFFFF', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
             WHAT OPERATIONAL PROBLEMS WE SOLVE
           </h2>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.85rem' }}>
             {service.problems.map((p, idx) => (
               <div key={idx} className="svc-card">
-                <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#38BDF8', fontWeight: 600 }}>0{idx + 1} // PROBLEM</span>
+                <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#FFFFFF', fontWeight: 600 }}>0{idx + 1} // PROBLEM</span>
                 <h3 className="svc-card-title">{p.title}</h3>
                 <p className="svc-card-desc">{p.desc}</p>
               </div>
@@ -597,15 +597,15 @@ export default async function ServiceDetailPage({ params }: Props) {
 
         {/* ─── What We Build / Capabilities ─── */}
         <div style={{ marginBottom: 'clamp(2.5rem, 5vw, 3.5rem)', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.25rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>CAPABILITIES</div>
-          <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#F8FAFC', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
+          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>CAPABILITIES</div>
+          <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#FFFFFF', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
             WHAT QUANTUM AI BUILDS
           </h2>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.85rem' }}>
             {service.capabilities.map((c, idx) => (
               <div key={idx} className="svc-card">
-                <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#1677FF', fontWeight: 600 }}>MODULE 0{idx + 1}</span>
+                <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#FFFFFF', fontWeight: 600 }}>MODULE 0{idx + 1}</span>
                 <h3 className="svc-card-title">{c.title}</h3>
                 <p className="svc-card-desc">{c.desc}</p>
               </div>
@@ -615,21 +615,21 @@ export default async function ServiceDetailPage({ params }: Props) {
 
         {/* ─── Engineering Lifecycle / Process ─── */}
         <div style={{ marginBottom: 'clamp(2.5rem, 5vw, 3.5rem)', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.25rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>EXECUTION PROCESS</div>
-          <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#F8FAFC', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
+          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>EXECUTION PROCESS</div>
+          <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#FFFFFF', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
             HOW WE DELIVER
           </h2>
 
           <div>
             {service.process.map((step) => (
               <div key={step.step} className="svc-step-row">
-                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.9rem', color: '#1677FF', fontWeight: 700 }}>
+                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.9rem', color: '#FFFFFF', fontWeight: 700 }}>
                   {step.step}
                 </div>
-                <div style={{ fontSize: '0.98rem', fontWeight: 600, color: '#F8FAFC', textTransform: 'uppercase' }}>
+                <div style={{ fontSize: '0.98rem', fontWeight: 600, color: '#FFFFFF', textTransform: 'uppercase' }}>
                   {step.title}
                 </div>
-                <div style={{ color: '#94A3B8', fontSize: '0.88rem', lineHeight: 1.55, fontWeight: 300 }}>
+                <div style={{ color: '#FFFFFF', fontSize: '0.88rem', lineHeight: 1.55, fontWeight: 300 }}>
                   {step.desc}
                 </div>
               </div>
@@ -640,8 +640,8 @@ export default async function ServiceDetailPage({ params }: Props) {
         {/* ─── Relevant Case Studies ─── */}
         {service.relevantCaseStudies.length > 0 && (
           <div style={{ marginBottom: 'clamp(2.5rem, 5vw, 3.5rem)', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.25rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>PROOF OF EXECUTION</div>
-            <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#F8FAFC', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
+            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>PROOF OF EXECUTION</div>
+            <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#FFFFFF', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
               RELEVANT DEPLOYMENTS
             </h2>
 
@@ -649,17 +649,17 @@ export default async function ServiceDetailPage({ params }: Props) {
               {service.relevantCaseStudies.map((study) => (
                 <Link key={study.slug} href={`/work/${study.slug}`} className="svc-case-card">
                   <div>
-                    <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600 }}>
+                    <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 600 }}>
                       {study.tag}
                     </span>
-                    <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', margin: '0.35rem 0 0.5rem 0', lineHeight: 1.3 }}>
+                    <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#FFFFFF', margin: '0.35rem 0 0.5rem 0', lineHeight: 1.3 }}>
                       {study.title}
                     </h3>
-                    <p style={{ color: '#94A3B8', fontSize: '0.85rem', lineHeight: 1.5, margin: 0, fontWeight: 300 }}>
+                    <p style={{ color: '#FFFFFF', fontSize: '0.85rem', lineHeight: 1.5, margin: 0, fontWeight: 300 }}>
                       {study.desc}
                     </p>
                   </div>
-                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', fontWeight: 600 }}>
+                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600 }}>
                     VIEW CASE STUDY →
                   </div>
                 </Link>
@@ -670,8 +670,8 @@ export default async function ServiceDetailPage({ params }: Props) {
 
         {/* ─── Frequently Asked Questions ─── */}
         <div style={{ marginBottom: 'clamp(2.5rem, 5vw, 3.5rem)', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.25rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#1677FF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>KNOWLEDGE BASE</div>
-          <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#F8FAFC', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
+          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>KNOWLEDGE BASE</div>
+          <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#FFFFFF', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
             FREQUENTLY ASKED QUESTIONS
           </h2>
 
@@ -687,10 +687,10 @@ export default async function ServiceDetailPage({ params }: Props) {
 
         {/* Bottom CTA */}
         <div style={{ borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.5rem', textAlign: 'center' }}>
-          <h2 style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', color: '#F8FAFC', marginBottom: '0.5rem', fontWeight: 700, textTransform: 'uppercase' }}>
+          <h2 style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', color: '#FFFFFF', marginBottom: '0.5rem', fontWeight: 700, textTransform: 'uppercase' }}>
             READY TO ARCHITECT YOUR {service.name.toUpperCase()}?
           </h2>
-          <p style={{ color: '#94A3B8', marginBottom: '1.5rem', maxWidth: 520, margin: '0 auto 1.5rem', fontSize: '0.9rem', lineHeight: 1.55 }}>
+          <p style={{ color: '#FFFFFF', marginBottom: '1.5rem', maxWidth: 520, margin: '0 auto 1.5rem', fontSize: '0.9rem', lineHeight: 1.55 }}>
             Consult with our engineering team to review your technical requirements and build a production-ready roadmap.
           </p>
           <Link

@@ -55,7 +55,7 @@ function CaseStudyPanel({ position, rotation, title, subtitle }: { position: [nu
       <Text position={[0, 1.5, 0.01]} fontSize={0.3} color="#ffffff" anchorX="center">
         {title}
       </Text>
-      <Text position={[0, 1.0, 0.01]} fontSize={0.15} color="#6F8F8D" anchorX="center">
+      <Text position={[0, 1.0, 0.01]} fontSize={0.15} color="#FFFFFF" anchorX="center">
         {subtitle}
       </Text>
       

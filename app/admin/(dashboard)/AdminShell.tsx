@@ -146,7 +146,7 @@ export function AdminShell({
                     gap: '0.65rem',
                     fontSize: '0.92rem',
                     fontWeight: 700,
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     textDecoration: 'none',
                     letterSpacing: '0.04em',
                   }}
@@ -162,7 +162,7 @@ export function AdminShell({
                     title="View public live website"
                     style={{
                       fontSize: '0.72rem',
-                      color: '#64748B',
+                      color: '#FFFFFF',
                       textDecoration: 'none',
                       padding: '0.2rem 0.45rem',
                       borderRadius: 4,
@@ -182,7 +182,7 @@ export function AdminShell({
                     style={{
                       background: 'transparent',
                       border: 'none',
-                      color: '#94A3B8',
+                      color: '#FFFFFF',
                       fontSize: '1.25rem',
                       cursor: 'pointer',
                       display: 'none',
@@ -233,7 +233,7 @@ export function AdminShell({
                             alignItems: 'center',
                             gap: '0.65rem',
                             padding: '0.45rem 0.65rem',
-                            color: active ? '#38BDF8' : '#94A3B8',
+                            color: active ? '#38BDF8' : '#FFFFFF',
                             backgroundColor: active ? 'rgba(56, 189, 248, 0.1)' : 'transparent',
                             border: active ? '1px solid rgba(56, 189, 248, 0.25)' : '1px solid transparent',
                             textDecoration: 'none',
@@ -291,7 +291,7 @@ export function AdminShell({
                     <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#F1F5F9', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                       {userName}
                     </div>
-                    <div style={{ fontSize: '0.65rem', color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'var(--font-mono, monospace)' }}>
+                    <div style={{ fontSize: '0.65rem', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'var(--font-mono, monospace)' }}>
                       {userRole}
                     </div>
                   </div>
@@ -335,7 +335,7 @@ export function AdminShell({
                   style={{
                     background: 'rgba(255, 255, 255, 0.05)',
                     border: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: '#94A3B8',
+                    color: '#FFFFFF',
                     cursor: 'pointer',
                     padding: '0.4rem',
                     borderRadius: 6,
@@ -357,7 +357,7 @@ export function AdminShell({
                       {idx === breadcrumbs.length - 1 ? (
                         <span style={{ color: '#F1F5F9', fontWeight: 600 }}>{crumb.label}</span>
                       ) : (
-                        <Link href={crumb.href} style={{ color: '#64748B', textDecoration: 'none' }}>
+                        <Link href={crumb.href} style={{ color: '#FFFFFF', textDecoration: 'none' }}>
                           {crumb.label}
                         </Link>
                       )}
@@ -373,7 +373,7 @@ export function AdminShell({
                   target="_blank"
                   style={{
                     fontSize: '0.75rem',
-                    color: '#94A3B8',
+                    color: '#FFFFFF',
                     textDecoration: 'none',
                     padding: '0.35rem 0.65rem',
                     borderRadius: 6,

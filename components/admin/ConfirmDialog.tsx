@@ -72,18 +72,18 @@ export function AdminConfirmProvider({ children }: { children: React.ReactNode }
               maxWidth: '460px',
               width: '100%',
               boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 0, 0, 0.5)',
-              color: '#F8FAFC',
+              color: '#FFFFFF',
               animation: 'modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.75rem' }}>
               <span style={{ fontSize: '1.35rem' }}>{isDanger ? '⚠️' : '❓'}</span>
-              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: isDanger ? '#F87171' : '#F8FAFC' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: isDanger ? '#F87171' : '#FFFFFF' }}>
                 {options.title || (isDanger ? 'Confirm Deletion' : 'Confirm Action')}
               </h3>
             </div>
 
-            <p style={{ color: '#CBD5E1', fontSize: '0.88rem', lineHeight: 1.55, margin: '0 0 1.5rem 0' }}>
+            <p style={{ color: '#FFFFFF', fontSize: '0.88rem', lineHeight: 1.55, margin: '0 0 1.5rem 0' }}>
               {options.message}
             </p>
 
@@ -94,7 +94,7 @@ export function AdminConfirmProvider({ children }: { children: React.ReactNode }
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   padding: '0.55rem 1.15rem',
                   borderRadius: '6px',
                   fontWeight: 600,

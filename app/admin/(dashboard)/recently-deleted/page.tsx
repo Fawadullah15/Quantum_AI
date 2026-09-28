@@ -28,10 +28,10 @@ export default async function RecentlyDeletedPage() {
         <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#06B6D4', textTransform: 'uppercase', marginBottom: '0.25rem', fontWeight: 600 }}>
           DATA PROTECTION &amp; RECOVERY VAULT
         </div>
-        <h1 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#F8FAFC', margin: '0 0 0.35rem 0' }}>
+        <h1 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.35rem 0' }}>
           Recently Deleted
         </h1>
-        <p style={{ color: '#94A3B8', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
+        <p style={{ color: '#FFFFFF', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
           Centralized CMS recovery hub. Any record deleted across the website is safely held here with its complete relational graph, media links, and metadata, ready to be restored.
         </p>
       </div>

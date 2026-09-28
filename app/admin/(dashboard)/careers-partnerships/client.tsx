@@ -244,7 +244,7 @@ export default function CareersPartnershipsClient({
   });
 
   return (
-    <div style={{ color: '#F8FAFC', width: '100%' }}>
+    <div style={{ color: '#FFFFFF', width: '100%' }}>
       {/* Top Header */}
       <div
         style={{
@@ -264,7 +264,7 @@ export default function CareersPartnershipsClient({
               fontFamily: 'var(--font-mono, monospace)',
               fontSize: '0.68rem',
               letterSpacing: '0.2em',
-              color: '#1677FF',
+              color: '#FFFFFF',
               textTransform: 'uppercase',
               marginBottom: '0.25rem',
               fontWeight: 600,
@@ -275,7 +275,7 @@ export default function CareersPartnershipsClient({
           <h1 style={{ fontSize: 'clamp(1.4rem, 2.5vw, 1.85rem)', fontWeight: 700, margin: 0 }}>
             Careers &amp; Business Partnerships
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.85rem', marginTop: '0.25rem', fontWeight: 300 }}>
+          <p style={{ color: '#FFFFFF', fontSize: '0.85rem', marginTop: '0.25rem', fontWeight: 300 }}>
             Review candidate applications, manage enterprise partnership proposals, and publish open engineering roles.
           </p>
         </div>
@@ -315,16 +315,16 @@ export default function CareersPartnershipsClient({
         }}
       >
         <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 10, padding: '1rem', borderLeft: '3px solid #38BDF8' }}>
-          <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '0.68rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
             Total Submissions
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#F8FAFC', marginTop: '0.25rem' }}>
+          <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#FFFFFF', marginTop: '0.25rem' }}>
             {metrics.totalSubmissions}
           </div>
         </div>
 
         <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 10, padding: '1rem', borderLeft: '3px solid #F59E0B' }}>
-          <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '0.68rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
             New Applications
           </div>
           <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#FBBF24', marginTop: '0.25rem' }}>
@@ -333,7 +333,7 @@ export default function CareersPartnershipsClient({
         </div>
 
         <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 10, padding: '1rem', borderLeft: '3px solid #818CF8' }}>
-          <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '0.68rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
             Under Review
           </div>
           <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#A5B4FC', marginTop: '0.25rem' }}>
@@ -342,7 +342,7 @@ export default function CareersPartnershipsClient({
         </div>
 
         <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.75)', border: '1px solid rgba(22, 119, 255, 0.18)', borderRadius: 10, padding: '1rem', borderLeft: '3px solid #34D399' }}>
-          <div style={{ fontSize: '0.68rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '0.68rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
             Open Job Roles
           </div>
           <div style={{ fontSize: '1.75rem', fontWeight: 700, color: '#34D399', marginTop: '0.25rem' }}>
@@ -370,7 +370,7 @@ export default function CareersPartnershipsClient({
               style={{
                 backgroundColor: isActive ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
                 border: isActive ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
-                color: isActive ? '#FFFFFF' : '#94A3B8',
+                color: isActive ? '#FFFFFF' : '#FFFFFF',
                 padding: '0.5rem 1rem',
                 borderRadius: '6px',
                 fontSize: '0.82rem',
@@ -419,7 +419,7 @@ export default function CareersPartnershipsClient({
               borderRadius: '8px',
               padding: '0.6rem 0.95rem',
               fontSize: '0.85rem',
-              color: '#F8FAFC',
+              color: '#FFFFFF',
               outline: 'none',
               boxSizing: 'border-box',
             }}
@@ -436,7 +436,7 @@ export default function CareersPartnershipsClient({
                 style={{
                   backgroundColor: statusFilter === st ? 'rgba(56, 189, 248, 0.2)' : 'rgba(6, 21, 43, 0.65)',
                   border: statusFilter === st ? '1px solid #38BDF8' : '1px solid rgba(22, 119, 255, 0.18)',
-                  color: statusFilter === st ? '#38BDF8' : '#94A3B8',
+                  color: statusFilter === st ? '#38BDF8' : '#FFFFFF',
                   padding: '0.35rem 0.65rem',
                   borderRadius: '4px',
                   fontSize: '0.72rem',
@@ -467,11 +467,11 @@ export default function CareersPartnershipsClient({
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
                   <thead>
                     <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Ref ID &amp; Sender</th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Company &amp; Country</th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Partnership Type</th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Status</th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Ref ID &amp; Sender</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Company &amp; Country</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Partnership Type</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Status</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -484,16 +484,16 @@ export default function CareersPartnershipsClient({
                         onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
                       >
                         <td style={{ padding: '0.75rem 1rem' }}>
-                          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#38BDF8', fontWeight: 600 }}>{p.referenceId}</div>
-                          <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.9rem', marginTop: '0.15rem' }}>{p.fullName}</div>
-                          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{p.email}</div>
+                          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF', fontWeight: 600 }}>{p.referenceId}</div>
+                          <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.9rem', marginTop: '0.15rem' }}>{p.fullName}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>{p.email}</div>
                         </td>
                         <td style={{ padding: '0.75rem 1rem' }}>
-                          <div style={{ color: '#F8FAFC', fontWeight: 500 }}>{p.company || '-'}</div>
-                          <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{p.country || 'Global'}</div>
+                          <div style={{ color: '#FFFFFF', fontWeight: 500 }}>{p.company || '-'}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>{p.country || 'Global'}</div>
                         </td>
                         <td style={{ padding: '0.75rem 1rem' }}>
-                          <span style={{ backgroundColor: 'rgba(22, 119, 255, 0.12)', border: '1px solid rgba(22, 119, 255, 0.25)', padding: '0.2rem 0.55rem', borderRadius: 4, fontSize: '0.75rem', color: '#CBD5E1', fontFamily: 'var(--font-mono, monospace)' }}>
+                          <span style={{ backgroundColor: 'rgba(22, 119, 255, 0.12)', border: '1px solid rgba(22, 119, 255, 0.25)', padding: '0.2rem 0.55rem', borderRadius: 4, fontSize: '0.75rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)' }}>
                             {p.partnershipType || 'Strategic'}
                           </span>
                         </td>
@@ -504,7 +504,7 @@ export default function CareersPartnershipsClient({
                           <div style={{ display: 'flex', gap: '0.45rem', justifyContent: 'flex-end' }} onClick={(e) => e.stopPropagation()}>
                             <Link
                               href={`/admin/careers-partnerships/partnership/${p.id}`}
-                              style={{ backgroundColor: 'rgba(22, 119, 255, 0.15)', border: '1px solid rgba(22, 119, 255, 0.35)', color: '#38BDF8', padding: '0.3rem 0.65rem', borderRadius: 4, fontSize: '0.72rem', fontWeight: 600, textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
+                              style={{ backgroundColor: 'rgba(22, 119, 255, 0.15)', border: '1px solid rgba(22, 119, 255, 0.35)', color: '#FFFFFF', padding: '0.3rem 0.65rem', borderRadius: 4, fontSize: '0.72rem', fontWeight: 600, textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
                             >
                               Review
                             </Link>
@@ -542,12 +542,12 @@ export default function CareersPartnershipsClient({
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
                   <thead>
                     <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Applicant &amp; Role</th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Location &amp; Work Type</th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Experience &amp; Skills</th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>CV / Resume</th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Status &amp; Date</th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Applicant &amp; Role</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Location &amp; Work Type</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Experience &amp; Skills</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>CV / Resume</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Status &amp; Date</th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -568,24 +568,24 @@ export default function CareersPartnershipsClient({
                                 style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #38BDF8', flexShrink: 0 }}
                               />
                             ) : (
-                              <div style={{ width: '38px', height: '38px', borderRadius: '50%', backgroundColor: 'rgba(22, 119, 255, 0.15)', border: '1px solid rgba(22, 119, 255, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#38BDF8', fontSize: '0.8rem', fontWeight: 600, flexShrink: 0 }}>
+                              <div style={{ width: '38px', height: '38px', borderRadius: '50%', backgroundColor: 'rgba(22, 119, 255, 0.15)', border: '1px solid rgba(22, 119, 255, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontSize: '0.8rem', fontWeight: 600, flexShrink: 0 }}>
                                 {a.fullName.charAt(0).toUpperCase()}
                               </div>
                             )}
                             <div>
-                              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', fontWeight: 600 }}>{a.referenceId}</div>
-                              <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.9rem', marginTop: '0.1rem' }}>{a.fullName}</div>
-                              <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{a.position}</div>
+                              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600 }}>{a.referenceId}</div>
+                              <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.9rem', marginTop: '0.1rem' }}>{a.fullName}</div>
+                              <div style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>{a.position}</div>
                             </div>
                           </div>
                         </td>
                         <td style={{ padding: '0.75rem 1rem' }}>
-                          <div style={{ color: '#F8FAFC', fontSize: '0.82rem' }}>{a.currentLocation || 'Not specified'}</div>
-                          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.15rem' }}>{a.workType || 'Full Time'}</div>
+                          <div style={{ color: '#FFFFFF', fontSize: '0.82rem' }}>{a.currentLocation || 'Not specified'}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#FFFFFF', marginTop: '0.15rem' }}>{a.workType || 'Full Time'}</div>
                         </td>
                         <td style={{ padding: '0.75rem 1rem' }}>
-                          <div style={{ color: '#F8FAFC', fontSize: '0.82rem' }}>{a.experienceLevel || 'Mid Level'}</div>
-                          <div style={{ fontSize: '0.72rem', color: '#38BDF8', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '240px' }}>{a.skills || '-'}</div>
+                          <div style={{ color: '#FFFFFF', fontSize: '0.82rem' }}>{a.experienceLevel || 'Mid Level'}</div>
+                          <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '240px' }}>{a.skills || '-'}</div>
                         </td>
                         <td style={{ padding: '0.75rem 1rem' }} onClick={(e) => e.stopPropagation()}>
                           {a.resumeUrl ? (
@@ -593,18 +593,18 @@ export default function CareersPartnershipsClient({
                               href={a.resumeUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#38BDF8', textDecoration: 'none', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)' }}
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#FFFFFF', textDecoration: 'none', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)' }}
                             >
                               <span>📄 View Resume</span>
                               <span>↗</span>
                             </a>
                           ) : (
-                            <span style={{ color: '#64748B', fontSize: '0.75rem' }}>No link</span>
+                            <span style={{ color: '#FFFFFF', fontSize: '0.75rem' }}>No link</span>
                           )}
                         </td>
                         <td style={{ padding: '0.75rem 1rem' }}>
                           <StatusBadge status={a.status} />
-                          <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '0.45rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                          <div style={{ fontSize: '0.7rem', color: '#FFFFFF', marginTop: '0.45rem', fontFamily: 'var(--font-mono, monospace)' }}>
                             {new Date(a.createdAt).toLocaleDateString()}
                           </div>
                         </td>
@@ -612,7 +612,7 @@ export default function CareersPartnershipsClient({
                           <div style={{ display: 'flex', gap: '0.45rem', justifyContent: 'flex-end' }} onClick={(e) => e.stopPropagation()}>
                             <Link
                               href={`/admin/careers-partnerships/career/${a.id}`}
-                              style={{ backgroundColor: 'rgba(22, 119, 255, 0.15)', border: '1px solid rgba(22, 119, 255, 0.35)', color: '#38BDF8', padding: '0.3rem 0.65rem', borderRadius: 4, fontSize: '0.72rem', fontWeight: 600, textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
+                              style={{ backgroundColor: 'rgba(22, 119, 255, 0.15)', border: '1px solid rgba(22, 119, 255, 0.35)', color: '#FFFFFF', padding: '0.3rem 0.65rem', borderRadius: 4, fontSize: '0.72rem', fontWeight: 600, textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
                             >
                               Review
                             </Link>
@@ -640,13 +640,13 @@ export default function CareersPartnershipsClient({
         <>
           {isEditingPosition ? (
             <div style={{ backgroundColor: 'rgba(6, 21, 43, 0.85)', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 12, padding: '1.5rem', maxWidth: '640px' }}>
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: '0 0 1.25rem 0', color: '#F8FAFC' }}>
+              <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: '0 0 1.25rem 0', color: '#FFFFFF' }}>
                 {editingPositionId ? 'Edit Open Position' : 'Create New Open Position'}
               </h2>
 
               <form onSubmit={handleSavePosition} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#94A3B8', marginBottom: '0.3rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.3rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
                     Position Title *
                   </label>
                   <input
@@ -655,13 +655,13 @@ export default function CareersPartnershipsClient({
                     placeholder="e.g. Senior AI Engineer"
                     value={positionForm.title}
                     onChange={(e) => setPositionForm({ ...positionForm, title: e.target.value })}
-                    style={{ width: '100%', backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#F8FAFC', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#FFFFFF', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#94A3B8', marginBottom: '0.3rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.3rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
                       Department / Orbit
                     </label>
                     <input
@@ -669,12 +669,12 @@ export default function CareersPartnershipsClient({
                       placeholder="e.g. AI Engineering"
                       value={positionForm.department}
                       onChange={(e) => setPositionForm({ ...positionForm, department: e.target.value })}
-                      style={{ width: '100%', backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#F8FAFC', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
+                      style={{ width: '100%', backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#FFFFFF', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#94A3B8', marginBottom: '0.3rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
+                    <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.3rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
                       Work Type &amp; Location
                     </label>
                     <input
@@ -682,13 +682,13 @@ export default function CareersPartnershipsClient({
                       placeholder="e.g. Full-time · Remote"
                       value={positionForm.workType}
                       onChange={(e) => setPositionForm({ ...positionForm, workType: e.target.value })}
-                      style={{ width: '100%', backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#F8FAFC', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
+                      style={{ width: '100%', backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#FFFFFF', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#94A3B8', marginBottom: '0.3rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
+                  <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.3rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
                     Job Description (Optional)
                   </label>
                   <textarea
@@ -696,7 +696,7 @@ export default function CareersPartnershipsClient({
                     placeholder="Key responsibilities, technical requirements, and qualifications..."
                     value={positionForm.description}
                     onChange={(e) => setPositionForm({ ...positionForm, description: e.target.value })}
-                    style={{ width: '100%', backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#F8FAFC', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
+                    style={{ width: '100%', backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.25)', borderRadius: 6, padding: '0.65rem 0.85rem', color: '#FFFFFF', fontSize: '0.88rem', outline: 'none', boxSizing: 'border-box' }}
                   />
                 </div>
 
@@ -707,7 +707,7 @@ export default function CareersPartnershipsClient({
                     checked={positionForm.isActive}
                     onChange={(e) => setPositionForm({ ...positionForm, isActive: e.target.checked })}
                   />
-                  <label htmlFor="isActive" style={{ fontSize: '0.85rem', color: '#CBD5E1', cursor: 'pointer' }}>
+                  <label htmlFor="isActive" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
                     Active &amp; Visible on Public /careers page
                   </label>
                 </div>
@@ -719,7 +719,7 @@ export default function CareersPartnershipsClient({
                       setIsEditingPosition(false);
                       setEditingPositionId(null);
                     }}
-                    style={{ backgroundColor: 'transparent', border: '1px solid rgba(148, 163, 184, 0.3)', color: '#94A3B8', padding: '0.55rem 1.15rem', borderRadius: 6, cursor: 'pointer', fontFamily: 'var(--font-mono, monospace)' }}
+                    style={{ backgroundColor: 'transparent', border: '1px solid rgba(148, 163, 184, 0.3)', color: '#FFFFFF', padding: '0.55rem 1.15rem', borderRadius: 6, cursor: 'pointer', fontFamily: 'var(--font-mono, monospace)' }}
                   >
                     Cancel
                   </button>
@@ -755,23 +755,23 @@ export default function CareersPartnershipsClient({
                     <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
                       <thead>
                         <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                          <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Position Title</th>
-                          <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Department</th>
-                          <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Work Type</th>
-                          <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Visibility</th>
-                          <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
+                          <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Position Title</th>
+                          <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Department</th>
+                          <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Work Type</th>
+                          <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>Visibility</th>
+                          <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         {filteredPositions.map((pos) => (
                           <tr key={pos.id} style={{ borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
-                            <td style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#F8FAFC' }}>
+                            <td style={{ padding: '0.75rem 1rem', fontWeight: 600, color: '#FFFFFF' }}>
                               {pos.title}
                             </td>
-                            <td style={{ padding: '0.75rem 1rem', color: '#38BDF8' }}>
+                            <td style={{ padding: '0.75rem 1rem', color: '#FFFFFF' }}>
                               {pos.department}
                             </td>
-                            <td style={{ padding: '0.75rem 1rem', color: '#94A3B8' }}>
+                            <td style={{ padding: '0.75rem 1rem', color: '#FFFFFF' }}>
                               {pos.workType}
                             </td>
                             <td style={{ padding: '0.75rem 1rem' }}>
@@ -781,7 +781,7 @@ export default function CareersPartnershipsClient({
                                 style={{
                                   backgroundColor: pos.isActive ? 'rgba(16, 185, 129, 0.15)' : 'rgba(100, 116, 139, 0.15)',
                                   border: pos.isActive ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(100, 116, 139, 0.35)',
-                                  color: pos.isActive ? '#34D399' : '#94A3B8',
+                                  color: pos.isActive ? '#34D399' : '#FFFFFF',
                                   padding: '0.2rem 0.55rem',
                                   borderRadius: 4,
                                   fontSize: '0.72rem',
@@ -798,7 +798,7 @@ export default function CareersPartnershipsClient({
                                 <button
                                   type="button"
                                   onClick={() => handleEditPosition(pos)}
-                                  style={{ backgroundColor: 'rgba(22, 119, 255, 0.15)', border: '1px solid rgba(22, 119, 255, 0.35)', color: '#38BDF8', padding: '0.3rem 0.65rem', borderRadius: 4, fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-mono, monospace)' }}
+                                  style={{ backgroundColor: 'rgba(22, 119, 255, 0.15)', border: '1px solid rgba(22, 119, 255, 0.35)', color: '#FFFFFF', padding: '0.3rem 0.65rem', borderRadius: 4, fontSize: '0.72rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-mono, monospace)' }}
                                 >
                                   Edit
                                 </button>

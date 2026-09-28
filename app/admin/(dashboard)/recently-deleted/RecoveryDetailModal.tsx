@@ -20,10 +20,10 @@ const TYPE_CONFIG: Record<string, { label: string; color: string; bg: string; bo
   SERVICE: { label: 'Service', color: '#10B981', bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.35)' },
   TECHNOLOGY: { label: 'Technology', color: '#6366F1', bg: 'rgba(99, 102, 241, 0.12)', border: 'rgba(99, 102, 241, 0.35)' },
   BLOG_POST: { label: 'Blog Article', color: '#F43F5E', bg: 'rgba(244, 63, 94, 0.12)', border: 'rgba(244, 63, 94, 0.35)' },
-  CLIENT: { label: 'Client / Worked With', color: '#14B8A6', bg: 'rgba(20, 184, 166, 0.12)', border: 'rgba(20, 184, 166, 0.35)' },
+  CLIENT: { label: 'Client / Worked With', color: '#FFFFFF', bg: 'rgba(20, 184, 166, 0.12)', border: 'rgba(20, 184, 166, 0.35)' },
   CAREER_APPLICATION: { label: 'Career Application', color: '#8B5CF6', bg: 'rgba(139, 92, 246, 0.12)', border: 'rgba(139, 92, 246, 0.35)' },
   PARTNERSHIP_REQUEST: { label: 'Partnership', color: '#10B981', bg: 'rgba(16, 185, 129, 0.12)', border: 'rgba(16, 185, 129, 0.35)' },
-  CAREER_POSITION: { label: 'Career Opening', color: '#38BDF8', bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.35)' },
+  CAREER_POSITION: { label: 'Career Opening', color: '#FFFFFF', bg: 'rgba(56, 189, 248, 0.12)', border: 'rgba(56, 189, 248, 0.35)' },
   CONTACT_SUBMISSION: { label: 'Contact Message', color: '#0284C7', bg: 'rgba(2, 132, 199, 0.12)', border: 'rgba(2, 132, 199, 0.35)' },
   MEDIA: { label: 'Media Asset', color: '#EC4899', bg: 'rgba(236, 72, 153, 0.12)', border: 'rgba(236, 72, 153, 0.35)' },
   NOTIFICATION: { label: 'Notification', color: '#F97316', bg: 'rgba(249, 115, 22, 0.12)', border: 'rgba(249, 115, 22, 0.35)' },
@@ -65,7 +65,7 @@ export function RecoveryDetailModal({
 
   const config = TYPE_CONFIG[item.entityType] || {
     label: item.entityType,
-    color: '#94A3B8',
+    color: '#FFFFFF',
     bg: 'rgba(148, 163, 184, 0.12)',
     border: 'rgba(148, 163, 184, 0.3)',
   };
@@ -143,7 +143,7 @@ export function RecoveryDetailModal({
           display: 'flex',
           flexDirection: 'column',
           boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.9), 0 0 40px rgba(6, 182, 212, 0.15)',
-          color: '#F8FAFC',
+          color: '#FFFFFF',
           overflow: 'hidden',
           animation: 'modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
@@ -183,7 +183,7 @@ export function RecoveryDetailModal({
                 style={{
                   fontSize: '0.72rem',
                   fontFamily: 'var(--font-mono, monospace)',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   padding: '0.2rem 0.55rem',
                   borderRadius: '6px',
                   backgroundColor: 'rgba(148, 163, 184, 0.08)',
@@ -208,11 +208,11 @@ export function RecoveryDetailModal({
               </span>
             </div>
 
-            <h2 style={{ fontSize: '1.28rem', fontWeight: 700, margin: '0 0 0.2rem 0', color: '#F8FAFC' }}>
+            <h2 style={{ fontSize: '1.28rem', fontWeight: 700, margin: '0 0 0.2rem 0', color: '#FFFFFF' }}>
               {item.title}
             </h2>
             {item.subtitle && (
-              <p style={{ margin: 0, fontSize: '0.82rem', color: '#94A3B8' }}>{item.subtitle}</p>
+              <p style={{ margin: 0, fontSize: '0.82rem', color: '#FFFFFF' }}>{item.subtitle}</p>
             )}
           </div>
 
@@ -223,7 +223,7 @@ export function RecoveryDetailModal({
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#94A3B8',
+              color: '#FFFFFF',
               fontSize: '1.4rem',
               cursor: 'pointer',
               padding: '0.25rem',
@@ -249,25 +249,25 @@ export function RecoveryDetailModal({
             }}
           >
             <div>
-              <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono, monospace)', color: '#64748B', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono, monospace)', color: '#FFFFFF', textTransform: 'uppercase' }}>
                 DELETED AT
               </div>
-              <div style={{ fontSize: '0.84rem', color: '#E2E8F0', fontWeight: 600, marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.84rem', color: '#FFFFFF', fontWeight: 600, marginTop: '0.2rem' }}>
                 {formatDate(item.deletedAt)}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono, monospace)', color: '#64748B', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono, monospace)', color: '#FFFFFF', textTransform: 'uppercase' }}>
                 DELETED BY
               </div>
-              <div style={{ fontSize: '0.84rem', color: '#E2E8F0', fontWeight: 600, marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.84rem', color: '#FFFFFF', fontWeight: 600, marginTop: '0.2rem' }}>
                 {item.adminName || 'Admin'} {item.adminEmail ? `(${item.adminEmail})` : ''}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono, monospace)', color: '#64748B', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono, monospace)', color: '#FFFFFF', textTransform: 'uppercase' }}>
                 ORIGINAL ID
               </div>
               <div style={{ fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)', color: '#06B6D4', marginTop: '0.2rem' }}>
@@ -277,7 +277,7 @@ export function RecoveryDetailModal({
 
             {item.originalSlug && (
               <div>
-                <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono, monospace)', color: '#64748B', textTransform: 'uppercase' }}>
+                <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono, monospace)', color: '#FFFFFF', textTransform: 'uppercase' }}>
                   SLUG / REFERENCE
                 </div>
                 <div style={{ fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)', color: '#A855F7', marginTop: '0.2rem' }}>
@@ -305,10 +305,10 @@ export function RecoveryDetailModal({
             >
               {attributeEntries.map(([k, v]) => (
                 <div key={k}>
-                  <span style={{ fontSize: '0.7rem', color: '#64748B', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
+                  <span style={{ fontSize: '0.7rem', color: '#FFFFFF', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
                     {k.replace(/([A-Z])/g, ' $1')}:
                   </span>
-                  <div style={{ fontSize: '0.82rem', color: '#F8FAFC', fontWeight: 500, wordBreak: 'break-word', marginTop: '0.15rem' }}>
+                  <div style={{ fontSize: '0.82rem', color: '#FFFFFF', fontWeight: 500, wordBreak: 'break-word', marginTop: '0.15rem' }}>
                     {typeof v === 'boolean' ? (v ? 'Yes' : 'No') : String(v)}
                   </div>
                 </div>
@@ -332,10 +332,10 @@ export function RecoveryDetailModal({
                     padding: '0.85rem 1rem',
                   }}
                 >
-                  <div style={{ fontSize: '0.7rem', color: '#64748B', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.4rem' }}>
+                  <div style={{ fontSize: '0.7rem', color: '#FFFFFF', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.4rem' }}>
                     {k.replace(/([A-Z])/g, ' $1')}
                   </div>
-                  <div style={{ fontSize: '0.84rem', color: '#CBD5E1', lineHeight: 1.6, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                  <div style={{ fontSize: '0.84rem', color: '#FFFFFF', lineHeight: 1.6, whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
                     {String(v)}
                   </div>
                 </div>
@@ -353,8 +353,8 @@ export function RecoveryDetailModal({
                 {metrics.map((m: any, idx: number) => (
                   <div key={idx} style={{ backgroundColor: 'rgba(6, 21, 43, 0.65)', border: '1px solid rgba(6, 182, 212, 0.2)', borderRadius: '8px', padding: '0.75rem' }}>
                     <div style={{ fontSize: '1.05rem', fontWeight: 700, color: '#06B6D4' }}>{m.value}</div>
-                    <div style={{ fontSize: '0.78rem', color: '#E2E8F0', fontWeight: 600 }}>{m.label}</div>
-                    {m.description && <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '0.2rem' }}>{m.description}</div>}
+                    <div style={{ fontSize: '0.78rem', color: '#FFFFFF', fontWeight: 600 }}>{m.label}</div>
+                    {m.description && <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.2rem' }}>{m.description}</div>}
                   </div>
                 ))}
               </div>
@@ -370,7 +370,7 @@ export function RecoveryDetailModal({
                 {features.map((f: any, idx: number) => (
                   <div key={idx} style={{ backgroundColor: 'rgba(6, 21, 43, 0.65)', border: '1px solid rgba(59, 130, 246, 0.2)', borderRadius: '8px', padding: '0.65rem 0.85rem' }}>
                     <div style={{ fontSize: '0.84rem', fontWeight: 600, color: '#60A5FA' }}>{f.title}</div>
-                    {f.description && <div style={{ fontSize: '0.78rem', color: '#94A3B8', marginTop: '0.15rem' }}>{f.description}</div>}
+                    {f.description && <div style={{ fontSize: '0.78rem', color: '#FFFFFF', marginTop: '0.15rem' }}>{f.description}</div>}
                   </div>
                 ))}
               </div>
@@ -388,7 +388,7 @@ export function RecoveryDetailModal({
                     <div style={{ fontSize: '0.72rem', color: '#C084FC', fontFamily: 'var(--font-mono, monospace)' }}>
                       {n.authorName} ({n.authorEmail}) • {formatDate(n.createdAt)}
                     </div>
-                    <div style={{ fontSize: '0.82rem', color: '#E2E8F0', marginTop: '0.25rem' }}>{n.content}</div>
+                    <div style={{ fontSize: '0.82rem', color: '#FFFFFF', marginTop: '0.25rem' }}>{n.content}</div>
                   </div>
                 ))}
               </div>
@@ -435,13 +435,13 @@ export function RecoveryDetailModal({
                     ) : (
                       <div style={{ fontSize: '1.6rem', margin: '0.5rem 0' }}>📄</div>
                     )}
-                    <span style={{ fontSize: '0.68rem', color: '#94A3B8', wordBreak: 'break-all', textAlign: 'center', fontFamily: 'var(--font-mono, monospace)' }}>
+                    <span style={{ fontSize: '0.68rem', color: '#FFFFFF', wordBreak: 'break-all', textAlign: 'center', fontFamily: 'var(--font-mono, monospace)' }}>
                       {url.split('/').pop()?.slice(0, 20)}...
                     </span>
                   </a>
                 ))}
               </div>
-              <p style={{ fontSize: '0.72rem', color: '#64748B', margin: '0.4rem 0 0 0' }}>
+              <p style={{ fontSize: '0.72rem', color: '#FFFFFF', margin: '0.4rem 0 0 0' }}>
                 Files in storage are preserved and will be automatically reconnected when restored.
               </p>
             </div>
@@ -487,7 +487,7 @@ export function RecoveryDetailModal({
               style={{
                 backgroundColor: 'transparent',
                 border: '1px solid rgba(148, 163, 184, 0.25)',
-                color: '#94A3B8',
+                color: '#FFFFFF',
                 padding: '0.55rem 1.15rem',
                 borderRadius: '6px',
                 fontSize: '0.8rem',

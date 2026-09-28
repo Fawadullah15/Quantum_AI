@@ -344,7 +344,7 @@ export function PremiumGlobe() {
       </mesh>
 
       {/* ── Lighting ── */}
-      <ambientLight intensity={0.15} color="#F0FDFA" />
+      <ambientLight intensity={0.15} color="#FFFFFF" />
       {/* Blue primary light */}
       <directionalLight position={[-12, 6, 10]} intensity={1.5} color="#2563EB" />
       {/* Deep indigo secondary light */}

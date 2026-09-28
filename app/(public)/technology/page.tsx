@@ -110,11 +110,11 @@ export default async function TechnologyPage() {
     <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container">
       <div style={{ maxWidth: 'var(--max-width, 1000px)', margin: '0 auto' }}>
         <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
-          <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#1677FF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.02 / ARCHITECTURE</div>
-          <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: 0 }}>
+          <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.02 / ARCHITECTURE</div>
+          <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: 'var(--color-text-primary, #FFFFFF)', textTransform: 'uppercase', margin: 0 }}>
             CORE TECHNOLOGY.
           </h1>
-          <p style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#94A3B8', lineHeight: 1.6, marginTop: '0.65rem', maxWidth: 620, fontWeight: 300 }}>
+          <p style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#FFFFFF', lineHeight: 1.6, marginTop: '0.65rem', maxWidth: 620, fontWeight: 300 }}>
             We choose technology for long-term business reliability, maintainability, and operational value — structured across four core engineering pillars.
           </p>
         </div>
@@ -127,10 +127,10 @@ export default async function TechnologyPage() {
                   <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'rgba(56, 189, 248, 0.4)', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
                     {String(groupIndex + 1).padStart(2, '0')}
                   </div>
-                  <h2 style={{ fontSize: 'clamp(1.2rem, 2.2vw, 1.55rem)', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--color-text-primary, #F8FAFC)', textTransform: 'uppercase', margin: '0 0 0.5rem 0' }}>
+                  <h2 style={{ fontSize: 'clamp(1.2rem, 2.2vw, 1.55rem)', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--color-text-primary, #FFFFFF)', textTransform: 'uppercase', margin: '0 0 0.5rem 0' }}>
                     {category}
                   </h2>
-                  <p style={{ color: '#94A3B8', fontSize: '0.86rem', lineHeight: 1.55, margin: 0, fontWeight: 300 }}>
+                  <p style={{ color: '#FFFFFF', fontSize: '0.86rem', lineHeight: 1.55, margin: 0, fontWeight: 300 }}>
                     {TECH_PILLARS[category]?.desc || 'Engineering capabilities and technology foundations.'}
                   </p>
                 </div>
@@ -140,17 +140,17 @@ export default async function TechnologyPage() {
                     <div key={tech.id || tech.slug} style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', borderBottom: '1px solid var(--color-border-2, rgba(30,58,138,0.2))', paddingBottom: '1.25rem' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                         <Link href={`/technologies/${tech.slug}`} style={{ textDecoration: 'none' }}>
-                          <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F8FAFC', textTransform: 'uppercase', margin: 0, transition: 'color 0.2s' }}>
+                          <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#FFFFFF', textTransform: 'uppercase', margin: 0, transition: 'color 0.2s' }}>
                             {tech.name} ↗
                           </h3>
                         </Link>
                         {tech.icon && <span style={{ fontSize: '1.1rem' }}>{tech.icon}</span>}
                       </div>
-                      <p style={{ color: 'var(--color-text-secondary, #94A3B8)', fontSize: '0.88rem', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+                      <p style={{ color: 'var(--color-text-secondary, #FFFFFF)', fontSize: '0.88rem', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
                         {tech.shortDescription || tech.description}
                       </p>
                       {tech.usage && (
-                        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#38BDF8', letterSpacing: '0.08em', marginTop: '0.25rem' }}>
+                        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.08em', marginTop: '0.25rem' }}>
                           DEPLOYMENT // {tech.usage}
                         </div>
                       )}

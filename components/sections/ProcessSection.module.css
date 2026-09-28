@@ -1,7 +1,7 @@
 .section {
   padding: clamp(3rem, 7vh, 5rem) clamp(1.25rem, 4vw, 3rem);
   background-color: var(--color-bg-primary, #020708);
-  color: var(--color-text-primary, #F0FDFA);
+  color: var(--color-text-primary, #FFFFFF);
   font-family: 'Space Grotesk', sans-serif;
   overflow: hidden;
 }
@@ -19,7 +19,7 @@
   font-family: 'Space Mono', monospace;
   font-size: 0.72rem;
   letter-spacing: 0.15em;
-  color: var(--color-text-muted, #A7C7C5);
+  color: var(--color-text-muted, #FFFFFF);
   margin-bottom: 1rem;
 }
 
@@ -85,7 +85,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--color-bg-primary, #020708);
-  -webkit-text-stroke: 1px var(--color-text-muted, #A7C7C5);
+  -webkit-text-stroke: 1px var(--color-text-muted, #FFFFFF);
   margin-bottom: 1rem;
   background: var(--color-bg-primary, #020708);
   display: inline-block;
@@ -111,7 +111,7 @@
 
 .stageDesc {
   font-size: 0.875rem;
-  color: var(--color-text-muted, #A7C7C5);
+  color: var(--color-text-muted, #FFFFFF);
   line-height: 1.5;
   margin: 0;
 }

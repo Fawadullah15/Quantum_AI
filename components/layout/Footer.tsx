@@ -30,7 +30,7 @@ const footerLinks = {
 };
 
 const lnk: React.CSSProperties = {
-  color: '#6F8F8D',
+  color: '#FFFFFF',
   textDecoration: 'none',
   transition: 'color 0.2s',
   display: 'block',
@@ -99,14 +99,14 @@ export default function Footer({
                 fontWeight: 700,
                 fontSize: '0.875rem',
                 letterSpacing: '0.15em',
-                color: '#F0FDFA',
+                color: '#FFFFFF',
                 textTransform: 'uppercase',
               }}>
                 {companyName}
               </span>
             </Link>
             <p style={{
-              color: '#6F8F8D',
+              color: '#FFFFFF',
               fontSize: '0.8125rem',
               lineHeight: 1.6,
               maxWidth: 240,
@@ -125,9 +125,9 @@ export default function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Quantum AI GitHub Repository"
-                    style={{ color: '#A7C7C5', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
+                    style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = '#14B8A6')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#A7C7C5')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}
                     title="GitHub"
                   >
                     GitHub
@@ -139,9 +139,9 @@ export default function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Quantum AI LinkedIn Company Page"
-                    style={{ color: '#A7C7C5', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
+                    style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = '#14B8A6')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#A7C7C5')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}
                     title="LinkedIn"
                   >
                     LinkedIn
@@ -153,9 +153,9 @@ export default function Footer({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Quantum AI Twitter / X Profile"
-                    style={{ color: '#A7C7C5', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
+                    style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.85rem', transition: 'color 0.2s' }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = '#14B8A6')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#A7C7C5')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}
                     title="Twitter / X"
                   >
                     Twitter
@@ -172,7 +172,7 @@ export default function Footer({
                 fontFamily: 'var(--font-mono)',
                 fontSize: '0.65rem',
                 letterSpacing: '0.2em',
-                color: '#A7C7C5',
+                color: '#FFFFFF',
                 marginBottom: '1rem',
                 textTransform: 'uppercase',
                 fontWeight: 600,
@@ -185,8 +185,8 @@ export default function Footer({
                     key={l.href}
                     href={l.href}
                     style={lnk}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#F0FDFA')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = '#6F8F8D')}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}
                   >
                     {l.label}
                   </Link>
@@ -206,14 +206,14 @@ export default function Footer({
           flexWrap: 'wrap',
           gap: '1rem',
         }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#6F8F8D', letterSpacing: '0.08em' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#FFFFFF', letterSpacing: '0.08em' }}>
             {displayCopyright}
           </span>
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
             <a href={`mailto:${email || 'hello@quantumai.dev'}`} style={{ 
               fontFamily: 'var(--font-mono)', 
               fontSize: '0.75rem', 
-              color: '#14B8A6', 
+              color: '#FFFFFF', 
               textDecoration: 'none', 
               letterSpacing: '0.05em' 
             }}>

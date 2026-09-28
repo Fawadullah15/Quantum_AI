@@ -260,7 +260,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
     backgroundColor: '#070B14',
     border: '1px solid rgba(22, 119, 255, 0.25)',
     borderRadius: 8,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: '0.875rem',
     outline: 'none',
     boxSizing: 'border-box',
@@ -271,7 +271,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
     display: 'block',
     fontSize: '0.72rem',
     fontWeight: 600,
-    color: '#94A3B8',
+    color: '#FFFFFF',
     marginBottom: '0.35rem',
     letterSpacing: '0.04em',
     fontFamily: 'var(--font-mono, monospace)',
@@ -285,7 +285,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
   };
 
   return (
-    <div style={{ maxWidth: 900, margin: '0 auto', paddingBottom: '4rem', color: '#F8FAFC' }}>
+    <div style={{ maxWidth: 900, margin: '0 auto', paddingBottom: '4rem', color: '#FFFFFF' }}>
       {/* ─── Page Header ─── */}
       <div
         style={{
@@ -305,7 +305,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
               fontFamily: 'var(--font-mono, monospace)',
               fontSize: '0.68rem',
               letterSpacing: '0.18em',
-              color: '#1677FF',
+              color: '#FFFFFF',
               textTransform: 'uppercase',
               marginBottom: '0.25rem',
               fontWeight: 600,
@@ -316,7 +316,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
           <h1 style={{ fontSize: '1.65rem', fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>
             Account Security
           </h1>
-          <p style={{ color: '#94A3B8', fontSize: '0.85rem', marginTop: '0.25rem', maxWidth: 600, lineHeight: 1.5 }}>
+          <p style={{ color: '#FFFFFF', fontSize: '0.85rem', marginTop: '0.25rem', maxWidth: 600, lineHeight: 1.5 }}>
             Manage administrator credentials, password encryption, role authorization, and multi-device session revocation.
           </p>
         </div>
@@ -354,19 +354,19 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
         }}
       >
         <div style={{ backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.2)', borderRadius: 10, padding: '1rem' }}>
-          <div style={{ fontSize: '0.68rem', color: '#64748B', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '0.68rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
             Admin Account
           </div>
-          <div style={{ fontSize: '1rem', fontWeight: 600, color: '#F8FAFC', marginTop: '0.25rem' }}>
+          <div style={{ fontSize: '1rem', fontWeight: 600, color: '#FFFFFF', marginTop: '0.25rem' }}>
             {user.name}
           </div>
-          <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <div style={{ fontSize: '0.75rem', color: '#FFFFFF', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {user.email}
           </div>
         </div>
 
         <div style={{ backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.2)', borderRadius: 10, padding: '1rem' }}>
-          <div style={{ fontSize: '0.68rem', color: '#64748B', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '0.68rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
             Account Role
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem' }}>
@@ -374,7 +374,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
               style={{
                 backgroundColor: 'rgba(22, 119, 255, 0.15)',
                 border: '1px solid rgba(22, 119, 255, 0.4)',
-                color: '#38BDF8',
+                color: '#FFFFFF',
                 padding: '0.2rem 0.6rem',
                 borderRadius: 999,
                 fontSize: '0.75rem',
@@ -385,20 +385,20 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
               {user.role || 'SUPER_ADMIN'}
             </span>
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem' }}>
+          <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.25rem' }}>
             Full system administrative permissions
           </div>
         </div>
 
         <div style={{ backgroundColor: '#070B14', border: '1px solid rgba(22, 119, 255, 0.2)', borderRadius: 10, padding: '1rem' }}>
-          <div style={{ fontSize: '0.68rem', color: '#64748B', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+          <div style={{ fontSize: '0.68rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
             Security Level
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.25rem' }}>
             <span style={{ color: '#10B981', fontSize: '0.8rem' }}>🔒</span>
             <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#34D399' }}>Bcrypt Hashed</span>
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem' }}>
+          <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.25rem' }}>
             Token Version: v{user.tokenVersion}
           </div>
         </div>
@@ -413,7 +413,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
               <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#F1F5F9', margin: 0 }}>
                 Admin Profile &amp; Username
               </h2>
-              <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0.15rem 0 0 0' }}>
+              <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.15rem 0 0 0' }}>
                 Update your visible display name, username, and login email address
               </p>
             </div>
@@ -423,7 +423,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
               <div>
                 <label style={labelStyle}>
-                  Admin Name / Username <span style={{ color: '#38BDF8' }}>*</span>
+                  Admin Name / Username <span style={{ color: '#FFFFFF' }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -441,7 +441,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
 
               <div>
                 <label style={labelStyle}>
-                  Admin Login Email <span style={{ color: '#38BDF8' }}>*</span>
+                  Admin Login Email <span style={{ color: '#FFFFFF' }}>*</span>
                 </label>
                 <input
                   type="email"
@@ -460,7 +460,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
 
             <div>
               <label style={labelStyle}>
-                Current Password (Required for security verification) <span style={{ color: '#38BDF8' }}>*</span>
+                Current Password (Required for security verification) <span style={{ color: '#FFFFFF' }}>*</span>
               </label>
               <div style={{ position: 'relative' }}>
                 <input
@@ -489,7 +489,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
                     transform: 'translateY(-50%)',
                     background: 'transparent',
                     border: 'none',
-                    color: '#94A3B8',
+                    color: '#FFFFFF',
                     cursor: 'pointer',
                     fontSize: '0.9rem',
                     padding: '0.25rem',
@@ -533,7 +533,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
               <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#F1F5F9', margin: 0 }}>
                 Change Account Password
               </h2>
-              <p style={{ fontSize: '0.75rem', color: '#64748B', margin: '0.15rem 0 0 0' }}>
+              <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.15rem 0 0 0' }}>
                 Secure your account with strong Bcrypt-encrypted password hashing
               </p>
             </div>
@@ -542,7 +542,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
           <form onSubmit={handlePasswordSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div>
               <label style={labelStyle}>
-                Current Password <span style={{ color: '#38BDF8' }}>*</span>
+                Current Password <span style={{ color: '#FFFFFF' }}>*</span>
               </label>
               <div style={{ position: 'relative' }}>
                 <input
@@ -571,7 +571,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
                     transform: 'translateY(-50%)',
                     background: 'transparent',
                     border: 'none',
-                    color: '#94A3B8',
+                    color: '#FFFFFF',
                     cursor: 'pointer',
                     fontSize: '0.9rem',
                     padding: '0.25rem',
@@ -586,7 +586,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
               <div>
                 <label style={labelStyle}>
-                  New Password (min 8 characters) <span style={{ color: '#38BDF8' }}>*</span>
+                  New Password (min 8 characters) <span style={{ color: '#FFFFFF' }}>*</span>
                 </label>
                 <div style={{ position: 'relative' }}>
                   <input
@@ -615,7 +615,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
                       transform: 'translateY(-50%)',
                       background: 'transparent',
                       border: 'none',
-                      color: '#94A3B8',
+                      color: '#FFFFFF',
                       cursor: 'pointer',
                       fontSize: '0.9rem',
                       padding: '0.25rem',
@@ -629,7 +629,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
 
               <div>
                 <label style={labelStyle}>
-                  Confirm New Password <span style={{ color: '#38BDF8' }}>*</span>
+                  Confirm New Password <span style={{ color: '#FFFFFF' }}>*</span>
                 </label>
                 <div style={{ position: 'relative' }}>
                   <input
@@ -658,7 +658,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
                       transform: 'translateY(-50%)',
                       background: 'transparent',
                       border: 'none',
-                      color: '#94A3B8',
+                      color: '#FFFFFF',
                       cursor: 'pointer',
                       fontSize: '0.9rem',
                       padding: '0.25rem',
@@ -703,13 +703,13 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
               <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#F87171', margin: 0 }}>
                 Multi-Device Session Revocation
               </h2>
-              <p style={{ fontSize: '0.75rem', color: '#94A3B8', margin: '0.15rem 0 0 0' }}>
+              <p style={{ fontSize: '0.75rem', color: '#FFFFFF', margin: '0.15rem 0 0 0' }}>
                 Terminate active sessions on other computers, phones, or shared browsers
               </p>
             </div>
           </div>
 
-          <p style={{ color: '#94A3B8', fontSize: '0.825rem', lineHeight: 1.6, marginBottom: '1.25rem' }}>
+          <p style={{ color: '#FFFFFF', fontSize: '0.825rem', lineHeight: 1.6, marginBottom: '1.25rem' }}>
             If you signed in on a public or shared device, you can revoke access for all other active browser sessions.
             All other devices will be immediately required to log in with current credentials.
           </p>
@@ -717,7 +717,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
           <form onSubmit={handleLogoutOtherDevices} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div>
               <label style={labelStyle}>
-                Enter Current Password to Confirm Invalidation <span style={{ color: '#38BDF8' }}>*</span>
+                Enter Current Password to Confirm Invalidation <span style={{ color: '#FFFFFF' }}>*</span>
               </label>
               <div style={{ position: 'relative' }}>
                 <input
@@ -746,7 +746,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
                     transform: 'translateY(-50%)',
                     background: 'transparent',
                     border: 'none',
-                    color: '#94A3B8',
+                    color: '#FFFFFF',
                     cursor: 'pointer',
                     fontSize: '0.9rem',
                     padding: '0.25rem',
@@ -765,7 +765,7 @@ export default function AccountSettingsClient({ user }: { user: AccountUser }) {
                 style={{
                   backgroundColor: 'rgba(56, 189, 248, 0.1)',
                   border: '1px solid rgba(56, 189, 248, 0.4)',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   padding: '0.6rem 1.25rem',
                   borderRadius: 8,
                   fontSize: '0.82rem',

@@ -26,13 +26,13 @@ function Field({
           fontFamily: 'var(--font-mono, monospace)',
           fontSize: '0.6875rem',
           letterSpacing: '0.2em',
-          color: focused ? '#38BDF8' : '#94A3B8',
+          color: focused ? '#38BDF8' : '#FFFFFF',
           textTransform: 'uppercase',
           fontWeight: 600,
           transition: 'color 0.2s',
         }}
       >
-        {label} {required && <span style={{ color: '#38BDF8' }}>*</span>}
+        {label} {required && <span style={{ color: '#FFFFFF' }}>*</span>}
       </label>
       <input
         id={fieldId}
@@ -45,7 +45,7 @@ function Field({
           backgroundColor: '#081735',
           border: `1px solid ${focused ? '#38BDF8' : 'rgba(56, 189, 248, 0.25)'}`,
           borderRadius: '8px',
-          color: '#F8FAFC',
+          color: '#FFFFFF',
           padding: '0.85rem 1rem',
           fontFamily: 'var(--font-sans, inherit)',
           fontSize: '0.95rem',
@@ -201,7 +201,7 @@ export default function ContactPage() {
                 fontFamily: 'var(--font-mono, monospace)',
                 fontSize: '0.72rem',
                 letterSpacing: '0.2em',
-                color: '#38BDF8',
+                color: '#FFFFFF',
                 textTransform: 'uppercase',
                 marginBottom: '0.65rem',
                 fontWeight: 600,
@@ -215,7 +215,7 @@ export default function ContactPage() {
                 fontWeight: 700,
                 lineHeight: 1.05,
                 letterSpacing: '-0.03em',
-                color: '#F8FAFC',
+                color: '#FFFFFF',
                 textTransform: 'uppercase',
                 margin: '0 0 1rem 0',
                 wordBreak: 'break-word',
@@ -226,7 +226,7 @@ export default function ContactPage() {
             <p
               style={{
                 fontSize: 'clamp(0.88rem, 1.3vw, 0.98rem)',
-                color: '#94A3B8',
+                color: '#FFFFFF',
                 lineHeight: 1.6,
                 margin: 0,
                 maxWidth: '520px',
@@ -256,7 +256,7 @@ export default function ContactPage() {
                 style={{
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: '0.6875rem',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   letterSpacing: '0.18em',
                   textTransform: 'uppercase',
                   marginBottom: '0.4rem',
@@ -270,7 +270,7 @@ export default function ContactPage() {
                 style={{
                   fontSize: 'clamp(1.05rem, 2.2vw, 1.45rem)',
                   fontWeight: 600,
-                  color: '#F8FAFC',
+                  color: '#FFFFFF',
                   borderBottom: '1px solid rgba(56, 189, 248, 0.4)',
                   paddingBottom: '0.2rem',
                   transition: 'color 0.2s, border-color 0.2s',
@@ -283,7 +283,7 @@ export default function ContactPage() {
                   e.currentTarget.style.borderColor = '#38BDF8';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#F8FAFC';
+                  e.currentTarget.style.color = '#FFFFFF';
                   e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
                 }}
               >
@@ -296,7 +296,7 @@ export default function ContactPage() {
                 style={{
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: '0.6875rem',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   letterSpacing: '0.18em',
                   textTransform: 'uppercase',
                   marginBottom: '0.4rem',
@@ -305,7 +305,7 @@ export default function ContactPage() {
               >
                 RESPONSE TIME
               </div>
-              <p style={{ fontSize: '0.9rem', color: '#94A3B8', margin: 0, lineHeight: 1.6, fontWeight: 300 }}>
+              <p style={{ fontSize: '0.9rem', color: '#FFFFFF', margin: 0, lineHeight: 1.6, fontWeight: 300 }}>
                 {contactSettings.responseTime}
               </p>
             </div>
@@ -315,7 +315,7 @@ export default function ContactPage() {
                 style={{
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: '0.6875rem',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   letterSpacing: '0.18em',
                   textTransform: 'uppercase',
                   marginBottom: '0.5rem',
@@ -333,7 +333,7 @@ export default function ContactPage() {
                       backgroundColor: '#081735',
                       border: '1px solid rgba(56, 189, 248, 0.2)',
                       borderRadius: '999px',
-                      color: '#E2E8F0',
+                      color: '#FFFFFF',
                       fontSize: '0.72rem',
                       fontFamily: 'var(--font-mono, monospace)',
                       whiteSpace: 'nowrap',
@@ -368,7 +368,7 @@ export default function ContactPage() {
                   borderRadius: '50%',
                   backgroundColor: 'rgba(56, 189, 248, 0.1)',
                   border: '1px solid #38BDF8',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -383,7 +383,7 @@ export default function ContactPage() {
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: '0.75rem',
                   letterSpacing: '0.2em',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   textTransform: 'uppercase',
                   marginBottom: '0.5rem',
                 }}
@@ -394,7 +394,7 @@ export default function ContactPage() {
                 style={{
                   fontSize: '1.75rem',
                   fontWeight: 700,
-                  color: '#F8FAFC',
+                  color: '#FFFFFF',
                   textTransform: 'uppercase',
                   letterSpacing: '-0.02em',
                   marginBottom: '1rem',
@@ -405,7 +405,7 @@ export default function ContactPage() {
               <p
                 style={{
                   fontSize: '1rem',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   maxWidth: '440px',
                   margin: '0 auto 2rem',
                   lineHeight: 1.7,
@@ -420,7 +420,7 @@ export default function ContactPage() {
                   padding: '0.75rem 1.75rem',
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(56, 189, 248, 0.4)',
-                  color: '#F8FAFC',
+                  color: '#FFFFFF',
                   borderRadius: '6px',
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: '0.8125rem',
@@ -439,7 +439,7 @@ export default function ContactPage() {
                   fontFamily: 'var(--font-mono, monospace)',
                   fontSize: '0.8125rem',
                   letterSpacing: '0.15em',
-                  color: '#38BDF8',
+                  color: '#FFFFFF',
                   textTransform: 'uppercase',
                   marginBottom: '0.25rem',
                   fontWeight: 600,
@@ -481,7 +481,7 @@ export default function ContactPage() {
                       fontFamily: 'var(--font-mono, monospace)',
                       fontSize: '0.6875rem',
                       letterSpacing: '0.2em',
-                      color: '#94A3B8',
+                      color: '#FFFFFF',
                       textTransform: 'uppercase',
                       fontWeight: 600,
                     }}
@@ -495,7 +495,7 @@ export default function ContactPage() {
                       backgroundColor: '#081735',
                       border: '1px solid rgba(56, 189, 248, 0.25)',
                       borderRadius: '8px',
-                      color: '#F8FAFC',
+                      color: '#FFFFFF',
                       padding: '0.85rem 1rem',
                       fontFamily: 'var(--font-sans, inherit)',
                       fontSize: '0.95rem',
@@ -504,14 +504,14 @@ export default function ContactPage() {
                       boxSizing: 'border-box',
                     }}
                   >
-                    <option value="" style={{ backgroundColor: '#040E24', color: '#64748B' }}>Select project type...</option>
-                    <option value="AI System" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>AI System</option>
-                    <option value="Business Software" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Business Software</option>
-                    <option value="Automation" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Automation</option>
-                    <option value="Digital Product" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Digital Product</option>
-                    <option value="Website / Web Application" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Website / Web Application</option>
-                    <option value="Existing System Improvement" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Existing System Improvement</option>
-                    <option value="Other" style={{ backgroundColor: '#040E24', color: '#F8FAFC' }}>Other</option>
+                    <option value="" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Select project type...</option>
+                    <option value="AI System" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>AI System</option>
+                    <option value="Business Software" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Business Software</option>
+                    <option value="Automation" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Automation</option>
+                    <option value="Digital Product" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Digital Product</option>
+                    <option value="Website / Web Application" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Website / Web Application</option>
+                    <option value="Existing System Improvement" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Existing System Improvement</option>
+                    <option value="Other" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Other</option>
                   </select>
                 </div>
               </div>
@@ -523,13 +523,13 @@ export default function ContactPage() {
                     fontFamily: 'var(--font-mono, monospace)',
                     fontSize: '0.6875rem',
                     letterSpacing: '0.2em',
-                    color: textFocused ? '#38BDF8' : '#94A3B8',
+                    color: textFocused ? '#38BDF8' : '#FFFFFF',
                     textTransform: 'uppercase',
                     fontWeight: 600,
                     transition: 'color 0.2s',
                   }}
                 >
-                  PROJECT OVERVIEW & REQUIREMENTS <span style={{ color: '#38BDF8' }}>*</span>
+                  PROJECT OVERVIEW & REQUIREMENTS <span style={{ color: '#FFFFFF' }}>*</span>
                 </label>
                 <textarea
                   id="contact-message"
@@ -542,7 +542,7 @@ export default function ContactPage() {
                     backgroundColor: '#081735',
                     border: `1px solid ${textFocused ? '#38BDF8' : 'rgba(56, 189, 248, 0.25)'}`,
                     borderRadius: '8px',
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     padding: '0.85rem 1rem',
                     fontFamily: 'var(--font-sans, inherit)',
                     fontSize: '0.95rem',

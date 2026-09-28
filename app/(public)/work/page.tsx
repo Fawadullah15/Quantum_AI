@@ -100,17 +100,17 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           transition: all 0.2s ease;
           border: 1px solid rgba(22, 119, 255, 0.18);
           background: rgba(6, 21, 43, 0.5);
-          color: #94A3B8;
+          color: #FFFFFF;
         }
         .work-filter-btn:hover {
-          color: #F8FAFC;
+          color: #FFFFFF;
           border-color: rgba(56, 189, 248, 0.4);
           background: rgba(8, 28, 58, 0.8);
         }
         .work-filter-btn.active {
           background: rgba(22, 119, 255, 0.2);
-          border-color: #38BDF8;
-          color: #38BDF8;
+          border-color: #FFFFFF;
+          color: #FFFFFF;
           font-weight: 600;
         }
         .works-grid-container {
@@ -140,7 +140,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(56, 189, 248, 0.2);
         }
         .work-card:focus-visible {
-          border-color: #38BDF8;
+          border-color: #FFFFFF;
           box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.4);
         }
         .work-card-header {
@@ -156,19 +156,19 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           font-family: var(--font-mono, monospace);
           font-size: 1.1rem;
           font-weight: 700;
-          color: #38BDF8;
+          color: #FFFFFF;
         }
         .work-client {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
-          color: #94A3B8;
+          color: #FFFFFF;
           letter-spacing: 0.08em;
           text-transform: uppercase;
         }
         .work-category-badge {
           font-family: var(--font-mono, monospace);
           font-size: 0.68rem;
-          color: #38BDF8;
+          color: #FFFFFF;
           background-color: rgba(22, 119, 255, 0.12);
           border: 1px solid rgba(56, 189, 248, 0.25);
           padding: 0.2rem 0.55rem;
@@ -179,12 +179,12 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         .work-year {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
-          color: #64748B;
+          color: #FFFFFF;
         }
         .work-title {
           font-size: clamp(1.15rem, 2vw, 1.4rem);
           font-weight: 600;
-          color: #F8FAFC;
+          color: #FFFFFF;
           letter-spacing: -0.015em;
           text-transform: none;
           line-height: 1.25;
@@ -192,10 +192,10 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           transition: color 0.2s;
         }
         .work-card:hover .work-title {
-          color: #38BDF8;
+          color: #FFFFFF;
         }
         .work-desc {
-          color: #94A3B8;
+          color: #FFFFFF;
           font-size: 0.88rem;
           line-height: 1.6;
           max-width: 860px;
@@ -218,7 +218,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           background-color: rgba(22, 119, 255, 0.08);
           border: 1px solid rgba(22, 119, 255, 0.16);
           border-radius: 4px;
-          color: #55D6FF;
+          color: #FFFFFF;
         }
         .work-action-row {
           display: flex;
@@ -229,7 +229,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         }
         .work-action-text {
           font-size: 0.75rem;
-          color: #1677FF;
+          color: #FFFFFF;
           font-weight: 600;
           letter-spacing: 0.08em;
           text-transform: uppercase;
@@ -239,7 +239,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           transition: color 0.2s, transform 0.2s;
         }
         .work-card:hover .work-action-text {
-          color: #38BDF8;
+          color: #FFFFFF;
           transform: translateX(3px);
         }
 
@@ -267,13 +267,13 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
       <div className="work-page-container">
         {/* Header */}
         <div style={{ marginBottom: 'clamp(1.75rem, 3.5vw, 2.75rem)' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#1677FF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
             [04 — OUR WORK]
           </div>
-          <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: '#F8FAFC', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
+          <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
             SELECTED DEPLOYMENTS &amp; CASE STUDIES.
           </h1>
-          <p style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#94A3B8', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+          <p style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#FFFFFF', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
             Production software platforms, enterprise automation engines, and custom AI systems delivered by Quantum AI.
           </p>
         </div>
@@ -304,13 +304,13 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
             padding: '4rem 2rem',
             textAlign: 'center',
           }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.2em', color: '#1677FF', marginBottom: '0.75rem', fontWeight: 600 }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.2em', color: '#FFFFFF', marginBottom: '0.75rem', fontWeight: 600 }}>
               NO MATCHING DEPLOYMENTS
             </div>
-            <h2 style={{ fontSize: '1.35rem', fontWeight: 600, color: '#F8FAFC', marginBottom: '0.5rem' }}>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.5rem' }}>
               No Case Studies Found in This Category
             </h2>
-            <p style={{ color: '#94A3B8', maxWidth: 440, margin: '0 auto 1.5rem', fontSize: '0.9rem', lineHeight: 1.6 }}>
+            <p style={{ color: '#FFFFFF', maxWidth: 440, margin: '0 auto 1.5rem', fontSize: '0.9rem', lineHeight: 1.6 }}>
               Explore all case studies or reach out to discuss how we can build custom intelligence for your organization.
             </p>
             <Link
@@ -339,7 +339,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
                 : [];
 
               const clientStr = (study.client || '').trim().toLowerCase();
-              let originBadge = { label: 'CLIENT PROJECT', color: '#38BDF8', bg: 'rgba(56, 189, 248, 0.12)', displayOrg: study.client };
+              let originBadge = { label: 'CLIENT PROJECT', color: '#FFFFFF', bg: 'rgba(56, 189, 248, 0.12)', displayOrg: study.client };
               if (clientStr.includes('internal / quantum ai') || study.title.includes('Intelligence') || study.title.includes('Automation Platform')) {
                 originBadge = { label: 'R&D / CONCEPT', color: '#A78BFA', bg: 'rgba(167, 139, 250, 0.12)', displayOrg: 'Concept / R&D' };
               } else if (clientStr.includes('quantum ai') || clientStr.includes('internal')) {

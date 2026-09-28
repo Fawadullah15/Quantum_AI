@@ -15,7 +15,7 @@ export default function NewProductPage() {
       style={{
         padding: '4rem 2rem',
         textAlign: 'center',
-        color: '#94A3B8',
+        color: '#FFFFFF',
         fontFamily: 'var(--font-mono, monospace)',
         fontSize: '0.85rem',
       }}

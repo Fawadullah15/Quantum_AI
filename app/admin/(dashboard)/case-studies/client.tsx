@@ -378,7 +378,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     backgroundColor: '#070B14',
     border: '1px solid rgba(22, 119, 255, 0.22)',
     borderRadius: 6,
-    color: '#F8FAFC',
+    color: '#FFFFFF',
     fontSize: '0.875rem',
     outline: 'none',
     boxSizing: 'border-box',
@@ -388,7 +388,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     display: 'block',
     fontSize: '0.75rem',
     fontWeight: 600,
-    color: '#94A3B8',
+    color: '#FFFFFF',
     marginBottom: '0.35rem',
     textTransform: 'uppercase',
     letterSpacing: '0.05em',
@@ -396,7 +396,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
   };
 
   return (
-    <div style={{ color: '#F8FAFC', width: '100%' }}>
+    <div style={{ color: '#FFFFFF', width: '100%' }}>
       {!isEditing ? (
         <>
           {/* Top Control Bar */}
@@ -425,7 +425,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     borderRadius: '8px',
                     padding: '0.6rem 0.95rem',
                     fontSize: '0.85rem',
-                    color: '#F8FAFC',
+                    color: '#FFFFFF',
                     outline: 'none',
                     boxSizing: 'border-box',
                   }}
@@ -442,7 +442,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     borderRadius: '8px',
                     padding: '0.6rem 0.85rem',
                     fontSize: '0.82rem',
-                    color: '#CBD5E1',
+                    color: '#FFFFFF',
                     outline: 'none',
                     fontFamily: 'var(--font-mono, monospace)',
                   }}
@@ -465,7 +465,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     style={{
                       backgroundColor: statusFilter === st ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
                       border: statusFilter === st ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
-                      color: statusFilter === st ? '#FFFFFF' : '#94A3B8',
+                      color: statusFilter === st ? '#FFFFFF' : '#FFFFFF',
                       padding: '0.45rem 0.75rem',
                       borderRadius: 6,
                       fontSize: '0.75rem',
@@ -547,22 +547,22 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
                   <thead>
                     <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', width: '70px' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', width: '70px' }}>
                         Order
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Project Title &amp; Client
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Industry &amp; Year
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Tech Stack
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Live Status
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
                         Actions
                       </th>
                     </tr>
@@ -589,7 +589,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                             >
                               ▲
                             </button>
-                            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#94A3B8', minWidth: '16px', textAlign: 'center' }}>
+                            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF', minWidth: '16px', textAlign: 'center' }}>
                               {index + 1}
                             </span>
                             <button
@@ -653,16 +653,16 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                             )}
 
                             <div style={{ minWidth: 0 }}>
-                              <div style={{ fontWeight: 600, color: '#F8FAFC', fontSize: '0.92rem' }}>
+                              <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.92rem' }}>
                                 {study.title}
                               </div>
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.15rem' }}>
-                                <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{study.client}</span>
+                                <span style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>{study.client}</span>
                                 <span style={{ color: '#475569', fontSize: '0.7rem' }}>•</span>
                                 <Link
                                   href={`/work/${study.slug}`}
                                   target="_blank"
-                                  style={{ fontSize: '0.72rem', color: '#38BDF8', textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
+                                  style={{ fontSize: '0.72rem', color: '#FFFFFF', textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
                                 >
                                   /work/{study.slug} ↗
                                 </Link>
@@ -674,7 +674,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                                         <span
                                           style={{
                                             backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                                            color: '#38BDF8',
+                                            color: '#FFFFFF',
                                             fontSize: '0.68rem',
                                             fontFamily: 'var(--font-mono, monospace)',
                                             padding: '1px 6px',
@@ -705,20 +705,20 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                               padding: '0.2rem 0.55rem',
                               borderRadius: '4px',
                               fontSize: '0.75rem',
-                              color: '#CBD5E1',
+                              color: '#FFFFFF',
                               fontFamily: 'var(--font-mono, monospace)',
                             }}
                           >
                             {study.industry}
                           </span>
-                          <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.2rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                          <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.2rem', fontFamily: 'var(--font-mono, monospace)' }}>
                             Year: {study.year}
                           </div>
                         </td>
 
                         {/* Tech Stack */}
                         <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', maxWidth: '220px' }}>
-                          <div style={{ fontSize: '0.75rem', color: '#38BDF8', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono, monospace)' }}>
+                          <div style={{ fontSize: '0.75rem', color: '#FFFFFF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono, monospace)' }}>
                             {study.technologies || '-'}
                           </div>
                         </td>
@@ -731,7 +731,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                             style={{
                               backgroundColor: study.published ? 'rgba(16, 185, 129, 0.15)' : 'rgba(100, 116, 139, 0.15)',
                               border: study.published ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(100, 116, 139, 0.35)',
-                              color: study.published ? '#34D399' : '#94A3B8',
+                              color: study.published ? '#34D399' : '#FFFFFF',
                               padding: '0.25rem 0.6rem',
                               borderRadius: '4px',
                               fontSize: '0.72rem',
@@ -748,7 +748,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                                 width: '5px',
                                 height: '5px',
                                 borderRadius: '50%',
-                                backgroundColor: study.published ? '#34D399' : '#94A3B8',
+                                backgroundColor: study.published ? '#34D399' : '#FFFFFF',
                               }}
                             />
                             {study.published ? 'LIVE / PUBLISHED' : 'DRAFT (HIDDEN)'}
@@ -764,7 +764,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                               style={{
                                 backgroundColor: 'rgba(22, 119, 255, 0.15)',
                                 border: '1px solid rgba(22, 119, 255, 0.35)',
-                                color: '#38BDF8',
+                                color: '#FFFFFF',
                                 padding: '0.3rem 0.65rem',
                                 borderRadius: '4px',
                                 fontSize: '0.72rem',
@@ -816,17 +816,17 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', paddingBottom: '0.75rem' }}>
             <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#F8FAFC' }}>
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#FFFFFF' }}>
                 {currentId ? `Edit Work: ${formData.title}` : 'Create New Work / Case Study'}
               </h2>
-              <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+              <div style={{ fontSize: '0.75rem', color: '#FFFFFF', marginTop: '0.2rem' }}>
                 Fill out the project architecture, client problem, technical solution, and deployment results.
               </div>
             </div>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              style={{ background: 'transparent', border: 'none', color: '#94A3B8', fontSize: '1.1rem', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '1.1rem', cursor: 'pointer' }}
             >
               ✕
             </button>
@@ -836,7 +836,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
             
             {/* Section 1: Overview */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 1. Overview &amp; Client Identity
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
@@ -914,7 +914,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
 
             {/* Section 2: Media & Tech Stack */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 2. Imagery &amp; Technology Stack
               </div>
 
@@ -969,7 +969,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                         style={{ objectFit: 'cover' }}
                       />
                     ) : (
-                      <span style={{ fontSize: '1.25rem', color: '#64748B' }}>🖼️</span>
+                      <span style={{ fontSize: '1.25rem', color: '#FFFFFF' }}>🖼️</span>
                     )}
                   </div>
 
@@ -989,7 +989,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                         style={{
                           backgroundColor: 'rgba(22, 119, 255, 0.15)',
                           border: '1px solid rgba(22, 119, 255, 0.35)',
-                          color: '#38BDF8',
+                          color: '#FFFFFF',
                           padding: '0.45rem 0.85rem',
                           borderRadius: '6px',
                           fontSize: '0.78rem',
@@ -1046,7 +1046,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                       style={{
                         fontSize: '0.85rem',
                         fontWeight: 700,
-                        color: '#38BDF8',
+                        color: '#FFFFFF',
                         letterSpacing: '0.08em',
                         textTransform: 'uppercase',
                         fontFamily: 'var(--font-mono, monospace)',
@@ -1061,7 +1061,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                         padding: '1px 8px',
                         borderRadius: '12px',
                         fontSize: '0.72rem',
-                        color: '#38BDF8',
+                        color: '#FFFFFF',
                         fontFamily: 'var(--font-mono, monospace)',
                       }}
                     >
@@ -1089,7 +1089,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                   )}
                 </div>
 
-                <p style={{ fontSize: '0.78rem', color: '#94A3B8', margin: '0 0 1rem 0', lineHeight: 1.4 }}>
+                <p style={{ fontSize: '0.78rem', color: '#FFFFFF', margin: '0 0 1rem 0', lineHeight: 1.4 }}>
                   Additional project visuals, screenshots, or design renders. These images will automatically display inside the 3D TV screens in the background on the project detail page.
                 </p>
 
@@ -1150,7 +1150,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                       style={{
                         backgroundColor: 'rgba(56, 189, 248, 0.15)',
                         border: '1px solid rgba(56, 189, 248, 0.3)',
-                        color: '#38BDF8',
+                        color: '#FFFFFF',
                         padding: '0.5rem 1.15rem',
                         borderRadius: '6px',
                         fontSize: '0.8rem',
@@ -1211,7 +1211,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                               top: '5px',
                               left: '5px',
                               backgroundColor: 'rgba(3, 7, 18, 0.9)',
-                              color: '#38BDF8',
+                              color: '#FFFFFF',
                               fontSize: '0.68rem',
                               fontFamily: 'var(--font-mono, monospace)',
                               fontWeight: 700,
@@ -1296,7 +1296,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     style={{
                       padding: '1.5rem',
                       textAlign: 'center',
-                      color: '#64748B',
+                      color: '#FFFFFF',
                       fontSize: '0.82rem',
                       border: '1px dashed rgba(56, 189, 248, 0.25)',
                       borderRadius: '8px',
@@ -1311,7 +1311,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
 
             {/* Section 3: Deep Technical Narrative */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
                 3. Technical Narrative &amp; Outcomes
               </div>
 
@@ -1372,8 +1372,8 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 checked={formData.published}
                 onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
               />
-              <label htmlFor="studyPublished" style={{ fontSize: '0.85rem', color: '#CBD5E1', cursor: 'pointer' }}>
-                Publish immediately to the public Works showcase (<span style={{ color: '#38BDF8' }}>/work</span> and <span style={{ color: '#38BDF8' }}>/work/[slug]</span>)
+              <label htmlFor="studyPublished" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
+                Publish immediately to the public Works showcase (<span style={{ color: '#FFFFFF' }}>/work</span> and <span style={{ color: '#FFFFFF' }}>/work/[slug]</span>)
               </label>
             </div>
 
@@ -1385,7 +1385,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
-                  color: '#94A3B8',
+                  color: '#FFFFFF',
                   padding: '0.55rem 1.15rem',
                   borderRadius: '6px',
                   fontWeight: 600,

@@ -82,7 +82,7 @@ export default function SolutionsSection() {
         }
 
         .solution-tab-card:focus-visible {
-          border-color: #14B8A6;
+          border-color: #FFFFFF;
           box-shadow: 0 0 0 2px rgba(20, 184, 166, 0.3);
         }
 
@@ -112,7 +112,7 @@ export default function SolutionsSection() {
         .solution-card-num {
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
-          color: #14B8A6;
+          color: #FFFFFF;
           font-weight: 600;
           letter-spacing: 0.05em;
           flex-shrink: 0;
@@ -124,7 +124,7 @@ export default function SolutionsSection() {
         .solution-card-title {
           font-size: clamp(1rem, 1.8vw, 1.15rem);
           font-weight: 600;
-          color: #F0FDFA;
+          color: #FFFFFF;
           letter-spacing: -0.01em;
           margin: 0;
           text-transform: none;
@@ -136,7 +136,7 @@ export default function SolutionsSection() {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #6F8F8D;
+          color: #FFFFFF;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -148,7 +148,7 @@ export default function SolutionsSection() {
         }
 
         .solution-tab-card.is-expanded .solution-card-indicator {
-          color: #14B8A6;
+          color: #FFFFFF;
         }
 
         /* ─── Smooth CSS Grid Expansion for Collapsible Body ─── */
@@ -174,7 +174,7 @@ export default function SolutionsSection() {
         }
 
         .solution-card-desc {
-          color: #A7C7C5;
+          color: #FFFFFF;
           font-size: 0.875rem;
           line-height: 1.55;
           margin: 0;
@@ -186,7 +186,7 @@ export default function SolutionsSection() {
           display: inline-flex;
           align-items: center;
           gap: 0.35rem;
-          color: #0F766E;
+          color: #FFFFFF;
           font-family: var(--font-mono, monospace);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
@@ -197,7 +197,7 @@ export default function SolutionsSection() {
         }
 
         .solution-tab-card:hover .solution-card-cta {
-          color: #14B8A6;
+          color: #FFFFFF;
           transform: translateX(3px);
         }
 
@@ -242,7 +242,7 @@ export default function SolutionsSection() {
           .mobile-solution-num {
             font-family: var(--font-mono, monospace);
             font-size: 0.62rem;
-            color: #14B8A6;
+            color: #FFFFFF;
             font-weight: 600;
             letter-spacing: 0.05em;
             margin-bottom: 0.25rem;
@@ -252,7 +252,7 @@ export default function SolutionsSection() {
           .mobile-solution-title {
             font-size: 0.82rem;
             font-weight: 600;
-            color: #F0FDFA;
+            color: #FFFFFF;
             letter-spacing: -0.01em;
             margin: 0;
             line-height: 1.25;
@@ -264,7 +264,7 @@ export default function SolutionsSection() {
           .mobile-solution-arrow {
             font-family: var(--font-mono, monospace);
             font-size: 0.68rem;
-            color: #6F8F8D;
+            color: #FFFFFF;
             align-self: flex-end;
             margin-top: 0.2rem;
           }
@@ -292,7 +292,7 @@ export default function SolutionsSection() {
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: '#0F766E',
+            color: '#FFFFFF',
             marginBottom: '0.5rem',
             fontWeight: 600,
           }}
@@ -306,7 +306,7 @@ export default function SolutionsSection() {
             fontWeight: 700,
             lineHeight: 1.02,
             letterSpacing: '-0.035em',
-            color: '#F0FDFA',
+            color: '#FFFFFF',
             marginBottom: '0.65rem',
             textTransform: 'uppercase',
           }}
@@ -317,7 +317,7 @@ export default function SolutionsSection() {
           className="section-desc"
           style={{
             fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-            color: '#A7C7C5',
+            color: '#FFFFFF',
             lineHeight: 1.6,
             marginBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
             maxWidth: 600,
@@ -393,7 +393,7 @@ export default function SolutionsSection() {
               backgroundColor: 'rgba(20, 184, 166, 0.1)',
               border: '1px solid rgba(20, 184, 166, 0.4)',
               borderRadius: 999,
-              color: '#F0FDFA',
+              color: '#FFFFFF',
               fontFamily: 'var(--font-mono, monospace)',
               fontSize: '0.8rem',
               fontWeight: 600,
@@ -417,7 +417,7 @@ export default function SolutionsSection() {
             }}
           >
             <span>VIEW ALL SOLUTIONS &amp; ARCHITECTURES</span>
-            <span style={{ color: '#14B8A6' }}>→</span>
+            <span style={{ color: '#FFFFFF' }}>→</span>
           </Link>
         </div>
       </div>

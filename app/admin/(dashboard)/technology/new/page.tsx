@@ -80,12 +80,12 @@ export default function NewTechnologyPage() {
   return (
     <div style={{ maxWidth: '800px', margin: '0 auto', padding: '1rem 0' }}>
       <div style={{ marginBottom: '24px' }}>
-        <Link href="/admin/technology" style={{ color: '#94A3B8', textDecoration: 'none', fontSize: '0.875rem' }}>
+        <Link href="/admin/technology" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.875rem' }}>
           ← Back to Technologies
         </Link>
       </div>
 
-      <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#F8FAFC', marginBottom: '24px' }}>
+      <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#FFFFFF', marginBottom: '24px' }}>
         Add New Technology
       </h1>
 
@@ -104,53 +104,53 @@ export default function NewTechnologyPage() {
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {/* Basic Information */}
         <div style={{ backgroundColor: '#0B132B', border: '1px solid #1E293B', borderRadius: '12px', padding: '24px' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
             Basic Information
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
             <div>
-              <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Name *</label>
-              <input required name="name" placeholder="e.g. PyTorch Deep Learning Engine" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+              <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Name *</label>
+              <input required name="name" placeholder="e.g. PyTorch Deep Learning Engine" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
             </div>
             <div>
-              <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Slug (Optional, auto-generated)</label>
-              <input name="slug" placeholder="e.g. pytorch" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+              <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Slug (Optional, auto-generated)</label>
+              <input name="slug" placeholder="e.g. pytorch" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
             </div>
           </div>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Short Description *</label>
-            <textarea required name="shortDescription" rows={2} placeholder="Brief summary of what this technology powers" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Short Description *</label>
+            <textarea required name="shortDescription" rows={2} placeholder="Brief summary of what this technology powers" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
             <div>
-              <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Category *</label>
-              <select name="category" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }}>
+              <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Category *</label>
+              <select name="category" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }}>
                 {categories.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Display Order</label>
-              <input type="number" name="order" defaultValue={0} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+              <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Display Order</label>
+              <input type="number" name="order" defaultValue={0} style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
             </div>
           </div>
         </div>
 
         {/* Hero Section */}
         <div style={{ backgroundColor: '#0B132B', border: '1px solid #1E293B', borderRadius: '12px', padding: '24px' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
             Hero Header
           </h2>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Hero Title</label>
-            <input name="heroTitle" placeholder="e.g. Artificial Intelligence Systems" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Hero Title</label>
+            <input name="heroTitle" placeholder="e.g. Artificial Intelligence Systems" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
           </div>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Hero Description</label>
-            <textarea name="heroDescription" rows={2} placeholder="Expanded subtitle for the hero banner" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Hero Description</label>
+            <textarea name="heroDescription" rows={2} placeholder="Expanded subtitle for the hero banner" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
           </div>
           <div>
-            <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Hero Image URL</label>
-            <input name="heroImage" placeholder="https://..." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Hero Image URL</label>
+            <input name="heroImage" placeholder="https://..." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
           </div>
         </div>
 
@@ -158,63 +158,63 @@ export default function NewTechnologyPage() {
         <div style={{ backgroundColor: '#0B132B', border: '1px solid rgba(22, 119, 255, 0.3)', borderRadius: '12px', padding: '24px', boxShadow: '0 4px 20px -4px rgba(22, 119, 255, 0.1)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
             <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#38BDF8' }} />
-            <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
+            <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.05em', margin: 0 }}>
               Call to Action (CTA)
             </h2>
           </div>
-          <p style={{ color: '#64748B', fontSize: '0.8125rem', marginBottom: '16px' }}>
+          <p style={{ color: '#FFFFFF', fontSize: '0.8125rem', marginBottom: '16px' }}>
             Configures the dynamic CTA card at the bottom of the public Technology page.
           </p>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', marginBottom: '16px' }}>
             <div>
-              <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Title</label>
-              <input name="ctaTitle" placeholder="e.g. Ready to Architect Next-Gen AI?" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+              <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Title</label>
+              <input name="ctaTitle" placeholder="e.g. Ready to Architect Next-Gen AI?" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
             </div>
             <div>
-              <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Button Text</label>
-              <input name="ctaText" placeholder="e.g. Start a Project / Schedule Consultation" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+              <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Button Text</label>
+              <input name="ctaText" placeholder="e.g. Start a Project / Schedule Consultation" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
             </div>
           </div>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Description</label>
-            <textarea name="ctaDescription" rows={2} placeholder="e.g. Connect with Quantum AI engineers to design and deploy custom intelligent software." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Description</label>
+            <textarea name="ctaDescription" rows={2} placeholder="e.g. Connect with Quantum AI engineers to design and deploy custom intelligent software." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
           </div>
           <div>
-            <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Button Link</label>
-            <input name="ctaLink" placeholder="e.g. /contact or https://calendly.com/..." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC' }} />
+            <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>CTA Button Link</label>
+            <input name="ctaLink" placeholder="e.g. /contact or https://calendly.com/..." style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF' }} />
           </div>
         </div>
 
         {/* Content & Features */}
         <div style={{ backgroundColor: '#0B132B', border: '1px solid #1E293B', borderRadius: '12px', padding: '24px' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#38BDF8', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '16px' }}>
             Detailed Content & Features
           </h2>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Page Content (HTML supported)</label>
-            <textarea name="content" rows={5} placeholder="<p>Detailed technical overview...</p>" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC', fontFamily: 'monospace' }} />
+            <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Page Content (HTML supported)</label>
+            <textarea name="content" rows={5} placeholder="<p>Detailed technical overview...</p>" style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF', fontFamily: 'monospace' }} />
           </div>
           <div style={{ marginBottom: '16px' }}>
-            <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Features (JSON array)</label>
-            <textarea name="features" defaultValue="[]" rows={3} placeholder='[{"title": "Feature 1", "description": "Description 1"}]' style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC', fontFamily: 'monospace' }} />
+            <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Features (JSON array)</label>
+            <textarea name="features" defaultValue="[]" rows={3} placeholder='[{"title": "Feature 1", "description": "Description 1"}]' style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF', fontFamily: 'monospace' }} />
           </div>
           <div>
-            <label style={{ display: 'block', color: '#94A3B8', fontSize: '0.875rem', marginBottom: '6px' }}>Use Cases (JSON array)</label>
-            <textarea name="useCases" defaultValue="[]" rows={3} placeholder='[{"title": "Use Case 1", "description": "Description 1"}]' style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#F8FAFC', fontFamily: 'monospace' }} />
+            <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.875rem', marginBottom: '6px' }}>Use Cases (JSON array)</label>
+            <textarea name="useCases" defaultValue="[]" rows={3} placeholder='[{"title": "Use Case 1", "description": "Description 1"}]' style={{ width: '100%', padding: '10px 12px', backgroundColor: '#0F172A', border: '1px solid #334155', borderRadius: '6px', color: '#FFFFFF', fontFamily: 'monospace' }} />
           </div>
         </div>
 
         {/* Publication Status */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', backgroundColor: '#0B132B', border: '1px solid #1E293B', borderRadius: '12px', padding: '16px 24px' }}>
           <input type="checkbox" name="published" id="published" defaultChecked style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
-          <label htmlFor="published" style={{ color: '#F8FAFC', fontSize: '0.9375rem', cursor: 'pointer' }}>
+          <label htmlFor="published" style={{ color: '#FFFFFF', fontSize: '0.9375rem', cursor: 'pointer' }}>
             Published (Visible on public website)
           </label>
         </div>
 
         {/* Action Buttons */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px', marginTop: '8px' }}>
-          <Link href="/admin/technology" style={{ padding: '10px 20px', border: '1px solid #334155', color: '#94A3B8', textDecoration: 'none', borderRadius: '6px', fontSize: '0.875rem', fontWeight: 500 }}>
+          <Link href="/admin/technology" style={{ padding: '10px 20px', border: '1px solid #334155', color: '#FFFFFF', textDecoration: 'none', borderRadius: '6px', fontSize: '0.875rem', fontWeight: 500 }}>
             Cancel
           </Link>
           <button
