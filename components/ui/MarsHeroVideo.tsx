@@ -2,13 +2,27 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 
+const DESKTOP_LOCAL = '/Mars_Rotation.mp4';
+const DESKTOP_CDN = 'https://sxcontent9668.azureedge.us/cms-assets/assets/Mars_Rotation_Web_HB_d96299f9de.mp4';
+const DESKTOP_POSTER = '/mars-poster.png';
+
+const MOBILE_LOCAL = '/Mobile_Mars.mp4';
+const MOBILE_CDN = 'https://sxcontent9668.azureedge.us/cms-assets/assets/Mobile_v4_HB_e1d2eda88f.mp4';
+const MOBILE_POSTER = '/mars-mobile-poster.png';
+
 export default function MarsHeroVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
+
+    // Detect mobile viewport (<= 768px)
+    const mql = window.matchMedia('(max-width: 768px)');
+    const initialMobile = mql.matches;
+    setIsMobile(initialMobile);
 
     // Force required attributes for mobile & desktop autoplay
     video.muted = true;
@@ -18,6 +32,25 @@ export default function MarsHeroVideo() {
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
 
+    // Synchronize active source if browser mis-evaluated media queries on initial load
+    const syncSourceForDevice = (mobileActive: boolean) => {
+      const current = video.currentSrc || '';
+      const isCurrentlyMobile = current.includes('Mobile_Mars') || current.includes('Mobile_v4_HB');
+      const isCurrentlyDesktop = current.includes('Mars_Rotation');
+
+      if (current) {
+        if (!mobileActive && isCurrentlyMobile) {
+          video.src = DESKTOP_LOCAL;
+          video.poster = DESKTOP_POSTER;
+          video.load();
+        } else if (mobileActive && isCurrentlyDesktop) {
+          video.src = MOBILE_LOCAL;
+          video.poster = MOBILE_POSTER;
+          video.load();
+        }
+      }
+    };
+
     const tryPlay = () => {
       const promise = video.play();
       if (promise !== undefined) {
@@ -25,26 +58,37 @@ export default function MarsHeroVideo() {
           .then(() => setIsPlaying(true))
           .catch(() => {
             // Autoplay blocked by browser policy (e.g. low power mode)
-            // Retry on first user interaction
             setIsPlaying(false);
           });
       }
     };
 
+    syncSourceForDevice(initialMobile);
     tryPlay();
 
     // Event listeners to ensure continuous playback
     const onPlay = () => setIsPlaying(true);
     const onPause = () => {
-      // If paused unexpectedly, attempt to resume
       tryPlay();
+    };
+
+    // If local video fails to load, gracefully fall back to Azure edge CDN
+    const onError = () => {
+      const isNowMobile = window.matchMedia('(max-width: 768px)').matches;
+      const cdnUrl = isNowMobile ? MOBILE_CDN : DESKTOP_CDN;
+      if (video.src !== cdnUrl) {
+        video.src = cdnUrl;
+        video.load();
+        video.play().catch(() => {});
+      }
     };
 
     video.addEventListener('play', onPlay);
     video.addEventListener('pause', onPause);
     video.addEventListener('ended', tryPlay);
+    video.addEventListener('error', onError);
 
-    // One-time fallback gesture listeners for stubborn mobile browsers
+    // One-time fallback gesture listeners for mobile phones (low power mode / battery saver)
     const onUserInteraction = () => {
       if (video.paused) {
         video.play().catch(() => {});
@@ -55,13 +99,27 @@ export default function MarsHeroVideo() {
     window.addEventListener('pointerdown', onUserInteraction, { passive: true, once: true });
     window.addEventListener('scroll', onUserInteraction, { passive: true, once: true });
 
+    // Handle viewport changes (e.g. screen rotation or desktop window resize)
+    const handleMediaChange = (e: MediaQueryListEvent) => {
+      const mobileActive = e.matches;
+      setIsMobile(mobileActive);
+      video.poster = mobileActive ? MOBILE_POSTER : DESKTOP_POSTER;
+      syncSourceForDevice(mobileActive);
+      video.load();
+      video.play().catch(() => {});
+    };
+
+    mql.addEventListener('change', handleMediaChange);
+
     return () => {
       video.removeEventListener('play', onPlay);
       video.removeEventListener('pause', onPause);
       video.removeEventListener('ended', tryPlay);
+      video.removeEventListener('error', onError);
       window.removeEventListener('touchstart', onUserInteraction);
       window.removeEventListener('pointerdown', onUserInteraction);
       window.removeEventListener('scroll', onUserInteraction);
+      mql.removeEventListener('change', handleMediaChange);
     };
   }, []);
 
@@ -90,31 +148,42 @@ export default function MarsHeroVideo() {
           transition: opacity 0.5s ease-in-out;
         }
 
-        /* Tablet responsive adjustment */
-        @media (max-width: 1024px) {
+        /* Tablet responsive adjustment (769px to 1024px) */
+        @media (max-width: 1024px) and (min-width: 769px) {
           .mars-hero-video {
             object-position: 85% center;
           }
         }
 
-        /* Mobile responsive adjustment */
-        @media (max-width: 640px) {
+        /* Mobile phones responsive adjustment (<= 768px) */
+        @media (max-width: 768px) {
           .mars-hero-video {
-            object-position: 72% 25%;
-            opacity: 0.85;
+            object-position: 38% center;
+            opacity: 0.90;
+          }
+          .mars-hero-vignette-desktop {
+            display: none !important;
           }
           .mars-hero-vignette-mobile {
+            display: block !important;
             background: linear-gradient(
               180deg,
-              rgba(2, 7, 8, 0.4) 0%,
-              rgba(2, 7, 8, 0.75) 40%,
-              rgba(2, 7, 8, 0.95) 100%
+              rgba(2, 7, 8, 0.35) 0%,
+              rgba(2, 7, 8, 0.65) 40%,
+              rgba(2, 7, 8, 0.92) 80%,
+              #020708 100%
             ) !important;
+          }
+        }
+
+        @media (min-width: 769px) {
+          .mars-hero-vignette-mobile {
+            display: none !important;
           }
         }
       `}</style>
 
-      {/* Video element with fast poster fallback and dual sources */}
+      {/* Video element with fast poster fallback and dual sources for mobile & desktop */}
       <video
         ref={videoRef}
         autoPlay
@@ -122,14 +191,35 @@ export default function MarsHeroVideo() {
         loop
         playsInline
         preload="auto"
-        poster="/mars-poster.png"
+        poster={isMobile ? MOBILE_POSTER : DESKTOP_POSTER}
         className="mars-hero-video"
       >
-        <source src="/Mars_Rotation.mp4" type="video/mp4" />
+        {/* Mobile sources (loaded when screen <= 768px) */}
         <source
-          src="https://sxcontent9668.azureedge.us/cms-assets/assets/Mars_Rotation_Web_HB_d96299f9de.mp4"
+          src={MOBILE_LOCAL}
           type="video/mp4"
+          media="(max-width: 768px)"
         />
+        <source
+          src={MOBILE_CDN}
+          type="video/mp4"
+          media="(max-width: 768px)"
+        />
+
+        {/* Desktop sources (loaded when screen > 768px) */}
+        <source
+          src={DESKTOP_LOCAL}
+          type="video/mp4"
+          media="(min-width: 769px)"
+        />
+        <source
+          src={DESKTOP_CDN}
+          type="video/mp4"
+          media="(min-width: 769px)"
+        />
+
+        {/* Fallback default source */}
+        <source src={DESKTOP_LOCAL} type="video/mp4" />
       </video>
 
       {/* Desktop Deep Space Void Vignette: ensures headline & buttons on the left have pure contrast */}
