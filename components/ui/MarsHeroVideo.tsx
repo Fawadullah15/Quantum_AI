@@ -158,8 +158,7 @@ export default function MarsHeroVideo() {
         /* Mobile phones responsive adjustment (<= 768px) */
         @media (max-width: 768px) {
           .mars-hero-video {
-            /* Shift Mars to the right so it acts as a backdrop for the right side */
-            object-position: 85% center;
+            object-position: 0% center;
             opacity: 0.90;
           }
           .mars-hero-vignette-desktop {
@@ -167,12 +166,12 @@ export default function MarsHeroVideo() {
           }
           .mars-hero-vignette-mobile {
             display: block !important;
-            /* Gradient that is dark on the left for text, transparent on right for Mars */
             background: linear-gradient(
-              90deg,
-              #020708 0%,
-              rgba(2, 7, 8, 0.8) 45%,
-              transparent 100%
+              180deg,
+              rgba(2, 7, 8, 0.35) 0%,
+              rgba(2, 7, 8, 0.65) 40%,
+              rgba(2, 7, 8, 0.92) 80%,
+              #020708 100%
             ) !important;
           }
         }
