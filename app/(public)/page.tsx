@@ -326,17 +326,87 @@ export default function HomePage() {
       <div style={{ position: 'relative', width: '100%', maxWidth: '100%', overflowX: 'hidden', pointerEvents: 'none' }}>
 
         {/* ═══════════════════════════════════════════════════════════
-            HERO SECTION
+            HERO SECTION — MARS SPACE ARRIVAL
         ═══════════════════════════════════════════════════════════ */}
         <section
           style={{
-            minHeight: '85vh',
+            minHeight: '100vh',
             display: 'flex',
             alignItems: 'center',
-            padding: 'clamp(3.5rem, 7vh, 5.5rem) clamp(1.25rem, 5vw, 5rem) clamp(2rem, 4vh, 3rem)',
+            padding: 'clamp(4.5rem, 8vh, 6.5rem) clamp(1.25rem, 5vw, 5rem) clamp(2.5rem, 5vh, 4rem)',
             position: 'relative',
+            overflow: 'hidden',
           }}
         >
+          {/* ── Mars Video Background (Spacex-style revolving Mars on the far right) ── */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              zIndex: 0,
+              overflow: 'hidden',
+              pointerEvents: 'none',
+              backgroundColor: '#020708',
+            }}
+          >
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'right center',
+              }}
+            >
+              <source src="/Mars_Rotation.mp4" type="video/mp4" />
+            </video>
+
+            {/* Left Deep Space Void: provides clean background contrast for text on the left */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(90deg, #020708 0%, rgba(2, 7, 8, 0.94) 30%, rgba(2, 7, 8, 0.6) 55%, rgba(2, 7, 8, 0.08) 78%, transparent 100%)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Top Fade into Header */}
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '120px',
+                background: 'linear-gradient(180deg, #020708 0%, transparent 100%)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Bottom Atmospheric Fade: smoothly dissolves into the section below */}
+            <div
+              style={{
+                position: 'absolute',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '220px',
+                background: 'linear-gradient(0deg, #020708 0%, rgba(2, 7, 8, 0.85) 45%, transparent 100%)',
+                pointerEvents: 'none',
+              }}
+            />
+          </div>
+
           {/* Semantic H1 for SEO & accessibility — visually hidden */}
           <h1 className="sr-only">We Build Intelligent Software — Quantum AI</h1>
 
@@ -348,7 +418,7 @@ export default function HomePage() {
                 fontSize: '0.72rem',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: '#38BDF8',
+                color: '#14B8A6',
                 marginBottom: '0.85rem',
                 fontWeight: 600,
               }}
@@ -361,14 +431,14 @@ export default function HomePage() {
               height: 'clamp(190px, 30vw, 300px)',
               width: 'clamp(280px, 90vw, 840px)',
               marginBottom: '1.25rem',
-              filter: 'drop-shadow(0 4px 24px rgba(2, 8, 23, 0.95))',
+              filter: 'drop-shadow(0 4px 24px rgba(2, 7, 8, 0.95))',
             }}>
               <ParticleText
                 text={`WE BUILD\nINTELLIGENT\nSOFTWARE`}
                 fontSize={95}
                 particleDensity={3}
                 particleSize={1.4}
-                textColor="#F8FAFF"
+                textColor="#F0FDFA"
                 friction={0.87}
                 ease={0.06}
                 mouseRadius={110}
@@ -380,7 +450,7 @@ export default function HomePage() {
             {/* Supporting copy */}
             <p style={{
               fontSize: 'clamp(0.9rem, 1.3vw, 1.05rem)',
-              color: '#94A3B8',
+              color: '#A7C7C5',
               lineHeight: 1.6,
               marginBottom: '1.75rem',
               maxWidth: 620,
@@ -442,14 +512,14 @@ export default function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             LEADERSHIP SECTION
         ═══════════════════════════════════════════════════════════ */}
-        <section style={{ padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(6, 21, 43, 0.2)' }}>
+        <section style={{ padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(7, 18, 20, 0.4)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
               fontFamily: 'var(--font-mono)',
               fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
-              color: '#1677FF',
+              color: '#14B8A6',
               marginBottom: '0.5rem',
               fontWeight: 600
             }}>
@@ -461,7 +531,7 @@ export default function HomePage() {
                 fontSize: 'clamp(2.5rem, 4.8vw, 3.85rem)',
                 fontWeight: 700,
                 lineHeight: 1.02,
-                color: '#F8FAFF',
+                color: '#F0FDFA',
                 marginBottom: '0.65rem',
                 letterSpacing: '-0.035em',
                 textTransform: 'uppercase'
@@ -473,7 +543,7 @@ export default function HomePage() {
               className="section-desc"
               style={{
                 fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)',
-                color: '#94A3B8',
+                color: '#A7C7C5',
                 lineHeight: 1.6,
                 marginBottom: 'clamp(1.5rem, 3vh, 2.5rem)',
                 maxWidth: 560,
@@ -500,8 +570,8 @@ export default function HomePage() {
                   key={person.id || person.slug}
                   href={`/leadership/${person.slug || 'muhammad-murtaza'}`}
                   style={{
-                    backgroundColor: 'rgba(6, 21, 43, 0.7)',
-                    border: '1px solid rgba(22, 119, 255, 0.15)',
+                    backgroundColor: 'rgba(7, 18, 20, 0.7)',
+                    border: '1px solid rgba(20, 184, 166, 0.15)',
                     borderRadius: 10,
                     overflow: 'hidden',
                     display: 'flex',
@@ -513,12 +583,12 @@ export default function HomePage() {
                     transition: 'transform 0.2s, border-color 0.2s, box-shadow 0.2s',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+                    e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.4)';
                     e.currentTarget.style.transform = 'translateY(-2px)';
-                    e.currentTarget.style.boxShadow = '0 8px 24px -6px rgba(22, 119, 255, 0.25)';
+                    e.currentTarget.style.boxShadow = '0 8px 24px -6px rgba(20, 184, 166, 0.25)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = 'rgba(22, 119, 255, 0.15)';
+                    e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.15)';
                     e.currentTarget.style.transform = 'none';
                     e.currentTarget.style.boxShadow = 'none';
                   }}
@@ -526,15 +596,15 @@ export default function HomePage() {
                   {/* Card Header Tag */}
                   <div style={{
                     padding: '0.5rem 0.85rem',
-                    borderBottom: '1px solid rgba(22, 119, 255, 0.1)',
+                    borderBottom: '1px solid rgba(20, 184, 166, 0.1)',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                   }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', color: '#1677FF', textTransform: 'uppercase' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', color: '#14B8A6', textTransform: 'uppercase' }}>
                       QUANTUM AI
                     </span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#64748B' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#6F8F8D' }}>
                       {person.publicId || 'QA-LEAD'}
                     </span>
                   </div>
@@ -543,7 +613,7 @@ export default function HomePage() {
                   <div style={{
                     width: '100%',
                     aspectRatio: '16/10',
-                    backgroundColor: '#030712',
+                    backgroundColor: '#020708',
                     overflow: 'hidden',
                     display: 'flex',
                     alignItems: 'center',
@@ -556,7 +626,7 @@ export default function HomePage() {
                         style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
                       />
                     ) : (
-                      <div style={{ color: '#64748B', fontSize: '2rem' }}>👤</div>
+                      <div style={{ color: '#6F8F8D', fontSize: '2rem' }}>👤</div>
                     )}
                   </div>
 
@@ -565,7 +635,7 @@ export default function HomePage() {
                     <h3 style={{
                       fontSize: '1.05rem',
                       fontWeight: 600,
-                      color: '#F8FAFF',
+                      color: '#F0FDFA',
                       margin: '0 0 0.2rem 0',
                       letterSpacing: '-0.01em',
                       textTransform: 'none',
@@ -573,13 +643,13 @@ export default function HomePage() {
                     }}>
                       {person.name}
                     </h3>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#55D6FF', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.35rem', display: 'block' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#67E8F9', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.35rem', display: 'block' }}>
                       {person.position}
                     </span>
-                    <p style={{ color: '#94A3B8', fontSize: '0.825rem', lineHeight: 1.45, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    <p style={{ color: '#A7C7C5', fontSize: '0.825rem', lineHeight: 1.45, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {person.shortBio}
                     </p>
-                    <span style={{ marginTop: 'auto', paddingTop: '0.65rem', color: '#38BDF8', fontSize: '0.72rem', fontWeight: 600, fontFamily: 'var(--font-mono)', letterSpacing: '0.06em' }}>
+                    <span style={{ marginTop: 'auto', paddingTop: '0.65rem', color: '#14B8A6', fontSize: '0.72rem', fontWeight: 600, fontFamily: 'var(--font-mono)', letterSpacing: '0.06em' }}>
                       VIEW PROFILE →
                     </span>
                   </div>
@@ -613,8 +683,8 @@ export default function HomePage() {
           <div style={{
             maxWidth: 1200,
             margin: '0 auto',
-            background: 'linear-gradient(135deg, rgba(6, 21, 43, 0.75) 0%, rgba(8, 28, 58, 0.9) 100%)',
-            border: '1px solid rgba(22, 119, 255, 0.22)',
+            background: 'linear-gradient(135deg, rgba(7, 18, 20, 0.85) 0%, rgba(10, 24, 27, 0.95) 100%)',
+            border: '1px solid rgba(20, 184, 166, 0.22)',
             borderRadius: 14,
             padding: 'clamp(1.5rem, 3.5vw, 2.25rem)',
             display: 'flex',
@@ -622,16 +692,16 @@ export default function HomePage() {
             justifyContent: 'space-between',
             alignItems: 'center',
             gap: '1.5rem',
-            boxShadow: '0 16px 40px -10px rgba(0, 0, 0, 0.7), 0 0 24px -6px rgba(22, 119, 255, 0.18)',
+            boxShadow: '0 16px 40px -10px rgba(0, 0, 0, 0.7), 0 0 24px -6px rgba(20, 184, 166, 0.18)',
           }}>
             <div style={{ maxWidth: 640 }}>
-              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#38BDF8', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
+              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#14B8A6', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
                 CUSTOM SOFTWARE ARCHITECTURES
               </div>
-              <h3 style={{ fontSize: 'clamp(1.3rem, 2.4vw, 1.75rem)', fontWeight: 700, color: '#F8FAFC', textTransform: 'uppercase', margin: '0 0 0.5rem 0', letterSpacing: '-0.02em', lineHeight: 1.15 }}>
+              <h3 style={{ fontSize: 'clamp(1.3rem, 2.4vw, 1.75rem)', fontWeight: 700, color: '#F0FDFA', textTransform: 'uppercase', margin: '0 0 0.5rem 0', letterSpacing: '-0.02em', lineHeight: 1.15 }}>
                 Tailored solutions engineered for your operations.
               </h3>
-              <p style={{ color: '#94A3B8', fontSize: '0.9rem', lineHeight: 1.55, margin: 0, fontWeight: 300 }}>
+              <p style={{ color: '#A7C7C5', fontSize: '0.9rem', lineHeight: 1.55, margin: 0, fontWeight: 300 }}>
                 From autonomous agentic workflows and automated pipelines to enterprise operations platforms, discover our complete software systems catalog.
               </p>
             </div>
@@ -642,9 +712,9 @@ export default function HomePage() {
                 alignItems: 'center',
                 gap: '0.5rem',
                 padding: '0.8rem 1.65rem',
-                backgroundColor: '#1677FF',
+                backgroundColor: '#0F766E',
                 borderRadius: 8,
-                color: '#FFFFFF',
+                color: '#F0FDFA',
                 fontFamily: 'var(--font-mono, monospace)',
                 fontSize: '0.8rem',
                 fontWeight: 600,
@@ -652,18 +722,20 @@ export default function HomePage() {
                 textTransform: 'uppercase',
                 textDecoration: 'none',
                 whiteSpace: 'nowrap',
-                boxShadow: '0 4px 16px rgba(22, 119, 255, 0.4)',
+                boxShadow: '0 4px 16px rgba(20, 184, 166, 0.3)',
                 transition: 'all 0.2s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#0050B3';
+                e.currentTarget.style.backgroundColor = '#14B8A6';
+                e.currentTarget.style.color = '#020708';
                 e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(22, 119, 255, 0.6)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(20, 184, 166, 0.4)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#1677FF';
+                e.currentTarget.style.backgroundColor = '#0F766E';
+                e.currentTarget.style.color = '#F0FDFA';
                 e.currentTarget.style.transform = 'none';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(22, 119, 255, 0.4)';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(20, 184, 166, 0.3)';
               }}
             >
               <span>EXPLORE ALL SOLUTIONS</span>
@@ -682,7 +754,7 @@ export default function HomePage() {
               fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
-              color: '#1677FF',
+              color: '#14B8A6',
               marginBottom: '0.5rem',
               fontWeight: 600
             }}>
@@ -698,7 +770,7 @@ export default function HomePage() {
                     fontWeight: 700,
                     lineHeight: 1.02,
                     letterSpacing: '-0.035em',
-                    color: '#F8FAFF',
+                    color: '#F0FDFA',
                     marginBottom: '0.65rem',
                     textTransform: 'uppercase',
                     wordBreak: 'break-word',
@@ -709,48 +781,48 @@ export default function HomePage() {
                 </h2>
                 <p
                   className="section-desc"
-                  style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#94A3B8', lineHeight: 1.6, marginBottom: '1.25rem', fontWeight: 300, wordBreak: 'break-word', overflowWrap: 'break-word' }}
+                  style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#A7C7C5', lineHeight: 1.6, marginBottom: '1.25rem', fontWeight: 300, wordBreak: 'break-word', overflowWrap: 'break-word' }}
                 >
                   Tell us what you are building, what problem you are solving, or what you want to improve.
                 </p>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderTop: '1px solid rgba(22, 119, 255, 0.1)', paddingTop: '1.25rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderTop: '1px solid rgba(20, 184, 166, 0.1)', paddingTop: '1.25rem' }}>
                   <div>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>EMAIL INQUIRIES</span>
-                    <a href="mailto:hello@quantumai.dev" style={{ fontSize: '1rem', color: '#F8FAFC', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500, wordBreak: 'break-word' }} onMouseEnter={(e) => e.currentTarget.style.color = '#1677FF'} onMouseLeave={(e) => e.currentTarget.style.color = '#F8FAFC'}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#6F8F8D', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>EMAIL INQUIRIES</span>
+                    <a href="mailto:hello@quantumai.dev" style={{ fontSize: '1rem', color: '#F0FDFA', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500, wordBreak: 'break-word' }} onMouseEnter={(e) => e.currentTarget.style.color = '#14B8A6'} onMouseLeave={(e) => e.currentTarget.style.color = '#F0FDFA'}>
                       hello@quantumai.dev
                     </a>
                   </div>
                   <div>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#64748B', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>RESPONSE MATRIX</span>
-                    <p style={{ color: '#94A3B8', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>We review all incoming submissions and reply within 24 hours.</p>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#6F8F8D', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>RESPONSE MATRIX</span>
+                    <p style={{ color: '#A7C7C5', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>We review all incoming submissions and reply within 24 hours.</p>
                   </div>
                 </div>
               </div>
 
               {/* Form */}
               <div style={{
-                backgroundColor: '#040E24',
-                border: '1px solid rgba(56, 189, 248, 0.25)',
+                backgroundColor: '#071214',
+                border: '1px solid rgba(20, 184, 166, 0.20)',
                 borderRadius: 12,
                 padding: 'clamp(1.25rem, 3vw, 2.25rem)',
-                boxShadow: '0 16px 40px -10px rgba(0, 0, 0, 0.85), 0 0 20px -5px rgba(22, 119, 255, 0.15)',
+                boxShadow: '0 16px 40px -10px rgba(0, 0, 0, 0.85), 0 0 20px -5px rgba(20, 184, 166, 0.12)',
                 minWidth: 0,
                 width: '100%',
                 boxSizing: 'border-box'
               }}>
                 {submitStatus === 'success' ? (
                   <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-                    <div style={{ color: '#34D399', fontSize: '2.5rem', marginBottom: '1rem' }}>✓</div>
-                    <h3 style={{ fontSize: '1.5rem', color: '#F8FAFC', marginBottom: '0.5rem', textTransform: 'none' }}>Project Inquiry Sent</h3>
-                    <p style={{ color: '#94A3B8', fontSize: '0.95rem', marginBottom: '2rem', fontWeight: 300 }}>Thank you for reaching out. An engineer will review your inquiry and connect with you shortly.</p>
+                    <div style={{ color: '#14B8A6', fontSize: '2.5rem', marginBottom: '1rem' }}>✓</div>
+                    <h3 style={{ fontSize: '1.5rem', color: '#F0FDFA', marginBottom: '0.5rem', textTransform: 'none' }}>Project Inquiry Sent</h3>
+                    <p style={{ color: '#A7C7C5', fontSize: '0.95rem', marginBottom: '2rem', fontWeight: 300 }}>Thank you for reaching out. An engineer will review your inquiry and connect with you shortly.</p>
                     <NovaButton onClick={() => setSubmitStatus('idle')}>SEND ANOTHER INQUIRY</NovaButton>
                   </div>
                 ) : (
                   <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>NAME <span style={{ color: '#38BDF8' }}>*</span></label>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#A7C7C5', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>NAME <span style={{ color: '#14B8A6' }}>*</span></label>
                       <input
                         type="text"
                         name="name"
@@ -758,24 +830,24 @@ export default function HomePage() {
                         onChange={handleFormChange}
                         placeholder="Your full name"
                         style={{
-                          backgroundColor: '#081735',
-                          border: `1px solid ${formErrors.name ? '#EF4444' : 'rgba(56, 189, 248, 0.2)'}`,
+                          backgroundColor: '#0A181B',
+                          border: `1px solid ${formErrors.name ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'}`,
                           borderRadius: 8,
-                          color: '#F8FAFC',
+                          color: '#F0FDFA',
                           padding: '0.85rem 1rem',
                           outline: 'none',
                           fontSize: '0.95rem',
                           width: '100%',
                           transition: 'border-color 0.2s, box-shadow 0.2s'
                         }}
-                        onFocus={(e) => { e.currentTarget.style.borderColor = '#38BDF8'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(56, 189, 248, 0.2)'; }}
-                        onBlur={(e) => { e.currentTarget.style.borderColor = formErrors.name ? '#EF4444' : 'rgba(56, 189, 248, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = '#14B8A6'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(20, 184, 166, 0.2)'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderColor = formErrors.name ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
                       />
                       {formErrors.name && <span style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>{formErrors.name}</span>}
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>EMAIL <span style={{ color: '#38BDF8' }}>*</span></label>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#A7C7C5', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>EMAIL <span style={{ color: '#14B8A6' }}>*</span></label>
                       <input
                         type="email"
                         name="email"
@@ -783,24 +855,24 @@ export default function HomePage() {
                         onChange={handleFormChange}
                         placeholder="name@company.com"
                         style={{
-                          backgroundColor: '#081735',
-                          border: `1px solid ${formErrors.email ? '#EF4444' : 'rgba(56, 189, 248, 0.2)'}`,
+                          backgroundColor: '#0A181B',
+                          border: `1px solid ${formErrors.email ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'}`,
                           borderRadius: 8,
-                          color: '#F8FAFC',
+                          color: '#F0FDFA',
                           padding: '0.85rem 1rem',
                           outline: 'none',
                           fontSize: '0.95rem',
                           width: '100%',
                           transition: 'border-color 0.2s, box-shadow 0.2s'
                         }}
-                        onFocus={(e) => { e.currentTarget.style.borderColor = '#38BDF8'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(56, 189, 248, 0.2)'; }}
-                        onBlur={(e) => { e.currentTarget.style.borderColor = formErrors.email ? '#EF4444' : 'rgba(56, 189, 248, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = '#14B8A6'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(20, 184, 166, 0.2)'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderColor = formErrors.email ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
                       />
                       {formErrors.email && <span style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>{formErrors.email}</span>}
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>COMPANY</label>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#A7C7C5', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>COMPANY</label>
                       <input
                         type="text"
                         name="company"
@@ -808,33 +880,33 @@ export default function HomePage() {
                         onChange={handleFormChange}
                         placeholder="Company name (optional)"
                         style={{
-                          backgroundColor: '#081735',
-                          border: '1px solid rgba(56, 189, 248, 0.2)',
+                          backgroundColor: '#0A181B',
+                          border: '1px solid rgba(20, 184, 166, 0.2)',
                           borderRadius: 8,
-                          color: '#F8FAFC',
+                          color: '#F0FDFA',
                           padding: '0.85rem 1rem',
                           outline: 'none',
                           fontSize: '0.95rem',
                           width: '100%',
                           transition: 'border-color 0.2s, box-shadow 0.2s'
                         }}
-                        onFocus={(e) => { e.currentTarget.style.borderColor = '#38BDF8'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(56, 189, 248, 0.2)'; }}
-                        onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = '#14B8A6'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(20, 184, 166, 0.2)'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
                       />
                     </div>
 
                     <div className="form-selects-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>PROJECT TYPE</label>
+                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#A7C7C5', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>PROJECT TYPE</label>
                         <select
                           name="projectType"
                           value={formState.projectType}
                           onChange={handleFormChange}
                           style={{
-                            backgroundColor: '#081735',
-                            border: '1px solid rgba(56, 189, 248, 0.2)',
+                            backgroundColor: '#0A181B',
+                            border: '1px solid rgba(20, 184, 166, 0.2)',
                             borderRadius: 8,
-                            color: '#F8FAFC',
+                            color: '#F0FDFA',
                             padding: '0.85rem 1rem',
                             outline: 'none',
                             fontSize: '0.95rem',
@@ -854,16 +926,16 @@ export default function HomePage() {
                       </div>
 
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>BUDGET RANGE</label>
+                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#A7C7C5', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>BUDGET RANGE</label>
                         <select
                           name="budget"
                           value={formState.budget}
                           onChange={handleFormChange}
                           style={{
-                            backgroundColor: '#081735',
-                            border: '1px solid rgba(56, 189, 248, 0.2)',
+                            backgroundColor: '#0A181B',
+                            border: '1px solid rgba(20, 184, 166, 0.2)',
                             borderRadius: 8,
-                            color: '#F8FAFC',
+                            color: '#F0FDFA',
                             padding: '0.85rem 1rem',
                             outline: 'none',
                             fontSize: '0.95rem',
@@ -882,7 +954,7 @@ export default function HomePage() {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#94A3B8', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>MESSAGE <span style={{ color: '#38BDF8' }}>*</span></label>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#A7C7C5', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>MESSAGE <span style={{ color: '#14B8A6' }}>*</span></label>
                       <textarea
                         name="message"
                         value={formState.message}
@@ -892,8 +964,8 @@ export default function HomePage() {
                         style={{
                           background: 'transparent',
                           border: 'none',
-                          borderBottom: `1.5px solid ${formErrors.message ? '#EF4444' : 'rgba(22, 119, 255, 0.2)'}`,
-                          color: '#F8FAFF',
+                          borderBottom: `1.5px solid ${formErrors.message ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'}`,
+                          color: '#F0FDFA',
                           padding: '0.625rem 0',
                           outline: 'none',
                           fontSize: '1rem',
@@ -902,8 +974,8 @@ export default function HomePage() {
                           lineHeight: 1.5,
                           transition: 'border-color 0.25s'
                         }}
-                        onFocus={(e) => { e.currentTarget.style.borderBottomColor = '#1677FF'; }}
-                        onBlur={(e) => { e.currentTarget.style.borderBottomColor = formErrors.message ? '#EF4444' : 'rgba(22, 119, 255, 0.2)'; }}
+                        onFocus={(e) => { e.currentTarget.style.borderBottomColor = '#14B8A6'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderBottomColor = formErrors.message ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'; }}
                       />
                       {formErrors.message && <span style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>{formErrors.message}</span>}
                     </div>
@@ -920,7 +992,7 @@ export default function HomePage() {
                       {isSubmitting ? 'SENDING...' : 'SEND PROJECT INQUIRY'}
                     </NovaButton>
 
-                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#64748B', lineHeight: 1.5, margin: '0.5rem 0 0 0', textAlign: 'center' }}>
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#6F8F8D', lineHeight: 1.5, margin: '0.5rem 0 0 0', textAlign: 'center' }}>
                       🔒 Your information is confidential and used solely to evaluate your project inquiry.
                     </p>
 
