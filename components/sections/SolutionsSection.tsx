@@ -37,8 +37,11 @@ const SOLUTIONS: SolutionItem[] = [
   },
 ];
 
-export default function SolutionsSection() {
+export default function SolutionsSection({ solutions = SOLUTIONS }: { solutions?: SolutionItem[] }) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+  // Use the passed props if they exist, otherwise fallback to the default array
+  const displaySolutions = solutions && solutions.length > 0 ? solutions : SOLUTIONS;
 
   return (
     <section
@@ -329,7 +332,7 @@ export default function SolutionsSection() {
 
         {/* ─── Desktop View: Interactive Expanding Horizontal Cards ─── */}
         <div className="solutions-desktop-list">
-          {SOLUTIONS.map((item, idx) => {
+          {displaySolutions.map((item, idx) => {
             const isExpanded = hoveredIdx === idx;
 
             return (
@@ -370,7 +373,7 @@ export default function SolutionsSection() {
 
         {/* ─── Mobile View: Clean 2x2 Grid of Small Tiles (No Hover, No Expansion) ─── */}
         <div className="solutions-mobile-grid">
-          {SOLUTIONS.map((item, idx) => (
+          {displaySolutions.map((item, idx) => (
             <Link key={idx} href={item.href} className="mobile-solution-tile">
               <div>
                 <span className="mobile-solution-num">{item.step}</span>

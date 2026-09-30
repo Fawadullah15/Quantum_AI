@@ -13,7 +13,7 @@ const MOBILE_POSTER = '/mars-mobile-poster.png';
 export default function MarsHeroVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -21,8 +21,7 @@ export default function MarsHeroVideo() {
 
     // Detect mobile viewport (<= 768px)
     const mql = window.matchMedia('(max-width: 768px)');
-    const initialMobile = mql.matches;
-    setIsMobile(initialMobile);
+    setIsMobile(mql.matches);
 
     // Force required attributes for mobile & desktop autoplay
     video.muted = true;
@@ -31,25 +30,6 @@ export default function MarsHeroVideo() {
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', '');
-
-    // Synchronize active source if browser mis-evaluated media queries on initial load
-    const syncSourceForDevice = (mobileActive: boolean) => {
-      const current = video.currentSrc || '';
-      const isCurrentlyMobile = current.includes('Mobile_Mars') || current.includes('Mobile_v4_HB');
-      const isCurrentlyDesktop = current.includes('Mars_Rotation');
-
-      if (current) {
-        if (!mobileActive && isCurrentlyMobile) {
-          video.src = DESKTOP_LOCAL;
-          video.poster = DESKTOP_POSTER;
-          video.load();
-        } else if (mobileActive && isCurrentlyDesktop) {
-          video.src = MOBILE_LOCAL;
-          video.poster = MOBILE_POSTER;
-          video.load();
-        }
-      }
-    };
 
     const tryPlay = () => {
       const promise = video.play();
@@ -63,7 +43,6 @@ export default function MarsHeroVideo() {
       }
     };
 
-    syncSourceForDevice(initialMobile);
     tryPlay();
 
     // Event listeners to ensure continuous playback
@@ -101,12 +80,7 @@ export default function MarsHeroVideo() {
 
     // Handle viewport changes (e.g. screen rotation or desktop window resize)
     const handleMediaChange = (e: MediaQueryListEvent) => {
-      const mobileActive = e.matches;
-      setIsMobile(mobileActive);
-      video.poster = mobileActive ? MOBILE_POSTER : DESKTOP_POSTER;
-      syncSourceForDevice(mobileActive);
-      video.load();
-      video.play().catch(() => {});
+      setIsMobile(e.matches);
     };
 
     mql.addEventListener('change', handleMediaChange);
@@ -190,8 +164,8 @@ export default function MarsHeroVideo() {
         muted
         loop
         playsInline
-        preload="auto"
-        poster={isMobile ? MOBILE_POSTER : DESKTOP_POSTER}
+        preload="none"
+        poster={isMobile === null ? undefined : (isMobile ? MOBILE_POSTER : DESKTOP_POSTER)}
         className="mars-hero-video"
       >
         {/* Mobile sources (loaded when screen <= 768px) */}

@@ -4,6 +4,8 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
+export const revalidate = 3600;
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

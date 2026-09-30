@@ -7,6 +7,8 @@ import { revalidatePath } from 'next/cache';
 export const dynamic = 'force-dynamic';
 
 // GET: Fetch clients (public returns published only; admin can pass ?all=true)
+export const revalidate = 3600;
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);

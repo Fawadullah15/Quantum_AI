@@ -1,33 +1,14 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
-import { motion, useReducedMotion } from 'framer-motion';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-export interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   href?: string;
-  onClick?: () => void;
   children: React.ReactNode;
-  className?: string;
-  style?: React.CSSProperties;
-  type?: 'button' | 'submit' | 'reset';
-  disabled?: boolean;
-  'aria-label'?: string;
 }
 
-// ─── NovaButton — Primary CTA with animated liquid blue edge ─────────────────
-
 export function NovaButton({ href, children, onClick, className = '', style, type = 'button', disabled, ...rest }: ButtonProps) {
-  const reduce = useReducedMotion();
-
-  const inner = (
-    <span style={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', zIndex: 2, gap: '0.5rem' }}>
-      {children}
-    </span>
-  );
-
   const baseStyle: React.CSSProperties = {
     position: 'relative',
     display: 'inline-flex',
@@ -55,27 +36,7 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
 
   const content = (
     <>
-      {/* Spinning edge ring */}
-      <span style={{
-        position: 'absolute',
-        inset: 0,
-        borderRadius: 999,
-        overflow: 'hidden',
-        zIndex: 0,
-      }}>
-        <span style={{
-          position: 'absolute',
-          inset: 0,
-          borderRadius: 'inherit',
-          background: reduce
-            ? 'rgba(15, 118, 110, 0.6)'
-            : undefined,
-          animation: reduce ? 'none' : 'novaSpin 3s linear infinite',
-          backgroundImage: reduce ? undefined : 'conic-gradient(from var(--nova-angle, 0deg), transparent 0%, transparent 60%, #0F766E 80%, #14B8A6 90%, transparent 100%)',
-        }} />
-      </span>
-
-      {/* Surface */}
+      <span className="nova-ring" />
       <span style={{
         position: 'absolute',
         inset: '1.5px',
@@ -84,82 +45,30 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
         zIndex: 1,
         overflow: 'hidden',
       }}>
-        {/* Shine on hover */}
-        <span className="nova-shine" style={{
-          position: 'absolute',
-          inset: 0,
-          background: 'linear-gradient(120deg, transparent 30%, rgba(103, 232, 249,0.12) 50%, transparent 70%)',
-          transform: 'translateX(-100%)',
-          transition: 'transform 0.6s ease',
-        }} />
+        <span className="nova-shine" />
       </span>
-
-      {/* Text */}
-      <span style={{
-        position: 'relative',
-        zIndex: 2,
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: '0.5rem',
-      }}>
+      <span style={{ position: 'relative', zIndex: 2, display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
         {children}
       </span>
     </>
   );
 
-  const motionProps = {
-    whileHover: !reduce && !disabled ? { scale: 1.02 } : {},
-    whileTap: !reduce && !disabled ? { scale: 0.98 } : {},
-    onHoverStart: (e: any) => {
-      const shine = e.target?.closest?.('.nova-btn')?.querySelector?.('.nova-shine');
-      if (shine) shine.style.transform = 'translateX(100%)';
-      const el = e.target?.closest?.('.nova-btn');
-      if (el) el.style.boxShadow = '0 0 20px rgba(15, 118, 110, 0.4)';
-    },
-    onHoverEnd: (e: any) => {
-      const shine = e.target?.closest?.('.nova-btn')?.querySelector?.('.nova-shine');
-      if (shine) { shine.style.transition = 'none'; shine.style.transform = 'translateX(-100%)'; setTimeout(() => { shine.style.transition = 'transform 0.6s ease'; }, 50); }
-      const el = e.target?.closest?.('.nova-btn');
-      if (el) el.style.boxShadow = 'none';
-    },
-  };
-
   if (href) {
-    const MotionLink = motion(Link);
     return (
-      <MotionLink
-        href={href}
-        className={`nova-btn ${className}`}
-        style={baseStyle}
-        {...motionProps}
-        {...(rest as any)}
-      >
+      <Link href={href} className={`nova-btn ${className}`} style={baseStyle} {...(rest as any)}>
         {content}
-      </MotionLink>
+      </Link>
     );
   }
 
   return (
-    <motion.button
-      type={type}
-      disabled={disabled}
-      onClick={onClick}
-      className={`nova-btn ${className}`}
-      style={baseStyle}
-      {...motionProps}
-      {...(rest as any)}
-    >
+    <button type={type} disabled={disabled} onClick={onClick} className={`nova-btn ${className}`} style={baseStyle} {...(rest as any)}>
       {content}
-    </motion.button>
+    </button>
   );
 }
 
-// ─── GalaxyButton — Secondary CTA with star-field hover ──────────────────────
-
 export function GalaxyButton({ href, children, onClick, className = '', style, type = 'button', disabled, ...rest }: ButtonProps) {
-  const reduce = useReducedMotion();
-  const btnRef = useRef<HTMLElement | null>(null);
-
   const baseStyle: React.CSSProperties = {
     position: 'relative',
     display: 'inline-flex',
@@ -180,7 +89,6 @@ export function GalaxyButton({ href, children, onClick, className = '', style, t
     opacity: disabled ? 0.5 : 1,
     background: '#050C0E',
     boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-    transition: 'box-shadow 0.3s, border-color 0.3s',
     maxWidth: '100%',
     boxSizing: 'border-box',
     textAlign: 'center',
@@ -189,13 +97,10 @@ export function GalaxyButton({ href, children, onClick, className = '', style, t
 
   const content = (
     <>
-      {/* Galaxy background */}
       <span className="galaxy-bg" style={{
         position: 'absolute',
         inset: 0,
         borderRadius: 'inherit',
-        opacity: 0,
-        transition: reduce ? 'none' : 'opacity 0.5s ease',
         backgroundImage: [
           'radial-gradient(circle at 30% 40%, rgba(124, 58, 237, 0.25) 0%, transparent 50%)',
           'radial-gradient(circle at 70% 60%, rgba(15, 118, 110, 0.2) 0%, transparent 50%)',
@@ -208,65 +113,25 @@ export function GalaxyButton({ href, children, onClick, className = '', style, t
           'radial-gradient(1.5px 1.5px at 8% 82%, rgba(255,255,255,0.5), transparent)',
         ].join(', '),
       }} />
-
-      {/* Text */}
       <span style={{ position: 'relative', zIndex: 1 }}>{children}</span>
     </>
   );
 
-  const motionProps = {
-    whileHover: !reduce && !disabled ? { scale: 1.02 } : {},
-    whileTap: !reduce && !disabled ? { scale: 0.98 } : {},
-    onHoverStart: (e: any) => {
-      const el = e.target?.closest?.('.galaxy-btn');
-      if (!el) return;
-      const bg = el.querySelector('.galaxy-bg');
-      if (bg) bg.style.opacity = '1';
-      el.style.borderColor = 'rgba(124, 58, 237, 0.35)';
-      el.style.boxShadow = '0 6px 32px rgba(124, 58, 237, 0.2)';
-    },
-    onHoverEnd: (e: any) => {
-      const el = e.target?.closest?.('.galaxy-btn');
-      if (!el) return;
-      const bg = el.querySelector('.galaxy-bg');
-      if (bg) bg.style.opacity = '0';
-      el.style.borderColor = 'rgba(255,255,255,0.1)';
-      el.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
-    },
-  };
-
   if (href) {
-    const MotionLink = motion(Link);
     return (
-      <MotionLink
-        href={href}
-        className={`galaxy-btn ${className}`}
-        style={baseStyle}
-        {...motionProps}
-        {...(rest as any)}
-      >
+      <Link href={href} className={`galaxy-btn ${className}`} style={baseStyle} {...(rest as any)}>
         {content}
-      </MotionLink>
+      </Link>
     );
   }
 
   return (
-    <motion.button
-      type={type}
-      disabled={disabled}
-      onClick={onClick}
-      className={`galaxy-btn ${className}`}
-      style={baseStyle}
-      {...motionProps}
-      {...(rest as any)}
-    >
+    <button type={type} disabled={disabled} onClick={onClick} className={`galaxy-btn ${className}`} style={baseStyle} {...(rest as any)}>
       {content}
-    </motion.button>
+    </button>
   );
 }
 
-// ─── Global Button Styles ─────────────────────────────────────────────────────
-// Inject once into the document
 const BUTTON_STYLES = `
   @property --nova-angle {
     syntax: '<angle>';
@@ -275,6 +140,67 @@ const BUTTON_STYLES = `
   }
   @keyframes novaSpin {
     to { --nova-angle: 360deg; }
+  }
+  
+  .nova-btn, .galaxy-btn {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  
+  .nova-btn:hover:not(:disabled), .galaxy-btn:hover:not(:disabled) {
+    transform: scale(1.02);
+  }
+  
+  .nova-btn:active:not(:disabled), .galaxy-btn:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  
+  /* Nova Button specifics */
+  .nova-btn:hover:not(:disabled) {
+    box-shadow: 0 0 20px rgba(15, 118, 110, 0.4);
+  }
+  
+  .nova-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    background: conic-gradient(from var(--nova-angle, 0deg), transparent 0%, transparent 60%, #0F766E 80%, #14B8A6 90%, transparent 100%);
+    animation: novaSpin 3s linear infinite;
+    z-index: 0;
+  }
+  
+  .nova-shine {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(103, 232, 249,0.12) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  
+  .nova-btn:hover:not(:disabled) .nova-shine {
+    transform: translateX(100%);
+  }
+  
+  /* Galaxy Button specifics */
+  .galaxy-btn:hover:not(:disabled) {
+    border-color: rgba(124, 58, 237, 0.35) !important;
+    box-shadow: 0 6px 32px rgba(124, 58, 237, 0.2) !important;
+  }
+  
+  .galaxy-bg {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  .galaxy-btn:hover:not(:disabled) .galaxy-bg {
+    opacity: 1;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .nova-ring { animation: none; background: rgba(15, 118, 110, 0.6); }
+    .nova-btn:hover:not(:disabled), .galaxy-btn:hover:not(:disabled) { transform: none; }
+    .nova-btn:active:not(:disabled), .galaxy-btn:active:not(:disabled) { transform: none; }
+    .nova-shine { display: none; }
+    .galaxy-bg { transition: none; }
   }
 `;
 

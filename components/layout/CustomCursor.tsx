@@ -190,7 +190,7 @@ export default function CustomCursor() {
             : '1px solid rgba(20, 184, 166, 0.35)',
           backgroundColor: isLink ? 'rgba(20, 184, 166, 0.15)' : 'transparent',
           boxShadow: isLink ? '0 0 16px rgba(20, 184, 166, 0.5)' : 'none',
-          transform: `translate3d(${leadPos.current.x}px, ${leadPos.current.y}px, 0) translate(-50%, -50%) scale(${isClicking ? 0.85 : 1})`,
+          transform: `translate3d(${leadPos.current.x}px, ${leadPos.current.y}px, 0) translate(-50%, -50%) `,
           transition: 'width 0.22s cubic-bezier(0.16, 1, 0.3, 1), height 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s, background-color 0.2s, box-shadow 0.2s',
           pointerEvents: 'none',
         }}
@@ -210,7 +210,7 @@ export default function CustomCursor() {
           boxShadow: isInvert
             ? '0 0 8px #FFFFFF'
             : '0 0 10px #67E8F9, 0 0 20px rgba(20, 184, 166, 0.8)',
-          transform: `translate3d(${leadPos.current.x}px, ${leadPos.current.y}px, 0) translate(-50%, -50%) scale(${isClicking ? 0.7 : 1})`,
+          transform: `translate3d(${leadPos.current.x}px, ${leadPos.current.y}px, 0) translate(-50%, -50%) `,
           transition: 'width 0.15s, height 0.15s, background-color 0.2s',
           pointerEvents: 'none',
         }}

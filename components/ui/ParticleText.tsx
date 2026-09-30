@@ -149,7 +149,7 @@ export default function ParticleText({
     let ch = 0;
 
     const init = () => {
-      const rect = container.getBoundingClientRect();
+      const rect = getRect();
       cw = rect.width;
       ch = rect.height;
 
@@ -283,7 +283,20 @@ export default function ParticleText({
       observer.observe(container);
     }
 
+    let cachedRect: DOMRect | null = null;
+    let lastScrollY = typeof window !== 'undefined' ? window.scrollY : 0;
+    const getRect = () => {
+      if (!container) return { left: 0, right: 0, top: 0, bottom: 0, width: 0, height: 0 };
+      const currentScrollY = window.scrollY;
+      if (!cachedRect || Math.abs(currentScrollY - lastScrollY) > 5) {
+        cachedRect = container.getBoundingClientRect();
+        lastScrollY = currentScrollY;
+      }
+      return cachedRect;
+    };
+
     const handleResize = () => {
+      cachedRect = null;
       cancelAnimationFrame(animationRef.current);
       init();
       if (isVisible) {
@@ -295,7 +308,7 @@ export default function ParticleText({
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!container || !isVisible) return;
-      const rect = container.getBoundingClientRect();
+      const rect = getRect();
       const clientX = e.clientX;
       const clientY = e.clientY;
 
@@ -325,7 +338,7 @@ export default function ParticleText({
 
     const handlePointerDown = (e: PointerEvent | MouseEvent) => {
       if (!container || !isVisible) return;
-      const rect = container.getBoundingClientRect();
+      const rect = getRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
@@ -340,7 +353,7 @@ export default function ParticleText({
 
     const handleTouchStart = (e: TouchEvent) => {
       if (!container || !isVisible || !e.touches[0]) return;
-      const rect = container.getBoundingClientRect();
+      const rect = getRect();
       const touch = e.touches[0];
       const x = touch.clientX - rect.left;
       const y = touch.clientY - rect.top;
@@ -356,7 +369,7 @@ export default function ParticleText({
 
     const handleTouchMove = (e: TouchEvent) => {
       if (!container || !isVisible || !e.touches[0]) return;
-      const rect = container.getBoundingClientRect();
+      const rect = getRect();
       const touch = e.touches[0];
       const clientX = touch.clientX;
       const clientY = touch.clientY;

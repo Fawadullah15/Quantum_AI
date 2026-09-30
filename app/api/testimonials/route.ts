@@ -7,6 +7,8 @@ import { revalidatePath } from 'next/cache';
 export const dynamic = 'force-dynamic';
 
 // GET: Public fetch of published testimonials
+export const revalidate = 3600;
+
 export async function GET() {
   try {
     const testimonials = await prisma.testimonial.findMany({

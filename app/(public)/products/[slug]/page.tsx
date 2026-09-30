@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import prisma from '@/lib/db';
 import { createPageMetadata, getProductSchema } from '@/lib/seo';
+import Image from 'next/image';
 
 interface Props {
   params: Promise<{ slug: string }>;

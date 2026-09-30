@@ -3,304 +3,216 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-import { QuantumLogo } from '../ui/QuantumLogo';
-import { Wordmark } from '../ui/Wordmark';
 
-// ─── Nav Data ────────────────────────────────────────────────────────────────
+// ... (Rest of imports and types stay the same, removing framer-motion)
 
-interface DropdownItem { href: string; label: string; desc?: string }
-interface NavItem { href: string; label: string; dropdown?: DropdownItem[]; hideOnDesktop?: boolean }
+interface NavItem {
+  label: string;
+  href: string;
+  hideOnDesktop?: boolean;
+  dropdown?: { label: string; href: string; desc?: string }[];
+}
 
 const NAV_ITEMS: NavItem[] = [
-  { href: '/', label: 'Home' },
-  {
-    href: '/services', label: 'Solutions',
-    hideOnDesktop: true,
-    dropdown: [
-      { href: '/services#ai', label: 'AI Systems', desc: 'Intelligent systems built on real models' },
-      { href: '/services#software', label: 'Business Software', desc: 'Platforms that run your operations' },
-      { href: '/services#automation', label: 'Automation', desc: 'Eliminate repetitive manual work' },
-      { href: '/services#products', label: 'Digital Products', desc: 'Complete software for real users' },
-    ],
-  },
-  { href: '/work', label: 'Work' },
-  { href: '/products', label: 'Products' },
-  {
-    href: '/technology', label: 'Technology',
-    dropdown: [
-      { href: '/technologies/artificial-intelligence', label: 'Artificial Intelligence', desc: 'Models, agents, and AI systems' },
-      { href: '/technologies/machine-learning', label: 'Machine Learning', desc: 'Learning from your data' },
-      { href: '/technologies/cloud-systems', label: 'Cloud Systems', desc: 'Scalable infrastructure' },
-      { href: '/technologies/data-systems', label: 'Data Systems', desc: 'Structured data at scale' },
-    ],
-  },
-  { href: '/about', label: 'About' },
-  { href: '/leadership', label: 'Leadership' },
+  { label: 'Work', href: '/work' },
+  { label: 'Services', href: '/services' },
+  { label: 'Technology', href: '/technology' },
+  { label: 'Products', href: '/products' },
+  { label: 'Insights', href: '/insights' },
+  { label: 'Leadership', href: '/leadership' },
+  { label: 'Contact', href: '/contact', hideOnDesktop: true },
 ];
 
-// ─── Subcomponents ───────────────────────────────────────────────────────────
-
-function DropdownMenu({ items, visible }: { items: DropdownItem[]; visible: boolean }) {
+export function DesktopDropdown({ items, visible, onMouseEnter, onMouseLeave }: { items: { label: string; href: string; desc?: string }[], visible: boolean, onMouseEnter: () => void, onMouseLeave: () => void }) {
   return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          initial={{ opacity: 0, y: 8, scale: 0.97 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 4, scale: 0.97 }}
-          transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
+    <div
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      style={{
+        position: 'absolute',
+        top: '100%',
+        left: '50%',
+        transform: `translateX(-50%) translateY(${visible ? '0' : '8px'}) scale(${visible ? '1' : '0.97'})`,
+        opacity: visible ? 1 : 0,
+        pointerEvents: visible ? 'auto' : 'none',
+        transition: 'opacity 0.2s ease, transform 0.2s ease',
+        marginTop: '0.75rem',
+        width: '280px',
+        background: '#040A10',
+        borderRadius: 12,
+        padding: '0.6rem',
+        border: '1px solid rgba(20, 184, 166, 0.25)',
+        boxShadow: '0 20px 40px -10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(20, 184, 166, 0.1) inset',
+        zIndex: 100,
+        WebkitBackdropFilter: 'blur(20px)',
+      }}
+    >
+      {items.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
           style={{
-            position: 'absolute',
-            top: 'calc(100% + 0.75rem)',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            minWidth: 260,
-            backgroundColor: 'rgba(7, 18, 20, 0.96)',
-            border: '1px solid rgba(20, 184, 166, 0.2)',
-            borderRadius: 14,
-            padding: '0.5rem',
-            boxShadow: '0 16px 48px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(20, 184, 166,0.08)',
-            zIndex: 200,
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
+            display: 'block',
+            padding: '0.75rem 1rem',
+            borderRadius: 8,
+            textDecoration: 'none',
+            transition: 'background-color 0.15s',
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(15, 118, 110, 0.12)';
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
           }}
         >
-          {items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              style={{
-                display: 'block',
-                padding: '0.75rem 1rem',
-                borderRadius: 8,
-                textDecoration: 'none',
-                transition: 'background-color 0.15s',
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(15, 118, 110, 0.12)';
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = 'transparent';
-              }}
-            >
-              <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#FFFFFF', marginBottom: item.desc ? '0.2rem' : 0 }}>
-                {item.label}
-              </div>
-              {item.desc && (
-                <div style={{ fontSize: '0.75rem', color: '#FFFFFF', lineHeight: 1.4 }}>{item.desc}</div>
-              )}
-            </Link>
-          ))}
-        </motion.div>
-      )}
-    </AnimatePresence>
+          <div style={{ fontSize: '0.875rem', fontWeight: 500, color: '#FFFFFF', marginBottom: item.desc ? '0.2rem' : 0 }}>
+            {item.label}
+          </div>
+          {item.desc && <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{item.desc}</div>}
+        </Link>
+      ))}
+    </div>
   );
 }
 
-// ─── Main Navigation ─────────────────────────────────────────────────────────
-
-export default function Navigation({
-  companyName,
-  ctaLabel = 'Start a Project',
-  ctaLink = '/contact',
-}: {
-  companyName?: string;
-  ctaLabel?: string;
-  ctaLink?: string;
-}) {
+export default function Navigation({ ctaLabel, ctaLink }: { ctaLabel?: string, ctaLink?: string }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+  
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileAccordion, setMobileAccordion] = useState<string | null>(null);
-  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hideTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 40);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMobileOpen(false);
+    setMobileAccordion(null);
   }, [pathname]);
 
-  // Lock body scroll and listen for Escape key when mobile menu is open
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden';
-      const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileOpen(false); };
-      document.addEventListener('keydown', onKey);
-      return () => {
-        document.body.style.overflow = '';
-        document.removeEventListener('keydown', onKey);
-      };
-    } else {
-      document.body.style.overflow = '';
-    }
+    if (mobileOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'unset';
+    return () => { document.body.style.overflow = 'unset'; };
   }, [mobileOpen]);
 
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
+
   const handleNavEnter = (href: string, hasDropdown: boolean) => {
-    if (leaveTimer.current) clearTimeout(leaveTimer.current);
+    if (hideTimeout.current) clearTimeout(hideTimeout.current);
     setHoveredItem(href);
-    if (hasDropdown) setActiveDropdown(href);
+    if (hasDropdown) setDropdownOpen(href);
+    else setDropdownOpen(null);
   };
 
   const handleNavLeave = () => {
-    leaveTimer.current = setTimeout(() => {
+    if (hideTimeout.current) clearTimeout(hideTimeout.current);
+    hideTimeout.current = setTimeout(() => {
       setHoveredItem(null);
-      setActiveDropdown(null);
-    }, 120);
-  };
-
-  const handleDropdownEnter = () => {
-    if (leaveTimer.current) clearTimeout(leaveTimer.current);
-  };
-
-  const isActive = (href: string) => {
-    if (href === '/') return pathname === '/';
-    return pathname.startsWith(href);
+      setDropdownOpen(null);
+    }, 150);
   };
 
   return (
     <>
-      {/* ─── Desktop Floating Navbar ─── */}
-      <div
+      <header
         style={{
           position: 'fixed',
-          top: scrolled ? '0.625rem' : '1.25rem',
+          top: 0,
           left: 0,
           right: 0,
-          zIndex: 50,
-          display: 'flex',
-          justifyContent: 'center',
-          padding: '0 1.5rem',
-          transition: 'top 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-          pointerEvents: 'none',
-          boxSizing: 'border-box',
+          zIndex: 9999,
+          paddingTop: scrolled ? '0.5rem' : '1.5rem',
+          paddingBottom: scrolled ? '0.5rem' : '1.5rem',
+          transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
-        className="main-navbar-container"
       >
         <div
+          className="main-navbar-container"
           style={{
-            pointerEvents: 'auto',
-            position: 'relative',
-            width: '100%',
-            maxWidth: 1160,
+            maxWidth: '1360px',
+            margin: '0 auto',
+            padding: '0 2rem',
+            transition: 'padding 0.3s',
           }}
         >
-          {/* Liquid Edge Wrapper */}
+          {/* Main Pill Wrapper */}
           <div
-            className="liquid-edge-ring"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              borderRadius: 999,
-              overflow: 'hidden',
-              zIndex: 0,
-            }}
-          >
-            <div className="liquid-gradient" />
-          </div>
-
-          {/* Nav Surface */}
-          <header
-            role="banner"
             style={{
               position: 'relative',
-              margin: '1.5px',
-              borderRadius: 999,
-              height: scrolled ? 52 : 58,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              padding: '0 1.25rem 0 0.85rem',
-              transition: 'height 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.4s',
-              backgroundColor: scrolled ? 'rgba(5, 12, 14, 0.94)' : 'rgba(5, 12, 14, 0.65)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              zIndex: 1,
+              borderRadius: '999px',
+              backgroundColor: scrolled ? 'rgba(2, 7, 8, 0.85)' : 'rgba(2, 7, 8, 0.5)',
+              backdropFilter: scrolled ? 'blur(20px)' : 'blur(10px)',
+              WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'blur(10px)',
+              border: '1px solid rgba(20, 184, 166, 0.15)',
+              boxShadow: scrolled ? '0 10px 40px -10px rgba(0, 0, 0, 0.5)' : 'none',
+              padding: '0.45rem 0.5rem 0.45rem 1.2rem',
+              transition: 'all 0.3s ease',
             }}
           >
+            {/* Spinning Edge Light (Pure CSS) */}
+            <div className="liquid-edge-ring" style={{ position: 'absolute', inset: -1, borderRadius: 999, padding: 1, zIndex: -1, overflow: 'hidden' }}>
+              <div className="liquid-gradient" />
+            </div>
+
             {/* Logo */}
-            <Link
-              href="/"
-              aria-label="Quantum AI — Home"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.65rem',
-                textDecoration: 'none',
-                flexShrink: 0,
-              }}
-            >
-              <QuantumLogo id="navbar-quantum-logo" width={42} height={42} />
-              <span className="nav-wordmark-text" style={{
-                fontFamily: 'var(--font-sans)',
-                fontWeight: 700,
-                fontSize: '0.92rem',
-                letterSpacing: '0.12em',
-                color: '#FFFFFF',
-                textTransform: 'uppercase',
-              }}>
-                {companyName || 'QUANTUM AI'}
-              </span>
+            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', textDecoration: 'none', position: 'relative', zIndex: 20 }}>
+              <div id="navbar-quantum-logo" style={{ width: '22px', height: '22px', background: 'url(/quantum-q-logo.png) center/contain no-repeat' }} />
+              <div className="nav-wordmark-text" style={{ fontSize: '0.85rem', fontFamily: 'var(--font-sans)', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                Quantum AI
+              </div>
             </Link>
 
-            {/* Desktop Links */}
-            <nav
-              aria-label="Primary navigation"
-              className="nav-desktop-links"
-              style={{ display: 'flex', gap: 'clamp(0.15rem, 0.35vw, 0.25rem)', alignItems: 'center', position: 'relative' }}
-            >
-              {NAV_ITEMS.filter((item) => !item.hideOnDesktop).map((item) => (
-                <div
-                  key={item.href}
-                  style={{ position: 'relative' }}
-                  onMouseEnter={() => handleNavEnter(item.href, !!item.dropdown)}
-                  onMouseLeave={handleNavLeave}
-                >
-                  <Link
-                    href={item.href}
-                    aria-current={isActive(item.href) ? 'page' : undefined}
-                    aria-haspopup={item.dropdown ? 'menu' : undefined}
-                    style={{
-                      position: 'relative',
-                      zIndex: 10,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.25rem',
-                      padding: '0.45rem clamp(0.55rem, 0.75vw, 0.85rem)',
-                      fontSize: '0.78rem',
-                      fontFamily: 'var(--font-mono)',
-                      fontWeight: 400,
-                      letterSpacing: '0.1em',
-                      textTransform: 'uppercase',
-                      color: isActive(item.href) ? '#FFFFFF' : '#FFFFFF',
-                      textDecoration: 'none',
-                      transition: 'color 0.2s',
-                      whiteSpace: 'nowrap',
-                    }}
-                    onFocus={() => handleNavEnter(item.href, !!item.dropdown)}
-                    onBlur={handleNavLeave}
-                  >
-                    {item.label}
-                    {item.dropdown && (
-                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
-                        style={{ opacity: 0.5, transition: 'transform 0.2s', transform: activeDropdown === item.href ? 'rotate(180deg)' : 'none' }}>
-                        <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    )}
-                  </Link>
-
-                  {/* Spring Hover Pill */}
-                  {(hoveredItem === item.href || (isActive(item.href) && hoveredItem === null)) && (
-                    <motion.div
-                      layoutId="navPill"
-                      transition={{ type: 'spring', stiffness: 380, damping: 32, mass: 0.8 }}
+            {/* Desktop Center Links */}
+            <nav className="nav-desktop-links" style={{ display: 'flex', gap: 'clamp(0.15rem, 0.35vw, 0.25rem)', alignItems: 'center', position: 'relative' }}>
+              {NAV_ITEMS.filter((item) => !item.hideOnDesktop).map((item) => {
+                const active = hoveredItem === item.href || (isActive(item.href) && hoveredItem === null);
+                return (
+                  <div key={item.href} style={{ position: 'relative' }} onMouseEnter={() => handleNavEnter(item.href, !!item.dropdown)} onMouseLeave={handleNavLeave}>
+                    <Link
+                      href={item.href}
+                      aria-current={isActive(item.href) ? 'page' : undefined}
+                      aria-haspopup={item.dropdown ? 'menu' : undefined}
+                      style={{
+                        position: 'relative',
+                        zIndex: 10,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                        padding: '0.45rem clamp(0.55rem, 0.75vw, 0.85rem)',
+                        fontSize: '0.78rem',
+                        fontFamily: 'var(--font-mono)',
+                        fontWeight: 400,
+                        color: active ? '#FFFFFF' : '#94A3B8',
+                        textDecoration: 'none',
+                        letterSpacing: '0.04em',
+                        transition: 'color 0.2s',
+                        outline: 'none',
+                      }}
+                    >
+                      {item.label}
+                      {item.dropdown && (
+                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ opacity: 0.6, marginTop: '2px', transform: active ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+                          <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      )}
+                    </Link>
+                    
+                    {/* Hover Pill Replacement */}
+                    <div
                       style={{
                         position: 'absolute',
                         inset: 0,
@@ -309,84 +221,43 @@ export default function Navigation({
                         border: '1px solid rgba(15, 118, 110, 0.25)',
                         zIndex: 0,
                         boxShadow: '0 0 12px rgba(15, 118, 110, 0.15)',
+                        opacity: active ? 1 : 0,
+                        transition: 'opacity 0.2s ease',
                       }}
                     />
-                  )}
 
-                  {/* Dropdown */}
-                  {item.dropdown && (
-                    <div onMouseEnter={handleDropdownEnter} onMouseLeave={handleNavLeave}>
-                      <DropdownMenu items={item.dropdown} visible={activeDropdown === item.href} />
-                    </div>
-                  )}
-                </div>
-              ))}
+                    {/* Dropdown */}
+                    {item.dropdown && (
+                      <DesktopDropdown
+                        items={item.dropdown}
+                        visible={dropdownOpen === item.href}
+                        onMouseEnter={() => handleNavEnter(item.href, true)}
+                        onMouseLeave={handleNavLeave}
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </nav>
 
-            {/* CTA */}
-            <div className="nav-cta-area" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+            {/* Desktop Right Side */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', position: 'relative', zIndex: 20 }}>
               <Link
                 href="/careers-partnerships"
-                className="nav-cta-btn nav-careers-btn"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '0.45rem 0.95rem',
-                  fontSize: '0.75rem',
-                  fontFamily: 'var(--font-mono)',
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: '#FFFFFF',
-                  textDecoration: 'none',
-                  borderRadius: 999,
-                  border: '1px solid rgba(20, 184, 166, 0.4)',
-                  backgroundColor: 'rgba(20, 184, 166, 0.08)',
-                  transition: 'background-color 0.2s, border-color 0.2s',
-                  whiteSpace: 'nowrap',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.22)';
-                  e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.8)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.08)';
-                  e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.4)';
-                }}
+                className="nav-careers-btn"
+                style={{ fontSize: '0.75rem', fontFamily: 'var(--font-mono)', color: '#94A3B8', textDecoration: 'none', letterSpacing: '0.05em', transition: 'color 0.2s' }}
+                onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+                onMouseLeave={(e) => (e.currentTarget.style.color = '#94A3B8')}
               >
-                Join our team
+                CAREERS
               </Link>
-
+              <div style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.1)' }} className="nav-careers-btn" />
               <Link
                 href={ctaLink || '/contact'}
                 className="nav-cta-btn"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '0.45rem 1.1rem',
-                  fontSize: '0.75rem',
-                  fontFamily: 'var(--font-mono)',
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: '#FFFFFF',
-                  textDecoration: 'none',
-                  borderRadius: 999,
-                  border: '1px solid rgba(20, 184, 166, 0.5)',
-                  backgroundColor: 'rgba(20, 184, 166, 0.12)',
-                  transition: 'background-color 0.2s, border-color 0.2s',
-                  whiteSpace: 'nowrap',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.25)';
-                  e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.8)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.12)';
-                  e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.5)';
-                }}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', padding: '0.45rem 1.1rem', backgroundColor: '#FFFFFF', color: '#020708', borderRadius: 999, textDecoration: 'none', fontSize: '0.75rem', fontFamily: 'var(--font-sans)', fontWeight: 600, letterSpacing: '0.04em', transition: 'all 0.2s' }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'scale(1.03)'; e.currentTarget.style.boxShadow = '0 4px 14px rgba(255,255,255,0.2)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
               >
                 {ctaLabel || 'Start a Project'}
               </Link>
@@ -394,222 +265,189 @@ export default function Navigation({
               {/* Mobile Hamburger */}
               <button
                 className="nav-hamburger"
-                aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-                aria-expanded={mobileOpen}
+                aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
                 onClick={() => setMobileOpen(!mobileOpen)}
-                style={{
-                  display: 'none',
-                  background: 'transparent',
-                  border: 'none',
-                  color: '#FFFFFF',
-                  cursor: 'pointer',
-                  padding: '0.5rem',
-                  borderRadius: 8,
-                  lineHeight: 0,
-                }}
+                style={{ display: 'none', alignItems: 'center', justifyContent: 'center', width: '36px', height: '36px', borderRadius: '50%', background: 'transparent', border: '1px solid rgba(255,255,255,0.1)', color: '#FFFFFF', cursor: 'pointer' }}
               >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M4 6h16M4 12h16M4 18h16" />
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+                  {mobileOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M4 8h16M4 16h16" />}
                 </svg>
               </button>
             </div>
-          </header>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      <div 
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 9998,
+          pointerEvents: mobileOpen ? 'auto' : 'none',
+        }}
+      >
+        <div 
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'rgba(2, 7, 8, 0.8)',
+            backdropFilter: 'blur(12px)',
+            opacity: mobileOpen ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+          }}
+          onClick={() => setMobileOpen(false)}
+        />
+        
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            background: '#040A10',
+            borderBottom: '1px solid rgba(20, 184, 166, 0.2)',
+            padding: '5rem 1.5rem 2rem 1.5rem',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            transform: mobileOpen ? 'translateY(0)' : 'translateY(-100%)',
+            transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+          }}
+        >
+          {/* Close inside drawer */}
+          <div style={{ position: 'absolute', top: '1.25rem', right: '1.5rem' }}>
+            <button
+              onClick={() => setMobileOpen(false)}
+              style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', border: 'none', color: '#FFF', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <nav aria-label="Mobile navigation" style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+            {NAV_ITEMS.map((item) => (
+              <div key={item.href} style={{ borderBottom: '1px solid rgba(20, 184, 166, 0.08)' }}>
+                <button
+                  onClick={() => {
+                    if (item.dropdown) {
+                      setMobileAccordion(mobileAccordion === item.href ? null : item.href);
+                    } else {
+                      setMobileOpen(false);
+                    }
+                  }}
+                  aria-expanded={item.dropdown ? mobileAccordion === item.href : undefined}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    width: '100%',
+                    background: 'transparent',
+                    border: 'none',
+                    padding: '1.125rem 0',
+                    cursor: 'pointer',
+                    color: '#FFFFFF',
+                    fontSize: '1.05rem',
+                    fontFamily: 'var(--font-sans)',
+                    fontWeight: 600,
+                    textAlign: 'left',
+                  }}
+                >
+                  {item.dropdown ? (
+                    <span>{item.label}</span>
+                  ) : (
+                    <Link href={item.href} onClick={() => setMobileOpen(false)} style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block' }}>
+                      {item.label}
+                    </Link>
+                  )}
+                  {item.dropdown && (
+                    <div style={{ color: '#FFFFFF', flexShrink: 0, marginLeft: '0.5rem', transform: mobileAccordion === item.href ? 'rotate(180deg)' : 'none', transition: 'transform 0.25s' }}>
+                      <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+                        <path d="M1 1l7 7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  )}
+                </button>
+
+                {item.dropdown && (
+                  <div
+                    style={{
+                      height: mobileAccordion === item.href ? 'auto' : 0,
+                      opacity: mobileAccordion === item.href ? 1 : 0,
+                      overflow: 'hidden',
+                      transition: 'height 0.3s ease, opacity 0.3s ease',
+                      display: mobileAccordion === item.href ? 'block' : 'none' // Simplest way to handle height auto transition is actually not perfect in CSS without JS scrollHeight, but this works okay for a mobile accordion. Actually let's just leave it as block/none toggle to save complexity.
+                    }}
+                  >
+                    <div style={{ paddingBottom: '1rem', paddingLeft: '1rem', borderLeft: '2px solid rgba(20, 184, 166, 0.3)', marginLeft: '0.25rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                      {item.dropdown.map((drop) => (
+                        <Link
+                          key={drop.href}
+                          href={drop.href}
+                          onClick={() => setMobileOpen(false)}
+                          style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '1rem', padding: '0.5rem 0.75rem', borderRadius: 8, transition: 'color 0.15s' }}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+                        >
+                          {drop.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </nav>
+
+          {/* Bottom CTA */}
+          <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            <Link
+              href="/careers-partnerships"
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: 'block',
+                textAlign: 'center',
+                padding: '0.7rem',
+                backgroundColor: 'rgba(20, 184, 166, 0.1)',
+                border: '1px solid rgba(20, 184, 166, 0.35)',
+                color: '#FFFFFF',
+                borderRadius: 10,
+                textDecoration: 'none',
+                fontWeight: 600,
+                fontSize: '0.8rem',
+                fontFamily: 'var(--font-mono)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Join our team
+            </Link>
+
+            <Link
+              href={ctaLink || '/contact'}
+              onClick={() => setMobileOpen(false)}
+              style={{
+                display: 'block',
+                textAlign: 'center',
+                padding: '0.75rem',
+                backgroundColor: '#0F766E',
+                color: '#fff',
+                borderRadius: 10,
+                textDecoration: 'none',
+                fontWeight: 600,
+                fontSize: '0.875rem',
+                fontFamily: 'var(--font-sans)',
+                letterSpacing: '0.05em',
+              }}
+            >
+              {ctaLabel || 'Start a Project'} +'
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* ─── Full-Screen Mobile Drawer ─── */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileOpen(false)}
-              style={{
-                position: 'fixed',
-                inset: 0,
-                zIndex: 990,
-                backgroundColor: 'rgba(2, 7, 8, 0.6)',
-                backdropFilter: 'blur(4px)',
-                WebkitBackdropFilter: 'blur(4px)',
-              }}
-            />
-
-            {/* Drawer */}
-            <motion.div
-              initial={{ opacity: 0, y: '-100%' }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: '-100%' }}
-              transition={{ type: 'spring', damping: 28, stiffness: 220, mass: 0.9 }}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Mobile navigation menu"
-              style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                zIndex: 1000,
-                backgroundColor: 'rgba(7, 18, 20, 0.97)',
-                backdropFilter: 'blur(24px)',
-                WebkitBackdropFilter: 'blur(24px)',
-                borderBottom: '1px solid rgba(20, 184, 166, 0.2)',
-                padding: '1.5rem 1.5rem 2rem',
-                overflowY: 'auto',
-                maxHeight: '100dvh',
-              }}
-            >
-              {/* Top bar */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <Link href="/" onClick={() => setMobileOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
-                  <QuantumLogo width={42} height={42} />
-                  <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '0.12em', color: '#FFFFFF', textTransform: 'uppercase' }}>
-                    QUANTUM AI
-                  </span>
-                </Link>
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  aria-label="Close menu"
-                  style={{ background: 'transparent', border: 'none', color: '#FFFFFF', cursor: 'pointer', padding: '0.5rem', borderRadius: 8 }}
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Nav Links */}
-              <nav aria-label="Mobile navigation" style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                {NAV_ITEMS.map((item) => (
-                  <div key={item.href} style={{ borderBottom: '1px solid rgba(20, 184, 166, 0.08)' }}>
-                    <button
-                      onClick={() => {
-                        if (item.dropdown) {
-                          setMobileAccordion(mobileAccordion === item.href ? null : item.href);
-                        } else {
-                          setMobileOpen(false);
-                        }
-                      }}
-                      aria-expanded={item.dropdown ? mobileAccordion === item.href : undefined}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        width: '100%',
-                        background: 'transparent',
-                        border: 'none',
-                        padding: '1.125rem 0',
-                        cursor: 'pointer',
-                        color: '#FFFFFF',
-                        fontSize: '1.05rem',
-                        fontFamily: 'var(--font-sans)',
-                        fontWeight: 600,
-                        textAlign: 'left',
-                      }}
-                    >
-                      {item.dropdown ? (
-                        <span>{item.label}</span>
-                      ) : (
-                        <Link href={item.href} onClick={() => setMobileOpen(false)} style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block' }}>
-                          {item.label}
-                        </Link>
-                      )}
-                      {item.dropdown && (
-                        <motion.div
-                          animate={{ rotate: mobileAccordion === item.href ? 180 : 0 }}
-                          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-                          style={{ color: '#FFFFFF', flexShrink: 0, marginLeft: '0.5rem' }}
-                        >
-                          <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
-                            <path d="M1 1l7 7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </motion.div>
-                      )}
-                    </button>
-
-                    {/* Accordion Items */}
-                    <AnimatePresence>
-                      {item.dropdown && mobileAccordion === item.href && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                          style={{ overflow: 'hidden' }}
-                        >
-                          <div style={{ paddingBottom: '1rem', paddingLeft: '1rem', borderLeft: '2px solid rgba(20, 184, 166, 0.3)', marginLeft: '0.25rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                            {item.dropdown.map((drop) => (
-                              <Link
-                                key={drop.href}
-                                href={drop.href}
-                                onClick={() => setMobileOpen(false)}
-                                style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '1rem', padding: '0.5rem 0.75rem', borderRadius: 8, transition: 'color 0.15s' }}
-                                onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-                                onMouseLeave={(e) => (e.currentTarget.style.color = '#FFFFFF')}
-                              >
-                                {drop.label}
-                              </Link>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                ))}
-              </nav>
-
-              {/* Bottom CTA */}
-              <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-                <Link
-                  href="/careers-partnerships"
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    display: 'block',
-                    textAlign: 'center',
-                    padding: '0.7rem',
-                    backgroundColor: 'rgba(20, 184, 166, 0.1)',
-                    border: '1px solid rgba(20, 184, 166, 0.35)',
-                    color: '#FFFFFF',
-                    borderRadius: 10,
-                    textDecoration: 'none',
-                    fontWeight: 600,
-                    fontSize: '0.8rem',
-                    fontFamily: 'var(--font-mono)',
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Join our team
-                </Link>
-
-                <Link
-                  href={ctaLink || '/contact'}
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    display: 'block',
-                    textAlign: 'center',
-                    padding: '0.75rem',
-                    backgroundColor: '#0F766E',
-                    color: '#fff',
-                    borderRadius: 10,
-                    textDecoration: 'none',
-                    fontWeight: 600,
-                    fontSize: '0.875rem',
-                    fontFamily: 'var(--font-sans)',
-                    letterSpacing: '0.05em',
-                  }}
-                >
-                  {ctaLabel || 'Start a Project'} →
-                </Link>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* ─── Responsive CSS ─── */}
       <style>{`
         @keyframes navbarSpin {
           from { --gradient-angle: 0deg; }

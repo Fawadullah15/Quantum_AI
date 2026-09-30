@@ -10,6 +10,8 @@ function cleanString(val: any): string | null {
   return s.length > 0 ? s : null;
 }
 
+export const revalidate = 3600;
+
 export async function GET() {
   try {
     const tech = await prisma.technology.findMany({

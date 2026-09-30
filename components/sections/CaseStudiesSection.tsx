@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -520,7 +521,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 <div className="cs-card-header">
                   <div className="cs-thumb-wrapper" style={{ background: study.gradient }}>
                     {study.image ? (
-                      <img src={study.image} alt={study.title} className="cs-thumb-img" />
+                      <Image src={study.image} alt={study.title} className="cs-thumb-img" fill sizes="130px" />
                     ) : (
                       <div className="cs-thumb-fallback">
                         <span style={{ fontSize: '1.25rem' }}>{study.accentIcon}</span>
@@ -574,7 +575,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
             <Link key={idx} href={`/work/${study.slug}`} className="mobile-cs-tile">
               <div className="mobile-cs-img-wrap" style={{ background: study.gradient }}>
                 {study.image ? (
-                  <img src={study.image} alt={study.title} className="mobile-cs-img" />
+                  <Image src={study.image} alt={study.title} className="mobile-cs-img" fill sizes="(max-width: 640px) 100vw, 320px" />
                 ) : (
                   <div className="cs-thumb-fallback">
                     <span style={{ fontSize: '1.1rem' }}>{study.accentIcon}</span>

@@ -11,6 +11,8 @@ function cleanString(val: any): string | null {
   return s.length > 0 ? s : null;
 }
 
+export const revalidate = 3600;
+
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;

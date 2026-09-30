@@ -8,6 +8,8 @@ import { softDelete } from '@/lib/recovery';
 export const dynamic = 'force-dynamic';
 
 // GET single testimonial
+export const revalidate = 3600;
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

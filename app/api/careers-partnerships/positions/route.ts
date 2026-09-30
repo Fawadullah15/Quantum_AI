@@ -14,6 +14,8 @@ const DEFAULT_POSITIONS = [
   { id: 'pos-8', title: 'General Application (Future Openings)', department: 'Operations', workType: 'Remote' },
 ];
 
+export const revalidate = 3600;
+
 export async function GET() {
   try {
     const dbPositions = await prisma.careerPosition.findMany({

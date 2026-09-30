@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 
 export interface TestimonialItem {
   id: string;
@@ -135,9 +136,7 @@ export default function TestimonialsSection({
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(true);
-          }
+          setIsVisible(entry.isIntersecting);
         });
       },
       { threshold: 0.05 }
@@ -749,7 +748,7 @@ export default function TestimonialsSection({
                 }}
               >
                 {activeReadingItem.photo ? (
-                  <img src={activeReadingItem.photo} alt={activeReadingItem.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  <Image src={activeReadingItem.photo} alt={activeReadingItem.name} fill sizes="40px" style={{ objectFit: 'cover' }} />
                 ) : (
                   <span style={{ fontFamily: 'var(--font-mono, monospace)', fontWeight: 700, color: '#FFFFFF', fontSize: '0.85rem' }}>
                     {activeReadingItem.name.slice(0, 2).toUpperCase()}
