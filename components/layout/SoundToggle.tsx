@@ -1,11 +1,11 @@
-'use client';
+﻿'use client';
 
 import React, { useSyncExternalStore } from 'react';
 import { audioStore } from '@/lib/audio-state';
 import { SoundPrompt } from './SoundPrompt';
 
 /**
- * SoundToggle � refined, minimal fixed-position ambient audio control
+ * SoundToggle — refined, minimal fixed-position ambient audio control
  * with an attached non-blocking floating prompt.
  *
  * Sits at z-index 1000 (below WelcomeIntro 99999 and CustomCursor 9999).
