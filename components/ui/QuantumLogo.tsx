@@ -19,7 +19,7 @@ export function QuantumLogo({ width = 32, height = 32, className, style, id }: Q
   return (
     <Image
       id={id}
-      src="/quantum-q-logo.jpg"
+      src="/quantum-q-logo.png"
       alt="Quantum AI"
       width={width}
       height={height}

@@ -500,7 +500,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                         type="text"
                         value={formData.site_logo}
                         onChange={(e) => handleChange('site_logo', e.target.value)}
-                        placeholder="/quantum-q-logo.jpg"
+                        placeholder="/quantum-q-logo.png"
                         style={{ ...inputStyle, fontSize: '0.8rem', padding: '0.45rem 0.65rem' }}
                       />
                     </div>
@@ -685,7 +685,7 @@ export default function SettingsClient({ initialSettings }: { initialSettings: S
                         type="text"
                         value={formData.site_og_image}
                         onChange={(e) => handleChange('site_og_image', e.target.value)}
-                        placeholder="/quantum-q-logo.jpg"
+                        placeholder="/quantum-q-logo.png"
                         style={{ ...inputStyle, fontSize: '0.8rem', padding: '0.45rem 0.65rem' }}
                       />
                     </div>

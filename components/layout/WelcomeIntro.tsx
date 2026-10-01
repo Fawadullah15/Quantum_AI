@@ -263,7 +263,7 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/quantum-q-logo.jpg"
+            src="/quantum-q-logo.png"
             alt=""
             className={styles.logo}
             draggable={false}
@@ -286,7 +286,7 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/quantum-q-logo.jpg"
+            src="/quantum-q-logo.png"
             alt=""
             className={styles.logo}
             draggable={false}

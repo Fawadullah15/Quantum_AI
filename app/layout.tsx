@@ -29,13 +29,13 @@ export const metadata: Metadata = {
   description: DEFAULT_DESCRIPTION,
   icons: {
     icon: [
-      { url: '/quantum-q-logo.jpg' },
-      { url: '/quantum-q-logo.jpg', sizes: '16x16', type: 'image/jpeg' },
-      { url: '/quantum-q-logo.jpg', sizes: '32x32', type: 'image/jpeg' },
-      { url: '/quantum-q-logo.jpg', sizes: '192x192', type: 'image/jpeg' },
+      { url: '/quantum-q-logo.png' },
+      { url: '/quantum-q-logo.png', sizes: '16x16', type: 'image/png' },
+      { url: '/quantum-q-logo.png', sizes: '32x32', type: 'image/png' },
+      { url: '/quantum-q-logo.png', sizes: '192x192', type: 'image/png' },
     ],
-    shortcut: ['/quantum-q-logo.jpg'],
-    apple: [{ url: '/quantum-q-logo.jpg', sizes: '180x180', type: 'image/jpeg' }],
+    shortcut: ['/quantum-q-logo.png'],
+    apple: [{ url: '/quantum-q-logo.png', sizes: '180x180', type: 'image/png' }],
   },
   manifest: '/site.webmanifest',
   openGraph: {
@@ -45,13 +45,13 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
-    images: [{ url: '/quantum-q-logo.jpg', width: 1200, height: 630, alt: 'Quantum AI' }],
+    images: [{ url: '/quantum-q-logo.png', width: 1200, height: 630, alt: 'Quantum AI' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: DEFAULT_TITLE,
     description: DEFAULT_DESCRIPTION,
-    images: ['/quantum-q-logo.jpg'],
+    images: ['/quantum-q-logo.png'],
   },
   robots: {
     index: true,
