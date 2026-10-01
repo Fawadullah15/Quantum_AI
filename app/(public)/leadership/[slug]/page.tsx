@@ -188,9 +188,15 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
         .prof-grid {
           display: grid;
           grid-template-columns: 320px 1fr;
+          grid-template-areas: 
+            "portrait main"
+            "social main";
           gap: clamp(1.5rem, 4vw, 3rem);
           align-items: start;
         }
+        .prof-portrait-col { grid-area: portrait; }
+        .prof-main-col { grid-area: main; display: flex; flex-direction: column; gap: 1.5rem; }
+        .prof-social-col { grid-area: social; }
 
         /* Portrait Container */
         .prof-photo-box {
@@ -251,9 +257,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
 
         /* Right Content Area */
         .prof-main {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
+          /* replaced by prof-main-col */
         }
         .prof-tag {
           font-family: var(--font-d-din);
@@ -315,13 +319,65 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
           font-weight: 300;
         }
 
+
+
         @media (max-width: 820px) {
           .prof-grid {
-            grid-template-columns: 1fr;
+            display: flex !important;
+            flex-direction: column !important;
             gap: 1.5rem;
           }
+          .prof-portrait-col { order: 1 !important; }
+          .prof-main-col { order: 2 !important; }
+          .prof-social-col { order: 3 !important; margin-top: 1rem !important; }
           .prof-photo-box {
-            max-width: 280px;
+            max-width: 100% !important;
+            aspect-ratio: 1 / 1.1 !important;
+            border-radius: 12px !important;
+            border: 1px solid rgba(22, 119, 255, 0.25) !important;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5) !important;
+            margin-bottom: 0 !important;
+          }
+          .prof-photo-box::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 40%;
+            background: linear-gradient(to top, rgba(3, 7, 18, 0.95) 0%, rgba(3, 7, 18, 0) 100%);
+            pointer-events: none;
+            z-index: 1;
+          }
+          .prof-photo-img {
+            object-fit: cover !important;
+            object-position: center 15% !important;
+            z-index: 0;
+          }
+          .prof-social-col {
+            width: 100%;
+            margin-top: 0.5rem;
+          }
+          .prof-social-list {
+            flex-direction: row !important;
+            flex-wrap: wrap;
+            gap: 1rem !important;
+          }
+          .prof-social-btn {
+            width: 48px !important;
+            height: 48px !important;
+            border-radius: 50% !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+          }
+          .prof-social-btn svg {
+            width: 20px !important;
+            height: 20px !important;
+            margin: 0 !important;
+          }
+          .prof-social-text {
+            display: none !important;
           }
         }
       `}</style>
@@ -333,8 +389,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
         </Link>
 
         <div className="prof-grid">
-          {/* Left Column: Portrait & Connect */}
-          <div>
+          <div className="prof-portrait-col">
             {(() => {
               const isPrincipal =
                 m.position.toLowerCase().includes("ceo") ||
@@ -365,13 +420,15 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
               </div>
             )}
 
+          </div>
+          <div className="prof-social-col">
             <div className="prof-social-list">
               {m.linkedin && (
-                <a href={m.linkedin} target="_blank" rel="noopener noreferrer" className="prof-social-btn">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                <a href={m.linkedin} target="_blank" rel="noopener noreferrer" className="prof-social-btn" aria-label={`View ${m.name}\'s LinkedIn profile`} title="LinkedIn Profile">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                   </svg>
-                  LinkedIn Profile ↗
+                  <span className="prof-social-text">LinkedIn Profile ↗</span>
                 </a>
               )}
               {m.github && (
@@ -380,37 +437,38 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`View ${m.name}'s GitHub profile`}
+                  title="GitHub Profile"
                   className="prof-social-btn"
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
                     <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
                   </svg>
-                  GitHub Profile ↗
+                  <span className="prof-social-text">GitHub Profile ↗</span>
                 </a>
               )}
               {m.email && (
-                <a href={`mailto:${m.email}`} className="prof-social-btn">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <a href={`mailto:${m.email}`} className="prof-social-btn" aria-label={`Send email to ${m.name}`} title="Send Email">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
                     <polyline points="22,6 12,13 2,6" />
                   </svg>
-                  {m.email}
+                  <span className="prof-social-text">{m.email}</span>
                 </a>
               )}
               {m.website && (
-                <a href={m.website.startsWith("http") ? m.website : `https://${m.website}`} target="_blank" rel="noopener noreferrer" className="prof-social-btn">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                    <circle cx="12" cy="12" r="10" />
+                <a href={m.website.startsWith("http") ? m.website : `https://${m.website}`} target="_blank" rel="noopener noreferrer" className="prof-social-btn" aria-label={`Visit ${m.name}\'s personal website`} title="Personal Website">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                      <circle cx="12" cy="12" r="10" />
                     <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
                   </svg>
-                  Personal Website ↗
+                  <span className="prof-social-text">Personal Website ↗</span>
                 </a>
               )}
             </div>
           </div>
 
           {/* Right Column: Details & Bio */}
-          <div className="prof-main">
+          <div className="prof-main-col">
             <div>
               <div className="prof-tag">SYS.01 / LEADERSHIP PROFILE</div>
               <h1 className="prof-name">{m.name}</h1>
