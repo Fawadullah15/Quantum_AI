@@ -111,14 +111,27 @@ export default function Navigation({
 }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
+  const [navHidden, setNavHidden] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileAccordion, setMobileAccordion] = useState<string | null>(null);
   const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
+    const onScroll = () => {
+      const currentScrollY = window.scrollY;
+      setScrolled(currentScrollY > 60);
+
+      // Hide navbar when scrolling down, show when scrolling up
+      if (currentScrollY > 100 && currentScrollY > lastScrollY.current) {
+        setNavHidden(true);
+      } else if (currentScrollY < lastScrollY.current) {
+        setNavHidden(false);
+      }
+      lastScrollY.current = currentScrollY;
+    };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -178,11 +191,11 @@ export default function Navigation({
           display: 'flex',
           justifyContent: 'center',
           padding: '0 1.5rem',
-          transition: 'top 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          transition: 'top 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
           pointerEvents: 'none',
           boxSizing: 'border-box',
         }}
-        className="main-navbar-container"
+        className={`main-navbar-container ${navHidden ? 'nav-desktop-hidden' : ''}`}
       >
         <div
           style={{
@@ -653,6 +666,12 @@ export default function Navigation({
         @media (max-width: 600px) {
           .main-navbar-container { padding: 0 0.75rem !important; }
         }
+      }
+      @media (min-width: 901px) {
+        .nav-desktop-hidden {
+          transform: translateY(-150%);
+        }
+      }
       `}</style>
     </>
   );
