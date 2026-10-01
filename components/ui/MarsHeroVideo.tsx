@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 
-const DESKTOP_LOCAL = '/Mars_Rotation.mp4';
+const DESKTOP_LOCAL = '/Mars_Rotation_Web_HB_d96299f9de.mp4';
 const DESKTOP_CDN = 'https://sxcontent9668.azureedge.us/cms-assets/assets/Mars_Rotation_Web_HB_d96299f9de.mp4';
 const DESKTOP_POSTER = '/mars-poster.png';
 
