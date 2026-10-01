@@ -764,8 +764,9 @@ export default async function LeadershipPage() {
                       </div>
                       <h3 className="exec-name">{member.name}</h3>
                       <p className="exec-bio">{member.shortBio}</p>
-                    </div>
-                  </Link>
+                      </div>
+                      <span className="mobile-pill-arrow" style={{ display: 'none' }}>&rarr;</span>
+                    </Link>
 
                   <div className="exec-footer">
                     <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", flexWrap: "wrap" }}>
