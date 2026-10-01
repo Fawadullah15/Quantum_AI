@@ -1,11 +1,11 @@
-﻿'use client';
+'use client';
 
 import React, { useSyncExternalStore } from 'react';
 import { audioStore } from '@/lib/audio-state';
 import { SoundPrompt } from './SoundPrompt';
 
 /**
- * SoundToggle — refined, minimal fixed-position ambient audio control
+ * SoundToggle � refined, minimal fixed-position ambient audio control
  * with an attached non-blocking floating prompt.
  *
  * Sits at z-index 1000 (below WelcomeIntro 99999 and CustomCursor 9999).
@@ -93,7 +93,7 @@ export function SoundToggle() {
         }
 
         .qa-sound-prompt-title {
-          font-family: var(--font-sans, sans-serif);
+          font-family: var(--font-d-din, sans-serif);
           font-size: 0.84rem;
           font-weight: 600;
           color: #FFFFFF;
@@ -128,7 +128,7 @@ export function SoundToggle() {
         }
 
         .qa-sound-prompt-desc {
-          font-family: var(--font-sans, sans-serif);
+          font-family: var(--font-d-din, sans-serif);
           font-size: 0.77rem;
           color: #FFFFFF;
           line-height: 1.45;

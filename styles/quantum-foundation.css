@@ -78,7 +78,7 @@
   color: var(--q-void);
   border-radius: var(--q-radius-pill);
   padding: var(--q-space-3) var(--q-space-6);
-  font-family: var(--font-space-mono, monospace);
+  font-family: var(--font-d-din, sans-serif);
   font-weight: 600;
   transition: all var(--q-motion-base) var(--q-ease-standard);
   border: none;
@@ -98,7 +98,7 @@
   border: 1px solid var(--q-border);
   border-radius: var(--q-radius-pill);
   padding: var(--q-space-3) var(--q-space-6);
-  font-family: var(--font-space-mono, monospace);
+  font-family: var(--font-d-din, sans-serif);
   font-weight: 600;
   transition: all var(--q-motion-base) var(--q-ease-standard);
   cursor: pointer;
@@ -115,7 +115,7 @@
   background-color: transparent;
   color: var(--q-muted);
   padding: var(--q-space-2) var(--q-space-4);
-  font-family: var(--font-space-mono, monospace);
+  font-family: var(--font-d-din, sans-serif);
   font-weight: 500;
   transition: all var(--q-motion-fast) var(--q-ease-standard);
   border: none;
@@ -188,25 +188,25 @@
 }
 
 .q-body-xl {
-  font-family: var(--font-space-grotesk, sans-serif);
+  font-family: var(--font-d-din, sans-serif);
   font-size: 20px;
   line-height: 1.6;
 }
 
 .q-body {
-  font-family: var(--font-space-grotesk, sans-serif);
+  font-family: var(--font-d-din, sans-serif);
   font-size: 16px;
   line-height: 1.65;
 }
 
 .q-small {
-  font-family: var(--font-space-grotesk, sans-serif);
+  font-family: var(--font-d-din, sans-serif);
   font-size: 14px;
   line-height: 1.5;
 }
 
 .q-metadata {
-  font-family: var(--font-space-mono, monospace);
+  font-family: var(--font-d-din, sans-serif);
   font-size: 12px;
   line-height: 1.5;
   text-transform: uppercase;

@@ -517,7 +517,7 @@ export default function Navigation({
                         cursor: 'pointer',
                         color: '#FFFFFF',
                         fontSize: '1.05rem',
-                        fontFamily: 'var(--font-sans)',
+                        fontFamily: 'var(--font-d-din)',
                         fontWeight: 600,
                         textAlign: 'left',
                       }}
@@ -610,7 +610,7 @@ export default function Navigation({
                     textDecoration: 'none',
                     fontWeight: 600,
                     fontSize: '0.875rem',
-                    fontFamily: 'var(--font-sans)',
+                    fontFamily: 'var(--font-d-din)',
                     letterSpacing: '0.05em',
                   }}
                 >

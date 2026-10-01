@@ -111,7 +111,7 @@ export default function Footer({
               lineHeight: 1.6,
               maxWidth: 240,
               fontWeight: 400,
-              fontFamily: 'var(--font-sans)',
+              fontFamily: 'var(--font-d-din)',
             }}>
               {tagline}
             </p>
