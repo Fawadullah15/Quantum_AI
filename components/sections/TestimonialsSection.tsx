@@ -368,7 +368,7 @@ export default function TestimonialsSection({
         }
         .test-submit-btn {
           background-color: #FFFFFF !important;
-          color: #FFFFFF !important;
+          color: #020708 !important;
           border: none !important;
           padding: 0.7rem 1.65rem !important;
           border-radius: 8px !important;
