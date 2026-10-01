@@ -367,18 +367,18 @@ export default function TestimonialsSection({
           z-index: 20;
         }
         .test-submit-btn {
-          background-color: #FFFFFF !important;
-          color: #020708 !important;
+          background-color: #11786D !important;
+          color: #FFFFFF !important;
           border: none !important;
-          padding: 0.7rem 1.65rem !important;
+          padding: 0.85rem 1.85rem !important;
           border-radius: 8px !important;
-          font-size: 0.88rem !important;
+          font-size: 0.85rem !important;
           font-weight: 700 !important;
           font-family: var(--font-mono, monospace) !important;
-          letter-spacing: 0.04em !important;
+          letter-spacing: 0.08em !important;
           cursor: pointer !important;
-          transition: background 0.2s, transform 0.2s, box-shadow 0.2s !important;
-          box-shadow: 0 4px 18px rgba(20, 184, 166, 0.45) !important;
+          transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease !important;
+          box-shadow: 0 4px 20px rgba(17, 120, 109, 0.4) !important;
           display: inline-flex !important;
           align-items: center !important;
           gap: 0.5rem !important;
@@ -386,11 +386,12 @@ export default function TestimonialsSection({
           position: relative !important;
           z-index: 30 !important;
           user-select: none !important;
+          text-transform: uppercase !important;
         }
         .test-submit-btn:hover {
-          background-color: #FFFFFF !important;
+          background-color: #0F655C !important;
           transform: translateY(-2px) !important;
-          box-shadow: 0 6px 24px rgba(20, 184, 166, 0.6) !important;
+          box-shadow: 0 6px 28px rgba(17, 120, 109, 0.6) !important;
         }
         .test-submit-btn:active {
           transform: translateY(0) !important;
@@ -692,7 +693,7 @@ export default function TestimonialsSection({
             }}
             className="test-submit-btn"
           >
-            <span>+</span> SHARE YOUR EXPERIENCE
+            SHARE YOUR EXPERIENCE &rarr;
           </button>
         </div>
       </div>
