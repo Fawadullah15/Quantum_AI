@@ -328,8 +328,8 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
             gap: 1.5rem;
           }
           .prof-portrait-col { order: 1 !important; }
-          .prof-main-col { order: 2 !important; }
-          .prof-social-col { order: 3 !important; margin-top: 1rem !important; }
+          .prof-main-col { order: 3 !important; }
+          .prof-social-col { order: 2 !important; margin-top: 0.75rem !important; margin-bottom: 0.75rem !important; }
           .prof-photo-box {
             max-width: 100% !important;
             aspect-ratio: 1 / 1.1 !important;
