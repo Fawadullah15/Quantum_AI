@@ -617,6 +617,147 @@ export default async function LeadershipPage() {
             padding: 0.35rem 0.5rem !important;
           }
         }
+      
+          /* --- PREMIUM MOBILE DIRECTORY PILL LAYOUT (Overrides) --- */
+          @media (max-width: 680px) {
+            .ldr-exec-grid {
+              grid-template-columns: 1fr !important;
+              gap: 0.75rem !important;
+              margin-bottom: 2.5rem !important;
+            }
+            .ldr-exec-grid .exec-card {
+              border-radius: 999px !important;
+              background-color: rgba(6, 21, 43, 0.45) !important;
+              border: 1px solid rgba(22, 119, 255, 0.15) !important;
+              padding: 0.4rem !important;
+              padding-right: 1.25rem !important;
+              width: 92% !important;
+              margin: 0 auto !important;
+              box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+              transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            }
+            .ldr-exec-grid .exec-card:active {
+              transform: scale(0.98) !important;
+              background-color: rgba(6, 21, 43, 0.65) !important;
+              border-color: rgba(56, 189, 248, 0.35) !important;
+            }
+            .ldr-exec-grid .exec-card:hover {
+              background-color: rgba(6, 21, 43, 0.6) !important;
+              border-color: rgba(56, 189, 248, 0.3) !important;
+              transform: translateY(-2px) !important;
+              box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+            }
+            .ldr-exec-grid .exec-card::before {
+              display: none !important;
+            }
+            .ldr-exec-grid .exec-card > a {
+              flex-direction: row !important;
+              align-items: center !important;
+              gap: 1rem !important;
+              width: 100% !important;
+            }
+            .ldr-exec-grid .exec-photo-wrapper {
+              width: 58px !important;
+              height: 58px !important;
+              aspect-ratio: auto !important;
+              flex-shrink: 0 !important;
+              border-radius: 50% !important;
+              overflow: hidden !important;
+              border: 1px solid rgba(56, 189, 248, 0.2) !important;
+              margin: 0 !important;
+              box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.1) !important;
+              background-color: #020708 !important;
+            }
+            .ldr-exec-grid .exec-photo-img {
+              width: 100% !important;
+              height: 100% !important;
+              object-fit: cover !important;
+              border-radius: 50% !important;
+              object-position: center top !important;
+            }
+            .ldr-exec-grid .exec-photo-fallback {
+              width: 100% !important;
+              height: 100% !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+            }
+            .ldr-exec-grid .exec-photo-fallback svg {
+              width: 20px !important;
+              height: 20px !important;
+            }
+            .ldr-exec-grid .exec-photo-fallback span {
+              display: none !important;
+            }
+            .ldr-exec-grid .exec-corner-badge,
+            .ldr-exec-grid .exec-bio,
+            .ldr-exec-grid .exec-footer,
+            .ldr-exec-grid .exec-action-text {
+              display: none !important;
+            }
+            .ldr-exec-grid .exec-body {
+              padding: 0 !important;
+              display: flex !important;
+              flex-direction: column !important;
+              justify-content: center !important;
+              flex-grow: 1 !important;
+              gap: 0.15rem !important;
+              min-width: 0 !important;
+            }
+            .ldr-exec-grid .exec-name {
+              font-size: 1.05rem !important;
+              font-weight: 600 !important;
+              color: #FFFFFF !important;
+              margin: 0 !important;
+              white-space: nowrap !important;
+              overflow: hidden !important;
+              text-overflow: ellipsis !important;
+              line-height: 1.2 !important;
+            }
+            .ldr-exec-grid .exec-position {
+              font-family: var(--font-d-din) !important;
+              font-size: 0.72rem !important;
+              color: rgba(56, 189, 248, 0.85) !important;
+              letter-spacing: 0.08em !important;
+              margin: 0 !important;
+              white-space: nowrap !important;
+              overflow: hidden !important;
+              text-overflow: ellipsis !important;
+              font-weight: 500 !important;
+            }
+            .mobile-pill-arrow {
+              display: block !important;
+              font-size: 1.35rem !important;
+              color: rgba(56, 189, 248, 0.4) !important;
+              margin-left: auto !important;
+              transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), color 0.25s !important;
+              flex-shrink: 0 !important;
+              font-weight: 300 !important;
+              line-height: 1 !important;
+            }
+            .ldr-exec-grid .exec-card:active .mobile-pill-arrow,
+            .ldr-exec-grid .exec-card:hover .mobile-pill-arrow {
+              transform: translateX(4px) !important;
+              color: rgba(56, 189, 248, 0.9) !important;
+            }
+            @media (max-width: 380px) {
+              .ldr-exec-grid .exec-card {
+                width: 100% !important;
+                padding-right: 1rem !important;
+              }
+              .ldr-exec-grid .exec-photo-wrapper {
+                width: 52px !important;
+                height: 52px !important;
+              }
+              .ldr-exec-grid .exec-name {
+                font-size: 0.95rem !important;
+              }
+              .ldr-exec-grid .exec-card > a {
+                gap: 0.75rem !important;
+              }
+            }
+          }
+
       `}</style>
 
       <div className="ldr-container">
