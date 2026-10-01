@@ -12,7 +12,7 @@ interface CaseStudyItem {
   desc: string;
   technologies: string[];
   slug: string;
-  image?: string;
+  image?: string | null;
   gradient: string;
   accentIcon: string;
 }
@@ -85,7 +85,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 ? s.technologies.split(',').map((t: string) => t.trim()).filter(Boolean)
                 : ['Next.js', 'TypeScript', 'Prisma'],
               slug: s.slug,
-              image: s.heroImage || undefined,
+              image: s.heroImage || null,
               gradient: i % 2 === 0 ? 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)' : 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
               accentIcon: '⚡',
             }));
