@@ -20,26 +20,46 @@ import MarsHeroVideo from '@/components/ui/MarsHeroVideo';
 import Image from 'next/image';
 
 export default async function HomePage() {
-  const dbLeaders = await prisma.leadership.findMany({
-    where: { isActive: true },
-    orderBy: { displayOrder: 'asc' },
-  });
+  let dbLeaders: any[] = [];
+  try {
+    dbLeaders = await prisma.leadership.findMany({
+      where: { isActive: true },
+      orderBy: { displayOrder: 'asc' },
+    });
+  } catch (e) {
+    console.error('Failed to fetch leaders:', e);
+  }
 
-  const dbCaseStudies = await prisma.caseStudy.findMany({
-    where: { published: true },
-    orderBy: { order: 'asc' },
-    take: 4,
-  });
+  let dbCaseStudies: any[] = [];
+  try {
+    dbCaseStudies = await prisma.caseStudy.findMany({
+      where: { published: true },
+      orderBy: { order: 'asc' },
+      take: 4,
+    });
+  } catch (e) {
+    console.error('Failed to fetch case studies:', e);
+  }
 
-  const dbServices = await prisma.service.findMany({
-    where: { published: true },
-    orderBy: { order: 'asc' },
-  });
+  let dbServices: any[] = [];
+  try {
+    dbServices = await prisma.service.findMany({
+      where: { published: true },
+      orderBy: { order: 'asc' },
+    });
+  } catch (e) {
+    console.error('Failed to fetch services:', e);
+  }
 
-  const dbTech = await prisma.technology.findMany({
-    where: { published: true },
-    orderBy: { order: 'asc' },
-  });
+  let dbTech: any[] = [];
+  try {
+    dbTech = await prisma.technology.findMany({
+      where: { published: true },
+      orderBy: { order: 'asc' },
+    });
+  } catch (e) {
+    console.error('Failed to fetch technology:', e);
+  }
 
   const caseStudies = dbCaseStudies.map((s, i) => ({
     step: String(i + 1).padStart(2, '0'),
