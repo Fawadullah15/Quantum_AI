@@ -1,15 +1,15 @@
-const prisma = {
-  leadership: { findMany: async () => [] },
-  siteSettings: { findFirst: async () => ({}), findMany: async () => [] },
-  product: { findMany: async () => [], findUnique: async () => null },
-  careerApplication: { findMany: async () => [] },
-  caseStudy: { findMany: async () => [], findUnique: async () => null },
-  blogPost: { findMany: async () => [], findUnique: async () => null },
-  service: { findMany: async () => [], findUnique: async () => null },
-  founder: { findMany: async () => [], findUnique: async () => null },
-  client: { findMany: async () => [], findUnique: async () => null },
-  technology: { findMany: async () => [], findUnique: async () => null },
-  testimonial: { findMany: async () => [], findUnique: async () => null },
-};
-export default prisma;
-export { prisma };
+import { PrismaClient } from '@prisma/client'
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined
+}
+
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  })
+
+globalForPrisma.prisma = prisma
+
+export default prisma
