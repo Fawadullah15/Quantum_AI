@@ -461,20 +461,24 @@ export default async function LeadershipPage() {
         }
         .ldr-cta-btn {
           display: inline-block;
-          padding: 0.85rem 2rem;
-          background-color: #FFFFFF;
-          color: #fff;
-          border-radius: 6px;
+          background-color: #11786D;
+          color: #FFFFFF;
+          border: none;
+          padding: 0.85rem 1.85rem;
+          border-radius: 8px;
           text-decoration: none;
-          font-weight: 600;
+          font-weight: 700;
           font-family: var(--font-d-din);
           letter-spacing: 0.08em;
-          font-size: 0.82rem;
-          transition: background-color 0.2s, transform 0.2s;
+          font-size: 0.85rem;
+          text-transform: uppercase;
+          transition: background-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+          box-shadow: 0 4px 20px rgba(17, 120, 109, 0.4);
         }
         .ldr-cta-btn:hover {
-          background-color: #FFFFFF;
-          transform: translateY(-1px);
+          background-color: #0F655C;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 28px rgba(17, 120, 109, 0.6);
         }
         .ldr-cta-btn:focus-visible {
           outline: none;
