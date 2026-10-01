@@ -34,7 +34,7 @@ export async function getMergedLeaders(includeInactive = false) {
       email: null,
       website: app.portfolioUrl,
       location: app.currentLocation,
-      displayOrder: 100,
+      displayOrder: app.displayOrder ?? 100,
       isActive: app.status === 'ACCEPTED',
     };
   });

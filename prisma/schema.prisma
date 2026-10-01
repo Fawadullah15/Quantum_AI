@@ -303,6 +303,7 @@ model CareerApplication {
   additionalDocsUrl String?
   workType          String           // Full Time | Part Time | Internship | Freelance | Contract | Remote
   status            String           @default("NEW") // NEW | REVIEWING | SHORTLISTED | CONTACTED | INTERVIEW | ACCEPTED | REJECTED | CLOSED
+  displayOrder      Int              @default(100)
   assignedTo        String?
   notes             SubmissionNote[]
   createdAt         DateTime         @default(now())

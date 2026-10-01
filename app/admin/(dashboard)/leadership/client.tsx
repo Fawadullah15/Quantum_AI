@@ -214,10 +214,8 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
     setMembers(reorderedItems);
 
     try {
-      const dbOnlyIds = reorderedItems
-        .filter((item) => !(item as any).isApplication)
-        .map((item) => item.id);
-      await reorderLeadershipMembers(dbOnlyIds);
+      const payload = reorderedItems.map((item) => ({ id: item.id, isApp: !!(item as any).isApplication }));
+        await reorderLeadershipMembers(payload);
       toast.success(
         `"${movedItem.name}" moved ${direction === 'UP' ? 'up' : 'down'} to position ${targetIndex + 1}.`,
         'Order Updated'
@@ -555,8 +553,8 @@ export default function LeadershipClient({ initialMembers = [] }: { initialMembe
                             const isFirst = memberIdx <= 0;
                             const isLast = memberIdx === -1 || memberIdx >= members.length - 1;
                             const orderNumber = memberIdx !== -1 ? memberIdx + 1 : index + 1;
-                            const upDisabled = isFirst || isReordering || isApp;
-                            const downDisabled = isLast || isReordering || isApp;
+                            const upDisabled = isFirst || isReordering;
+                              const downDisabled = isLast || isReordering;
 
                             return (
                               <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', opacity: isReordering ? 0.6 : 1, transition: 'opacity 0.15s' }}>

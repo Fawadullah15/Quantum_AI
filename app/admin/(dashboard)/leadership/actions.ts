@@ -132,18 +132,25 @@ export async function updateLeadershipMember(
   return member;
 }
 
-export async function reorderLeadershipMembers(orderedIds: string[]) {
+export async function reorderLeadershipMembers(orderedItems: { id: string; isApp?: boolean }[]) {
   await checkAuth();
 
-  // Use a transaction to swap all displayOrder values atomically
-  await prisma.$transaction(
-    orderedIds.map((id, index) =>
-      prisma.leadership.update({
-        where: { id },
+  // Use a transaction to swap all displayOrder values atomically across both tables
+  const updates = orderedItems.map((item, index) => {
+    if (item.isApp) {
+      return prisma.careerApplication.update({
+        where: { id: item.id },
         data: { displayOrder: index + 1 },
-      })
-    )
-  );
+      });
+    } else {
+      return prisma.leadership.update({
+        where: { id: item.id },
+        data: { displayOrder: index + 1 },
+      });
+    }
+  });
+  
+  await prisma.$transaction(updates);
 
   // Revalidate all affected paths
   revalidatePath('/admin/leadership');
@@ -153,8 +160,9 @@ export async function reorderLeadershipMembers(orderedIds: string[]) {
   revalidatePath('/');
 
   // Also revalidate individual member detail pages
+  const nativeIds = orderedItems.filter(i => !i.isApp).map(i => i.id);
   const members = await prisma.leadership.findMany({
-    where: { id: { in: orderedIds } },
+    where: { id: { in: nativeIds } },
     select: { slug: true },
   });
   for (const m of members) {
