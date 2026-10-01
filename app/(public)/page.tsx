@@ -60,11 +60,11 @@ export default async function HomePage() {
     step: String(i + 1).padStart(2, '0'),
     name: s.name,
     desc: s.description || '',
-    href: `/services#${s.slug || ''}`,
+    href: `/services#${(s as any).slug || ''}`,
   }));
 
-  const grouped = {};
-  const descMap = {
+  const grouped: Record<string, string[]> = {};
+  const descMap: Record<string, string> = {
     'AI & Machine Learning': 'Models, neural networks, retrieval platforms, and agentic workflows.',
     'Applications': 'Robust frontend rendering engines and high-throughput backend APIs.',
     'Data Systems': 'Transactional, document-store, cache, and vector memory instances.',

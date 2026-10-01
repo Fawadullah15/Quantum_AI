@@ -75,7 +75,7 @@ export function DesktopDropdown({ items, visible, onMouseEnter, onMouseLeave }: 
   );
 }
 
-export default function Navigation({ ctaLabel, ctaLink }: { ctaLabel?: string, ctaLink?: string }) {
+export default function Navigation({ companyName, ctaLabel, ctaLink }: { companyName?: string, ctaLabel?: string, ctaLink?: string }) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   
