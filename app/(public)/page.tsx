@@ -297,7 +297,7 @@ export default function HomePage() {
           }
           .home-leadership-grid > a > div:nth-child(2) {
             aspect-ratio: 1/1 !important;
-            max-height: 150px !important;
+            max-height: none !important;
           }
           .home-leadership-grid > a > div:last-child {
             padding: 0.65rem !important;
@@ -547,7 +547,7 @@ export default function HomePage() {
                   {/* Photo Container */}
                   <div style={{
                     width: '100%',
-                    aspectRatio: '16/10',
+                    aspectRatio: '1/1',
                     backgroundColor: '#020708',
                     overflow: 'hidden',
                     display: 'flex',
@@ -558,7 +558,7 @@ export default function HomePage() {
                       <img
                         src={person.photo}
                         alt={person.name}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
                       />
                     ) : (
                       <div style={{ color: '#FFFFFF', fontSize: '2rem' }}>👤</div>
