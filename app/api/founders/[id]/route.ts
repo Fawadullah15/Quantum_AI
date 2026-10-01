@@ -3,8 +3,6 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 
-export const revalidate = 3600;
-
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const founder = await prisma.founder.findUnique({

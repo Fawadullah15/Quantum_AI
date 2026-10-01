@@ -2,14 +2,9 @@
 
 import React, { useEffect, useRef } from 'react';
 import { GlobalProvider, useGlobalStore } from './GlobalStore';
-import dynamic from 'next/dynamic';
+import { GlobalSceneWrapper } from '../3d/GlobalSceneWrapper';
 import { usePathname } from 'next/navigation';
-
-const GlobalSceneWrapper = dynamic(
-  () => import('../3d/GlobalSceneWrapper').then(mod => mod.GlobalSceneWrapper),
-  { ssr: false }
-);
-const WelcomeIntro = dynamic(() => import('./WelcomeIntro'), { ssr: false });
+import WelcomeIntro from './WelcomeIntro';
 
 function EarthSceneContainer({ isHome }: { isHome: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -102,10 +97,11 @@ function RouteController({ children }: { children: React.ReactNode }) {
     return <>{children}</>;
   }
 
-  return (<><WelcomeIntro /><EarthSceneContainer isHome={isHome} />
+  return (
+    <WelcomeIntro>
+      <EarthSceneContainer isHome={isHome} />
 
       <div
-        id="qa-website-content"
         style={{
           position: 'relative',
           zIndex: 10,
@@ -115,7 +111,11 @@ function RouteController({ children }: { children: React.ReactNode }) {
       >
         <div style={{ pointerEvents: 'auto' }}>
           {children}
-        </div></div></>); }
+        </div>
+      </div>
+    </WelcomeIntro>
+  );
+}
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useMemo, useState, useEffect } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 // ── Geographic Dot Grid ───────────────────────────────────────────────────────
@@ -109,13 +109,12 @@ function GlobeDots() {
   );
 }
 
-function HubNode({ lat, lng, idx, isVisible }: { lat: number; lng: number; idx: number; isVisible: React.MutableRefObject<boolean> }) {
+function HubNode({ lat, lng, idx }: { lat: number; lng: number; idx: number }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const ringRef = useRef<THREE.Mesh>(null);
   const pos = latLngToXYZ(lat, lng, EARTH_RADIUS * 1.01);
 
   useFrame((state) => {
-    if (!isVisible.current) return;
     const t = state.clock.elapsedTime + idx * 0.9;
     const isReduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -166,12 +165,11 @@ function HubNode({ lat, lng, idx, isVisible }: { lat: number; lng: number; idx: 
 }
 
 function ConnectionArc({
-  a, b, idx, isVisible,
+  a, b, idx,
 }: {
   a: [number, number];
   b: [number, number];
   idx: number;
-  isVisible: React.MutableRefObject<boolean>;
 }) {
   const lineRef = useRef<THREE.Line>(null);
 
@@ -181,7 +179,6 @@ function ConnectionArc({
   }, [a, b]);
 
   useFrame((state) => {
-    if (!isVisible.current) return;
     if (lineRef.current) {
       const mat = lineRef.current.material as THREE.LineBasicMaterial;
       const t = state.clock.elapsedTime * 0.6 + idx * 1.1;
@@ -209,19 +206,6 @@ export function PremiumGlobe() {
   const scrollRef = useRef({ current: 0, target: 0, velocity: 0, lastY: 0 });
 
   const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
-
-  const { gl } = useThree();
-  const isVisible = useRef(true);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
-      isVisible.current = entry.isIntersecting;
-    });
-    if (gl.domElement) {
-      observer.observe(gl.domElement);
-    }
-    return () => observer.disconnect();
-  }, [gl.domElement]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -253,8 +237,6 @@ export function PremiumGlobe() {
   }, []);
 
   useFrame((state, delta) => {
-    if (!isVisible.current) return;
-    
     // Spring physics for smooth scroll responsiveness
     scrollRef.current.current += (scrollRef.current.target - scrollRef.current.current) * 0.06;
     const progress = scrollRef.current.current;
@@ -315,13 +297,12 @@ export function PremiumGlobe() {
           idx={i}
           a={[HUBS[ai].lat, HUBS[ai].lng]}
           b={[HUBS[bi].lat, HUBS[bi].lng]}
-          isVisible={isVisible}
         />
       ))}
 
       {/* ── Hub nodes ── */}
       {HUBS.map((h, i) => (
-        <HubNode key={i} lat={h.lat} lng={h.lng} idx={i} isVisible={isVisible} />
+        <HubNode key={i} lat={h.lat} lng={h.lng} idx={i} />
       ))}
 
       {/* ── Inner glow (atmosphere, inner) ── */}

@@ -37,10 +37,8 @@ const TECH_CATEGORIES: TechCategory[] = [
   },
 ];
 
-export default function CapabilitiesSection({ techGroups = TECH_CATEGORIES }: { techGroups?: TechCategory[] }) {
+export default function CapabilitiesSection() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-
-  const displayGroups = techGroups && techGroups.length > 0 ? techGroups : TECH_CATEGORIES;
 
   return (
     <section
@@ -352,7 +350,7 @@ export default function CapabilitiesSection({ techGroups = TECH_CATEGORIES }: { 
 
         {/* ─── Desktop View: Interactive Compact Tech Rows with Hover Reveal ─── */}
         <div className="capabilities-desktop-list">
-          {displayGroups.map((group, idx) => {
+          {TECH_CATEGORIES.map((group, idx) => {
             const isExpanded = hoveredIdx === idx;
 
             return (
@@ -396,7 +394,7 @@ export default function CapabilitiesSection({ techGroups = TECH_CATEGORIES }: { 
 
         {/* ─── Mobile View: Clean 2x2 Grid (No Hover, Compact) ─── */}
         <div className="capabilities-mobile-grid">
-          {displayGroups.map((group, idx) => (
+          {TECH_CATEGORIES.map((group, idx) => (
             <div key={idx} className="mobile-tech-tile">
               <div>
                 <span className="mobile-tech-num">{group.num}</span>

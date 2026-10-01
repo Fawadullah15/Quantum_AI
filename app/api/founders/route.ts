@@ -3,8 +3,6 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 
-export const revalidate = 3600;
-
 export async function GET() {
   try {
     const founders = await prisma.founder.findMany({

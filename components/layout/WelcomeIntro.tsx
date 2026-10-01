@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 import styles from './BrandReveal.module.css';
 
 /**
@@ -26,7 +25,7 @@ const easePrecise: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 type Phase = 'init' | 'entrance' | 'hold' | 'travel' | 'done';
 
-export default function WelcomeIntro() {
+export default function WelcomeIntro({ children }: { children: React.ReactNode }) {
   const [phase, setPhase] = useState<Phase | null>(null); // null = SSR/first paint
   const [targetCoords, setTargetCoords] = useState<{ x: number; y: number; scale: number } | null>(null);
   
@@ -142,7 +141,9 @@ export default function WelcomeIntro() {
 
   // ── Render ─────────────────────────────────────────────────
 
-  if (phase === null || phase === 'done') return null;
+  if (phase === null || phase === 'done') {
+    return <>{children}</>;
+  }
 
   // Animation variants
   const logoVariants = {
@@ -261,14 +262,11 @@ export default function WelcomeIntro() {
           style={{ zIndex: 4, transformOrigin: 'center' }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <Image
+          <img
             src="/quantum-q-logo.png"
-            alt="Quantum AI"
-            width={110}
-            height={110}
+            alt=""
             className={styles.logo}
             draggable={false}
-            priority
           />
         </motion.div>
 
@@ -287,19 +285,18 @@ export default function WelcomeIntro() {
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <Image
+          <img
             src="/quantum-q-logo.png"
-            alt="Quantum AI"
-            width={110}
-            height={110}
+            alt=""
             className={styles.logo}
             draggable={false}
-            priority
           />
         </motion.div>
       </div>
 
-      
+      <div id="qa-website-content">
+        {children}
+      </div>
     </>
   );
 }

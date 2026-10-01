@@ -5,7 +5,6 @@ import prisma from '@/lib/db';
 import { createPageMetadata, getCaseStudySchema } from '@/lib/seo';
 import { parseGallery } from '@/lib/gallery';
 import { GalleryConfigurator } from '@/components/layout/GalleryConfigurator';
-import Image from 'next/image';
 
 interface Props {
   params: Promise<{ slug: string }>;

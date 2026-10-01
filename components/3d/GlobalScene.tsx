@@ -5,8 +5,9 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useGlobalStore } from '@/components/layout/GlobalStore';
 import { GlobalParticles } from './particles/GlobalParticles';
+import { PremiumGlobe } from './scenes/PremiumGlobe';
+
 // Lazy load the other heavy scenes
-const PremiumGlobe = React.lazy(() => import('./scenes/PremiumGlobe').then(m => ({ default: m.PremiumGlobe })));
 const EarthNode = React.lazy(() => import('./scenes/EarthNode').then(m => ({ default: m.EarthNode })));
 const NeuralNetwork = React.lazy(() => import('./scenes/NeuralNetwork').then(m => ({ default: m.NeuralNetwork })));
 const SoftwareSpace = React.lazy(() => import('./scenes/SoftwareSpace').then(m => ({ default: m.SoftwareSpace })));

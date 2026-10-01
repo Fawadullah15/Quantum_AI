@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
 const WorldMapSVG = dynamic(() => import('../WorldMapSVG'), { ssr: false });
@@ -37,7 +38,7 @@ const getCoords = (cx: number, cy: number) => {
 
 function MapMarker({ marker }: { marker: Marker }) {
   const [hovered, setHovered] = useState(false);
-  const reduce = false;
+  const reduce = useReducedMotion();
 
   const { x, y } = getCoords(marker.cx, marker.cy);
   const flipLeft = marker.cx > 60;
@@ -72,13 +73,14 @@ function MapMarker({ marker }: { marker: Marker }) {
       <circle r="1.2" fill="#7C3AED" />
 
       {/* Tooltip */}
-      <g
-            style={{
-              opacity: hovered ? 1 : 0,
-              transform: `translate(${flipLeft ? -190 : 12}px, ${hovered ? -42 : -46}px)`,
-              transition: reduce ? 'none' : 'opacity 0.15s ease, transform 0.15s ease',
-              pointerEvents: hovered ? 'auto' : 'none',
-            }}
+      <AnimatePresence>
+        {hovered && (
+          <motion.g
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            transform={`translate(${flipLeft ? -190 : 12}, -42)`}
           >
             <rect
               x="0" y="0"
@@ -107,7 +109,9 @@ function MapMarker({ marker }: { marker: Marker }) {
             >
               {marker.subLabel}
             </text>
-          </g>
+          </motion.g>
+        )}
+      </AnimatePresence>
     </g>
   );
 }
@@ -115,7 +119,7 @@ function MapMarker({ marker }: { marker: Marker }) {
 // ─── Main Section ─────────────────────────────────────────────────────────────
 
 export default function GlobalMapSection() {
-  const reduce = false;
+  const reduce = useReducedMotion();
 
   // Create smooth curved lines (networks) between markers
   const connections = [

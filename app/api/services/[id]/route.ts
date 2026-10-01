@@ -5,8 +5,6 @@ import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { softDelete } from '@/lib/recovery';
 
-export const revalidate = 3600;
-
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;

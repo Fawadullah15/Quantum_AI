@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 
 export interface ClientItem {
   id?: string;
@@ -93,7 +92,9 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          setIsVisible(entry.isIntersecting);
+          if (entry.isIntersecting) {
+            setIsVisible(true);
+          }
         });
       },
       { threshold: 0.05 }
@@ -124,16 +125,15 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
       <>
         <div className="marquee-logo-box">
           {client.logo ? (
-            <div style={{ position: 'relative', width: '170px', height: '60px' }}>
-                <Image
-                  src={client.logo}
-                  alt={`${client.name} logo`}
-                  className="marquee-logo-img"
-                  fill
-                  sizes="170px"
-                  style={{ objectFit: 'contain' }}
-                />
-              </div>
+            <img
+              src={client.logo}
+              alt={`${client.name} logo`}
+              className="marquee-logo-img"
+              loading="lazy"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+              }}
+            />
           ) : (
             <div className="marquee-placeholder">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">

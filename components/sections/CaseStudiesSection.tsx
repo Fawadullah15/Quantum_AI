@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
@@ -12,7 +11,7 @@ interface CaseStudyItem {
   desc: string;
   technologies: string[];
   slug: string;
-  image?: string | null;
+  image?: string;
   gradient: string;
   accentIcon: string;
 }
@@ -85,7 +84,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 ? s.technologies.split(',').map((t: string) => t.trim()).filter(Boolean)
                 : ['Next.js', 'TypeScript', 'Prisma'],
               slug: s.slug,
-              image: s.heroImage || null,
+              image: s.heroImage || undefined,
               gradient: i % 2 === 0 ? 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)' : 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
               accentIcon: '⚡',
             }));
@@ -521,7 +520,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 <div className="cs-card-header">
                   <div className="cs-thumb-wrapper" style={{ background: study.gradient }}>
                     {study.image ? (
-                      <Image src={study.image} alt={study.title} className="cs-thumb-img" fill sizes="130px" />
+                      <img src={study.image} alt={study.title} className="cs-thumb-img" />
                     ) : (
                       <div className="cs-thumb-fallback">
                         <span style={{ fontSize: '1.25rem' }}>{study.accentIcon}</span>
@@ -575,7 +574,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
             <Link key={idx} href={`/work/${study.slug}`} className="mobile-cs-tile">
               <div className="mobile-cs-img-wrap" style={{ background: study.gradient }}>
                 {study.image ? (
-                  <Image src={study.image} alt={study.title} className="mobile-cs-img" fill sizes="(max-width: 640px) 100vw, 320px" />
+                  <img src={study.image} alt={study.title} className="mobile-cs-img" />
                 ) : (
                   <div className="cs-thumb-fallback">
                     <span style={{ fontSize: '1.1rem' }}>{study.accentIcon}</span>

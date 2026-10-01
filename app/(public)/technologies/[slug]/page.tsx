@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import prisma from '@/lib/db';
 import { createPageMetadata } from '@/lib/seo';
-import Image from 'next/image';
 
 export const dynamic = 'force-dynamic';
 
@@ -172,13 +171,10 @@ export default async function TechnologyDetailPage({ params }: Props) {
           position: 'relative',
           width: '100%',
           height: '280px',
+          background: `linear-gradient(to bottom, rgba(2, 8, 23, 0.4), rgba(2, 8, 23, 0.95)), url(${tech.heroImage}) center/cover`,
           marginBottom: '2.5rem',
-            borderBottom: '1px solid rgba(22, 119, 255, 0.15)',
-            overflow: 'hidden'
-          }}>
-            <Image src={tech.heroImage} alt={tech.name} fill sizes="100vw" style={{ objectFit: 'cover', zIndex: 0 }} priority />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(2, 8, 23, 0.4), rgba(2, 8, 23, 0.95))', zIndex: 1 }} />
-          </div>
+          borderBottom: '1px solid rgba(22, 119, 255, 0.15)'
+        }} />
       )}
 
       <div className="container" style={{ maxWidth: '1000px', margin: '0 auto', paddingInline: 'clamp(1.25rem, 5vw, 3rem)' }}>

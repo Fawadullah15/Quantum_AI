@@ -101,7 +101,6 @@ const FALLBACK_MEMBERS: LeaderItem[] = [
 ];
 
 import { getMergedLeaders } from "@/lib/getMergedLeaders";
-import Image from 'next/image';
 
 export default async function LeadershipPage() {
   const { dbMembers, appMembers } = await getMergedLeaders();
@@ -651,7 +650,11 @@ export default async function LeadershipPage() {
                         : (leader.department || leader.position).toUpperCase()}
                     </div>
                     {leader.photo ? (
-                      <Image src={leader.photo} alt={leader.name} className="exec-photo-img principal-photo-img" fill sizes="(max-width: 768px) 100vw, 33vw" />
+                      <img
+                        src={leader.photo}
+                        alt={leader.name}
+                        className="exec-photo-img principal-photo-img"
+                      />
                     ) : (
                         <div className="exec-photo-fallback">
                           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
@@ -736,7 +739,11 @@ export default async function LeadershipPage() {
                         </div>
                       )}
                       {member.photo ? (
-                        <Image src={member.photo} alt={member.name} className="exec-photo-img" fill sizes="(max-width: 768px) 50vw, 25vw" />
+                        <img
+                          src={member.photo}
+                          alt={member.name}
+                          className="exec-photo-img"
+                        />
                       ) : (
                         <div className="exec-photo-fallback">
                           <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">

@@ -7,8 +7,6 @@ import { revalidatePath } from 'next/cache';
 export const dynamic = 'force-dynamic';
 
 // GET: Fetch a single client
-export const revalidate = 3600;
-
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;

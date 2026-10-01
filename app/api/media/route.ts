@@ -7,8 +7,6 @@ import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { existsSync } from 'fs';
 
-export const revalidate = 3600;
-
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);

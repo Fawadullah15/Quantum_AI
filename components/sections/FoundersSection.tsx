@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './FoundersSection.module.css';
-import Image from 'next/image';
 
 interface FounderData {
   name: string;
@@ -42,7 +41,7 @@ const FoundersSection: React.FC<FoundersSectionProps> = ({ founders = DEFAULT_FO
           <div key={index} className={`${styles.panel} ${index === 0 ? styles.panelLeft : styles.panelRight}`}>
             <div className={styles.photoArea}>
               {founder.photo ? (
-                <Image src={founder.photo} alt={founder.name} className={styles.photo} fill sizes="(max-width: 768px) 100vw, 33vw" />
+                <img src={founder.photo} alt={founder.name} className={styles.photo} />
               ) : (
                 <div className={styles.photoPlaceholder}>
                   {founder.name.split(' ').map(n => n[0]).join('')}

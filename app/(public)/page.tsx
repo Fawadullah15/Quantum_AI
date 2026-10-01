@@ -1,9 +1,7 @@
+'use client';
 
-import React from 'react';
-import prisma from '@/lib/db';
-import { Leadership, CaseStudy, Service, Technology } from '@prisma/client';
-import { HomeContactForm, ClientParticleText, ClientGlobalMapSection } from '@/components/sections/HomeClient';
-
+import React, { useEffect, useState, useRef } from 'react';
+import { useGlobalStore } from '@/components/layout/GlobalStore';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { NovaButton, GalaxyButton, ButtonStyles } from '@/components/ui/Buttons';
@@ -13,97 +11,253 @@ import WhoWeHelpSection from '@/components/sections/WhoWeHelpSection';
 import CaseStudiesSection from '@/components/sections/CaseStudiesSection';
 import ProcessSection from '@/components/sections/ProcessSection';
 import CapabilitiesSection from '@/components/sections/CapabilitiesSection';
-const ClientsSection = dynamic(() => import('@/components/sections/ClientsSection'), { ssr: true });
+import ClientsSection from '@/components/sections/ClientsSection';
 import WhyQuantumSection from '@/components/sections/WhyQuantumSection';
 
-const TestimonialsSection = dynamic(() => import('@/components/sections/TestimonialsSection'), { ssr: true });
+const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr: false });
+const GlobalMapSection = dynamic(() => import('@/components/sections/GlobalMapSection'), { ssr: false });
+import TestimonialsSection from '@/components/sections/TestimonialsSection';
 import MarsHeroVideo from '@/components/ui/MarsHeroVideo';
-import Image from 'next/image';
 
-export default async function HomePage() {
-  let dbLeaders: Leadership[] = [];
-  try {
-    dbLeaders = await prisma.leadership.findMany({
-      where: { isActive: true },
-      orderBy: { displayOrder: 'asc' },
-    });
-  } catch (e) {
-    console.error('Failed to fetch leaders:', e);
-  }
+export default function HomePage() {
+  const { setScrollProgress } = useGlobalStore();
+  const [isMounted, setIsMounted] = useState(false);
 
-  let dbCaseStudies: CaseStudy[] = [];
-  try {
-    dbCaseStudies = await prisma.caseStudy.findMany({
-      where: { published: true },
-      orderBy: { order: 'asc' },
-      take: 4,
-    });
-  } catch (e) {
-    console.error('Failed to fetch case studies:', e);
-  }
-
-  let dbServices: Service[] = [];
-  try {
-    dbServices = await prisma.service.findMany({
-      where: { published: true },
-      orderBy: { order: 'asc' },
-    });
-  } catch (e) {
-    console.error('Failed to fetch services:', e);
-  }
-
-  let dbTech: Technology[] = [];
-  try {
-    dbTech = await prisma.technology.findMany({
-      where: { published: true },
-      orderBy: { order: 'asc' },
-    });
-  } catch (e) {
-    console.error('Failed to fetch technology:', e);
-  }
-
-  const caseStudies = dbCaseStudies.map((s, i) => ({
-    step: String(i + 1).padStart(2, '0'),
-    industry: s.industry ? s.industry.split('/')[0].trim() : 'Technology',
-    year: String(s.year || new Date().getFullYear()),
-    title: s.title,
-    desc: s.problem || s.solution || '',
-    technologies: s.technologies
-      ? s.technologies.split(',').map((t) => t.trim()).filter(Boolean)
-      : ['Next.js', 'TypeScript', 'Prisma'],
-    slug: s.slug,
-    image: s.heroImage || null,
-    gradient: i % 2 === 0 ? 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)' : 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
-    accentIcon: '✨',
-  }));
-
-  const solutions = dbServices.map((s, i) => ({
-    step: String(i + 1).padStart(2, '0'),
-    name: s.name,
-    desc: s.description || '',
-    href: `/services#${(s as any).slug || ''}`,
-  }));
-
-  const grouped: Record<string, string[]> = {};
-  const descMap: Record<string, string> = {
-    'AI & Machine Learning': 'Models, neural networks, retrieval platforms, and agentic workflows.',
-    'Applications': 'Robust frontend rendering engines and high-throughput backend APIs.',
-    'Data Systems': 'Transactional, document-store, cache, and vector memory instances.',
-    'Infrastructure': 'Virtualization, cloud computation, secure configurations, and automation pipelines.'
-  };
-  dbTech.forEach((t) => {
-    const cat = t.category || 'General';
-    if (!grouped[cat]) grouped[cat] = [];
-    grouped[cat].push(t.name);
+  // Contact Form State
+  const [formState, setFormState] = useState({
+    name: '',
+    email: '',
+    company: '',
+    projectType: '',
+    budget: '',
+    message: ''
   });
-  const techGroups = Object.keys(grouped).map((title, idx) => ({
-    num: String(idx + 1).padStart(2, '0'),
-    title: title.toUpperCase(),
-    desc: descMap[title] || `Engineering capabilities and stack for ${title}.`,
-    tags: grouped[title]
-  }));
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
-  const leaders = dbLeaders;
+  // Leadership state synced with database / admin panel
+  const [leaders, setLeaders] = useState<any[]>([
+    {
+      id: '1',
+      name: 'Muhammad Murtaza',
+      position: 'Co-Founder & CEO',
+      shortBio: 'Co-Founder and CEO of Quantum AI, building AI-powered software and digital solutions for enterprise and institutional clients.',
+      photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049252241-Screenshot_2025-02-11_170816.png',
+      slug: 'muhammad-murtaza',
+      publicId: 'QA-001'
+    },
+    {
+      id: '2',
+      name: 'Fahad Khan',
+      position: 'Co-Founder & Executive Chairman',
+      shortBio: 'Co-Founder and Executive Chairman of Quantum AI, supporting strategic direction, technical vision, and long-term growth.',
+      photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049467020-Screenshot_2026-08-18_153738.png',
+      slug: 'fahad-khan',
+      publicId: 'QA-002'
+    }
+  ]);
+
+  // Dynamic Case Studies state synced with database / admin panel
+  const [caseStudies, setCaseStudies] = useState<any[]>([
+    {
+      id: '1',
+      title: 'School Operations Manager',
+      industry: 'Education / School Management',
+      problem: 'A centralized school management platform designed to bring academic, administrative, student, staff, attendance, communication, and operational workflows into one digital system.',
+      technologies: 'Next.js, React, TypeScript, Tailwind CSS, Node.js, Prisma, PostgreSQL',
+      results: 'Provides a centralized digital foundation for managing school operations and reducing reliance on disconnected manual workflows.',
+      slug: 'school-operations-manager',
+    },
+    {
+      id: '2',
+      title: 'Sales Pipeline Automation System',
+      industry: 'Sales / Business Automation',
+      problem: 'A sales workflow system designed to organize leads, opportunities, follow-ups, and customer interactions in one centralized platform.',
+      technologies: 'Next.js, React, TypeScript, Node.js, FastAPI, PostgreSQL, REST APIs',
+      results: 'Creates a centralized sales workflow that gives teams clearer visibility into leads, opportunities, and follow-up activities.',
+      slug: 'sales-pipeline-automation-system',
+    },
+    {
+      id: '3',
+      title: 'Vector Search Knowledge Base',
+      industry: 'Artificial Intelligence / Knowledge Management',
+      problem: 'An AI-powered knowledge retrieval system designed to make large collections of information easier to search and use with vector-based semantic retrieval.',
+      technologies: 'Python, LangChain, RAG, Vector Search, Embeddings, LLMs, FastAPI, PostgreSQL',
+      results: 'Provides semantic search over knowledge sources and creates a foundation for retrieval-augmented AI applications.',
+      slug: 'vector-search-knowledge-base',
+    },
+    {
+      id: '4',
+      title: 'AI-Powered Customer Support Assistant',
+      industry: 'Artificial Intelligence / Customer Support',
+      problem: 'An AI customer support system designed to handle common customer questions, provide contextual answers, and assist support teams with faster information retrieval.',
+      technologies: 'Python, FastAPI, LangChain, LLMs, RAG, APIs',
+      results: 'Creates an AI-assisted support workflow that can provide faster access to business information and reduce repetitive support work.',
+      slug: 'ai-powered-customer-support-assistant',
+    }
+  ]);
+
+  // Dynamic Services / Solutions state synced with database / admin panel
+  const [services, setServices] = useState<any[]>([
+    { id: '1', name: 'AI Systems', description: 'Custom AI systems for business workflows and intelligent decision making.', category: 'AI', order: 1 },
+    { id: '2', name: 'Business Software', description: 'Web applications and internal systems designed around real business processes.', category: 'SOFTWARE', order: 2 },
+    { id: '3', name: 'Automation', description: 'Automated workflows that reduce repetitive manual work.', category: 'AUTOMATION', order: 3 },
+    { id: '4', name: 'Digital Products', description: 'Customer facing software products, platforms, and intelligent tools.', category: 'PRODUCT', order: 4 },
+  ]);
+
+  // Dynamic Technology Stack state synced with database / admin panel
+  const [techGroups, setTechGroups] = useState<any[]>([
+    {
+      title: 'AI & Machine Learning',
+      desc: 'Models, neural networks, retrieval platforms, and agentic workflows.',
+      tags: ['Python', 'PyTorch', 'TensorFlow', 'LLMs', 'RAG', 'AI Agents']
+    },
+    {
+      title: 'Applications',
+      desc: 'Robust frontend rendering engines and high-throughput backend APIs.',
+      tags: ['Next.js', 'React', 'TypeScript', 'Node.js', 'FastAPI']
+    },
+    {
+      title: 'Data Systems',
+      desc: 'Transactional, document-store, cache, and vector memory instances.',
+      tags: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis']
+    },
+    {
+      title: 'Infrastructure',
+      desc: 'Virtualization, cloud computation, secure configurations, and automation pipelines.',
+      tags: ['Docker', 'AWS', 'Linux', 'REST APIs', 'DevOps']
+    }
+  ]);
+
+  useEffect(() => {
+    fetch('/api/leadership')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setLeaders(data.filter((m: any) => m.isActive !== false));
+        }
+      })
+      .catch(() => {});
+
+    fetch('/api/case-studies')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setCaseStudies(data.filter((s: any) => s.published !== false).slice(0, 4));
+        }
+      })
+      .catch(() => {});
+
+    fetch('/api/services')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          setServices(data.filter((s: any) => s.published !== false));
+        }
+      })
+      .catch(() => {});
+
+    fetch('/api/technology')
+      .then(res => res.ok ? res.json() : [])
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const published = data.filter((t: any) => t.published !== false);
+          const grouped: Record<string, string[]> = {};
+          const descMap: Record<string, string> = {
+            'AI & Machine Learning': 'Models, neural networks, retrieval platforms, and agentic workflows.',
+            'Applications': 'Robust frontend rendering engines and high-throughput backend APIs.',
+            'Data Systems': 'Transactional, document-store, cache, and vector memory instances.',
+            'Infrastructure': 'Virtualization, cloud computation, secure configurations, and automation pipelines.'
+          };
+          published.forEach((t: any) => {
+            const cat = t.category || 'General';
+            if (!grouped[cat]) grouped[cat] = [];
+            grouped[cat].push(t.name);
+          });
+          const list = Object.entries(grouped).map(([title, tags]) => ({
+            title,
+            desc: descMap[title] || `Engineering capabilities and stack for ${title}.`,
+            tags
+          }));
+          if (list.length > 0) setTechGroups(list);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    setIsMounted(true);
+    const handleScroll = () => {
+      const maxScroll = document.body.scrollHeight - window.innerHeight;
+      if (maxScroll <= 0) return;
+      setScrollProgress(Math.max(0, Math.min(1, window.scrollY / maxScroll)));
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [setScrollProgress]);
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setFormState({
+      ...formState,
+      [e.target.name]: e.target.value
+    });
+    // Clear errors as user types
+    if (formErrors[e.target.name]) {
+      setFormErrors({
+        ...formErrors,
+        [e.target.name]: ''
+      });
+    }
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    // Validation
+    const errors: Record<string, string> = {};
+    if (!formState.name.trim()) errors.name = 'Name is required';
+    if (!formState.email.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/^\S+@\S+\.\S+$/.test(formState.email)) {
+      errors.email = 'Please enter a valid email address';
+    }
+    if (!formState.message.trim()) errors.message = 'Message is required';
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formState)
+      });
+      if (res.ok) {
+        setSubmitStatus('success');
+        setFormState({
+          name: '',
+          email: '',
+          company: '',
+          projectType: '',
+          budget: '',
+          message: ''
+        });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <>
@@ -214,7 +368,7 @@ export default async function HomePage() {
               marginBottom: '1.25rem',
               filter: 'drop-shadow(0 4px 24px rgba(2, 7, 8, 0.95))',
             }}>
-              <ClientParticleText
+              <ParticleText
                 text={`WE BUILD\nINTELLIGENT\nSOFTWARE`}
                 fontSize={95}
                 particleDensity={3}
@@ -251,7 +405,7 @@ export default async function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             01 // WHAT WE BUILD (Solutions: AI Systems, Business Software, Automation, Digital Products)
         ═══════════════════════════════════════════════════════════ */}
-        <SolutionsSection solutions={solutions} />
+        <SolutionsSection />
 
         {/* ═══════════════════════════════════════════════════════════
             02 // WHO WE HELP (Education, Businesses, Startups, Organizations)
@@ -266,7 +420,7 @@ export default async function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             04 // SELECTED WORK & DEPLOYMENTS
         ═══════════════════════════════════════════════════════════ */}
-        <CaseStudiesSection initialStudies={caseStudies} />
+        <CaseStudiesSection />
 
         {/* ═══════════════════════════════════════════════════════════
             05 // HOW WE WORK / DELIVERY PROCESS
@@ -281,13 +435,13 @@ export default async function HomePage() {
         {/* ═══════════════════════════════════════════════════════════
             07 // CORE TECHNOLOGY CAPABILITIES
         ═══════════════════════════════════════════════════════════ */}
-        <CapabilitiesSection techGroups={techGroups} />
+        <CapabilitiesSection />
 
         {/* ═══════════════════════════════════════════════════════════
             INTERACTIVE WORLD MAP
         ═══════════════════════════════════════════════════════════ */}
         <div style={{ pointerEvents: 'auto' }}>
-          <ClientGlobalMapSection />
+          <GlobalMapSection />
         </div>
 
         {/* ═══════════════════════════════════════════════════════════
@@ -363,8 +517,16 @@ export default async function HomePage() {
                     boxSizing: 'border-box',
                     transition: 'transform 0.2s, border-color 0.2s, box-shadow 0.2s',
                   }}
-                  
-                  
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.4)';
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 8px 24px -6px rgba(20, 184, 166, 0.25)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.15)';
+                    e.currentTarget.style.transform = 'none';
+                    e.currentTarget.style.boxShadow = 'none';
+                  }}
                 >
                   {/* Card Header Tag */}
                   <div style={{
@@ -385,14 +547,19 @@ export default async function HomePage() {
                   {/* Photo Container */}
                   <div style={{
                     width: '100%',
-                    position: 'relative', aspectRatio: '1/1', backgroundColor: '#020708',
+                    aspectRatio: '16/10',
+                    backgroundColor: '#020708',
                     overflow: 'hidden',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                   }}>
                     {person.photo ? (
-                      <Image src={person.photo} alt={person.name} fill sizes="(max-width: 768px) 50vw, 300px" style={{ objectFit: 'cover', objectPosition: 'center top' }} />
+                      <img
+                        src={person.photo}
+                        alt={person.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
+                      />
                     ) : (
                       <div style={{ color: '#FFFFFF', fontSize: '2rem' }}>👤</div>
                     )}
@@ -493,8 +660,18 @@ export default async function HomePage() {
                 boxShadow: '0 4px 16px rgba(20, 184, 166, 0.3)',
                 transition: 'all 0.2s ease',
               }}
-              
-              
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#14B8A6';
+                e.currentTarget.style.color = '#020708';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 8px 24px rgba(20, 184, 166, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = '#0F766E';
+                e.currentTarget.style.color = '#FFFFFF';
+                e.currentTarget.style.transform = 'none';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(20, 184, 166, 0.3)';
+              }}
             >
               <span>EXPLORE ALL SOLUTIONS</span>
               <span>→</span>
@@ -547,7 +724,7 @@ export default async function HomePage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderTop: '1px solid rgba(20, 184, 166, 0.1)', paddingTop: '1.25rem' }}>
                   <div>
                     <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>EMAIL INQUIRIES</span>
-                    <a href="mailto:hello@quantumai.dev" style={{ fontSize: '1rem', color: '#FFFFFF', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500, wordBreak: 'break-word' }} >
+                    <a href="mailto:hello@quantumai.dev" style={{ fontSize: '1rem', color: '#FFFFFF', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500, wordBreak: 'break-word' }} onMouseEnter={(e) => e.currentTarget.style.color = '#14B8A6'} onMouseLeave={(e) => e.currentTarget.style.color = '#FFFFFF'}>
                       hello@quantumai.dev
                     </a>
                   </div>
@@ -569,7 +746,193 @@ export default async function HomePage() {
                 width: '100%',
                 boxSizing: 'border-box'
               }}>
-                <HomeContactForm />
+                {submitStatus === 'success' ? (
+                  <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                    <div style={{ color: '#FFFFFF', fontSize: '2.5rem', marginBottom: '1rem' }}>✓</div>
+                    <h3 style={{ fontSize: '1.5rem', color: '#FFFFFF', marginBottom: '0.5rem', textTransform: 'none' }}>Project Inquiry Sent</h3>
+                    <p style={{ color: '#FFFFFF', fontSize: '0.95rem', marginBottom: '2rem', fontWeight: 300 }}>Thank you for reaching out. An engineer will review your inquiry and connect with you shortly.</p>
+                    <NovaButton onClick={() => setSubmitStatus('idle')}>SEND ANOTHER INQUIRY</NovaButton>
+                  </div>
+                ) : (
+                  <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>NAME <span style={{ color: '#FFFFFF' }}>*</span></label>
+                      <input
+                        type="text"
+                        name="name"
+                        value={formState.name}
+                        onChange={handleFormChange}
+                        placeholder="Your full name"
+                        style={{
+                          backgroundColor: '#0A181B',
+                          border: `1px solid ${formErrors.name ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'}`,
+                          borderRadius: 8,
+                          color: '#FFFFFF',
+                          padding: '0.85rem 1rem',
+                          outline: 'none',
+                          fontSize: '0.95rem',
+                          width: '100%',
+                          transition: 'border-color 0.2s, box-shadow 0.2s'
+                        }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = '#14B8A6'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(20, 184, 166, 0.2)'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderColor = formErrors.name ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
+                      />
+                      {formErrors.name && <span style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>{formErrors.name}</span>}
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>EMAIL <span style={{ color: '#FFFFFF' }}>*</span></label>
+                      <input
+                        type="email"
+                        name="email"
+                        value={formState.email}
+                        onChange={handleFormChange}
+                        placeholder="name@company.com"
+                        style={{
+                          backgroundColor: '#0A181B',
+                          border: `1px solid ${formErrors.email ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'}`,
+                          borderRadius: 8,
+                          color: '#FFFFFF',
+                          padding: '0.85rem 1rem',
+                          outline: 'none',
+                          fontSize: '0.95rem',
+                          width: '100%',
+                          transition: 'border-color 0.2s, box-shadow 0.2s'
+                        }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = '#14B8A6'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(20, 184, 166, 0.2)'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderColor = formErrors.email ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
+                      />
+                      {formErrors.email && <span style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>{formErrors.email}</span>}
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>COMPANY</label>
+                      <input
+                        type="text"
+                        name="company"
+                        value={formState.company}
+                        onChange={handleFormChange}
+                        placeholder="Company name (optional)"
+                        style={{
+                          backgroundColor: '#0A181B',
+                          border: '1px solid rgba(20, 184, 166, 0.2)',
+                          borderRadius: 8,
+                          color: '#FFFFFF',
+                          padding: '0.85rem 1rem',
+                          outline: 'none',
+                          fontSize: '0.95rem',
+                          width: '100%',
+                          transition: 'border-color 0.2s, box-shadow 0.2s'
+                        }}
+                        onFocus={(e) => { e.currentTarget.style.borderColor = '#14B8A6'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(20, 184, 166, 0.2)'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.2)'; e.currentTarget.style.boxShadow = 'none'; }}
+                      />
+                    </div>
+
+                    <div className="form-selects-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>PROJECT TYPE</label>
+                        <select
+                          name="projectType"
+                          value={formState.projectType}
+                          onChange={handleFormChange}
+                          style={{
+                            backgroundColor: '#0A181B',
+                            border: '1px solid rgba(20, 184, 166, 0.2)',
+                            borderRadius: 8,
+                            color: '#FFFFFF',
+                            padding: '0.85rem 1rem',
+                            outline: 'none',
+                            fontSize: '0.95rem',
+                            width: '100%',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <option value="">Select project type...</option>
+                          <option value="AI System">AI System</option>
+                          <option value="Business Software">Business Software</option>
+                          <option value="Automation">Automation</option>
+                          <option value="Digital Product">Digital Product</option>
+                          <option value="Website / Web Application">Website / Web Application</option>
+                          <option value="Existing System Improvement">Existing System Improvement</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>BUDGET RANGE</label>
+                        <select
+                          name="budget"
+                          value={formState.budget}
+                          onChange={handleFormChange}
+                          style={{
+                            backgroundColor: '#0A181B',
+                            border: '1px solid rgba(20, 184, 166, 0.2)',
+                            borderRadius: 8,
+                            color: '#FFFFFF',
+                            padding: '0.85rem 1rem',
+                            outline: 'none',
+                            fontSize: '0.95rem',
+                            width: '100%',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          <option value="">Select budget...</option>
+                          <option value="< $5,000">&lt; $5,000</option>
+                          <option value="$5,000 - $15,000">$5,000 - $15,000</option>
+                          <option value="$15,000 - $50,000">$15,000 - $50,000</option>
+                          <option value="$50,000+">$50,000+</option>
+                          <option value="Undecided / Flexible">Undecided / Flexible</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>MESSAGE <span style={{ color: '#FFFFFF' }}>*</span></label>
+                      <textarea
+                        name="message"
+                        value={formState.message}
+                        onChange={handleFormChange}
+                        placeholder="Describe your project, problems, and goals"
+                        rows={4}
+                        style={{
+                          background: 'transparent',
+                          border: 'none',
+                          borderBottom: `1.5px solid ${formErrors.message ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'}`,
+                          color: '#FFFFFF',
+                          padding: '0.625rem 0',
+                          outline: 'none',
+                          fontSize: '1rem',
+                          width: '100%',
+                          resize: 'vertical',
+                          lineHeight: 1.5,
+                          transition: 'border-color 0.25s'
+                        }}
+                        onFocus={(e) => { e.currentTarget.style.borderBottomColor = '#14B8A6'; }}
+                        onBlur={(e) => { e.currentTarget.style.borderBottomColor = formErrors.message ? '#EF4444' : 'rgba(20, 184, 166, 0.2)'; }}
+                      />
+                      {formErrors.message && <span style={{ color: '#EF4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>{formErrors.message}</span>}
+                    </div>
+
+                    {submitStatus === 'error' && (
+                      <span style={{ color: '#EF4444', fontSize: '0.85rem' }}>Submission failed. Please check your network or try again.</span>
+                    )}
+
+                    <NovaButton
+                      type="submit"
+                      disabled={isSubmitting}
+                      style={{ marginTop: '0.5rem', width: '100%' }}
+                    >
+                      {isSubmitting ? 'SENDING...' : 'SEND PROJECT INQUIRY'}
+                    </NovaButton>
+
+                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#FFFFFF', lineHeight: 1.5, margin: '0.5rem 0 0 0', textAlign: 'center' }}>
+                      🔒 Your information is confidential and used solely to evaluate your project inquiry.
+                    </p>
+
+                  </form>
+                )}
               </div>
             </div>
           </div>

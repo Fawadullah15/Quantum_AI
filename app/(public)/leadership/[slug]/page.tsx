@@ -110,7 +110,6 @@ const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
 };
 
 import { getMergedLeaders } from "@/lib/getMergedLeaders";
-import Image from 'next/image';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -346,7 +345,11 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
               return (
                 <div className={`prof-photo-box ${isPrincipal ? 'is-principal-profile' : ''}`}>
                   {m.photo ? (
-                    <Image src={m.photo} alt={m.name} className={`prof-photo-img ${isPrincipal ? 'is-principal-profile' : ''}`} fill sizes="(max-width: 768px) 100vw, 400px" priority />
+                    <img
+                      src={m.photo}
+                      alt={m.name}
+                      className={`prof-photo-img ${isPrincipal ? 'is-principal-profile' : ''}`}
+                    />
                   ) : (
                     <div style={{ color: '#FFFFFF', fontFamily: "var(--font-mono, monospace)", fontSize: "0.85rem" }}>
                       QUANTUM AI

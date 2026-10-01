@@ -3,8 +3,6 @@ import { getSiteSettings } from '@/lib/settings';
 
 export const dynamic = 'force-dynamic';
 
-export const revalidate = 3600;
-
 export async function GET() {
   try {
     const settings = await getSiteSettings();

@@ -42,7 +42,7 @@ async function runEmailResilienceTests() {
   assert(unconfiguredResult.success === false, 'Returns success: false when no credentials are present');
   assert(unconfiguredResult.status === 'FAILED', 'Returns status: "FAILED"');
   assert(typeof unconfiguredResult.error === 'string' && unconfiguredResult.error.length > 0, 'Provides descriptive error message for admin panel');
-  assert(!!(unconfiguredResult.error?.includes('GMAIL_USER') || unconfiguredResult.error?.includes('RESEND_API_KEY')), 'Diagnostic mentions required environment variables');
+  assert(unconfiguredResult.error?.includes('GMAIL_USER') || unconfiguredResult.error?.includes('RESEND_API_KEY'), 'Diagnostic mentions required environment variables');
 
   // 3. Contact Form HTML Template & Content Builder
   console.log('\n[Test Group 3: Contact Form Email Content & Template]');
