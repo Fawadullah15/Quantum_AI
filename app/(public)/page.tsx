@@ -1,6 +1,7 @@
 
 import React from 'react';
 import prisma from '@/lib/db';
+import { Leadership, CaseStudy, Service, Technology } from '@prisma/client';
 import { HomeContactForm, ClientParticleText, ClientGlobalMapSection } from '@/components/sections/HomeClient';
 
 import Link from 'next/link';
@@ -20,7 +21,7 @@ import MarsHeroVideo from '@/components/ui/MarsHeroVideo';
 import Image from 'next/image';
 
 export default async function HomePage() {
-  let dbLeaders: any[] = [];
+  let dbLeaders: Leadership[] = [];
   try {
     dbLeaders = await prisma.leadership.findMany({
       where: { isActive: true },
@@ -30,7 +31,7 @@ export default async function HomePage() {
     console.error('Failed to fetch leaders:', e);
   }
 
-  let dbCaseStudies: any[] = [];
+  let dbCaseStudies: CaseStudy[] = [];
   try {
     dbCaseStudies = await prisma.caseStudy.findMany({
       where: { published: true },
@@ -41,7 +42,7 @@ export default async function HomePage() {
     console.error('Failed to fetch case studies:', e);
   }
 
-  let dbServices: any[] = [];
+  let dbServices: Service[] = [];
   try {
     dbServices = await prisma.service.findMany({
       where: { published: true },
@@ -51,7 +52,7 @@ export default async function HomePage() {
     console.error('Failed to fetch services:', e);
   }
 
-  let dbTech: any[] = [];
+  let dbTech: Technology[] = [];
   try {
     dbTech = await prisma.technology.findMany({
       where: { published: true },
