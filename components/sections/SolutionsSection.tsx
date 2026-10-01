@@ -110,7 +110,7 @@ export default function SolutionsSection() {
         }
 
         .solution-card-num {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           color: #FFFFFF;
           font-weight: 600;
@@ -137,7 +137,7 @@ export default function SolutionsSection() {
           align-items: center;
           gap: 0.35rem;
           color: #FFFFFF;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           font-weight: 600;
@@ -187,7 +187,7 @@ export default function SolutionsSection() {
           align-items: center;
           gap: 0.35rem;
           color: #FFFFFF;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           font-weight: 700;
@@ -240,7 +240,7 @@ export default function SolutionsSection() {
           }
 
           .mobile-solution-num {
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-d-din);
             font-size: 0.62rem;
             color: #FFFFFF;
             font-weight: 600;
@@ -262,7 +262,7 @@ export default function SolutionsSection() {
           }
 
           .mobile-solution-arrow {
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-d-din);
             font-size: 0.68rem;
             color: #FFFFFF;
             align-self: flex-end;
@@ -288,7 +288,7 @@ export default function SolutionsSection() {
         {/* Eyebrow & Title */}
         <p
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
@@ -394,7 +394,7 @@ export default function SolutionsSection() {
               border: '1px solid rgba(20, 184, 166, 0.4)',
               borderRadius: 999,
               color: '#FFFFFF',
-              fontFamily: 'var(--font-mono, monospace)',
+              fontFamily: 'var(--font-d-din)',
               fontSize: '0.8rem',
               fontWeight: 600,
               letterSpacing: '0.08em',

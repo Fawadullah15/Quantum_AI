@@ -36,7 +36,7 @@ export default async function CareersPage() {
     <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container">
       <div style={{ maxWidth: 'var(--max-width, 1000px)', margin: '0 auto' }}>
         <div style={{ marginBottom: '2rem' }}>
-          <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
             SYS.12 / ORBITAL SYSTEM
           </div>
           <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: 'var(--color-text-primary, #FFFFFF)', textTransform: 'uppercase', margin: 0 }}>
@@ -61,7 +61,7 @@ export default async function CareersPage() {
               }}
             >
               <div>
-                <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+                <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.35rem' }}>
                   DEPARTMENT / {role.department}
                 </div>
                 <h2 style={{ fontSize: 'clamp(1.05rem, 2vw, 1.35rem)', fontWeight: 600, color: 'var(--color-text-primary, #FFFFFF)', margin: 0 }}>
@@ -69,7 +69,7 @@ export default async function CareersPage() {
                 </h2>
               </div>
 
-              <div style={{ color: 'var(--color-text-secondary, #FFFFFF)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.8125rem' }}>
+              <div style={{ color: 'var(--color-text-secondary, #FFFFFF)', fontFamily: 'var(--font-d-din)', fontSize: '0.8125rem' }}>
                 {role.workType}
               </div>
 
@@ -78,7 +78,7 @@ export default async function CareersPage() {
                   href={`/careers-partnerships?tab=career&role=${encodeURIComponent(role.title)}`}
                   style={{
                     display: 'inline-block',
-                    fontFamily: 'var(--font-mono, monospace)',
+                    fontFamily: 'var(--font-d-din)',
                     fontSize: '0.75rem',
                     letterSpacing: '0.1em',
                     color: '#FFFFFF',
@@ -97,7 +97,7 @@ export default async function CareersPage() {
           ))}
         </div>
 
-        <div style={{ marginTop: 'var(--space-16, 3rem)', color: 'var(--color-text-secondary, #FFFFFF)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.9rem' }}>
+        <div style={{ marginTop: 'var(--space-16, 3rem)', color: 'var(--color-text-secondary, #FFFFFF)', fontFamily: 'var(--font-d-din)', fontSize: '0.9rem' }}>
           No suitable role? Write to us directly at{' '}
           <a href="mailto:careers@quantumai.dev" style={{ color: '#FFFFFF', textDecoration: 'none' }}>
             careers@quantumai.dev

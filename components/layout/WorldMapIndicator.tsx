@@ -29,7 +29,7 @@ export function WorldMapIndicator() {
       display: 'flex',
       flexDirection: 'column',
       gap: '0.25rem',
-      fontFamily: 'var(--font-mono)',
+      fontFamily: 'var(--font-d-din)',
       fontSize: '0.65rem',
       letterSpacing: '0.2em',
       color: 'var(--color-text-tertiary)',

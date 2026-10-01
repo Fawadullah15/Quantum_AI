@@ -288,7 +288,7 @@ export default function Navigation({
                       gap: '0.25rem',
                       padding: '0.45rem clamp(0.55rem, 0.75vw, 0.85rem)',
                       fontSize: '0.78rem',
-                      fontFamily: 'var(--font-mono)',
+                      fontFamily: 'var(--font-d-din)',
                       fontWeight: 400,
                       letterSpacing: '0.1em',
                       textTransform: 'uppercase',
@@ -347,7 +347,7 @@ export default function Navigation({
                   justifyContent: 'center',
                   padding: '0.45rem 0.95rem',
                   fontSize: '0.75rem',
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-d-din)',
                   fontWeight: 600,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -380,7 +380,7 @@ export default function Navigation({
                   justifyContent: 'center',
                   padding: '0.45rem 1.1rem',
                   fontSize: '0.75rem',
-                  fontFamily: 'var(--font-mono)',
+                  fontFamily: 'var(--font-d-din)',
                   fontWeight: 600,
                   letterSpacing: '0.08em',
                   textTransform: 'uppercase',
@@ -478,7 +478,7 @@ export default function Navigation({
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
                 <Link href="/" onClick={() => setMobileOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', textDecoration: 'none' }}>
                   <QuantumLogo width={42} height={42} />
-                  <span style={{ fontFamily: 'var(--font-sans)', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '0.12em', color: '#FFFFFF', textTransform: 'uppercase' }}>
+                  <span style={{ fontFamily: 'var(--font-d-din)', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '0.12em', color: '#FFFFFF', textTransform: 'uppercase' }}>
                     QUANTUM AI
                   </span>
                 </Link>
@@ -589,7 +589,7 @@ export default function Navigation({
                     textDecoration: 'none',
                     fontWeight: 600,
                     fontSize: '0.8rem',
-                    fontFamily: 'var(--font-mono)',
+                    fontFamily: 'var(--font-d-din)',
                     letterSpacing: '0.08em',
                     textTransform: 'uppercase',
                   }}

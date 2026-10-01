@@ -93,7 +93,7 @@ export default async function ProductPage({ params }: Props) {
           background: linear-gradient(135deg, #1677FF, #0050B3);
           color: #FFFFFF;
           font-weight: 600;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.8125rem;
           border-radius: 6px;
           text-decoration: none;
@@ -114,7 +114,7 @@ export default async function ProductPage({ params }: Props) {
           border: 1px solid rgba(56, 189, 248, 0.35);
           background: rgba(56, 189, 248, 0.08);
           font-weight: 600;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.8125rem;
           border-radius: 6px;
           text-decoration: none;
@@ -140,7 +140,7 @@ export default async function ProductPage({ params }: Props) {
         <Link
           href="/products"
           style={{
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: '0.72rem',
             color: '#FFFFFF',
             textDecoration: 'none',
@@ -159,10 +159,10 @@ export default async function ProductPage({ params }: Props) {
       {/* Header */}
       <header style={{ marginBottom: '2.5rem', paddingBottom: '2rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-          <span style={{ padding: '0.2rem 0.65rem', borderRadius: '4px', fontSize: '0.68rem', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700 }} className={statusClass}>
+          <span style={{ padding: '0.2rem 0.65rem', borderRadius: '4px', fontSize: '0.68rem', fontFamily: 'var(--font-d-din)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 700 }} className={statusClass}>
             {product.status?.replace(/_/g, ' ') || 'LIVE'}
           </span>
-          <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.75rem', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
             {product.category || 'AI Software'}
           </span>
         </div>
@@ -205,7 +205,7 @@ export default async function ProductPage({ params }: Props) {
       {/* Core Features */}
       {features.length > 0 && (
         <section style={{ marginBottom: '3.5rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
             01 // CAPABILITIES
           </div>
           <h2 style={{ fontSize: 'clamp(1.35rem, 2.5vw, 1.85rem)', fontWeight: 700, marginBottom: '1.5rem', textTransform: 'uppercase', color: '#FFFFFF', letterSpacing: '-0.02em' }}>
@@ -214,7 +214,7 @@ export default async function ProductPage({ params }: Props) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
             {features.map((feature, i) => (
               <div key={i} style={{ padding: '1.35rem', border: '1px solid rgba(22, 119, 255, 0.16)', background: 'rgba(6, 21, 43, 0.65)', borderRadius: '10px' }}>
-                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.1em', marginBottom: '0.5rem', fontWeight: 600 }}>
+                <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.1em', marginBottom: '0.5rem', fontWeight: 600 }}>
                   FEATURE {String(i + 1).padStart(2, '0')}
                 </div>
                 <h3 style={{ fontSize: '1.05rem', fontWeight: 600, marginBottom: '0.5rem', color: '#FFFFFF', lineHeight: 1.3 }}>
@@ -232,7 +232,7 @@ export default async function ProductPage({ params }: Props) {
       {/* Technology Stack */}
       {technologies.length > 0 && (
         <section style={{ marginBottom: '3.5rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
             02 // ARCHITECTURE
           </div>
           <h2 style={{ fontSize: 'clamp(1.35rem, 2.5vw, 1.85rem)', fontWeight: 700, marginBottom: '1.25rem', textTransform: 'uppercase', color: '#FFFFFF', letterSpacing: '-0.02em' }}>
@@ -240,7 +240,7 @@ export default async function ProductPage({ params }: Props) {
           </h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
             {technologies.map((tech: string) => (
-              <div key={tech} style={{ padding: '0.35rem 0.85rem', border: '1px solid rgba(22, 119, 255, 0.18)', background: 'rgba(6, 21, 43, 0.6)', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.78rem', color: '#FFFFFF', borderRadius: '4px' }}>
+              <div key={tech} style={{ padding: '0.35rem 0.85rem', border: '1px solid rgba(22, 119, 255, 0.18)', background: 'rgba(6, 21, 43, 0.6)', fontFamily: 'var(--font-d-din)', fontSize: '0.78rem', color: '#FFFFFF', borderRadius: '4px' }}>
                 {tech}
               </div>
             ))}
@@ -251,7 +251,7 @@ export default async function ProductPage({ params }: Props) {
       {/* Related Products */}
       {relatedProducts.length > 0 && (
         <section style={{ marginBottom: '4rem', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.5rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
             EXPLORE PLATFORMS
           </div>
           <h2 style={{ fontSize: 'clamp(1.35rem, 2.5vw, 1.85rem)', fontWeight: 700, color: '#FFFFFF', marginBottom: '1.5rem', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
@@ -276,10 +276,10 @@ export default async function ProductPage({ params }: Props) {
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>
+                  <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>
                     {item.category || 'AI Software'}
                   </span>
-                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#FFFFFF', textTransform: 'uppercase' }}>
+                  <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', textTransform: 'uppercase' }}>
                     {item.status || 'LIVE'}
                   </span>
                 </div>
@@ -289,7 +289,7 @@ export default async function ProductPage({ params }: Props) {
                 <p style={{ color: '#FFFFFF', fontSize: '0.8rem', lineHeight: 1.45, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {item.description}
                 </p>
-                <span style={{ marginTop: 'auto', paddingTop: '0.5rem', color: '#FFFFFF', fontSize: '0.72rem', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600, letterSpacing: '0.05em' }}>
+                <span style={{ marginTop: 'auto', paddingTop: '0.5rem', color: '#FFFFFF', fontSize: '0.72rem', fontFamily: 'var(--font-d-din)', fontWeight: 600, letterSpacing: '0.05em' }}>
                   VIEW PRODUCT →
                 </span>
               </Link>
@@ -300,7 +300,7 @@ export default async function ProductPage({ params }: Props) {
 
       {/* CTA Box */}
       <section style={{ textAlign: 'center', paddingTop: '3.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.15)', marginTop: '2rem' }}>
-        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.65rem', fontWeight: 600 }}>
+        <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.65rem', fontWeight: 600 }}>
           DEPLOYMENT &amp; INTEGRATION
         </div>
         <h2 style={{ fontSize: 'clamp(1.6rem, 3.5vw, 2.35rem)', fontWeight: 700, color: '#FFFFFF', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
@@ -318,7 +318,7 @@ export default async function ProductPage({ params }: Props) {
             background: 'linear-gradient(135deg, #1677FF, #0050B3)',
             color: '#FFFFFF',
             fontWeight: 700,
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: '0.8125rem',
             letterSpacing: '0.1em',
             borderRadius: '8px',

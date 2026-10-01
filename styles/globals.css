@@ -1,3 +1,4 @@
+@import url('https://fonts.cdnfonts.com/css/d-din');
 /* Tokens imported in layout.tsx */
 
 
@@ -270,7 +271,7 @@ a {
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-d-din);
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -427,7 +428,7 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-d-din);
   font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -476,7 +477,7 @@ a {
 }
 
 .form-label {
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-d-din);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -516,7 +517,7 @@ a {
 .form-error {
   font-size: 0.75rem;
   color: #EF4444;
-  font-family: var(--font-mono, monospace);
+  font-family: var(--font-d-din);
   margin-top: 0.25rem;
 }
 
@@ -530,7 +531,7 @@ a {
 
 .tech-label {
 
-  font-family: var(--font-mono);
+  font-family: var(--font-d-din);
 
   font-size: var(--text-xs);
 
@@ -570,7 +571,7 @@ a {
 
 .eyebrow {
 
-  font-family: var(--font-mono);
+  font-family: var(--font-d-din);
 
   font-size: var(--text-xs);
 

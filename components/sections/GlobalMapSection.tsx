@@ -145,7 +145,7 @@ export default function GlobalMapSection() {
       {/* Header */}
       <div style={{ maxWidth: 720, margin: '0 auto clamp(1.5rem, 3vh, 2.25rem)', textAlign: 'center' }}>
         <p style={{
-          fontFamily: 'var(--font-mono)',
+          fontFamily: 'var(--font-d-din)',
           fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
@@ -312,7 +312,7 @@ export default function GlobalMapSection() {
         textAlign: 'center',
         marginTop: '1.5rem',
         fontSize: '0.75rem',
-        fontFamily: 'var(--font-mono)',
+        fontFamily: 'var(--font-d-din)',
         color: '#3A5553',
         letterSpacing: '0.1em',
       }}>

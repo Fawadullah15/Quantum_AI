@@ -108,7 +108,7 @@ export default function TrustSection() {
         }
 
         .trust-card-code {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.68rem;
           color: #FFFFFF;
           font-weight: 600;
@@ -136,7 +136,7 @@ export default function TrustSection() {
           align-items: center;
           gap: 0.35rem;
           color: #FFFFFF;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           font-weight: 600;
@@ -214,7 +214,7 @@ export default function TrustSection() {
           }
 
           .mobile-trust-code {
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-d-din);
             font-size: 0.56rem;
             color: #FFFFFF;
             font-weight: 600;
@@ -257,7 +257,7 @@ export default function TrustSection() {
         {/* Eyebrow & Title */}
         <p
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
@@ -353,7 +353,7 @@ export default function TrustSection() {
           <Link
             href="/contact"
             style={{
-              fontFamily: 'var(--font-mono, monospace)',
+              fontFamily: 'var(--font-d-din)',
               fontSize: '0.75rem',
               color: '#FFFFFF',
               textDecoration: 'none',

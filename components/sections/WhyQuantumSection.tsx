@@ -92,7 +92,7 @@ export default function WhyQuantumSection() {
         }
 
         .think-card-num {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.68rem;
           color: #FFFFFF;
           font-weight: 600;
@@ -185,7 +185,7 @@ export default function WhyQuantumSection() {
         <div className="why-left-content">
           <p
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-d-din)',
               fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
@@ -237,7 +237,7 @@ export default function WhyQuantumSection() {
         <div style={{ width: '100%', minWidth: 0, boxSizing: 'border-box' }}>
           <div
             style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-d-din)',
               fontSize: '0.68rem',
               color: '#FFFFFF',
               letterSpacing: '0.2em',

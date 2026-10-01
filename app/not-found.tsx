@@ -14,12 +14,12 @@ export default function NotFound() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#030712', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem', textAlign: 'center', color: '#FFFFFF' }}>
       <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
-        <div style={{ fontSize: 'clamp(6rem, 15vw, 10rem)', fontWeight: 700, fontFamily: 'var(--font-mono, monospace)', color: 'rgba(22, 119, 255, 0.15)', userSelect: 'none', lineHeight: 1 }}>
+        <div style={{ fontSize: 'clamp(6rem, 15vw, 10rem)', fontWeight: 700, fontFamily: 'var(--font-d-din)', color: 'rgba(22, 119, 255, 0.15)', userSelect: 'none', lineHeight: 1 }}>
           404
         </div>
       </div>
       
-      <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
+      <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.75rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
         [SYS.ERROR // PAGE NOT FOUND]
       </div>
       <h1 style={{ fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.02em', color: '#FFFFFF', marginBottom: '0.75rem' }}>
@@ -39,7 +39,7 @@ export default function NotFound() {
             background: 'linear-gradient(135deg, #1677FF, #0050B3)',
             color: '#FFFFFF',
             fontWeight: 700,
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: '0.8125rem',
             letterSpacing: '0.08em',
             borderRadius: '6px',
@@ -60,7 +60,7 @@ export default function NotFound() {
             background: 'rgba(56, 189, 248, 0.08)',
             color: '#FFFFFF',
             fontWeight: 600,
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: '0.8125rem',
             letterSpacing: '0.08em',
             borderRadius: '6px',
@@ -80,7 +80,7 @@ export default function NotFound() {
             background: 'rgba(6, 21, 43, 0.75)',
             color: '#FFFFFF',
             fontWeight: 600,
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: '0.8125rem',
             letterSpacing: '0.08em',
             borderRadius: '6px',

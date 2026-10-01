@@ -130,7 +130,7 @@ export default async function ServicesPage() {
           gap: 0.2rem;
         }
         .service-card-eyebrow {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.65rem;
           color: #FFFFFF;
           letter-spacing: 0.15em;
@@ -153,7 +153,7 @@ export default async function ServicesPage() {
           font-weight: 300;
         }
         .service-card-action {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           color: #FFFFFF;
           text-decoration: none;
@@ -215,7 +215,7 @@ export default async function ServicesPage() {
       `}</style>
       <div style={{ maxWidth: 'var(--max-width, 1200px)', margin: '0 auto' }}>
         <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
-          <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.08 / SERVICES</div>
+          <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.08 / SERVICES</div>
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: 'var(--color-text-primary, #FFFFFF)', textTransform: 'uppercase', margin: '0 0 0.65rem 0' }}>
             AI & SOFTWARE DEVELOPMENT SERVICES.
           </h1>
@@ -262,7 +262,7 @@ export default async function ServicesPage() {
         {/* ─── Frequently Asked Questions Section (Organic SEO & User Clarity) ─── */}
         <div style={{ marginTop: '3.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.5rem' }}>
           <div style={{ marginBottom: '1.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>KNOWLEDGE BASE</div>
+            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>KNOWLEDGE BASE</div>
             <h2 style={{ fontSize: 'clamp(1.2rem, 2.2vw, 1.6rem)', color: '#FFFFFF', fontWeight: 700, textTransform: 'uppercase', margin: 0, letterSpacing: '-0.02em' }}>
               FREQUENTLY ASKED QUESTIONS
             </h2>
@@ -282,7 +282,7 @@ export default async function ServicesPage() {
         <div style={{ marginTop: '3.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.1)', paddingTop: '2.5rem', textAlign: 'center' }}>
           <h2 style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', color: '#FFFFFF', marginBottom: '0.5rem', fontWeight: 700, textTransform: 'uppercase' }}>HAVE A SPECIFIC SYSTEM IN MIND?</h2>
           <p style={{ color: '#FFFFFF', marginBottom: '1.5rem', maxWidth: 500, margin: '0 auto 1.5rem', fontSize: '0.9rem', lineHeight: 1.55 }}>We design and deploy custom intelligent architectures tailored to your operational requirements.</p>
-          <Link href="/contact" style={{ display: 'inline-block', padding: '0.75rem 1.75rem', backgroundColor: '#1677FF', color: '#fff', borderRadius: 6, textDecoration: 'none', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.08em', fontSize: '0.8rem' }}>
+          <Link href="/contact" style={{ display: 'inline-block', padding: '0.75rem 1.75rem', backgroundColor: '#1677FF', color: '#fff', borderRadius: 6, textDecoration: 'none', fontWeight: 600, fontFamily: 'var(--font-d-din)', letterSpacing: '0.08em', fontSize: '0.8rem' }}>
             START A PROJECT →
           </Link>
         </div>

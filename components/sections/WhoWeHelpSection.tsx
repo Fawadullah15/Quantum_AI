@@ -63,7 +63,7 @@ export default function WhoWeHelpSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <p
           style={{
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
@@ -146,7 +146,7 @@ export default function WhoWeHelpSection() {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span
                   style={{
-                    fontFamily: 'var(--font-mono, monospace)',
+                    fontFamily: 'var(--font-d-din)',
                     fontSize: '0.72rem',
                     color: '#FFFFFF',
                     fontWeight: 700,
@@ -157,7 +157,7 @@ export default function WhoWeHelpSection() {
                 </span>
                 <span
                   style={{
-                    fontFamily: 'var(--font-mono, monospace)',
+                    fontFamily: 'var(--font-d-din)',
                     fontSize: '0.68rem',
                     color: '#FFFFFF',
                     textTransform: 'uppercase',
@@ -204,7 +204,7 @@ export default function WhoWeHelpSection() {
                         gap: '0.4rem',
                         fontSize: '0.76rem',
                         color: '#FFFFFF',
-                        fontFamily: 'var(--font-mono, monospace)',
+                        fontFamily: 'var(--font-d-din)',
                       }}
                     >
                       <span style={{ color: '#FFFFFF', fontSize: '0.7rem' }}>▹</span>

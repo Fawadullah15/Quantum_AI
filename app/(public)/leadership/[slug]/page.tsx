@@ -169,7 +169,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
           text-decoration: none;
           font-size: 0.72rem;
           letter-spacing: 0.15em;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-weight: 600;
           text-transform: uppercase;
           margin-bottom: 2rem;
@@ -235,7 +235,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
           color: #FFFFFF;
           text-decoration: none;
           font-size: 0.75rem;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           padding: 0.65rem 0.85rem;
           background: rgba(6, 21, 43, 0.4);
           border: 1px solid rgba(22, 119, 255, 0.15);
@@ -256,7 +256,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
           gap: 1.5rem;
         }
         .prof-tag {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.68rem;
           color: #FFFFFF;
           letter-spacing: 0.2em;
@@ -273,7 +273,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
           margin: 0;
         }
         .prof-position {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.8rem;
           color: #FFFFFF;
           letter-spacing: 0.12em;
@@ -283,7 +283,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
         }
         .prof-dept-pill {
           display: inline-block;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.68rem;
           color: #FFFFFF;
           letter-spacing: 0.08em;
@@ -300,7 +300,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
           gap: 0.5rem;
         }
         .prof-card-label {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.65rem;
           color: #FFFFFF;
           letter-spacing: 0.18em;
@@ -351,7 +351,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
                       className={`prof-photo-img ${isPrincipal ? 'is-principal-profile' : ''}`}
                     />
                   ) : (
-                    <div style={{ color: '#FFFFFF', fontFamily: "var(--font-mono, monospace)", fontSize: "0.85rem" }}>
+                    <div style={{ color: '#FFFFFF', fontFamily: "var(--font-d-din)", fontSize: "0.85rem" }}>
                       QUANTUM AI
                     </div>
                   )}
@@ -360,7 +360,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
             })()}
 
             {m.publicId && (
-              <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: "#FFFFFF", letterSpacing: "0.15em", marginBottom: "0.85rem" }}>
+              <div style={{ fontFamily: "var(--font-d-din)", fontSize: "0.68rem", color: "#FFFFFF", letterSpacing: "0.15em", marginBottom: "0.85rem" }}>
                 ID // {m.publicId}
               </div>
             )}
@@ -452,7 +452,7 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
                   borderRadius: 6,
                   textDecoration: "none",
                   fontWeight: 600,
-                  fontFamily: "var(--font-mono, monospace)",
+                  fontFamily: "var(--font-d-din)",
                   letterSpacing: "0.08em",
                   fontSize: "0.78rem",
                 }}

@@ -188,7 +188,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           justify-content: center;
           gap: 0.2rem;
           color: #FFFFFF;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.65rem;
           font-weight: 700;
           letter-spacing: 0.1em;
@@ -207,7 +207,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           display: flex;
           align-items: center;
           gap: 0.5rem;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.65rem;
           color: #FFFFFF;
           letter-spacing: 0.12em;
@@ -239,7 +239,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           align-items: center;
           gap: 0.35rem;
           color: #FFFFFF;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           font-weight: 600;
@@ -307,7 +307,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           border: 1px solid rgba(20, 184, 166, 0.18);
           padding: 0.12rem 0.45rem;
           border-radius: 4px;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
         }
 
         .cs-card-cta {
@@ -315,7 +315,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           align-items: center;
           gap: 0.35rem;
           color: #FFFFFF;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.75rem;
           letter-spacing: 0.08em;
           font-weight: 700;
@@ -387,7 +387,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
             align-items: center;
             flex-wrap: wrap;
             gap: 0.25rem;
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-d-din);
             font-size: 0.56rem;
             color: #FFFFFF;
             letter-spacing: 0.08em;
@@ -413,7 +413,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           }
 
           .mobile-cs-arrow {
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-d-din);
             font-size: 0.65rem;
             color: #FFFFFF;
             font-weight: 700;
@@ -454,7 +454,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
           <div>
             <p
               style={{
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-d-din)',
                 fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
@@ -492,7 +492,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-d-din)',
               letterSpacing: '0.05em',
             }}
           >

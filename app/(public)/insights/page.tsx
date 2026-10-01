@@ -22,7 +22,7 @@ export default async function InsightsPage() {
       <div style={{ maxWidth: 'var(--max-width, 1000px)', margin: '0 auto' }}>
         {/* MASTHEAD */}
         <section style={{ marginBottom: '2.5rem' }}>
-          <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>SYS.13 / DATABANK</div>
+          <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>SYS.13 / DATABANK</div>
           <h1 style={{
             fontSize: 'clamp(2rem, 5vw, 3.5rem)',
             fontWeight: 700, lineHeight: 1.05, letterSpacing: '-0.035em',
@@ -34,7 +34,7 @@ export default async function InsightsPage() {
 
         {posts.length === 0 ? (
           <section style={{ borderTop: '1px solid var(--color-border, rgba(30,58,138,0.22))', paddingTop: '1.5rem' }}>
-            <p style={{ color: 'var(--color-text-secondary, #FFFFFF)', fontSize: '0.95rem', fontFamily: 'var(--font-mono, monospace)' }}>
+            <p style={{ color: 'var(--color-text-secondary, #FFFFFF)', fontSize: '0.95rem', fontFamily: 'var(--font-d-din)' }}>
               NO PUBLISHED ARTICLES YET. CHECK BACK SOON.
             </p>
           </section>
@@ -44,14 +44,14 @@ export default async function InsightsPage() {
             {posts[0] && (
               <section style={{ borderTop: '1px solid var(--color-border, rgba(30,58,138,0.22))', paddingTop: '1.5rem', marginBottom: '1.5rem' }}>
                 <Link href={`/blog/${posts[0].slug}`} style={{ textDecoration: 'none', display: 'block' }}>
-                  <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>FEATURED ARTICLE</div>
+                  <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>FEATURED ARTICLE</div>
                   <h2 style={{ fontSize: 'clamp(1.35rem, 3vw, 2rem)', fontWeight: 700, lineHeight: 1.15, letterSpacing: '-0.025em', color: 'var(--color-text-primary, #FFFFFF)', textTransform: 'uppercase', marginBottom: '0.75rem' }}>
                     {posts[0].title}
                   </h2>
                   <p style={{ fontSize: '0.95rem', color: 'var(--color-text-secondary, #FFFFFF)', maxWidth: '60ch', lineHeight: 1.6, marginBottom: '0.75rem' }}>
                     {posts[0].excerpt}
                   </p>
-                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: 'var(--color-text-tertiary, #FFFFFF)', letterSpacing: '0.12em' }}>
+                  <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: 'var(--color-text-tertiary, #FFFFFF)', letterSpacing: '0.12em' }}>
                     {posts[0].author} · {posts[0].publishedAt ? new Date(posts[0].publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Unpublished'} · {posts[0].category}
                   </div>
                 </Link>
@@ -65,12 +65,12 @@ export default async function InsightsPage() {
                   <Link key={post.id} href={`/blog/${post.slug}`} style={{ textDecoration: 'none', display: 'block', borderBottom: '1px solid var(--color-border, rgba(30,58,138,0.22))', paddingTop: '1.25rem', paddingBottom: '1.25rem' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem', alignItems: 'start' }}>
                       <div>
-                        <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', marginBottom: '0.35rem' }}>{String(idx + 2).padStart(2, '0')} / {post.category || 'INTELLIGENCE'}</div>
+                        <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', marginBottom: '0.35rem' }}>{String(idx + 2).padStart(2, '0')} / {post.category || 'INTELLIGENCE'}</div>
                         <h3 style={{ fontSize: 'clamp(1.05rem, 2vw, 1.35rem)', fontWeight: 600, color: 'var(--color-text-primary, #FFFFFF)', letterSpacing: '-0.02em', margin: 0 }}>{post.title}</h3>
                       </div>
                       <div>
                         <p style={{ color: 'var(--color-text-secondary, #FFFFFF)', lineHeight: 1.6, fontSize: '0.875rem', marginBottom: '0.5rem', margin: '0 0 0.5rem' }}>{post.excerpt}</p>
-                        <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', color: 'var(--color-text-tertiary, #FFFFFF)', letterSpacing: '0.12em' }}>
+                        <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.7rem', color: 'var(--color-text-tertiary, #FFFFFF)', letterSpacing: '0.12em' }}>
                           {post.author} · {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : ''}
                         </div>
                       </div>

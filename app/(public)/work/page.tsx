@@ -90,7 +90,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           margin-bottom: 2rem;
         }
         .work-filter-btn {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           text-transform: uppercase;
@@ -153,20 +153,20 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           padding-bottom: 0.75rem;
         }
         .work-num {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 1.1rem;
           font-weight: 700;
           color: #FFFFFF;
         }
         .work-client {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           color: #FFFFFF;
           letter-spacing: 0.08em;
           text-transform: uppercase;
         }
         .work-category-badge {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.68rem;
           color: #FFFFFF;
           background-color: rgba(22, 119, 255, 0.12);
@@ -177,7 +177,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           font-weight: 600;
         }
         .work-year {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           color: #FFFFFF;
         }
@@ -213,7 +213,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         }
         .work-tech-tag {
           font-size: 0.72rem;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           padding: 0.2rem 0.55rem;
           background-color: rgba(22, 119, 255, 0.08);
           border: 1px solid rgba(22, 119, 255, 0.16);
@@ -225,7 +225,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           justify-content: space-between;
           align-items: center;
           padding-top: 0.25rem;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
         }
         .work-action-text {
           font-size: 0.75rem;
@@ -267,7 +267,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
       <div className="work-page-container">
         {/* Header */}
         <div style={{ marginBottom: 'clamp(1.75rem, 3.5vw, 2.75rem)' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
             [04 — OUR WORK]
           </div>
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
@@ -304,7 +304,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
             padding: '4rem 2rem',
             textAlign: 'center',
           }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.2em', color: '#FFFFFF', marginBottom: '0.75rem', fontWeight: 600 }}>
+            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.7rem', letterSpacing: '0.2em', color: '#FFFFFF', marginBottom: '0.75rem', fontWeight: 600 }}>
               NO MATCHING DEPLOYMENTS
             </div>
             <h2 style={{ fontSize: '1.35rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.5rem' }}>
@@ -325,7 +325,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
                 fontSize: '0.8125rem',
                 fontWeight: 600,
                 letterSpacing: '0.05em',
-                fontFamily: 'var(--font-mono, monospace)',
+                fontFamily: 'var(--font-d-din)',
               }}
             >
               VIEW ALL WORK →
@@ -358,7 +358,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
                       </span>
                       <span
                         style={{
-                          fontFamily: 'var(--font-mono, monospace)',
+                          fontFamily: 'var(--font-d-din)',
                           fontSize: '0.65rem',
                           color: originBadge.color,
                           backgroundColor: originBadge.bg,

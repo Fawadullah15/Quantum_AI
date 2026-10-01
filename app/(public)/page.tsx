@@ -349,7 +349,7 @@ export default function HomePage() {
             <p
               className="hero-eyebrow"
               style={{
-                fontFamily: 'var(--font-mono, monospace)',
+                fontFamily: 'var(--font-d-din)',
                 fontSize: '0.72rem',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
@@ -450,7 +450,7 @@ export default function HomePage() {
         <section style={{ padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto', backgroundColor: 'rgba(7, 18, 20, 0.4)' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-d-din)',
               fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
@@ -536,10 +536,10 @@ export default function HomePage() {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                   }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', letterSpacing: '0.15em', color: '#FFFFFF', textTransform: 'uppercase' }}>
+                    <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6rem', letterSpacing: '0.15em', color: '#FFFFFF', textTransform: 'uppercase' }}>
                       QUANTUM AI
                     </span>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#FFFFFF' }}>
+                    <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6rem', color: '#FFFFFF' }}>
                       {person.publicId || 'QA-LEAD'}
                     </span>
                   </div>
@@ -578,13 +578,13 @@ export default function HomePage() {
                     }}>
                       {person.name}
                     </h3>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.35rem', display: 'block' }}>
+                    <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600, marginBottom: '0.35rem', display: 'block' }}>
                       {person.position}
                     </span>
                     <p style={{ color: '#FFFFFF', fontSize: '0.825rem', lineHeight: 1.45, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {person.shortBio}
                     </p>
-                    <span style={{ marginTop: 'auto', paddingTop: '0.65rem', color: '#FFFFFF', fontSize: '0.72rem', fontWeight: 600, fontFamily: 'var(--font-mono)', letterSpacing: '0.06em' }}>
+                    <span style={{ marginTop: 'auto', paddingTop: '0.65rem', color: '#FFFFFF', fontSize: '0.72rem', fontWeight: 600, fontFamily: 'var(--font-d-din)', letterSpacing: '0.06em' }}>
                       VIEW PROFILE →
                     </span>
                   </div>
@@ -630,7 +630,7 @@ export default function HomePage() {
             boxShadow: '0 16px 40px -10px rgba(0, 0, 0, 0.7), 0 0 24px -6px rgba(20, 184, 166, 0.18)',
           }}>
             <div style={{ maxWidth: 640 }}>
-              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
+              <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
                 CUSTOM SOFTWARE ARCHITECTURES
               </div>
               <h3 style={{ fontSize: 'clamp(1.3rem, 2.4vw, 1.75rem)', fontWeight: 700, color: '#FFFFFF', textTransform: 'uppercase', margin: '0 0 0.5rem 0', letterSpacing: '-0.02em', lineHeight: 1.15 }}>
@@ -650,7 +650,7 @@ export default function HomePage() {
                 backgroundColor: '#0F766E',
                 borderRadius: 8,
                 color: '#FFFFFF',
-                fontFamily: 'var(--font-mono, monospace)',
+                fontFamily: 'var(--font-d-din)',
                 fontSize: '0.8rem',
                 fontWeight: 600,
                 letterSpacing: '0.08em',
@@ -685,7 +685,7 @@ export default function HomePage() {
         <section id="contact-form" style={{ padding: 'clamp(2.5rem, 5vh, 4rem) clamp(1rem, 5vw, 6rem)', pointerEvents: 'auto' }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <p style={{
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-d-din)',
               fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
               letterSpacing: '0.22em',
               textTransform: 'uppercase',
@@ -723,13 +723,13 @@ export default function HomePage() {
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', borderTop: '1px solid rgba(20, 184, 166, 0.1)', paddingTop: '1.25rem' }}>
                   <div>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>EMAIL INQUIRIES</span>
+                    <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>EMAIL INQUIRIES</span>
                     <a href="mailto:hello@quantumai.dev" style={{ fontSize: '1rem', color: '#FFFFFF', textDecoration: 'none', transition: 'color 0.2s', fontWeight: 500, wordBreak: 'break-word' }} onMouseEnter={(e) => e.currentTarget.style.color = '#14B8A6'} onMouseLeave={(e) => e.currentTarget.style.color = '#FFFFFF'}>
                       hello@quantumai.dev
                     </a>
                   </div>
                   <div>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>RESPONSE MATRIX</span>
+                    <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', display: 'block', marginBottom: '0.2rem', textTransform: 'uppercase' }}>RESPONSE MATRIX</span>
                     <p style={{ color: '#FFFFFF', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>We review all incoming submissions and reply within 24 hours.</p>
                   </div>
                 </div>
@@ -757,7 +757,7 @@ export default function HomePage() {
                   <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>NAME <span style={{ color: '#FFFFFF' }}>*</span></label>
+                      <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>NAME <span style={{ color: '#FFFFFF' }}>*</span></label>
                       <input
                         type="text"
                         name="name"
@@ -782,7 +782,7 @@ export default function HomePage() {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>EMAIL <span style={{ color: '#FFFFFF' }}>*</span></label>
+                      <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>EMAIL <span style={{ color: '#FFFFFF' }}>*</span></label>
                       <input
                         type="email"
                         name="email"
@@ -807,7 +807,7 @@ export default function HomePage() {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>COMPANY</label>
+                      <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>COMPANY</label>
                       <input
                         type="text"
                         name="company"
@@ -832,7 +832,7 @@ export default function HomePage() {
 
                     <div className="form-selects-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>PROJECT TYPE</label>
+                        <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>PROJECT TYPE</label>
                         <select
                           name="projectType"
                           value={formState.projectType}
@@ -861,7 +861,7 @@ export default function HomePage() {
                       </div>
 
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>BUDGET RANGE</label>
+                        <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>BUDGET RANGE</label>
                         <select
                           name="budget"
                           value={formState.budget}
@@ -889,7 +889,7 @@ export default function HomePage() {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>MESSAGE <span style={{ color: '#FFFFFF' }}>*</span></label>
+                      <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>MESSAGE <span style={{ color: '#FFFFFF' }}>*</span></label>
                       <textarea
                         name="message"
                         value={formState.message}
@@ -927,7 +927,7 @@ export default function HomePage() {
                       {isSubmitting ? 'SENDING...' : 'SEND PROJECT INQUIRY'}
                     </NovaButton>
 
-                    <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#FFFFFF', lineHeight: 1.5, margin: '0.5rem 0 0 0', textAlign: 'center' }}>
+                    <p style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.7rem', color: '#FFFFFF', lineHeight: 1.5, margin: '0.5rem 0 0 0', textAlign: 'center' }}>
                       🔒 Your information is confidential and used solely to evaluate your project inquiry.
                     </p>
 

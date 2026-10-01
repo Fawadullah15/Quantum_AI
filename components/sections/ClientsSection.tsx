@@ -200,7 +200,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
           padding: 0 clamp(1.25rem, 4vw, 3rem);
         }
         .clients-marquee-tag {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.25em;
           text-transform: uppercase;
@@ -322,7 +322,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         }
 
         .marquee-placeholder {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.76rem;
           color: #FFFFFF;
           display: flex;
@@ -363,7 +363,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         }
 
         .marquee-tooltip-ind {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.6rem;
           color: #FFFFFF;
           text-transform: uppercase;

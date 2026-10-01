@@ -68,7 +68,7 @@ export default async function ProductsPage() {
           padding-bottom: 0.75rem;
         }
         .product-num {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 1.1rem;
           font-weight: 700;
           color: #FFFFFF;
@@ -79,7 +79,7 @@ export default async function ProductsPage() {
           gap: 0.5rem;
         }
         .product-category-badge {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.68rem;
           color: #FFFFFF;
           background-color: rgba(22, 119, 255, 0.1);
@@ -91,7 +91,7 @@ export default async function ProductsPage() {
           letter-spacing: 0.05em;
         }
         .product-status-badge {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.65rem;
           padding: 0.2rem 0.55rem;
           border-radius: 4px;
@@ -139,7 +139,7 @@ export default async function ProductsPage() {
           justify-content: space-between;
           align-items: center;
           padding-top: 0.35rem;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           flex-wrap: wrap;
           gap: 0.75rem;
         }
@@ -150,7 +150,7 @@ export default async function ProductsPage() {
         }
         .product-tech-tag {
           font-size: 0.72rem;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           padding: 0.2rem 0.55rem;
           background-color: rgba(22, 119, 255, 0.08);
           border: 1px solid rgba(22, 119, 255, 0.16);
@@ -197,7 +197,7 @@ export default async function ProductsPage() {
       <div className="products-page-container">
         {/* Header */}
         <div style={{ marginBottom: 'clamp(1.75rem, 3.5vw, 2.75rem)' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
             [04 — PRODUCTS]
           </div>
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
@@ -216,7 +216,7 @@ export default async function ProductsPage() {
             padding: '4rem 2rem',
             textAlign: 'center',
           }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', letterSpacing: '0.2em', color: '#FFFFFF', marginBottom: '0.75rem', fontWeight: 600 }}>
+            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.7rem', letterSpacing: '0.2em', color: '#FFFFFF', marginBottom: '0.75rem', fontWeight: 600 }}>
               PRODUCTS IN PRODUCTION
             </div>
             <h2 style={{ fontSize: '1.35rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.5rem' }}>
@@ -237,7 +237,7 @@ export default async function ProductsPage() {
                 fontSize: '0.8125rem',
                 fontWeight: 600,
                 letterSpacing: '0.05em',
-                fontFamily: 'var(--font-mono, monospace)',
+                fontFamily: 'var(--font-d-din)',
               }}
             >
               DISCUSS CUSTOM SOFTWARE →

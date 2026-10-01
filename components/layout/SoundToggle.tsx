@@ -150,7 +150,7 @@ export function SoundToggle() {
           border: 1px solid rgba(20, 184, 166, 0.4);
           border-radius: 5px;
           padding: 6px 14px;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           font-weight: 600;
           letter-spacing: 0.06em;

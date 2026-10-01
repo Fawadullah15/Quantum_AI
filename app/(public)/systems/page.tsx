@@ -19,7 +19,7 @@ export default async function SystemsPage() {
     <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container">
       <div style={{ maxWidth: 'var(--max-width, 1000px)', margin: '0 auto' }}>
         <div style={{ marginBottom: '2rem' }}>
-          <div className="tech-label" style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.03 / NEURAL NETWORK</div>
+          <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.03 / NEURAL NETWORK</div>
           <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: 'var(--color-text-primary, #FFFFFF)', textTransform: 'uppercase', margin: 0 }}>
             INTELLIGENT SYSTEMS.
           </h1>
@@ -29,7 +29,7 @@ export default async function SystemsPage() {
           {services.map((service: any, index: number) => (
             <div key={service.id} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem', borderTop: '1px solid var(--color-border, rgba(30,58,138,0.22))', paddingTop: '1.25rem' }}>
               <div>
-                <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'rgba(56, 189, 248, 0.4)', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.35rem' }}>
+                <div style={{ fontSize: '1.15rem', fontWeight: 700, color: 'rgba(56, 189, 248, 0.4)', fontFamily: 'var(--font-d-din)', marginBottom: '0.35rem' }}>
                   {String(index + 1).padStart(2, '0')}
                 </div>
                 <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--color-text-primary, #FFFFFF)', textTransform: 'uppercase', margin: 0 }}>

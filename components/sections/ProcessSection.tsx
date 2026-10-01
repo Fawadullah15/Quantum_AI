@@ -113,7 +113,7 @@ export default function ProcessSection() {
         }
 
         .process-step-label {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           color: #FFFFFF;
           font-weight: 600;
@@ -140,7 +140,7 @@ export default function ProcessSection() {
           align-items: center;
           gap: 0.35rem;
           color: #FFFFFF;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           font-weight: 600;
@@ -225,7 +225,7 @@ export default function ProcessSection() {
           }
 
           .mobile-step-num {
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-d-din);
             font-size: 0.62rem;
             color: #FFFFFF;
             font-weight: 600;
@@ -273,7 +273,7 @@ export default function ProcessSection() {
         {/* Eyebrow & Title */}
         <p
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
@@ -373,7 +373,7 @@ export default function ProcessSection() {
           <Link
             href="/contact"
             style={{
-              fontFamily: 'var(--font-mono, monospace)',
+              fontFamily: 'var(--font-d-din)',
               fontSize: '0.75rem',
               color: '#FFFFFF',
               textDecoration: 'none',

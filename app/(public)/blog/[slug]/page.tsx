@@ -276,7 +276,7 @@ export default async function BlogPostPage({ params }: Props) {
         <Link
           href="/blog"
           style={{
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: '0.72rem',
             color: '#FFFFFF',
             textDecoration: 'none',
@@ -294,7 +294,7 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* Header */}
         <header style={{ marginBottom: '2.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', textTransform: 'uppercase', color: '#FFFFFF', marginBottom: '0.65rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', fontFamily: 'var(--font-d-din)', fontSize: '0.7rem', textTransform: 'uppercase', color: '#FFFFFF', marginBottom: '0.65rem' }}>
             {post.category && <span>{post.category}</span>}
             {post.category && <span>·</span>}
             <span style={{ color: '#FFFFFF' }}>{new Date(post.publishedAt ?? post.createdAt).toLocaleDateString()}</span>
@@ -303,7 +303,7 @@ export default async function BlogPostPage({ params }: Props) {
             {post.title}
           </h1>
           {post.author && (
-            <div style={{ color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem' }}>
+            <div style={{ color: '#FFFFFF', fontFamily: 'var(--font-d-din)', fontSize: '0.75rem' }}>
               Written by <span style={{ color: '#FFFFFF' }}>{post.author}</span>
             </div>
           )}
@@ -314,7 +314,7 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* ─── Relevant Service CTA Banner ─── */}
         <div style={{ marginTop: '3rem', background: 'rgba(6, 21, 43, 0.8)', border: '1px solid rgba(56, 189, 248, 0.3)', borderRadius: 10, padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 600 }}>
+          <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: 600 }}>
             EXPLORE RELATED ARCHITECTURE
           </div>
           <h3 style={{ fontSize: '1.2rem', color: '#FFFFFF', margin: 0, fontWeight: 600 }}>
@@ -334,7 +334,7 @@ export default async function BlogPostPage({ params }: Props) {
                 borderRadius: 6,
                 textDecoration: 'none',
                 fontWeight: 600,
-                fontFamily: 'var(--font-mono, monospace)',
+                fontFamily: 'var(--font-d-din)',
                 letterSpacing: '0.08em',
                 fontSize: '0.75rem',
               }}
@@ -352,7 +352,7 @@ export default async function BlogPostPage({ params }: Props) {
                 borderRadius: 6,
                 textDecoration: 'none',
                 fontWeight: 600,
-                fontFamily: 'var(--font-mono, monospace)',
+                fontFamily: 'var(--font-d-din)',
                 letterSpacing: '0.08em',
                 fontSize: '0.75rem',
               }}
@@ -365,7 +365,7 @@ export default async function BlogPostPage({ params }: Props) {
         {/* ─── Related Articles ─── */}
         {relatedPosts.length > 0 && (
           <div style={{ marginTop: '3.5rem', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.25rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>READ NEXT</div>
+            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>READ NEXT</div>
             <h2 style={{ fontSize: '1.25rem', color: '#FFFFFF', fontWeight: 700, margin: 0, textTransform: 'uppercase' }}>
               RELATED ARTICLES
             </h2>
@@ -374,14 +374,14 @@ export default async function BlogPostPage({ params }: Props) {
               {relatedPosts.map((r: any) => (
                 <Link key={r.slug} href={`/blog/${r.slug}`} className="related-card">
                   <div>
-                    <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#FFFFFF', textTransform: 'uppercase', fontWeight: 600 }}>
+                    <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', textTransform: 'uppercase', fontWeight: 600 }}>
                       {r.category}
                     </span>
                     <h4 style={{ fontSize: '0.95rem', color: '#FFFFFF', margin: '0.35rem 0 0.45rem 0', lineHeight: 1.35, fontWeight: 600 }}>
                       {r.title}
                     </h4>
                   </div>
-                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.7rem', color: '#FFFFFF', fontWeight: 600 }}>
+                  <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.7rem', color: '#FFFFFF', fontWeight: 600 }}>
                     READ &rarr;
                   </span>
                 </Link>

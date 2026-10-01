@@ -331,7 +331,7 @@ export default function TestimonialsSection({
           z-index: 10;
         }
         .test-tag {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.25em;
           text-transform: uppercase;
@@ -374,7 +374,7 @@ export default function TestimonialsSection({
           border-radius: 8px !important;
           font-size: 0.85rem !important;
           font-weight: 700 !important;
-          font-family: var(--font-mono, monospace) !important;
+          font-family: var(--font-d-din) !important;
           letter-spacing: 0.08em !important;
           cursor: pointer !important;
           transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease !important;
@@ -480,7 +480,7 @@ export default function TestimonialsSection({
           position: absolute;
           top: 12px;
           right: 12px;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.58rem;
           color: rgba(20, 184, 166, 0.6);
           background: rgba(20, 184, 166, 0.12);
@@ -561,7 +561,7 @@ export default function TestimonialsSection({
           object-fit: cover;
         }
         .test-avatar-initials {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.75rem;
           font-weight: 700;
           color: #FFFFFF;
@@ -582,7 +582,7 @@ export default function TestimonialsSection({
           white-space: normal;
         }
         .test-author-role {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.62rem;
           color: #FFFFFF;
           letter-spacing: 0.03em;
@@ -752,7 +752,7 @@ export default function TestimonialsSection({
                 {activeReadingItem.photo ? (
                   <img src={activeReadingItem.photo} alt={activeReadingItem.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 ) : (
-                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontWeight: 700, color: '#FFFFFF', fontSize: '0.85rem' }}>
+                  <span style={{ fontFamily: 'var(--font-d-din)', fontWeight: 700, color: '#FFFFFF', fontSize: '0.85rem' }}>
                     {activeReadingItem.name.slice(0, 2).toUpperCase()}
                   </span>
                 )}
@@ -763,7 +763,7 @@ export default function TestimonialsSection({
                   {activeReadingItem.name}
                 </h3>
                 {(activeReadingItem.role || activeReadingItem.company) && (
-                  <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', textTransform: 'uppercase' }}>
+                  <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', textTransform: 'uppercase' }}>
                     {[activeReadingItem.role, activeReadingItem.company].filter(Boolean).join(' · ')}
                   </span>
                 )}
@@ -819,7 +819,7 @@ export default function TestimonialsSection({
               </div>
             ) : (
               <div>
-                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
+                <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.25rem' }}>
                   CLIENT REVIEW
                 </div>
                 <h3 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.5rem 0' }}>
@@ -837,7 +837,7 @@ export default function TestimonialsSection({
 
                 <form onSubmit={handleSubmitTestimonial} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-d-din)' }}>
                       Your Full Name *
                     </label>
                     <input
@@ -852,7 +852,7 @@ export default function TestimonialsSection({
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.85rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                      <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-d-din)' }}>
                         Position / Role
                       </label>
                       <input
@@ -865,7 +865,7 @@ export default function TestimonialsSection({
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                      <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-d-din)' }}>
                         Company / Organization
                       </label>
                       <input
@@ -879,7 +879,7 @@ export default function TestimonialsSection({
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-d-din)' }}>
                       Rating
                     </label>
                     <select
@@ -896,7 +896,7 @@ export default function TestimonialsSection({
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-d-din)' }}>
                       Your Review / Testimonial *
                     </label>
                     <textarea
@@ -911,7 +911,7 @@ export default function TestimonialsSection({
 
                   {/* Photo Upload */}
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                    <label style={{ display: 'block', fontSize: '0.72rem', color: '#FFFFFF', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.3rem', fontFamily: 'var(--font-d-din)' }}>
                       Your Photo / Avatar (Optional)
                     </label>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -946,7 +946,7 @@ export default function TestimonialsSection({
                           padding: '0.45rem 0.85rem',
                           borderRadius: '6px',
                           fontSize: '0.78rem',
-                          fontFamily: 'var(--font-mono, monospace)',
+                          fontFamily: 'var(--font-d-din)',
                           cursor: 'pointer',
                         }}
                       >
@@ -994,7 +994,7 @@ export default function TestimonialsSection({
                         fontWeight: 600,
                         fontSize: '0.82rem',
                         opacity: isSubmitting ? 0.7 : 1,
-                        fontFamily: 'var(--font-mono, monospace)',
+                        fontFamily: 'var(--font-d-din)',
                       }}
                     >
                       {isSubmitting ? 'Submitting...' : 'Submit Testimonial'}

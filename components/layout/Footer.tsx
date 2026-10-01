@@ -169,7 +169,7 @@ export default function Footer({
           {Object.entries(footerLinks).map(([section, links]) => (
             <div key={section} className="footer-col">
               <div style={{
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-d-din)',
                 fontSize: '0.65rem',
                 letterSpacing: '0.2em',
                 color: '#FFFFFF',
@@ -206,12 +206,12 @@ export default function Footer({
           flexWrap: 'wrap',
           gap: '1rem',
         }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#FFFFFF', letterSpacing: '0.08em' }}>
+          <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.7rem', color: '#FFFFFF', letterSpacing: '0.08em' }}>
             {displayCopyright}
           </span>
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
             <a href={`mailto:${email || 'hello@quantumai.dev'}`} style={{ 
-              fontFamily: 'var(--font-mono)', 
+              fontFamily: 'var(--font-d-din)', 
               fontSize: '0.75rem', 
               color: '#FFFFFF', 
               textDecoration: 'none', 

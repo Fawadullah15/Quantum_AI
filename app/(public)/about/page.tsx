@@ -73,7 +73,7 @@ export default function AboutPage() {
           z-index: 0;
         }
         .abt-inner { max-width: 1000px; margin: 0 auto; position: relative; z-index: 1; }
-        .abt-eyebrow { font-family: var(--font-mono, monospace); font-size: 0.72rem; letter-spacing: 0.25em; color: #FFFFFF; text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 600; }
+        .abt-eyebrow { font-family: var(--font-d-din); font-size: 0.72rem; letter-spacing: 0.25em; color: #FFFFFF; text-transform: uppercase; margin-bottom: 0.5rem; font-weight: 600; }
         .abt-h1 { font-size: clamp(2.5rem, 5vw, 4.25rem); font-weight: 700; line-height: 1.02; letter-spacing: -0.035em; color: #FFFFFF; text-transform: uppercase; margin-bottom: 0.75rem; }
         .abt-lead { font-size: clamp(0.95rem, 1.2vw, 1.125rem); color: #FFFFFF; max-width: 680px; line-height: 1.65; margin-bottom: 2.5rem; font-weight: 300; }
         
@@ -103,11 +103,11 @@ export default function AboutPage() {
           font-weight: 300;
         }
 
-        .abt-principles-header { font-family: var(--font-mono, monospace); font-size: 0.68rem; letter-spacing: 0.2em; color: #FFFFFF; text-transform: uppercase; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(30,58,138,0.22); margin-bottom: 0; }
+        .abt-principles-header { font-family: var(--font-d-din); font-size: 0.68rem; letter-spacing: 0.2em; color: #FFFFFF; text-transform: uppercase; padding-bottom: 1.25rem; border-bottom: 1px solid rgba(30,58,138,0.22); margin-bottom: 0; }
         .principle { padding: 1.75rem 0; border-bottom: 1px solid rgba(30,58,138,0.22); display: grid; grid-template-columns: 60px 1fr 1.2fr; gap: 1.5rem; align-items: start; transition: border-bottom-color 0.3s; cursor: default; }
         .principle:hover { border-bottom-color: rgba(37,99,235,0.38); }
         @media (max-width: 640px) { .principle { grid-template-columns: 44px 1fr; } .principle-body { grid-column: 1 / -1; } }
-        .principle-num { font-family: var(--font-mono, monospace); font-size: 0.75rem; color: #334155; letter-spacing: 0.08em; padding-top: 0.25rem; transition: color 0.3s; }
+        .principle-num { font-family: var(--font-d-din); font-size: 0.75rem; color: #334155; letter-spacing: 0.08em; padding-top: 0.25rem; transition: color 0.3s; }
         .principle:hover .principle-num { color: #FFFFFF; }
         .principle-title { font-size: clamp(1.2rem, 2vw, 1.55rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.025em; color: #FFFFFF; }
         .principle-title span { display: block; }
@@ -126,7 +126,7 @@ export default function AboutPage() {
 
           {/* What We Build Section */}
           <section style={{ marginBottom: '3.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.85rem', fontWeight: 600 }}>
+            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.85rem', fontWeight: 600 }}>
               [01 — WHAT WE BUILD]
             </div>
             <div className="abt-grid-2">
@@ -141,7 +141,7 @@ export default function AboutPage() {
 
           {/* Who We Help Section */}
           <section style={{ marginBottom: '3.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.85rem', fontWeight: 600 }}>
+            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.85rem', fontWeight: 600 }}>
               [02 — WHO WE SERVE]
             </div>
             <div className="abt-grid-2">
@@ -182,7 +182,7 @@ export default function AboutPage() {
           <section style={{ marginBottom: '3.5rem', backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.16)', borderRadius: '12px', padding: 'clamp(1.5rem, 3vw, 2rem)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1.25rem' }}>
               <div>
-                <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
+                <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
                   [04 — THE TEAM]
                 </div>
                 <h2 style={{ fontSize: '1.35rem', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.35rem 0', textTransform: 'uppercase' }}>
@@ -202,7 +202,7 @@ export default function AboutPage() {
                   background: 'rgba(56, 189, 248, 0.08)',
                   color: '#FFFFFF',
                   borderRadius: '6px',
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.75rem',
                   fontWeight: 600,
                   letterSpacing: '0.08em',
@@ -234,7 +234,7 @@ export default function AboutPage() {
                   background: 'linear-gradient(135deg, #1677FF, #0050B3)',
                   color: '#FFFFFF',
                   fontWeight: 600,
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.8125rem',
                   letterSpacing: '0.08em',
                   borderRadius: '6px',
@@ -254,7 +254,7 @@ export default function AboutPage() {
                   border: '1px solid rgba(56, 189, 248, 0.35)',
                   background: 'rgba(56, 189, 248, 0.08)',
                   fontWeight: 600,
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.8125rem',
                   letterSpacing: '0.08em',
                   borderRadius: '6px',

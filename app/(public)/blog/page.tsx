@@ -92,7 +92,7 @@ export default async function BlogPage() {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.68rem;
           margin-bottom: 0.65rem;
         }
@@ -121,7 +121,7 @@ export default async function BlogPage() {
           font-weight: 300;
         }
         .blog-card-action {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           color: #FFFFFF;
           font-weight: 600;
@@ -133,7 +133,7 @@ export default async function BlogPage() {
       `}</style>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
-          <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.09 / ARTICLES & RESEARCH</div>
+          <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.09 / ARTICLES & RESEARCH</div>
           <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', color: '#FFFFFF', margin: '0 0 0.5rem 0' }}>
             ENGINEERING INSIGHTS & STRATEGY.
           </h1>

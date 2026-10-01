@@ -63,7 +63,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       <div style={{ width: '300px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <div
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: 'var(--text-xs)',
             letterSpacing: 'var(--tracking-widest)',
             color: 'var(--color-text-tertiary)',
@@ -75,7 +75,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           SYSTEM INITIALIZATION
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-sans)', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-medium)', color: 'var(--color-text-secondary)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-d-din)', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-medium)', color: 'var(--color-text-secondary)' }}>
           {steps.map((step, index) => (
             <div
               key={step}

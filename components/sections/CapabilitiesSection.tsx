@@ -113,7 +113,7 @@ export default function CapabilitiesSection() {
         }
 
         .tech-card-num {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           color: #FFFFFF;
           font-weight: 600;
@@ -140,7 +140,7 @@ export default function CapabilitiesSection() {
           align-items: center;
           gap: 0.35rem;
           color: #FFFFFF;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           font-weight: 600;
@@ -195,7 +195,7 @@ export default function CapabilitiesSection() {
 
         .tech-tag-badge {
           font-size: 0.7rem;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           padding: 0.15rem 0.5rem;
           background-color: rgba(20, 184, 166, 0.08);
           border: 1px solid rgba(20, 184, 166, 0.18);
@@ -237,7 +237,7 @@ export default function CapabilitiesSection() {
           }
 
           .mobile-tech-num {
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-d-din);
             font-size: 0.62rem;
             color: #FFFFFF;
             font-weight: 600;
@@ -289,7 +289,7 @@ export default function CapabilitiesSection() {
           <div>
             <p
               style={{
-                fontFamily: 'var(--font-mono)',
+                fontFamily: 'var(--font-d-din)',
                 fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
@@ -340,7 +340,7 @@ export default function CapabilitiesSection() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.35rem',
-              fontFamily: 'var(--font-mono)',
+              fontFamily: 'var(--font-d-din)',
               letterSpacing: '0.05em',
             }}
           >

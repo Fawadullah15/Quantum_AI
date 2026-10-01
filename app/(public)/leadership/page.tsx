@@ -158,7 +158,7 @@ export default async function LeadershipPage() {
           padding-bottom: clamp(2rem, 4vw, 3rem);
         }
         .ldr-eyebrow {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.25em;
           color: #FFFFFF;
@@ -190,7 +190,7 @@ export default async function LeadershipPage() {
           margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
         }
         .ldr-section-tag {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.68rem;
           color: #FFFFFF;
           letter-spacing: 0.2em;
@@ -307,7 +307,7 @@ export default async function LeadershipPage() {
           justify-content: center;
           gap: 0.65rem;
           color: rgba(56, 189, 248, 0.25);
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.75rem;
           letter-spacing: 0.1em;
           background: repeating-linear-gradient(45deg, rgba(22, 119, 255, 0.02) 0px, rgba(22, 119, 255, 0.02) 2px, transparent 2px, transparent 8px);
@@ -328,7 +328,7 @@ export default async function LeadershipPage() {
           position: absolute;
           top: 0.85rem;
           left: 0.85rem;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.62rem;
           letter-spacing: 0.15em;
           color: #FFFFFF;
@@ -359,7 +359,7 @@ export default async function LeadershipPage() {
           line-height: 1.25;
         }
         .exec-position {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.68rem;
           color: #FFFFFF;
           letter-spacing: 0.12em;
@@ -386,7 +386,7 @@ export default async function LeadershipPage() {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
         }
         .exec-social-link {
           display: inline-flex;
@@ -467,7 +467,7 @@ export default async function LeadershipPage() {
           border-radius: 6px;
           text-decoration: none;
           font-weight: 600;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           letter-spacing: 0.08em;
           font-size: 0.82rem;
           transition: background-color 0.2s, transform 0.2s;
@@ -809,7 +809,7 @@ export default async function LeadershipPage() {
 
         {/* ─── 4. LEADERSHIP PHILOSOPHY ─── */}
         <section className="ldr-philosophy-box">
-          <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: '#FFFFFF', letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem", fontWeight: 600 }}>
+          <div style={{ fontFamily: "var(--font-d-din)", fontSize: "0.68rem", color: '#FFFFFF', letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem", fontWeight: 600 }}>
             CORE PRINCIPLE
           </div>
           <h2 className="ldr-philosophy-quote">
@@ -822,7 +822,7 @@ export default async function LeadershipPage() {
 
         {/* ─── 5. FINAL CALL TO ACTION ─── */}
         <section className="ldr-bottom-cta">
-          <div style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.68rem", color: '#FFFFFF', letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem", fontWeight: 600 }}>
+          <div style={{ fontFamily: "var(--font-d-din)", fontSize: "0.68rem", color: '#FFFFFF', letterSpacing: "0.2em", textTransform: "uppercase", marginBottom: "0.5rem", fontWeight: 600 }}>
             COLLABORATION & INQUIRIES
           </div>
           <h2 style={{ fontSize: "clamp(1.5rem, 3vw, 2rem)", color: "#FFFFFF", fontWeight: 700, textTransform: "uppercase", margin: "0 0 0.5rem 0", letterSpacing: "-0.02em" }}>

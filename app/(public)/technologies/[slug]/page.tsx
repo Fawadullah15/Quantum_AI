@@ -185,7 +185,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
           gap: '0.4rem',
           color: '#FFFFFF',
           textDecoration: 'none',
-          fontFamily: 'var(--font-mono, monospace)',
+          fontFamily: 'var(--font-d-din)',
           fontSize: '0.75rem',
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
@@ -201,7 +201,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '0.5rem',
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: '0.72rem',
             letterSpacing: '0.2em',
             color: '#FFFFFF',
@@ -257,7 +257,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
         {/* Key Capabilities / Features */}
         {features.length > 0 && (
           <section style={{ marginBottom: '3.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
               SYS.CAPABILITIES
             </div>
             <h2 style={{
@@ -283,7 +283,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
                   borderRadius: '10px',
                   boxShadow: '0 4px 20px -4px rgba(0,0,0,0.5)',
                 }}>
-                  <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#FFFFFF', marginBottom: '0.5rem', fontWeight: 600 }}>
+                  <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', marginBottom: '0.5rem', fontWeight: 600 }}>
                     {String(index + 1).padStart(2, '0')} // FEATURE
                   </div>
                   <h3 style={{
@@ -306,7 +306,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
         {/* Use Cases */}
         {useCases.length > 0 && (
           <section style={{ marginBottom: '3.5rem' }}>
-            <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
               SYS.DEPLOYMENTS
             </div>
             <h2 style={{
@@ -378,7 +378,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
 
           <div style={{ position: 'relative', zIndex: 2 }}>
             <div style={{
-              fontFamily: 'var(--font-mono, monospace)',
+              fontFamily: 'var(--font-d-din)',
               fontSize: '0.75rem',
               letterSpacing: '0.3em',
               color: '#FFFFFF',
@@ -470,7 +470,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
           <Link href="/technology" style={{
             color: '#FFFFFF',
             textDecoration: 'none',
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: '0.8125rem',
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
@@ -480,7 +480,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
           <Link href="/contact" style={{
             color: '#FFFFFF',
             textDecoration: 'none',
-            fontFamily: 'var(--font-mono, monospace)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: '0.8125rem',
             letterSpacing: '0.1em',
             textTransform: 'uppercase',

@@ -23,7 +23,7 @@ function Field({
       <label
         htmlFor={fieldId}
         style={{
-          fontFamily: 'var(--font-mono, monospace)',
+          fontFamily: 'var(--font-d-din)',
           fontSize: '0.6875rem',
           letterSpacing: '0.2em',
           color: focused ? '#38BDF8' : '#FFFFFF',
@@ -154,7 +154,7 @@ export default function ContactPage() {
           color: #FFFFFF;
           border: none;
           border-radius: 8px;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.8125rem;
           font-weight: 700;
           letter-spacing: 0.1em;
@@ -198,7 +198,7 @@ export default function ContactPage() {
           <div>
             <div
               style={{
-                fontFamily: 'var(--font-mono, monospace)',
+                fontFamily: 'var(--font-d-din)',
                 fontSize: '0.72rem',
                 letterSpacing: '0.2em',
                 color: '#FFFFFF',
@@ -254,7 +254,7 @@ export default function ContactPage() {
             <div>
               <div
                 style={{
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.6875rem',
                   color: '#FFFFFF',
                   letterSpacing: '0.18em',
@@ -294,7 +294,7 @@ export default function ContactPage() {
             <div>
               <div
                 style={{
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.6875rem',
                   color: '#FFFFFF',
                   letterSpacing: '0.18em',
@@ -313,7 +313,7 @@ export default function ContactPage() {
             <div style={{ paddingTop: '1.25rem', borderTop: '1px solid rgba(56, 189, 248, 0.15)' }}>
               <div
                 style={{
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.6875rem',
                   color: '#FFFFFF',
                   letterSpacing: '0.18em',
@@ -335,7 +335,7 @@ export default function ContactPage() {
                       borderRadius: '999px',
                       color: '#FFFFFF',
                       fontSize: '0.72rem',
-                      fontFamily: 'var(--font-mono, monospace)',
+                      fontFamily: 'var(--font-d-din)',
                       whiteSpace: 'nowrap',
                     }}
                   >
@@ -380,7 +380,7 @@ export default function ContactPage() {
               </div>
               <div
                 style={{
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.75rem',
                   letterSpacing: '0.2em',
                   color: '#FFFFFF',
@@ -422,7 +422,7 @@ export default function ContactPage() {
                   border: '1px solid rgba(56, 189, 248, 0.4)',
                   color: '#FFFFFF',
                   borderRadius: '6px',
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.8125rem',
                   letterSpacing: '0.1em',
                   cursor: 'pointer',
@@ -436,7 +436,7 @@ export default function ContactPage() {
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               <div
                 style={{
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.8125rem',
                   letterSpacing: '0.15em',
                   color: '#FFFFFF',
@@ -478,7 +478,7 @@ export default function ContactPage() {
                   <label
                     htmlFor="contact-project-type"
                     style={{
-                      fontFamily: 'var(--font-mono, monospace)',
+                      fontFamily: 'var(--font-d-din)',
                       fontSize: '0.6875rem',
                       letterSpacing: '0.2em',
                       color: '#FFFFFF',
@@ -520,7 +520,7 @@ export default function ContactPage() {
                 <label
                   htmlFor="contact-message"
                   style={{
-                    fontFamily: 'var(--font-mono, monospace)',
+                    fontFamily: 'var(--font-d-din)',
                     fontSize: '0.6875rem',
                     letterSpacing: '0.2em',
                     color: textFocused ? '#38BDF8' : '#FFFFFF',

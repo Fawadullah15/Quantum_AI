@@ -24,7 +24,7 @@ const CustomFileInput = ({ name, accept, required, onChange, label, hint }: any)
 
   return (
     <div>
-      <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+      <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
         {label} {required && <span style={{ color: '#FFFFFF' }}>*</span>}
       </label>
       <label 
@@ -51,7 +51,7 @@ const CustomFileInput = ({ name, accept, required, onChange, label, hint }: any)
           marginRight: '1rem',
           fontWeight: 600,
           fontSize: '0.75rem',
-          fontFamily: 'var(--font-mono, monospace)'
+          fontFamily: 'var(--font-d-din)'
         }}>
           {fileName ? 'CHANGE' : 'BROWSE'}
         </div>
@@ -162,7 +162,7 @@ export default function CareersPartnershipsPage() {
               display: 'inline-flex',
               alignItems: 'center',
               gap: '0.5rem',
-              fontFamily: 'var(--font-mono, monospace)',
+              fontFamily: 'var(--font-d-din)',
               fontSize: '0.72rem',
               letterSpacing: '0.2em',
               color: '#FFFFFF',
@@ -237,7 +237,7 @@ export default function CareersPartnershipsPage() {
 
             <div
               style={{
-                fontFamily: 'var(--font-mono, monospace)',
+                fontFamily: 'var(--font-d-din)',
                 fontSize: '0.8125rem',
                 letterSpacing: '0.2em',
                 color: '#FFFFFF',
@@ -283,10 +283,10 @@ export default function CareersPartnershipsPage() {
                 marginBottom: '2.5rem',
               }}
             >
-              <span style={{ color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              <span style={{ color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
                 REFERENCE ID
               </span>
-              <span style={{ color: '#FFFFFF', fontSize: '1.35rem', fontWeight: 700, fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.08em' }}>
+              <span style={{ color: '#FFFFFF', fontSize: '1.35rem', fontWeight: 700, fontFamily: 'var(--font-d-din)', letterSpacing: '0.08em' }}>
                 {referenceId}
               </span>
             </div>
@@ -303,7 +303,7 @@ export default function CareersPartnershipsPage() {
                   borderRadius: '8px',
                   textDecoration: 'none',
                   fontWeight: 700,
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.8125rem',
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
@@ -320,7 +320,7 @@ export default function CareersPartnershipsPage() {
                   border: '1px solid rgba(56, 189, 248, 0.4)',
                   color: '#FFFFFF',
                   borderRadius: '8px',
-                  fontFamily: 'var(--font-mono, monospace)',
+                  fontFamily: 'var(--font-d-din)',
                   fontSize: '0.8125rem',
                   letterSpacing: '0.12em',
                   cursor: 'pointer',
@@ -360,7 +360,7 @@ export default function CareersPartnershipsPage() {
               >
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 'clamp(0.6rem, 1.2vw, 0.72rem)', color: activeTab === 'PARTNERSHIP' ? '#38BDF8' : '#FFFFFF', letterSpacing: '0.12em', fontWeight: 600, textTransform: 'uppercase' }}>
+                    <span style={{ fontFamily: 'var(--font-d-din)', fontSize: 'clamp(0.6rem, 1.2vw, 0.72rem)', color: activeTab === 'PARTNERSHIP' ? '#38BDF8' : '#FFFFFF', letterSpacing: '0.12em', fontWeight: 600, textTransform: 'uppercase' }}>
                       01 // ENTERPRISE
                     </span>
                     <span
@@ -381,7 +381,7 @@ export default function CareersPartnershipsPage() {
                     For companies, organizations, and investors seeking technical collaboration.
                   </p>
                 </div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: activeTab === 'PARTNERSHIP' ? '#38BDF8' : '#FFFFFF', fontWeight: 600, fontSize: 'clamp(0.68rem, 1.2vw, 0.8rem)', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: activeTab === 'PARTNERSHIP' ? '#38BDF8' : '#FFFFFF', fontWeight: 600, fontSize: 'clamp(0.68rem, 1.2vw, 0.8rem)', fontFamily: 'var(--font-d-din)', textTransform: 'uppercase' }}>
                   {activeTab === 'PARTNERSHIP' ? '● SELECTED' : 'SELECT THIS →'}
                 </div>
               </div>
@@ -404,7 +404,7 @@ export default function CareersPartnershipsPage() {
               >
                 <div>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                    <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: 'clamp(0.6rem, 1.2vw, 0.72rem)', color: activeTab === 'CAREER' ? '#38BDF8' : '#FFFFFF', letterSpacing: '0.12em', fontWeight: 600, textTransform: 'uppercase' }}>
+                    <span style={{ fontFamily: 'var(--font-d-din)', fontSize: 'clamp(0.6rem, 1.2vw, 0.72rem)', color: activeTab === 'CAREER' ? '#38BDF8' : '#FFFFFF', letterSpacing: '0.12em', fontWeight: 600, textTransform: 'uppercase' }}>
                       02 // CAREERS
                     </span>
                     <span
@@ -425,7 +425,7 @@ export default function CareersPartnershipsPage() {
                     For engineers, researchers, and interns seeking full-time or freelance roles.
                   </p>
                 </div>
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: activeTab === 'CAREER' ? '#38BDF8' : '#FFFFFF', fontWeight: 600, fontSize: 'clamp(0.68rem, 1.2vw, 0.8rem)', fontFamily: 'var(--font-mono, monospace)', textTransform: 'uppercase' }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', color: activeTab === 'CAREER' ? '#38BDF8' : '#FFFFFF', fontWeight: 600, fontSize: 'clamp(0.68rem, 1.2vw, 0.8rem)', fontFamily: 'var(--font-d-din)', textTransform: 'uppercase' }}>
                   {activeTab === 'CAREER' ? '● SELECTED' : 'SELECT THIS →'}
                 </div>
               </div>
@@ -460,19 +460,19 @@ export default function CareersPartnershipsPage() {
               <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                 {activeTab === 'PARTNERSHIP' ? (
                   <>
-                    <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>
+                    <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.75rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>
                       BUSINESS PARTNERSHIP APPLICATION
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Full Name <span style={{ color: '#FFFFFF' }}>*</span>
                         </label>
                         <input required name="fullName" placeholder="Jane Doe" style={inputBoxStyle} />
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Company / Organization
                         </label>
                         <input name="company" placeholder="Acme Corp" style={inputBoxStyle} />
@@ -481,13 +481,13 @@ export default function CareersPartnershipsPage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Work Email <span style={{ color: '#FFFFFF' }}>*</span>
                         </label>
                         <input required type="email" name="email" placeholder="jane@acme.com" style={inputBoxStyle} />
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Phone / WhatsApp
                         </label>
                         <input name="phone" placeholder="+1 (555) 000-0000" style={inputBoxStyle} />
@@ -496,13 +496,13 @@ export default function CareersPartnershipsPage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Website
                         </label>
                         <input name="website" placeholder="https://acme.com" style={inputBoxStyle} />
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Country / Region
                         </label>
                         <input name="country" placeholder="United States / United Kingdom" style={inputBoxStyle} />
@@ -511,7 +511,7 @@ export default function CareersPartnershipsPage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Partnership Type <span style={{ color: '#FFFFFF' }}>*</span>
                         </label>
                         <select
@@ -530,7 +530,7 @@ export default function CareersPartnershipsPage() {
                         </select>
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Budget / Project Range
                         </label>
                         <select name="budgetRange" style={inputBoxStyle}>
@@ -544,14 +544,14 @@ export default function CareersPartnershipsPage() {
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                      <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                         Subject <span style={{ color: '#FFFFFF' }}>*</span>
                       </label>
                       <input required name="subject" placeholder="e.g. Strategic AI Integration Alliance" style={inputBoxStyle} />
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                      <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                         Partnership Proposal / Message <span style={{ color: '#FFFFFF' }}>*</span>
                       </label>
                       <textarea
@@ -565,7 +565,7 @@ export default function CareersPartnershipsPage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Preferred Contact Method
                         </label>
                         <select name="preferredContactMethod" style={inputBoxStyle}>
@@ -585,7 +585,7 @@ export default function CareersPartnershipsPage() {
                   </>
                 ) : (
                   <>
-                    <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>
+                    <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.75rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>
                       OPEN POSITIONS
                     </div>
 
@@ -635,19 +635,19 @@ export default function CareersPartnershipsPage() {
 
                     <div style={{ width: '100%', height: '1px', backgroundColor: 'rgba(56, 189, 248, 0.15)', margin: '1rem 0 1.5rem 0' }} />
 
-                    <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>
+                    <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.75rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>
                       YOUR APPLICATION
                     </div>
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Full Name <span style={{ color: '#FFFFFF' }}>*</span>
                         </label>
                         <input required name="fullName" placeholder="Alex Rivers" style={inputBoxStyle} />
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Email <span style={{ color: '#FFFFFF' }}>*</span>
                         </label>
                         <input required type="email" name="email" placeholder="alex@domain.com" style={inputBoxStyle} />
@@ -656,13 +656,13 @@ export default function CareersPartnershipsPage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Phone / WhatsApp
                         </label>
                         <input name="phone" placeholder="+1 (555) 000-0000" style={inputBoxStyle} />
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Current Location (City, Country)
                         </label>
                         <input name="currentLocation" placeholder="San Francisco, US / Remote" style={inputBoxStyle} />
@@ -671,7 +671,7 @@ export default function CareersPartnershipsPage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Position Applying For <span style={{ color: '#FFFFFF' }}>*</span>
                         </label>
                         <input
@@ -685,7 +685,7 @@ export default function CareersPartnershipsPage() {
                         />
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Experience Level <span style={{ color: '#FFFFFF' }}>*</span>
                         </label>
                         <select
@@ -706,7 +706,7 @@ export default function CareersPartnershipsPage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Preferred Work Type <span style={{ color: '#FFFFFF' }}>*</span>
                         </label>
                         <select
@@ -724,7 +724,7 @@ export default function CareersPartnershipsPage() {
                         </select>
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Core Technical Skills <span style={{ color: '#FFFFFF' }}>*</span>
                         </label>
                         <input required name="skills" placeholder="e.g. PyTorch, Next.js, CUDA, Vector DBs" style={inputBoxStyle} />
@@ -733,19 +733,19 @@ export default function CareersPartnershipsPage() {
 
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           LinkedIn URL
                         </label>
                         <input name="linkedinUrl" placeholder="https://linkedin.com/in/..." style={inputBoxStyle} />
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           GitHub URL
                         </label>
                         <input name="githubUrl" placeholder="https://github.com/..." style={inputBoxStyle} />
                       </div>
                       <div>
-                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                        <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                           Portfolio / Website
                         </label>
                         <input name="portfolioUrl" placeholder="https://..." style={inputBoxStyle} />
@@ -753,7 +753,7 @@ export default function CareersPartnershipsPage() {
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                      <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                         Short Introduction & Engineering Background <span style={{ color: '#FFFFFF' }}>*</span>
                       </label>
                       <textarea
@@ -766,7 +766,7 @@ export default function CareersPartnershipsPage() {
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-mono, monospace)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
+                      <label style={{ display: 'block', color: '#FFFFFF', fontSize: '0.75rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.1em', marginBottom: '6px', textTransform: 'uppercase', fontWeight: 600 }}>
                         Why do you want to work with Quantum AI?
                       </label>
                       <textarea
@@ -839,7 +839,7 @@ export default function CareersPartnershipsPage() {
                     color: '#FFFFFF',
                     border: 'none',
                     borderRadius: '8px',
-                    fontFamily: 'var(--font-mono, monospace)',
+                    fontFamily: 'var(--font-d-din)',
                     fontSize: '0.875rem',
                     fontWeight: 700,
                     letterSpacing: '0.15em',

@@ -123,7 +123,7 @@ export default function ChallengesSection() {
         }
 
         .challenge-card-code {
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.68rem;
           color: #FFFFFF;
           letter-spacing: 0.15em;
@@ -151,7 +151,7 @@ export default function ChallengesSection() {
           align-items: center;
           gap: 0.35rem;
           color: #FFFFFF;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           font-weight: 600;
@@ -200,7 +200,7 @@ export default function ChallengesSection() {
           align-items: center;
           gap: 0.35rem;
           color: #FFFFFF;
-          font-family: var(--font-mono, monospace);
+          font-family: var(--font-d-din);
           font-size: 0.75rem;
           letter-spacing: 0.1em;
           font-weight: 700;
@@ -252,7 +252,7 @@ export default function ChallengesSection() {
           }
 
           .mobile-block-code {
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-d-din);
             font-size: 0.56rem;
             color: #FFFFFF;
             letter-spacing: 0.08em;
@@ -293,7 +293,7 @@ export default function ChallengesSection() {
             align-items: center;
             gap: 0.25rem;
             color: #FFFFFF;
-            font-family: var(--font-mono, monospace);
+            font-family: var(--font-d-din);
             font-size: 0.62rem;
             font-weight: 700;
             letter-spacing: 0.08em;
@@ -324,7 +324,7 @@ export default function ChallengesSection() {
         {/* Eyebrow & Title */}
         <p
           style={{
-            fontFamily: 'var(--font-mono)',
+            fontFamily: 'var(--font-d-din)',
             fontSize: 'clamp(0.68rem, 0.8vw, 0.78rem)',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
