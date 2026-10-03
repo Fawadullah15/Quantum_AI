@@ -25,7 +25,6 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
   { href: '/work', label: 'Work' },
-  { href: '/products', label: 'Products' },
   {
     href: '/technology', label: 'Technology',
     dropdown: [
@@ -36,7 +35,6 @@ const NAV_ITEMS: NavItem[] = [
     ],
   },
   { href: '/about', label: 'About' },
-  { href: '/leadership', label: 'Leadership' },
 ];
 
 // ─── Subcomponents ───────────────────────────────────────────────────────────
@@ -55,7 +53,7 @@ function DropdownMenu({ items, visible }: { items: DropdownItem[]; visible: bool
             top: 'calc(100% + 0.75rem)',
             left: '50%',
             transform: 'translateX(-50%)',
-            minWidth: 260,
+            minWidth: items.some(i => i.desc) ? 260 : 220,
             backgroundColor: 'rgba(7, 18, 20, 0.96)',
             border: '1px solid rgba(20, 184, 166, 0.2)',
             borderRadius: 14,
@@ -72,7 +70,7 @@ function DropdownMenu({ items, visible }: { items: DropdownItem[]; visible: bool
               href={item.href}
               style={{
                 display: 'block',
-                padding: '0.75rem 1rem',
+                padding: item.desc ? '0.75rem 1rem' : '0.55rem 1rem',
                 borderRadius: 8,
                 textDecoration: 'none',
                 transition: 'background-color 0.15s',
