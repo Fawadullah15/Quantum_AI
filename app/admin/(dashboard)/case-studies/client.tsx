@@ -45,11 +45,24 @@ export default function CaseStudiesClient({
     }
   }, [initialCaseStudies]);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [isUploadingGallery, setIsUploadingGallery] = useState(false);
   const [manualGalleryUrl, setManualGalleryUrl] = useState('');
+
+  // Prompt user before navigating away if form has unsaved modifications
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isEditing && isDirty) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isEditing, isDirty]);
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PUBLISHED' | 'DRAFT'>('ALL');
@@ -118,6 +131,7 @@ export default function CaseStudiesClient({
     setManualGalleryUrl('');
     setCurrentId(null);
     setIsEditing(true);
+    setIsDirty(false);
   };
 
   useEffect(() => {
@@ -174,6 +188,21 @@ export default function CaseStudiesClient({
     setManualGalleryUrl('');
     setCurrentId(study.id);
     setIsEditing(true);
+    setIsDirty(false);
+  };
+
+  const handleCancel = async () => {
+    if (isDirty) {
+      const confirmed = await confirm({
+        title: 'Discard Unsaved Changes?',
+        message: 'You have unsaved changes in this project. Are you sure you want to exit without saving?',
+        confirmText: 'Discard Changes',
+        confirmVariant: 'danger',
+      });
+      if (!confirmed) return;
+    }
+    setIsDirty(false);
+    setIsEditing(false);
   };
 
   const handleTitleChange = (val: string) => {
@@ -183,6 +212,7 @@ export default function CaseStudiesClient({
       title: val,
       slug: !currentId ? autoSlug : prev.slug,
     }));
+    setIsDirty(true);
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -425,6 +455,7 @@ export default function CaseStudiesClient({
           'Project Created'
         );
       }
+      setIsDirty(false);
       setIsEditing(false);
       setCurrentId(null);
       router.refresh();
@@ -471,7 +502,6 @@ export default function CaseStudiesClient({
     borderRadius: 6,
     color: '#FFFFFF',
     fontSize: '0.875rem',
-    outline: 'none',
     boxSizing: 'border-box',
     fontFamily: 'var(--font-d-din, sans-serif)',
   };
@@ -519,7 +549,6 @@ export default function CaseStudiesClient({
                     padding: '0.6rem 0.95rem',
                     fontSize: '0.85rem',
                     color: '#FFFFFF',
-                    outline: 'none',
                     boxSizing: 'border-box',
                   }}
                 />
@@ -1026,7 +1055,7 @@ export default function CaseStudiesClient({
             </div>
             <button
               type="button"
-              onClick={() => setIsEditing(false)}
+              onClick={handleCancel}
               aria-label="Close project editor"
               style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '1.25rem', cursor: 'pointer' }}
             >
@@ -1043,8 +1072,9 @@ export default function CaseStudiesClient({
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
                 <div>
-                  <label style={labelStyle}>Project Title *</label>
+                  <label htmlFor="cs-title" style={labelStyle}>Project Title *</label>
                   <input
+                    id="cs-title"
                     type="text"
                     required
                     placeholder="e.g. Mechanical Engineering Design Copilot"
@@ -1055,46 +1085,62 @@ export default function CaseStudiesClient({
                 </div>
 
                 <div>
-                  <label style={labelStyle}>URL Slug *</label>
+                  <label htmlFor="cs-slug" style={labelStyle}>URL Slug *</label>
                   <input
+                    id="cs-slug"
                     type="text"
                     required
                     placeholder="e.g. mechanical-engineering-design-copilot"
                     value={formData.slug}
-                    onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, slug: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Project Owner / Organization *</label>
+                  <label htmlFor="cs-client" style={labelStyle}>Project Owner / Organization *</label>
                   <input
+                    id="cs-client"
                     type="text"
                     required
                     placeholder="e.g. Quantum AI"
                     value={formData.client}
-                    onChange={(e) => setFormData({ ...formData, client: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, client: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Category / Domain *</label>
+                  <label htmlFor="cs-industry" style={labelStyle}>Category / Domain *</label>
                   <input
+                    id="cs-industry"
                     type="text"
                     required
                     placeholder="e.g. AI Product / Engineering Software"
                     value={formData.industry}
-                    onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, industry: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Project Status *</label>
+                  <label htmlFor="cs-status" style={labelStyle}>Project Status *</label>
                   <select
+                    id="cs-status"
                     value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, status: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={{ ...inputStyle, fontFamily: 'var(--font-mono, monospace)' }}
                   >
                     <option value="Prototype in Development">Prototype in Development</option>
@@ -1106,12 +1152,16 @@ export default function CaseStudiesClient({
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Deployment / Release Year *</label>
+                  <label htmlFor="cs-year" style={labelStyle}>Deployment / Release Year *</label>
                   <input
+                    id="cs-year"
                     type="number"
                     required
                     value={formData.year}
-                    onChange={(e) => setFormData({ ...formData, year: Number(e.target.value) })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, year: Number(e.target.value) });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
@@ -1119,23 +1169,31 @@ export default function CaseStudiesClient({
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
                 <div>
-                  <label style={labelStyle}>Primary Tags &amp; Technologies (comma separated) *</label>
+                  <label htmlFor="cs-technologies" style={labelStyle}>Primary Tags &amp; Technologies (comma separated) *</label>
                   <input
+                    id="cs-technologies"
                     type="text"
                     placeholder="e.g. Artificial Intelligence, Mechanical Engineering, Engineering Design, Calculations, Machine Learning"
                     value={formData.technologies}
-                    onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, technologies: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Services &amp; Capabilities (comma separated)</label>
+                  <label htmlFor="cs-services" style={labelStyle}>Services &amp; Capabilities (comma separated)</label>
                   <input
+                    id="cs-services"
                     type="text"
                     placeholder="e.g. AI Engineering, Product Development, Mechanical Design, Calculations"
                     value={formData.services}
-                    onChange={(e) => setFormData({ ...formData, services: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, services: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
@@ -1210,7 +1268,10 @@ export default function CaseStudiesClient({
                       {formData.heroImage && (
                         <button
                           type="button"
-                          onClick={() => setFormData({ ...formData, heroImage: '' })}
+                          onClick={() => {
+                            setFormData({ ...formData, heroImage: '' });
+                            setIsDirty(true);
+                          }}
                           style={{
                             backgroundColor: 'transparent',
                             border: '1px solid rgba(239, 68, 68, 0.3)',
@@ -1226,10 +1287,14 @@ export default function CaseStudiesClient({
                       )}
                     </div>
                     <input
+                      id="cs-heroImage"
                       type="text"
                       placeholder="Or paste direct image URL (e.g. /uploads/mechanical-engineering-design-copilot.png)"
                       value={formData.heroImage}
-                      onChange={(e) => setFormData({ ...formData, heroImage: e.target.value })}
+                      onChange={(e) => {
+                        setFormData({ ...formData, heroImage: e.target.value });
+                        setIsDirty(true);
+                      }}
                       style={{ ...inputStyle, fontSize: '0.78rem', padding: '0.45rem 0.65rem' }}
                     />
                   </div>
@@ -1259,7 +1324,10 @@ export default function CaseStudiesClient({
                   {formData.gallery.length > 0 && (
                     <button
                       type="button"
-                      onClick={() => setFormData((prev) => ({ ...prev, gallery: [] }))}
+                      onClick={() => {
+                        setFormData((prev) => ({ ...prev, gallery: [] }));
+                        setIsDirty(true);
+                      }}
                       style={{ backgroundColor: 'transparent', border: '1px solid rgba(239, 68, 68, 0.25)', color: '#F87171', padding: '0.3rem 0.65rem', borderRadius: '4px', fontSize: '0.72rem', cursor: 'pointer', fontFamily: 'var(--font-mono, monospace)' }}
                     >
                       Clear All
@@ -1295,14 +1363,15 @@ export default function CaseStudiesClient({
                         fontFamily: 'var(--font-mono, monospace)',
                       }}
                     >
-                      <span>📁</span> {isUploadingGallery ? 'Uploading images...' : 'Upload Screenshots (Select Multiple)'}
+                      <span>📁</span> {isUploadingGallery ? 'Uploading images…' : 'Upload Screenshots (Select Multiple)'}
                     </button>
                   </div>
 
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <input
                       type="text"
-                      placeholder="Or paste screenshot URL (e.g. /uploads/cad-schematic.png or https://...)"
+                      aria-label="Screenshot direct URL"
+                      placeholder="Or paste screenshot URL (e.g. /uploads/cad-schematic.png or https://…)"
                       value={manualGalleryUrl}
                       onChange={(e) => setManualGalleryUrl(e.target.value)}
                       onKeyDown={(e) => {
@@ -1372,24 +1441,32 @@ export default function CaseStudiesClient({
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
-                  <label style={labelStyle}>Short Description * (Overview summary shown on project cards &amp; meta)</label>
+                  <label htmlFor="cs-problem" style={labelStyle}>Short Description * (Overview summary shown on project cards &amp; meta)</label>
                   <textarea
+                    id="cs-problem"
                     rows={2}
                     required
                     placeholder="An AI assisted engineering design system intended to help mechanical engineers solve design problems, perform engineering calculations, evaluate components, and make informed technical decisions."
                     value={formData.problem}
-                    onChange={(e) => setFormData({ ...formData, problem: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, problem: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={{ ...inputStyle, resize: 'vertical' }}
                   />
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Full Project Description (Headings, Markdown, Calculations &amp; Use Cases)</label>
+                  <label htmlFor="cs-fullDescription" style={labelStyle}>Full Project Description (Headings, Markdown, Calculations &amp; Use Cases)</label>
                   <textarea
+                    id="cs-fullDescription"
                     rows={8}
-                    placeholder="Overview, Problem, Solution, Planned Capabilities, Example Calculations, and Engineering Workflow..."
+                    placeholder="Overview, Problem, Solution, Planned Capabilities, Example Calculations, and Engineering Workflow…"
                     value={formData.fullDescription}
-                    onChange={(e) => setFormData({ ...formData, fullDescription: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, fullDescription: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.5, fontFamily: 'monospace', fontSize: '0.82rem' }}
                   />
                   <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '0.25rem' }}>
@@ -1399,35 +1476,47 @@ export default function CaseStudiesClient({
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
                   <div>
-                    <label style={labelStyle}>Engineered Solution &amp; AI Architecture</label>
+                    <label htmlFor="cs-solution" style={labelStyle}>Engineered Solution &amp; AI Architecture</label>
                     <textarea
+                      id="cs-solution"
                       rows={3}
-                      placeholder="Detail the technical systems, algorithms, models, and reasoning tools built by Quantum AI..."
+                      placeholder="Detail the technical systems, algorithms, models, and reasoning tools built by Quantum AI…"
                       value={formData.solution}
-                      onChange={(e) => setFormData({ ...formData, solution: e.target.value })}
+                      onChange={(e) => {
+                        setFormData({ ...formData, solution: e.target.value });
+                        setIsDirty(true);
+                      }}
                       style={{ ...inputStyle, resize: 'vertical' }}
                     />
                   </div>
 
                   <div>
-                    <label style={labelStyle}>Implementation &amp; Workflow Integration</label>
+                    <label htmlFor="cs-implementation" style={labelStyle}>Implementation &amp; Workflow Integration</label>
                     <textarea
+                      id="cs-implementation"
                       rows={3}
-                      placeholder="Describe the iterative prototyping, validation logic, equations, and software interface..."
+                      placeholder="Describe the iterative prototyping, validation logic, equations, and software interface…"
                       value={formData.implementation}
-                      onChange={(e) => setFormData({ ...formData, implementation: e.target.value })}
+                      onChange={(e) => {
+                        setFormData({ ...formData, implementation: e.target.value });
+                        setIsDirty(true);
+                      }}
                       style={{ ...inputStyle, resize: 'vertical' }}
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Results, Impact &amp; Technical Outcomes</label>
+                  <label htmlFor="cs-results" style={labelStyle}>Results, Impact &amp; Technical Outcomes</label>
                   <textarea
+                    id="cs-results"
                     rows={2}
-                    placeholder="Describe design clarity, structured calculations, safety evaluation outcomes, or metrics..."
+                    placeholder="Describe design clarity, structured calculations, safety evaluation outcomes, or metrics…"
                     value={formData.results}
-                    onChange={(e) => setFormData({ ...formData, results: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, results: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={{ ...inputStyle, resize: 'vertical' }}
                   />
                 </div>
@@ -1442,57 +1531,77 @@ export default function CaseStudiesClient({
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
                 <div>
-                  <label style={labelStyle}>Primary CTA Label</label>
+                  <label htmlFor="cs-primaryCtaLabel" style={labelStyle}>Primary CTA Label</label>
                   <input
+                    id="cs-primaryCtaLabel"
                     type="text"
                     placeholder="e.g. Explore the Project"
                     value={formData.primaryCtaLabel}
-                    onChange={(e) => setFormData({ ...formData, primaryCtaLabel: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, primaryCtaLabel: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Primary CTA Destination URL</label>
+                  <label htmlFor="cs-primaryCtaUrl" style={labelStyle}>Primary CTA Destination URL</label>
                   <input
+                    id="cs-primaryCtaUrl"
                     type="text"
                     placeholder="e.g. /work/mechanical-engineering-design-copilot"
                     value={formData.primaryCtaUrl}
-                    onChange={(e) => setFormData({ ...formData, primaryCtaUrl: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, primaryCtaUrl: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Secondary CTA Label</label>
+                  <label htmlFor="cs-secondaryCtaLabel" style={labelStyle}>Secondary CTA Label</label>
                   <input
+                    id="cs-secondaryCtaLabel"
                     type="text"
                     placeholder="e.g. Contact Quantum AI"
                     value={formData.secondaryCtaLabel}
-                    onChange={(e) => setFormData({ ...formData, secondaryCtaLabel: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, secondaryCtaLabel: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Secondary CTA Destination URL</label>
+                  <label htmlFor="cs-secondaryCtaUrl" style={labelStyle}>Secondary CTA Destination URL</label>
                   <input
+                    id="cs-secondaryCtaUrl"
                     type="text"
                     placeholder="e.g. /contact"
                     value={formData.secondaryCtaUrl}
-                    onChange={(e) => setFormData({ ...formData, secondaryCtaUrl: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, secondaryCtaUrl: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
               </div>
 
               <div style={{ marginTop: '0.85rem' }}>
-                <label style={labelStyle}>Live Demo / External URL (Optional)</label>
+                <label htmlFor="cs-externalUrl" style={labelStyle}>Live Demo / External URL (Optional)</label>
                 <input
+                  id="cs-externalUrl"
                   type="text"
                   placeholder="e.g. https://copilot.quantumai.tech"
                   value={formData.externalUrl}
-                  onChange={(e) => setFormData({ ...formData, externalUrl: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, externalUrl: e.target.value });
+                    setIsDirty(true);
+                  }}
                   style={inputStyle}
                 />
               </div>
@@ -1505,23 +1614,31 @@ export default function CaseStudiesClient({
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
                 <div>
-                  <label style={labelStyle}>SEO Title</label>
+                  <label htmlFor="cs-seoTitle" style={labelStyle}>SEO Title</label>
                   <input
+                    id="cs-seoTitle"
                     type="text"
                     placeholder="Mechanical Engineering Design Copilot | Quantum AI"
                     value={formData.seoTitle}
-                    onChange={(e) => setFormData({ ...formData, seoTitle: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, seoTitle: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
 
                 <div>
-                  <label style={labelStyle}>SEO Description</label>
+                  <label htmlFor="cs-seoDescription" style={labelStyle}>SEO Description</label>
                   <input
+                    id="cs-seoDescription"
                     type="text"
-                    placeholder="Learn about Quantum AI's AI assisted mechanical engineering design copilot..."
+                    placeholder="Learn about Quantum AI’s AI assisted mechanical engineering design copilot…"
                     value={formData.seoDescription}
-                    onChange={(e) => setFormData({ ...formData, seoDescription: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, seoDescription: e.target.value });
+                      setIsDirty(true);
+                    }}
                     style={inputStyle}
                   />
                 </div>
@@ -1540,7 +1657,10 @@ export default function CaseStudiesClient({
                     type="checkbox"
                     id="projectFeatured"
                     checked={formData.featured}
-                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, featured: e.target.checked });
+                      setIsDirty(true);
+                    }}
                     style={{ cursor: 'pointer', width: '16px', height: '16px' }}
                   />
                   <label htmlFor="projectFeatured" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
@@ -1553,7 +1673,10 @@ export default function CaseStudiesClient({
                     type="checkbox"
                     id="projectPublished"
                     checked={formData.published}
-                    onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, published: e.target.checked });
+                      setIsDirty(true);
+                    }}
                     style={{ cursor: 'pointer', width: '16px', height: '16px' }}
                   />
                   <label htmlFor="projectPublished" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
@@ -1567,7 +1690,7 @@ export default function CaseStudiesClient({
             <div style={{ display: 'flex', gap: '0.65rem', justifyContent: 'flex-end', marginTop: '0.5rem', flexWrap: 'wrap' }}>
               <button
                 type="button"
-                onClick={() => setIsEditing(false)}
+                onClick={handleCancel}
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
@@ -1586,6 +1709,7 @@ export default function CaseStudiesClient({
               <button
                 type="button"
                 disabled={isSubmitting}
+                aria-busy={isSubmitting}
                 onClick={(e) => handleSubmitWithPublication(e, false)}
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.08)',
@@ -1599,12 +1723,13 @@ export default function CaseStudiesClient({
                   fontFamily: 'var(--font-mono, monospace)',
                 }}
               >
-                Save as Draft
+                {isSubmitting ? 'Saving…' : 'Save as Draft'}
               </button>
 
               <button
                 type="button"
                 disabled={isSubmitting}
+                aria-busy={isSubmitting}
                 onClick={(e) => handleSubmitWithPublication(e, true)}
                 style={{
                   backgroundColor: '#1677FF',
