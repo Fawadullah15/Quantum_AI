@@ -18,7 +18,8 @@ export type EntityType =
   | 'MEDIA'
   | 'NOTIFICATION'
   | 'TEAM_MEMBER'
-  | 'FOUNDER';
+  | 'FOUNDER'
+  | 'CAMPAIGN';
 
 export interface AdminUserInfo {
   id?: string;
@@ -70,6 +71,7 @@ const SECTION_MAP: Record<EntityType, string> = {
   NOTIFICATION: 'Website Notifications',
   TEAM_MEMBER: 'Leadership & Team',
   FOUNDER: 'Leadership & Team',
+  CAMPAIGN: 'Announcements & Ads',
 };
 
 // Extract associated media URLs from any entity snapshot
@@ -87,7 +89,7 @@ function extractMediaUrls(data: any): string[] {
   if (!data || typeof data !== 'object') return [];
 
   // Direct fields
-  ['heroImage', 'photo', 'photoUrl', 'coverImage', 'logo', 'icon', 'url', 'resumeUrl', 'additionalDocsUrl', 'attachmentUrl'].forEach((k) => {
+  ['heroImage', 'photo', 'photoUrl', 'coverImage', 'logo', 'icon', 'url', 'resumeUrl', 'additionalDocsUrl', 'attachmentUrl', 'imageUrl', 'mobileImageUrl'].forEach((k) => {
     if (data[k]) check(data[k]);
   });
 
@@ -183,6 +185,10 @@ function revalidateEntityPaths(entityType: EntityType, originalSlug?: string | n
       break;
     case 'NOTIFICATION':
       revalidatePath('/api/admin/notifications');
+      break;
+    case 'CAMPAIGN':
+      revalidatePath('/admin/campaigns');
+      revalidatePath('/');
       break;
   }
 }
@@ -345,6 +351,14 @@ export async function softDelete({ entityType, id, adminUser }: SoftDeleteOption
         subtitle = record.role || 'Founder';
       }
       break;
+
+    case 'CAMPAIGN':
+      record = await prisma.campaign.findUnique({ where: { id } });
+      if (record) {
+        title = record.name || record.headline || 'Untitled Campaign';
+        subtitle = `${record.type} • Status: ${record.status}`;
+      }
+      break;
   }
 
   if (!record) {
@@ -436,6 +450,9 @@ export async function softDelete({ entityType, id, adminUser }: SoftDeleteOption
       break;
     case 'FOUNDER':
       await prisma.founder.delete({ where: { id } });
+      break;
+    case 'CAMPAIGN':
+      await prisma.campaign.delete({ where: { id } });
       break;
   }
 
@@ -709,6 +726,13 @@ export async function restoreItem({ id, adminUser }: RestoreOptions) {
       const existingId = await prisma.founder.findUnique({ where: { id: data.id } });
       if (existingId) delete data.id;
       await prisma.founder.create({ data });
+      break;
+    }
+
+    case 'CAMPAIGN': {
+      const existingId = await prisma.campaign.findUnique({ where: { id: data.id } });
+      if (existingId) delete data.id;
+      await prisma.campaign.create({ data });
       break;
     }
   }

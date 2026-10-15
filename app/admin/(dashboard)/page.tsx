@@ -24,6 +24,8 @@ export default async function AdminDashboardPage() {
     newCareerAppsCount,
     partnershipCount,
     newPartnershipCount,
+    campaignCount,
+    publishedCampaignCount,
     recentMessages,
     recentPosts,
     recentActivity,
@@ -46,6 +48,8 @@ export default async function AdminDashboardPage() {
     prisma.careerApplication.count({ where: { status: 'NEW' } }).catch(() => 0),
     prisma.partnershipRequest.count().catch(() => 0),
     prisma.partnershipRequest.count({ where: { status: 'NEW' } }).catch(() => 0),
+    prisma.campaign.count().catch(() => 0),
+    prisma.campaign.count({ where: { status: 'PUBLISHED' } }).catch(() => 0),
     prisma.contactSubmission.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
@@ -193,11 +197,21 @@ export default async function AdminDashboardPage() {
       color: '#2DD4BF',
       href: '/admin/media',
     },
+    {
+      label: 'Announcements & Ads',
+      count: campaignCount,
+      total: `${publishedCampaignCount} published live`,
+      subtext: 'Promotions & popups',
+      icon: '📢',
+      color: '#67E8F9',
+      href: '/admin/campaigns',
+    },
   ];
 
   // Quick Actions
   const quickActions = [
     { label: '💬 Inquiries', href: '/admin/messages', variant: 'primary' },
+    { label: '📢 Announcements', href: '/admin/campaigns', variant: 'secondary' },
     { label: '🤝 Careers / Partnerships', href: '/admin/careers-partnerships', variant: 'secondary' },
     { label: '+ Add Leader', href: '/admin/leadership/new', variant: 'secondary' },
     { label: '+ Add New Project', href: '/admin/case-studies?new=1', variant: 'secondary' },

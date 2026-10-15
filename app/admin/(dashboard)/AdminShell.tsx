@@ -28,6 +28,7 @@ export const navSections = [
       { href: '/admin/technology', label: 'Technology Stack', icon: '💻' },
       { href: '/admin/blog', label: 'Blog Articles', icon: '📝' },
       { href: '/admin/testimonials', label: 'Testimonials', icon: '⭐' },
+      { href: '/admin/campaigns', label: 'Announcements & Ads', icon: '📢' },
     ],
   },
   {
@@ -88,9 +89,12 @@ export function AdminShell({
 
     for (let i = 0; i < parts.length; i++) {
       currentPath += `/${parts[i]}`;
-      const name = parts[i]
+      let name = parts[i]
         .replace(/-/g, ' ')
         .replace(/\b\w/g, (c) => c.toUpperCase());
+      if (parts[i] === 'campaigns') {
+        name = 'Announcements & Ads';
+      }
       crumbs.push({ label: name, href: currentPath });
     }
 

@@ -7,9 +7,12 @@ import { AudioPlayer } from '@/components/layout/AudioPlayer';
 import { SoundToggle } from '@/components/layout/SoundToggle';
 import { getOrganizationSchema, getWebSiteSchema } from '@/lib/seo';
 import { getSiteSettings } from '@/lib/settings';
+import { getActiveCampaign } from '@/lib/campaigns';
+import { CampaignDisplay } from '@/components/public/CampaignDisplay';
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSiteSettings();
+  const activeCampaign = await getActiveCampaign();
   const orgSchema = getOrganizationSchema(settings);
   const webSiteSchema = getWebSiteSchema(settings);
 
@@ -38,6 +41,8 @@ export default async function PublicLayout({ children }: { children: React.React
             ctaLabel={settings.nav_cta_label}
             ctaLink={settings.nav_cta_link}
           />
+          {/* Active Campaign Announcement / Popup */}
+          <CampaignDisplay campaign={activeCampaign} />
           <main id="main-content" tabIndex={-1} style={{ outline: 'none' }}>
             {children}
           </main>

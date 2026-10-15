@@ -427,5 +427,45 @@ model RecentlyDeleted {
   @@index([status])
 }
 
+// ─────────────────────────────────────────────────────────────
+// ANNOUNCEMENTS, PROMOTIONS & POPUP CAMPAIGNS
+// ─────────────────────────────────────────────────────────────
 
+model Campaign {
+  id                   String    @id @default(cuid())
+  name                 String    // Internal administrative campaign name
+  headline             String?   // Public headline
+  description          String?   // Short promotional description
+  supportingText       String?   // Optional secondary/disclaimer text
+  badge                String?   // e.g. "NEW", "ANNOUNCEMENT", "SPECIAL OFFER", "BETA"
+  type                 String    @default("IMAGE_POPUP") // IMAGE_POPUP | ANNOUNCEMENT_POPUP | COMPACT_NOTIFICATION | PROMOTIONAL_BANNER | IMAGE_ONLY
+  imageUrl             String?   // Primary creative / visual URL
+  imageAlt             String?   // Accessibility alt text
+  mobileImageUrl       String?   // Optional mobile-specific image
+  ctaLabel             String?   // Call to action button label
+  destinationUrl       String?   // Target URL
+  openInNewTab         Boolean   @default(false)
+  status               String    @default("DRAFT") // DRAFT | PUBLISHED | SCHEDULED | DISABLED | EXPIRED
+  priority             Int       @default(0) // Higher integer = higher display priority
+  startDate            DateTime? // Publication start date/time
+  endDate              DateTime? // Publication expiry date/time
+  autoDismiss          Boolean   @default(true) // Auto-close enabled
+  dismissDuration      Int       @default(5) // Duration in seconds (4-5s default)
+  showProgress         Boolean   @default(true) // Thin countdown progress indicator
+  repeatPolicy         String    @default("SESSION") // EVERY_PAGE | SESSION | ONCE_PERSISTENT | COOLDOWN
+  cooldownMinutes      Int       @default(1440) // Minutes between reappearance if COOLDOWN
+  displayPosition      String    @default("TOP_RIGHT") // TOP_RIGHT | TOP_CENTER | TOP_BANNER | BOTTOM_RIGHT
+  allowClickEmptySpace Boolean   @default(false) // Whether clicking card backdrop follows URL
+  impressions          Int       @default(0) // Verified view impressions
+  clicks               Int       @default(0) // Verified clicks
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  creatorId            String?
+  creatorName          String?
 
+  @@index([status])
+  @@index([startDate])
+  @@index([endDate])
+  @@index([priority])
+  @@index([createdAt])
+}
