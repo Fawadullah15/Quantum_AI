@@ -286,20 +286,36 @@ export function CampaignsClient({
 
     try {
       setIsSubmitting(true);
-      const payload: CampaignInput = {
+      const payload = {
         ...formData,
         ...(forceStatus ? { status: forceStatus } : {}),
       };
 
+      const url = '/api/admin/campaigns';
+      const method = editingId ? 'PUT' : 'POST';
+      const body = editingId ? JSON.stringify({ id: editingId, ...payload }) : JSON.stringify(payload);
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      });
+
+      const resData = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(resData.error || `Server responded with status ${res.status}`);
+      }
+
+      const campaignResult = resData.campaign;
+
       if (editingId) {
-        const updated = await updateCampaign(editingId, payload);
         setCampaigns((prev) =>
-          prev.map((c) => (c.id === editingId ? { ...updated, effectiveStatus: updated.status } : c))
+          prev.map((c) => (c.id === editingId ? { ...campaignResult, effectiveStatus: campaignResult.status } : c))
         );
         toast.success(`Campaign "${formData.name}" updated successfully!`, 'Changes Saved');
       } else {
-        const created = await createCampaign(payload);
-        setCampaigns((prev) => [{ ...created, effectiveStatus: created.status }, ...prev]);
+        setCampaigns((prev) => [{ ...campaignResult, effectiveStatus: campaignResult.status }, ...prev]);
         toast.success(`Campaign "${formData.name}" created successfully!`, 'Campaign Published');
       }
 
@@ -321,7 +337,15 @@ export function CampaignsClient({
     const nextStatus: CampaignStatus = isLive ? 'DISABLED' : 'PUBLISHED';
 
     try {
-      const updated = await togglePublishCampaign(campaign.id, nextStatus);
+      const res = await fetch('/api/admin/campaigns', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: campaign.id, status: nextStatus }),
+      });
+
+      const resData = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(resData.error || 'Failed to toggle status');
+
       setCampaigns((prev) =>
         prev.map((c) => (c.id === campaign.id ? { ...c, status: nextStatus, effectiveStatus: nextStatus } : c))
       );
@@ -338,8 +362,16 @@ export function CampaignsClient({
   // Duplicate Handler
   const handleDuplicate = async (campaign: any) => {
     try {
-      const copy = await duplicateCampaign(campaign.id);
-      setCampaigns((prev) => [{ ...copy, effectiveStatus: 'DRAFT' }, ...prev]);
+      const res = await fetch('/api/admin/campaigns', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'duplicate', id: campaign.id }),
+      });
+
+      const resData = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(resData.error || 'Failed to duplicate campaign');
+
+      setCampaigns((prev) => [resData.campaign, ...prev]);
       toast.success(`Created draft duplicate of "${campaign.name}".`, 'Campaign Duplicated');
       router.refresh();
     } catch (err: any) {
@@ -358,7 +390,11 @@ export function CampaignsClient({
 
     if (confirmed) {
       try {
-        await deleteCampaign(campaign.id);
+        const res = await fetch(`/api/admin/campaigns?id=${campaign.id}`, {
+          method: 'DELETE',
+        });
+        const resData = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(resData.error || 'Failed to delete campaign');
         setCampaigns((prev) => prev.filter((c) => c.id !== campaign.id));
         toast.success(`"${campaign.name}" was moved to Recently Deleted.`, 'Deleted');
         router.refresh();

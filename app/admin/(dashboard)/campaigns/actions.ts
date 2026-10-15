@@ -188,6 +188,13 @@ export async function getCampaignById(id: string) {
   }
 }
 
+function parseDateSafely(val: any): Date | null {
+  if (!val) return null;
+  if (typeof val === 'string' && !val.trim()) return null;
+  const d = new Date(val);
+  return isNaN(d.getTime()) ? null : d;
+}
+
 /**
  * Create a new campaign
  */
@@ -207,8 +214,8 @@ export async function createCampaign(input: CampaignInput) {
   const cleanCtaLabel = input.ctaLabel?.trim() ? input.ctaLabel.trim().slice(0, 40) : null;
   const cleanDestUrl = sanitizeDestinationUrl(input.destinationUrl);
 
-  const parsedStart = input.startDate ? new Date(input.startDate) : null;
-  const parsedEnd = input.endDate ? new Date(input.endDate) : null;
+  const parsedStart = parseDateSafely(input.startDate);
+  const parsedEnd = parseDateSafely(input.endDate);
 
   if (parsedStart && parsedEnd && parsedEnd <= parsedStart) {
     throw new Error('End date must be scheduled after start date.');
@@ -337,11 +344,11 @@ export async function updateCampaign(id: string, input: Partial<CampaignInput>) 
   }
 
   if (input.startDate !== undefined) {
-    dataToUpdate.startDate = input.startDate ? new Date(input.startDate) : null;
+    dataToUpdate.startDate = parseDateSafely(input.startDate);
   }
 
   if (input.endDate !== undefined) {
-    dataToUpdate.endDate = input.endDate ? new Date(input.endDate) : null;
+    dataToUpdate.endDate = parseDateSafely(input.endDate);
   }
 
   if (input.autoDismiss !== undefined) {
