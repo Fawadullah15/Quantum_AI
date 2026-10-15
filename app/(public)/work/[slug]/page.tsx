@@ -5,6 +5,7 @@ import prisma from '@/lib/db';
 import { createPageMetadata, getCaseStudySchema } from '@/lib/seo';
 import { parseGallery } from '@/lib/gallery';
 import { GalleryConfigurator } from '@/components/layout/GalleryConfigurator';
+import { COPILOT_CASE_STUDY, ensureMechanicalCopilotInDb } from '@/lib/default-projects';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -16,13 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   let caseStudy = await prisma.caseStudy.findUnique({ where: { slug } }).catch(() => null);
   if (!caseStudy && slug === 'mechanical-engineering-design-copilot') {
-    caseStudy = {
-      title: 'Mechanical Engineering Design Copilot',
-      seoTitle: 'Mechanical Engineering Design Copilot — AI Engineering Tool | Quantum AI',
-      seoDescription: 'An AI powered engineering copilot designed by Quantum AI to assist with mechanical component design, technical calculations, constraint analysis, and material evaluation.',
-      problem: 'An AI powered engineering copilot designed to assist with mechanical component design, technical calculations, constraint analysis, material evaluation, and engineering recommendations.',
-      heroImage: '/uploads/mechanical-engineering-design-copilot.png',
-    } as any;
+    caseStudy = COPILOT_CASE_STUDY as any;
   }
   if (!caseStudy) return { title: 'Case Study Not Found' };
 
@@ -179,45 +174,16 @@ function FormattedDescription({ content }: { content: string }) {
 
 export default async function CaseStudyPage({ params }: Props) {
   const { slug } = await params;
+  if (slug === 'mechanical-engineering-design-copilot') {
+    await ensureMechanicalCopilotInDb();
+  }
   let study = await prisma.caseStudy.findUnique({
     where: { slug },
     include: { metrics: true },
   }).catch(() => null);
 
   if (!study && slug === 'mechanical-engineering-design-copilot') {
-    study = {
-      id: 'copilot-01',
-      title: 'Mechanical Engineering Design Copilot',
-      slug: 'mechanical-engineering-design-copilot',
-      client: 'Quantum AI',
-      industry: 'AI Product / Engineering Software',
-      year: 2026,
-      order: 0,
-      heroImage: '/uploads/mechanical-engineering-design-copilot.png',
-      gallery: JSON.stringify(['/uploads/mechanical-engineering-design-copilot.png']),
-      featured: true,
-      status: 'Prototype in Development',
-      shortDescription: 'An AI powered engineering copilot designed to assist with mechanical component design, technical calculations, constraint analysis, material evaluation, and engineering recommendations.',
-      fullDescription: `Mechanical Engineering Design Copilot\n\nOverview\nMechanical Engineering Design Copilot is an AI assisted engineering system developed by Quantum AI to help engineers work through mechanical design problems with greater clarity, structured calculations, and technical reasoning.\n\nTraditional mechanical design requires engineers to move between equations, material data, component specifications, engineering references, and repeated calculations. Our goal is to bring these activities into a unified workspace where engineering requirements can be translated into structured analysis and practical design recommendations.\n\nThe system is being developed as an engineering reasoning tool, not merely a general purpose chatbot.\n\nThe Problem\nMechanical engineers often need to perform multiple calculations, compare design options, evaluate component dimensions, check safety factors, and document their decisions. These tasks can require considerable time, repeated manual work, and careful cross checking.\n\nA single incorrect assumption or calculation can affect the entire design process.\n\nOur Solution\nWe are developing an AI powered copilot that accepts mechanical engineering requirements and helps organize the process into clear engineering steps. It aims to connect user requirements with relevant equations, design parameters, engineering constraints, component evaluations, and technical recommendations.\n\nThe engineer remains responsible for reviewing calculations, confirming applicable standards, and validating the final design.\n\nPlanned Core Capabilities\n1. Engineering Calculations and Sizing\nAssists with calculations for standard mechanical components such as shafts, keys, bearings, gears, fasteners, and simple structural elements.\n\n2. Material Selection Support\nProvides structured comparisons between candidate materials based on yield strength, tensile strength, fatigue considerations, weight, operating conditions, and availability.\n\n3. Constraint and Safety Factor Evaluation\nHelps engineers analyze design margins, determine appropriate factors of safety, and identify potential stress concentrations or failure modes.\n\n4. Engineering Reasoning and Recommendations\nSuggests practical design adjustments, standard commercial sizes, manufacturing considerations, and potential design alternatives.\n\n5. Technical Documentation and Calculation Summaries\nGenerates clear, step by step calculation reports that engineers can review, export, verify, and include in project documentation.\n\nExample Engineering Use Case\nShaft and Key Sizing for Power Transmission\nAn engineer needs to design a drive shaft connecting an electric motor to an industrial gearbox.\n\nInputs\nPower: 15 kW\nRotational speed: 1450 RPM\nApplied torque: Approximately 98.8 N·m\nMaterial: AISI 1045 steel\nDesign factor: 2.0\n\nCopilot Actions\nCalculates required shaft diameter based on torsional shear stress.\nEvaluates standard shaft diameters available from suppliers.\nRecommends compatible key and keyway dimensions according to engineering standards.\nPresents the full formula, intermediate values, and final engineering checks for human review.\n\nDevelopment Approach\nWe are approaching this project with engineering rigor:\n• Grounding in engineering fundamentals\n• Clear formulas and visible calculation steps\n• Support for standard mechanical engineering practices\n• Human engineer oversight for every critical output\n• Focus on practical utility for engineering workflows\n\nVision\nOur long term goal is to build an intelligent design companion that reduces routine engineering friction, accelerates preliminary design cycles, and helps engineering teams explore better technical solutions with confidence.`,
-      problem: 'Mechanical engineers often need to perform multiple calculations, compare design options, evaluate component dimensions, check safety factors, and document their decisions. These tasks can require considerable time, repeated manual work, and careful cross checking. A single incorrect assumption or calculation can affect the entire design process.',
-      solution: 'We are developing an AI powered copilot that accepts mechanical engineering requirements and helps organize the process into clear engineering steps. It aims to connect user requirements with relevant equations, design parameters, engineering constraints, component evaluations, and technical recommendations.',
-      implementation: 'Built around engineering reasoning, deterministic formula engines, parametric verification models, and CAD/design reference datasets. The system integrates standard component databases, material properties, and stress-strain calculations into an interactive engineering copilot workspace.',
-      results: 'Reduces routine engineering friction, accelerates preliminary component sizing cycles, and provides auditable step-by-step calculation reports.',
-      technologies: 'Artificial Intelligence, Mechanical Design, Engineering Analysis, Product Development, Python, CAD Integration, Fast Computational Solvers',
-      services: 'AI Product, Engineering Software, Internal Product, Research and Development',
-      primaryCtaLabel: 'Request Technical Demo',
-      primaryCtaUrl: '/contact?project=mechanical-engineering-copilot',
-      secondaryCtaLabel: 'View Research Scope',
-      secondaryCtaUrl: '#capabilities',
-      seoTitle: 'Mechanical Engineering Design Copilot — AI Engineering Tool | Quantum AI',
-      seoDescription: 'An AI powered engineering copilot designed by Quantum AI to assist with mechanical component design, technical calculations, constraint analysis, and material evaluation.',
-      published: true,
-      metrics: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      testimonialId: null,
-      externalUrl: null,
-    } as any;
+    study = COPILOT_CASE_STUDY as any;
   }
 
   if (!study || !study.published) {

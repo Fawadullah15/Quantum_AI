@@ -1,5 +1,6 @@
 import prisma from '@/lib/db';
 import CaseStudiesClient from '../case-studies/client';
+import { getEnsuredAdminCaseStudies } from '@/lib/default-projects';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,9 +9,7 @@ export const metadata = {
 };
 
 export default async function ProjectsAdminPage() {
-  const caseStudies = await prisma.caseStudy.findMany({
-    orderBy: { order: 'asc' },
-  }).catch(() => []);
+  const caseStudies = await getEnsuredAdminCaseStudies();
 
   return (
     <div style={{ maxWidth: 1280, margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>

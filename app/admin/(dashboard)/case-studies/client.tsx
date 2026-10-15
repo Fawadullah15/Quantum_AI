@@ -16,6 +16,7 @@ import {
   toggleFeaturedCaseStudy,
 } from './actions';
 import type { CaseStudy } from '@prisma/client';
+import { COPILOT_CASE_STUDY } from '@/lib/default-projects';
 
 export default function CaseStudiesClient({
   caseStudies: initialCaseStudies,
@@ -26,7 +27,23 @@ export default function CaseStudiesClient({
   const toast = useAdminToast();
   const { confirm } = useAdminConfirm();
 
-  const [caseStudies, setCaseStudies] = useState<any[]>(initialCaseStudies);
+  const [caseStudies, setCaseStudies] = useState<any[]>(() => {
+    const list = Array.isArray(initialCaseStudies) ? initialCaseStudies : [];
+    if (list.some((s) => s.slug === 'mechanical-engineering-design-copilot')) {
+      return list;
+    }
+    return [COPILOT_CASE_STUDY, ...list];
+  });
+
+  useEffect(() => {
+    if (Array.isArray(initialCaseStudies)) {
+      if (initialCaseStudies.some((s) => s.slug === 'mechanical-engineering-design-copilot')) {
+        setCaseStudies(initialCaseStudies);
+      } else {
+        setCaseStudies([COPILOT_CASE_STUDY, ...initialCaseStudies]);
+      }
+    }
+  }, [initialCaseStudies]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);

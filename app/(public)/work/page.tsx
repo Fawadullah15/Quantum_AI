@@ -4,6 +4,8 @@ import { createPageMetadata } from '@/lib/seo';
 import { parseGallery } from '@/lib/gallery';
 import { GalleryConfigurator } from '@/components/layout/GalleryConfigurator';
 
+import { COPILOT_CASE_STUDY, ensureMechanicalCopilotInDb } from '@/lib/default-projects';
+
 export const dynamic = 'force-dynamic';
 
 export const metadata = createPageMetadata({
@@ -20,52 +22,16 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
   const resolvedParams = searchParams ? await searchParams : {};
   const activeCategory = resolvedParams?.category || 'ALL';
 
+  await ensureMechanicalCopilotInDb();
   let allCaseStudies = await prisma.caseStudy.findMany({
     where: { published: true },
     orderBy: { order: 'asc' },
   }).catch(() => []);
 
   if (!allCaseStudies || allCaseStudies.length === 0) {
-    allCaseStudies = [
-      {
-        id: 'copilot-01',
-        title: 'Mechanical Engineering Design Copilot',
-        slug: 'mechanical-engineering-design-copilot',
-        client: 'Quantum AI',
-        industry: 'AI Product / Engineering Software',
-        year: 2026,
-        order: 0,
-        heroImage: '/uploads/mechanical-engineering-design-copilot.png',
-        gallery: JSON.stringify(['/uploads/mechanical-engineering-design-copilot.png']),
-        featured: true,
-        status: 'Prototype in Development',
-        problem: 'An AI powered engineering copilot designed to assist with mechanical component design, technical calculations, constraint analysis, material evaluation, and engineering recommendations.',
-        solution: 'We are developing an AI powered copilot that accepts mechanical engineering requirements and helps organize the process into clear engineering steps. It aims to connect user requirements with relevant equations, design parameters, engineering constraints, component evaluations, and technical recommendations.',
-        technologies: 'Artificial Intelligence, Mechanical Design, Engineering Analysis, Product Development, Python, CAD Integration',
-        published: true,
-      } as any,
-    ];
+    allCaseStudies = [COPILOT_CASE_STUDY as any];
   } else if (!allCaseStudies.some((s) => s.slug === 'mechanical-engineering-design-copilot')) {
-    allCaseStudies = [
-      {
-        id: 'copilot-01',
-        title: 'Mechanical Engineering Design Copilot',
-        slug: 'mechanical-engineering-design-copilot',
-        client: 'Quantum AI',
-        industry: 'AI Product / Engineering Software',
-        year: 2026,
-        order: 0,
-        heroImage: '/uploads/mechanical-engineering-design-copilot.png',
-        gallery: JSON.stringify(['/uploads/mechanical-engineering-design-copilot.png']),
-        featured: true,
-        status: 'Prototype in Development',
-        problem: 'An AI powered engineering copilot designed to assist with mechanical component design, technical calculations, constraint analysis, material evaluation, and engineering recommendations.',
-        solution: 'We are developing an AI powered copilot that accepts mechanical engineering requirements and helps organize the process into clear engineering steps. It aims to connect user requirements with relevant equations, design parameters, engineering constraints, component evaluations, and technical recommendations.',
-        technologies: 'Artificial Intelligence, Mechanical Design, Engineering Analysis, Product Development, Python, CAD Integration',
-        published: true,
-      } as any,
-      ...allCaseStudies,
-    ];
+    allCaseStudies = [COPILOT_CASE_STUDY as any, ...allCaseStudies];
   }
 
   // Collect images from published case studies for the 3D gallery background

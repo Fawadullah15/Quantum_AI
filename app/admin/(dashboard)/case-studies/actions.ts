@@ -238,8 +238,22 @@ export async function updateCaseStudy(id: string, data: Partial<CaseStudyInput>)
     }
   }
 
+  let targetId = id;
+  let targetStudy = await prisma.caseStudy.findFirst({
+    where: { OR: [{ id }, { slug: id }, { slug: 'mechanical-engineering-design-copilot' }] },
+  });
+  if (targetStudy) {
+    targetId = targetStudy.id;
+  } else if (id.includes('mechanical-engineering-design-copilot')) {
+    const { ensureMechanicalCopilotInDb } = await import('@/lib/default-projects');
+    targetStudy = await ensureMechanicalCopilotInDb();
+    if (targetStudy) {
+      targetId = targetStudy.id;
+    }
+  }
+
   const study = await prisma.caseStudy.update({
-    where: { id },
+    where: { id: targetId },
     data: updateData,
   });
 
@@ -255,8 +269,17 @@ export async function updateCaseStudy(id: string, data: Partial<CaseStudyInput>)
 
 export async function togglePublishCaseStudy(id: string, published: boolean) {
   await checkAuth();
+  let targetStudy = await prisma.caseStudy.findFirst({
+    where: { OR: [{ id }, { slug: id }, { slug: 'mechanical-engineering-design-copilot' }] },
+  });
+
+  if (!targetStudy && id.includes('mechanical-engineering-design-copilot')) {
+    const { ensureMechanicalCopilotInDb } = await import('@/lib/default-projects');
+    targetStudy = await ensureMechanicalCopilotInDb();
+  }
+
   const study = await prisma.caseStudy.update({
-    where: { id },
+    where: { id: targetStudy ? targetStudy.id : id },
     data: { published },
   });
 
@@ -272,8 +295,17 @@ export async function togglePublishCaseStudy(id: string, published: boolean) {
 
 export async function toggleFeaturedCaseStudy(id: string, featured: boolean) {
   await checkAuth();
+  let targetStudy = await prisma.caseStudy.findFirst({
+    where: { OR: [{ id }, { slug: id }, { slug: 'mechanical-engineering-design-copilot' }] },
+  });
+
+  if (!targetStudy && id.includes('mechanical-engineering-design-copilot')) {
+    const { ensureMechanicalCopilotInDb } = await import('@/lib/default-projects');
+    targetStudy = await ensureMechanicalCopilotInDb();
+  }
+
   const study = await prisma.caseStudy.update({
-    where: { id },
+    where: { id: targetStudy ? targetStudy.id : id },
     data: { featured },
   });
 
@@ -289,9 +321,17 @@ export async function deleteCaseStudy(id: string) {
   const session = await checkAuth();
   const user = session.user as any;
 
+  let targetId = id;
+  const targetStudy = await prisma.caseStudy.findFirst({
+    where: { OR: [{ id }, { slug: id }, { slug: 'mechanical-engineering-design-copilot' }] },
+  });
+  if (targetStudy) {
+    targetId = targetStudy.id;
+  }
+
   await softDelete({
     entityType: 'CASE_STUDY',
-    id,
+    id: targetId,
     adminUser: { id: user?.id, name: user?.name, email: user?.email },
   });
 

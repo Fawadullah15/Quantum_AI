@@ -4,16 +4,22 @@ import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 
+import { COPILOT_CASE_STUDY, ensureMechanicalCopilotInDb } from '@/lib/default-projects';
+
 export async function GET() {
   try {
-    const caseStudies = await prisma.caseStudy.findMany({
+    await ensureMechanicalCopilotInDb();
+    let caseStudies = await prisma.caseStudy.findMany({
       where: { published: true },
       include: { metrics: true },
       orderBy: { order: 'asc' },
     });
+    if (!caseStudies.some((s) => s.slug === 'mechanical-engineering-design-copilot')) {
+      caseStudies = [COPILOT_CASE_STUDY as any, ...caseStudies];
+    }
     return NextResponse.json(caseStudies);
   } catch (error) {
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    return NextResponse.json([COPILOT_CASE_STUDY as any]);
   }
 }
 
