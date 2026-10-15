@@ -228,6 +228,17 @@ export default function ParticleText({
       particlesRef.current = newParticles;
     };
 
+    const prefersReduced = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      particlesRef.current.forEach((p) => {
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.originX, p.originY, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      return;
+    }
+
     let isVisible = true;
 
     // Timing constants for natural dispersion hold and smooth return
@@ -413,6 +424,7 @@ export default function ParticleText({
     >
       <canvas 
         ref={canvasRef} 
+        aria-hidden="true"
         style={{ 
           display: 'block', 
           width: '100%', 

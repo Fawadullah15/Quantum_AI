@@ -41,7 +41,14 @@ const FoundersSection: React.FC<FoundersSectionProps> = ({ founders = DEFAULT_FO
           <div key={index} className={`${styles.panel} ${index === 0 ? styles.panelLeft : styles.panelRight}`}>
             <div className={styles.photoArea}>
               {founder.photo ? (
-                <img src={founder.photo} alt={founder.name} className={styles.photo} />
+                <img
+                  src={founder.photo}
+                  alt={founder.name}
+                  width={400}
+                  height={480}
+                  loading="lazy"
+                  className={styles.photo}
+                />
               ) : (
                 <div className={styles.photoPlaceholder}>
                   {founder.name.split(' ').map(n => n[0]).join('')}
@@ -55,9 +62,36 @@ const FoundersSection: React.FC<FoundersSectionProps> = ({ founders = DEFAULT_FO
               <p className={styles.bio}>{founder.bio}</p>
               
               <div className={styles.socials}>
-                {founder.linkedin && <a href={founder.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>}
-                {founder.twitter && <a href={founder.twitter} target="_blank" rel="noreferrer">Twitter</a>}
-                {founder.github && <a href={founder.github} target="_blank" rel="noreferrer">GitHub</a>}
+                {founder.linkedin && (
+                  <a
+                    href={founder.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${founder.name} on LinkedIn (opens in new tab)`}
+                  >
+                    LinkedIn
+                  </a>
+                )}
+                {founder.twitter && (
+                  <a
+                    href={founder.twitter}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${founder.name} on Twitter (opens in new tab)`}
+                  >
+                    Twitter
+                  </a>
+                )}
+                {founder.github && (
+                  <a
+                    href={founder.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${founder.name} on GitHub (opens in new tab)`}
+                  >
+                    GitHub
+                  </a>
+                )}
               </div>
             </div>
           </div>

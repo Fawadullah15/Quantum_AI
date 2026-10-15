@@ -62,7 +62,7 @@ const ContactSection: React.FC = () => {
         <div className={styles.leftCol}>
           <div className={styles.label}>[11 — CONTACT]</div>
           <h2 className={styles.heading}>
-            LET'S BUILD<br />
+            LET’S BUILD<br />
             SOMETHING<br />
             INTELLIGENT.
           </h2>
@@ -74,9 +74,9 @@ const ContactSection: React.FC = () => {
 
         <div className={styles.rightCol}>
           {submitStatus === 'success' ? (
-            <div className={styles.successMessage}>
+            <div className={styles.successMessage} aria-live="polite">
               <h3>MESSAGE RECEIVED</h3>
-              <p>We'll be in touch shortly to discuss your project.</p>
+              <p>We’ll be in touch shortly to discuss your project.</p>
               <button onClick={() => setSubmitStatus('idle')} className={styles.resetBtn}>
                 Send another message
               </button>
@@ -88,6 +88,8 @@ const ContactSection: React.FC = () => {
                   type="text" 
                   name="name" 
                   placeholder="Name *" 
+                  aria-label="Full name"
+                  autoComplete="name"
                   className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
                 />
               </div>
@@ -97,6 +99,9 @@ const ContactSection: React.FC = () => {
                   type="email" 
                   name="email" 
                   placeholder="Email *" 
+                  aria-label="Email address"
+                  autoComplete="email"
+                  spellCheck={false}
                   className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
                 />
               </div>
@@ -107,6 +112,8 @@ const ContactSection: React.FC = () => {
                     type="text" 
                     name="company" 
                     placeholder="Company (Optional)" 
+                    aria-label="Company name (optional)"
+                    autoComplete="organization"
                     className={styles.input}
                   />
                 </div>
@@ -115,6 +122,8 @@ const ContactSection: React.FC = () => {
                     type="tel" 
                     name="phone" 
                     placeholder="Phone (Optional)" 
+                    aria-label="Phone number (optional)"
+                    autoComplete="tel"
                     className={styles.input}
                   />
                 </div>
@@ -122,8 +131,8 @@ const ContactSection: React.FC = () => {
 
               <div className={styles.row}>
                 <div className={styles.inputGroup}>
-                  <select name="projectType" className={styles.select}>
-                    <option value="">Project Type...</option>
+                  <select name="projectType" aria-label="Project type" className={styles.select}>
+                    <option value="">Project Type…</option>
                     <option value="AI Systems">AI Systems</option>
                     <option value="AI Agents">AI Agents</option>
                     <option value="Machine Learning">Machine Learning</option>
@@ -133,13 +142,13 @@ const ContactSection: React.FC = () => {
                   </select>
                 </div>
                 <div className={styles.inputGroup}>
-                  <select name="budget" className={styles.select}>
-                    <option value="">Budget...</option>
+                  <select name="budget" aria-label="Estimated budget" className={styles.select}>
+                    <option value="">Budget…</option>
                     <option value="< $5k">&lt; $5k</option>
                     <option value="$5k-$20k">$5k-$20k</option>
                     <option value="$20k-$50k">$20k-$50k</option>
                     <option value="$50k+">$50k+</option>
-                    <option value="discuss">Let's discuss</option>
+                    <option value="discuss">Let’s discuss</option>
                   </select>
                 </div>
               </div>
@@ -148,13 +157,14 @@ const ContactSection: React.FC = () => {
                 <textarea 
                   name="message" 
                   placeholder="Tell us about your project *" 
+                  aria-label="Project details"
                   rows={4}
                   className={`${styles.textarea} ${errors.message ? styles.inputError : ''}`}
                 ></textarea>
               </div>
 
               {submitStatus === 'error' && (
-                <div className={styles.errorMessage}>
+                <div className={styles.errorMessage} aria-live="polite">
                   Something went wrong. Please try again or email us directly.
                 </div>
               )}
@@ -162,9 +172,10 @@ const ContactSection: React.FC = () => {
               <button 
                 type="submit" 
                 disabled={isSubmitting} 
+                aria-busy={isSubmitting}
                 className={styles.submitBtn}
               >
-                {isSubmitting ? 'SENDING...' : 'START THE CONVERSATION'}
+                {isSubmitting ? 'SENDING…' : 'START THE CONVERSATION'}
               </button>
             </form>
           )}

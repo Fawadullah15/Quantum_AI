@@ -80,7 +80,7 @@
   padding: var(--q-space-3) var(--q-space-6);
   font-family: var(--font-d-din, sans-serif);
   font-weight: 600;
-  transition: all var(--q-motion-base) var(--q-ease-standard);
+  transition: background-color var(--q-motion-base) var(--q-ease-standard), color var(--q-motion-base) var(--q-ease-standard);
   border: none;
   cursor: pointer;
 }
@@ -100,7 +100,7 @@
   padding: var(--q-space-3) var(--q-space-6);
   font-family: var(--font-d-din, sans-serif);
   font-weight: 600;
-  transition: all var(--q-motion-base) var(--q-ease-standard);
+  transition: background-color var(--q-motion-base) var(--q-ease-standard), border-color var(--q-motion-base) var(--q-ease-standard), color var(--q-motion-base) var(--q-ease-standard);
   cursor: pointer;
 }
 .q-btn-secondary:hover {
@@ -117,7 +117,7 @@
   padding: var(--q-space-2) var(--q-space-4);
   font-family: var(--font-d-din, sans-serif);
   font-weight: 500;
-  transition: all var(--q-motion-fast) var(--q-ease-standard);
+  transition: color var(--q-motion-fast) var(--q-ease-standard);
   border: none;
   cursor: pointer;
 }
@@ -236,7 +236,10 @@
 
 /* ACCESSIBILITY & REDUCED MOTION */
 @media (prefers-reduced-motion: reduce) {
-  .q-motion-respect {
+  .q-motion-respect,
+  .q-btn-primary,
+  .q-btn-secondary,
+  .q-btn-tertiary {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

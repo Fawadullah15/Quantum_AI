@@ -29,13 +29,18 @@ export default async function PublicLayout({ children }: { children: React.React
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webSiteSchema) }}
       />
       <div className="public-layout">
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <ClientLayout>
           <Navigation
             companyName={settings.company_name}
             ctaLabel={settings.nav_cta_label}
             ctaLink={settings.nav_cta_link}
           />
-          {children}
+          <main id="main-content" tabIndex={-1} style={{ outline: 'none' }}>
+            {children}
+          </main>
           <Footer
             companyName={settings.company_name}
             tagline={settings.footer_tagline || settings.company_tagline}

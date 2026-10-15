@@ -168,7 +168,7 @@ export default function Footer({
           {/* Link columns - each spans 1 column */}
           {Object.entries(footerLinks).map(([section, links]) => (
             <div key={section} className="footer-col">
-              <div style={{
+              <h3 style={{
                 fontFamily: 'var(--font-d-din)',
                 fontSize: '0.65rem',
                 letterSpacing: '0.2em',
@@ -178,7 +178,7 @@ export default function Footer({
                 fontWeight: 600,
               }}>
                 {section}
-              </div>
+              </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {links.map(l => (
                   <Link

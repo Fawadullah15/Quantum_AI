@@ -37,6 +37,7 @@ export default function CustomCursor() {
 
     // 2. Respect prefers-reduced-motion
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
 
     document.body.classList.add('custom-cursor-active');
     setIsVisible(true);

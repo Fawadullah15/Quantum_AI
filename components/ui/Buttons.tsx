@@ -44,7 +44,6 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
     cursor: disabled ? 'not-allowed' : 'pointer',
     textDecoration: 'none',
     overflow: 'hidden',
-    outline: 'none',
     opacity: disabled ? 0.5 : 1,
     background: 'transparent',
     maxWidth: '100%',
@@ -56,7 +55,7 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
   const content = (
     <>
       {/* Spinning edge ring */}
-      <span style={{
+      <span aria-hidden="true" style={{
         position: 'absolute',
         inset: 0,
         borderRadius: 999,
@@ -76,7 +75,7 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
       </span>
 
       {/* Surface */}
-      <span style={{
+      <span aria-hidden="true" style={{
         position: 'absolute',
         inset: '1.5px',
         borderRadius: 999,
@@ -85,7 +84,7 @@ export function NovaButton({ href, children, onClick, className = '', style, typ
         overflow: 'hidden',
       }}>
         {/* Shine on hover */}
-        <span className="nova-shine" style={{
+        <span className="nova-shine" aria-hidden="true" style={{
           position: 'absolute',
           inset: 0,
           background: 'linear-gradient(120deg, transparent 30%, rgba(103, 232, 249,0.12) 50%, transparent 70%)',
@@ -176,7 +175,6 @@ export function GalaxyButton({ href, children, onClick, className = '', style, t
     cursor: disabled ? 'not-allowed' : 'pointer',
     textDecoration: 'none',
     overflow: 'hidden',
-    outline: 'none',
     opacity: disabled ? 0.5 : 1,
     background: '#050C0E',
     boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
@@ -190,7 +188,7 @@ export function GalaxyButton({ href, children, onClick, className = '', style, t
   const content = (
     <>
       {/* Galaxy background */}
-      <span className="galaxy-bg" style={{
+      <span className="galaxy-bg" aria-hidden="true" style={{
         position: 'absolute',
         inset: 0,
         borderRadius: 'inherit',
@@ -275,6 +273,11 @@ const BUTTON_STYLES = `
   }
   @keyframes novaSpin {
     to { --nova-angle: 360deg; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    @keyframes novaSpin {
+      to { --nova-angle: 0deg; }
+    }
   }
 `;
 

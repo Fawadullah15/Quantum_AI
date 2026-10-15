@@ -20,7 +20,7 @@ const SOLUTIONS: SolutionItem[] = [
   {
     step: '02',
     name: 'Business Software',
-    desc: 'Custom management portals, internal operations platforms, real-time dashboards, and ERP/CRM-style systems built specifically for your organization\'s workflow.',
+    desc: 'Custom management portals, internal operations platforms, real-time dashboards, and ERP/CRM-style systems built specifically for your organization’s workflow.',
     href: '/services#software',
   },
   {
@@ -341,7 +341,6 @@ export default function SolutionsSection() {
                 onMouseLeave={() => setHoveredIdx(null)}
                 onFocus={() => setHoveredIdx(idx)}
                 onBlur={() => setHoveredIdx(null)}
-                aria-expanded={isExpanded}
               >
                 <div className="solution-card-header">
                   <div className="solution-card-title-group">
@@ -350,7 +349,7 @@ export default function SolutionsSection() {
                   </div>
                   <div className="solution-card-indicator">
                     <span>{isExpanded ? 'DISCOVER' : '+'}</span>
-                    <span>→</span>
+                    <span aria-hidden="true">→</span>
                   </div>
                 </div>
 
@@ -359,7 +358,7 @@ export default function SolutionsSection() {
                     <p className="solution-card-desc">{item.desc}</p>
                     <div className="solution-card-cta">
                       <span>DISCOVER SOLUTION</span>
-                      <span>→</span>
+                      <span aria-hidden="true">→</span>
                     </div>
                   </div>
                 </div>
@@ -376,7 +375,7 @@ export default function SolutionsSection() {
                 <span className="mobile-solution-num">{item.step}</span>
                 <h3 className="mobile-solution-title">{item.name}</h3>
               </div>
-              <span className="mobile-solution-arrow">→</span>
+              <span className="mobile-solution-arrow" aria-hidden="true">→</span>
             </Link>
           ))}
         </div>
@@ -401,7 +400,7 @@ export default function SolutionsSection() {
               textTransform: 'uppercase',
               textDecoration: 'none',
               boxShadow: '0 0 20px -5px rgba(20, 184, 166, 0.3)',
-              transition: 'all 0.25s ease',
+              transition: 'background-color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.25)';
@@ -417,7 +416,7 @@ export default function SolutionsSection() {
             }}
           >
             <span>VIEW ALL SOLUTIONS &amp; ARCHITECTURES</span>
-            <span style={{ color: '#FFFFFF' }}>→</span>
+            <span style={{ color: '#FFFFFF' }} aria-hidden="true">→</span>
           </Link>
         </div>
       </div>

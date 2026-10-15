@@ -381,7 +381,14 @@ export default async function CaseStudyPage({ params }: Props) {
       {study.heroImage && (
         <div style={{ width: '100%', aspectRatio: '16/9', backgroundColor: '#020714', borderRadius: '12px', border: '1px solid rgba(56, 189, 248, 0.25)', marginBottom: '2.5rem', overflow: 'hidden', boxShadow: '0 20px 50px -10px rgba(0, 0, 0, 0.8)' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={study.heroImage} alt={study.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img
+            src={study.heroImage}
+            alt={study.title}
+            width={1200}
+            height={675}
+            loading="lazy"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
         </div>
       )}
 

@@ -241,7 +241,11 @@ export default function TestimonialsSection({
 
   const renderStars = (rating: number = 5) => {
     const clamped = Math.max(1, Math.min(5, Math.round(rating)));
-    return <div className="test-stars">{'★'.repeat(clamped)}</div>;
+    return (
+      <div className="test-stars" role="img" aria-label={`${clamped} out of 5 stars`}>
+        {'★'.repeat(clamped)}
+      </div>
+    );
   };
 
   const renderCard = (t: TestimonialItem, keyIdx: string | number) => {
@@ -259,6 +263,12 @@ export default function TestimonialsSection({
         key={keyIdx}
         className="test-square-card"
         onClick={() => setActiveReadingItem(t)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setActiveReadingItem(t);
+          }
+        }}
         onMouseEnter={() => setIsSlowMode(true)}
         onMouseLeave={() => setIsSlowMode(false)}
         role="button"
@@ -267,7 +277,7 @@ export default function TestimonialsSection({
       >
         {/* Top Header: Quote Mark & Star Rating */}
         <div className="test-card-top">
-          <span className="test-quote-mark">“</span>
+          <span className="test-quote-mark" aria-hidden="true">“</span>
           {renderStars(t.rating || 5)}
         </div>
 
@@ -283,6 +293,8 @@ export default function TestimonialsSection({
               <img
                 src={t.photo}
                 alt={t.name}
+                width={40}
+                height={40}
                 className="test-avatar-img"
                 loading="lazy"
                 onError={(e) => {
@@ -997,7 +1009,7 @@ export default function TestimonialsSection({
                         fontFamily: 'var(--font-d-din)',
                       }}
                     >
-                      {isSubmitting ? 'Submitting...' : 'Submit Testimonial'}
+                      {isSubmitting ? 'Submitting…' : 'Submit Testimonial'}
                     </button>
                   </div>
                 </form>

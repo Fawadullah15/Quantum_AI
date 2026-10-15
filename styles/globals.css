@@ -54,9 +54,65 @@ input, button, textarea, select {
 
 
 .public-layout p, .public-layout h1, .public-layout h2, .public-layout h3, .public-layout h4, .public-layout h5, .public-layout h6 {
-
   overflow-wrap: break-word;
+}
 
+h1, h2, h3, h4, h5, h6,
+.section-heading, .card-heading, .accordion-title {
+  text-wrap: balance;
+}
+
+h1[id], h2[id], h3[id], section[id], [id="main-content"] {
+  scroll-margin-top: 100px;
+}
+
+/* Accessible Skip Link */
+.skip-link {
+  position: absolute;
+  top: -120px;
+  left: 1.5rem;
+  background: #050C0E;
+  color: #00F5FF !important;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #00F5FF;
+  border-radius: 6px;
+  font-family: var(--font-d-din, monospace);
+  font-weight: 700;
+  font-size: 0.875rem;
+  z-index: 999999;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  box-shadow: 0 4px 20px rgba(0, 245, 255, 0.35);
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus-visible {
+  top: 1.5rem;
+  outline: 2px solid #00F5FF !important;
+  outline-offset: 2px !important;
+}
+
+/* Universal high-contrast focus-visible ring for accessibility */
+:focus-visible {
+  outline: 2px solid #00F5FF !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 0 10px rgba(0, 245, 255, 0.4) !important;
+}
+
+/* Don't show outline on mouse click when not using keyboard navigation */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Global respect for prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 

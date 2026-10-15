@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 
@@ -12,16 +12,37 @@ export function Card({
   className = '',
   style,
   children,
+  onClick,
+  onKeyDown,
+  tabIndex,
   ...rest
 }: CardProps) {
+  const isInteractive = variant === 'interactive';
   const variantClass = variant === 'subtle' 
     ? 'card-subtle' 
-    : variant === 'interactive' 
+    : isInteractive 
     ? 'card-interactive' 
     : '';
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (onKeyDown) {
+      onKeyDown(e);
+    } else if (isInteractive && onClick && (e.key === 'Enter' || e.key === ' ')) {
+      e.preventDefault();
+      onClick(e as any);
+    }
+  };
+
   return (
-    <div className={`card ${variantClass} ${className}`.trim()} style={style} {...rest}>
+    <div
+      role={isInteractive && onClick ? 'button' : rest.role}
+      tabIndex={isInteractive ? (tabIndex ?? 0) : tabIndex}
+      className={`card ${variantClass} ${className}`.trim()}
+      style={style}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      {...rest}
+    >
       {children}
     </div>
   );

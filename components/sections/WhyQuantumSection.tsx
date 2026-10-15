@@ -254,7 +254,7 @@ export default function WhyQuantumSection() {
             }}
           >
             <span>THINK DEEPER</span>
-            <span style={{ color: '#FFFFFF', fontSize: '0.6rem' }}>[PHILOSOPHY]</span>
+            <span style={{ color: '#FFFFFF', fontSize: '0.6rem' }} aria-hidden="true">[PHILOSOPHY]</span>
           </div>
 
           <div className="why-right-cards">

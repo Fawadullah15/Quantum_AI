@@ -506,7 +506,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
               letterSpacing: '0.05em',
             }}
           >
-            View all case studies <span>→</span>
+            View all case studies <span aria-hidden="true">→</span>
           </Link>
         </div>
 
@@ -524,16 +524,22 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 onMouseLeave={() => setHoveredIdx(null)}
                 onFocus={() => setHoveredIdx(idx)}
                 onBlur={() => setHoveredIdx(null)}
-                aria-expanded={isExpanded}
               >
                 {/* Default Visible Header Row (Photo + Meta + Title) */}
                 <div className="cs-card-header">
                   <div className="cs-thumb-wrapper" style={{ background: study.gradient }}>
                     {study.image ? (
-                      <img src={study.image} alt={study.title} className="cs-thumb-img" />
+                      <img
+                        src={study.image}
+                        alt={study.title}
+                        width={64}
+                        height={64}
+                        loading="lazy"
+                        className="cs-thumb-img"
+                      />
                     ) : (
                       <div className="cs-thumb-fallback">
-                        <span style={{ fontSize: '1.25rem' }}>{study.accentIcon}</span>
+                        <span style={{ fontSize: '1.25rem' }} aria-hidden="true">{study.accentIcon}</span>
                         <span>{study.industry}</span>
                       </div>
                     )}
@@ -550,7 +556,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
 
                   <div className="cs-card-indicator">
                     <span>{isExpanded ? 'VIEW' : '+'}</span>
-                    <span>→</span>
+                    <span aria-hidden="true">→</span>
                   </div>
                 </div>
 
@@ -568,7 +574,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                       </div>
                       <div className="cs-card-cta">
                         <span>VIEW CASE STUDY</span>
-                        <span>→</span>
+                        <span aria-hidden="true">→</span>
                       </div>
                     </div>
                   </div>
@@ -584,10 +590,17 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
             <Link key={idx} href={`/work/${study.slug}`} className="mobile-cs-tile">
               <div className="mobile-cs-img-wrap" style={{ background: study.gradient }}>
                 {study.image ? (
-                  <img src={study.image} alt={study.title} className="mobile-cs-img" />
+                  <img
+                    src={study.image}
+                    alt={study.title}
+                    width={180}
+                    height={100}
+                    loading="lazy"
+                    className="mobile-cs-img"
+                  />
                 ) : (
                   <div className="cs-thumb-fallback">
-                    <span style={{ fontSize: '1.1rem' }}>{study.accentIcon}</span>
+                    <span style={{ fontSize: '1.1rem' }} aria-hidden="true">{study.accentIcon}</span>
                     <span style={{ fontSize: '0.55rem' }}>{study.industry}</span>
                   </div>
                 )}
@@ -603,7 +616,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
 
               <div className="mobile-cs-arrow">
                 <span>VIEW</span>
-                <span>→</span>
+                <span aria-hidden="true">→</span>
               </div>
             </Link>
           ))}

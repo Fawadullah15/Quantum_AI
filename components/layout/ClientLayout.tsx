@@ -53,6 +53,7 @@ function EarthSceneContainer({ isHome }: { isHome: boolean }) {
   return (
     <div
       ref={containerRef}
+      aria-hidden="true"
       style={{
         position: 'fixed',
         inset: 0,

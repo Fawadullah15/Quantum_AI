@@ -304,12 +304,19 @@ export default function TrustSection() {
             return (
               <div
                 key={idx}
+                role="button"
                 tabIndex={0}
                 className={`trust-tab-card ${isExpanded ? 'is-expanded' : ''}`}
                 onMouseEnter={() => setHoveredIdx(idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
                 onFocus={() => setHoveredIdx(idx)}
                 onBlur={() => setHoveredIdx(null)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setHoveredIdx(isExpanded ? null : idx);
+                  }
+                }}
                 aria-expanded={isExpanded}
               >
                 <div className="trust-card-header">
@@ -319,7 +326,7 @@ export default function TrustSection() {
                   </div>
                   <div className="trust-card-indicator">
                     <span>{isExpanded ? 'VERIFIED' : '+'}</span>
-                    <span>→</span>
+                    <span aria-hidden="true">→</span>
                   </div>
                 </div>
 
@@ -366,7 +373,7 @@ export default function TrustSection() {
               transition: 'color 0.2s',
             }}
           >
-            START A PROJECT →
+            START A PROJECT <span aria-hidden="true">→</span>
           </Link>
         </div>
       </div>

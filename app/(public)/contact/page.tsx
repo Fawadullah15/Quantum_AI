@@ -40,6 +40,8 @@ function Field({
         type={type}
         required={required}
         aria-required={required}
+        autoComplete={type === 'email' ? 'email' : name === 'name' ? 'name' : 'off'}
+        spellCheck={type === 'email' ? false : undefined}
         placeholder={placeholder}
         style={{
           backgroundColor: '#081735',
@@ -360,7 +362,7 @@ export default function ContactPage() {
           }}
         >
           {status === 'success' ? (
-            <div style={{ padding: '3rem 1.5rem', textAlign: 'center' }}>
+            <div role="status" aria-live="polite" style={{ padding: '3rem 1.5rem', textAlign: 'center' }}>
               <div
                 style={{
                   width: '56px',
@@ -453,6 +455,8 @@ export default function ContactPage() {
 
               {status === 'error' && (
                 <div
+                  role="alert"
+                  aria-live="polite"
                   style={{
                     padding: '0.875rem 1.25rem',
                     backgroundColor: 'rgba(239, 68, 68, 0.1)',
@@ -504,7 +508,7 @@ export default function ContactPage() {
                       boxSizing: 'border-box',
                     }}
                   >
-                    <option value="" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Select project type...</option>
+                    <option value="" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Select project type…</option>
                     <option value="AI System" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>AI System</option>
                     <option value="Business Software" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Business Software</option>
                     <option value="Automation" style={{ backgroundColor: '#040E24', color: '#FFFFFF' }}>Automation</option>
@@ -537,7 +541,7 @@ export default function ContactPage() {
                   required
                   aria-required="true"
                   rows={5}
-                  placeholder="Describe your technical objectives, timeline, scope, or current operational bottleneck..."
+                  placeholder="Describe your technical objectives, timeline, scope, or current operational bottleneck…"
                   style={{
                     backgroundColor: '#081735',
                     border: `1px solid ${textFocused ? '#38BDF8' : 'rgba(56, 189, 248, 0.25)'}`,
@@ -563,9 +567,10 @@ export default function ContactPage() {
                 <button
                   type="submit"
                   disabled={status === 'submitting'}
+                  aria-busy={status === 'submitting'}
                   className="contact-submit-btn"
                 >
-                  {status === 'submitting' ? 'TRANSMITTING...' : 'TRANSMIT INQUIRY →'}
+                  {status === 'submitting' ? 'TRANSMITTING…' : 'TRANSMIT INQUIRY →'}
                 </button>
               </div>
             </form>

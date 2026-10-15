@@ -71,8 +71,9 @@ export function AudioPlayer() {
       }
 
       const state = audioStore.getSnapshot();
-      // If user explicitly muted or audio is already playing, do not play
-      if (state.isMuted || state.isPlaying || !isActive) {
+      const reduceMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      // If user explicitly muted, prefers reduced motion/distraction, or audio is already playing, do not play
+      if (state.isMuted || state.isPlaying || !isActive || reduceMotion) {
         cleanupInteractionListeners();
         return;
       }

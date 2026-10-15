@@ -301,7 +301,7 @@ export default function Navigation({
                   >
                     {item.label}
                     {item.dropdown && (
-                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none"
+                      <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true"
                         style={{ opacity: 0.5, transition: 'transform 0.2s', transform: activeDropdown === item.href ? 'rotate(180deg)' : 'none' }}>
                         <path d="M1 1l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
@@ -420,7 +420,7 @@ export default function Navigation({
                   lineHeight: 0,
                 }}
               >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
                   <path d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
@@ -439,6 +439,8 @@ export default function Navigation({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileOpen(false)}
+              role="presentation"
+              aria-hidden="true"
               style={{
                 position: 'fixed',
                 inset: 0,
@@ -486,7 +488,7 @@ export default function Navigation({
                   aria-label="Close menu"
                   style={{ background: 'transparent', border: 'none', color: '#FFFFFF', cursor: 'pointer', padding: '0.5rem', borderRadius: 8 }}
                 >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
                     <path d="M18 6L6 18M6 6l12 12" />
                   </svg>
                 </button>
@@ -496,50 +498,59 @@ export default function Navigation({
               <nav aria-label="Mobile navigation" style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                 {NAV_ITEMS.map((item) => (
                   <div key={item.href} style={{ borderBottom: '1px solid rgba(20, 184, 166, 0.08)' }}>
-                    <button
-                      onClick={() => {
-                        if (item.dropdown) {
+                    {item.dropdown ? (
+                      <button
+                        onClick={() => {
                           setMobileAccordion(mobileAccordion === item.href ? null : item.href);
-                        } else {
-                          setMobileOpen(false);
-                        }
-                      }}
-                      aria-expanded={item.dropdown ? mobileAccordion === item.href : undefined}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        width: '100%',
-                        background: 'transparent',
-                        border: 'none',
-                        padding: '1.125rem 0',
-                        cursor: 'pointer',
-                        color: '#FFFFFF',
-                        fontSize: '1.05rem',
-                        fontFamily: 'var(--font-d-din)',
-                        fontWeight: 600,
-                        textAlign: 'left',
-                      }}
-                    >
-                      {item.dropdown ? (
+                        }}
+                        aria-expanded={mobileAccordion === item.href}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          width: '100%',
+                          background: 'transparent',
+                          border: 'none',
+                          padding: '1.125rem 0',
+                          cursor: 'pointer',
+                          color: '#FFFFFF',
+                          fontSize: '1.05rem',
+                          fontFamily: 'var(--font-d-din)',
+                          fontWeight: 600,
+                          textAlign: 'left',
+                        }}
+                      >
                         <span>{item.label}</span>
-                      ) : (
-                        <Link href={item.href} onClick={() => setMobileOpen(false)} style={{ color: 'inherit', textDecoration: 'none', width: '100%', display: 'block' }}>
-                          {item.label}
-                        </Link>
-                      )}
-                      {item.dropdown && (
                         <motion.div
                           animate={{ rotate: mobileAccordion === item.href ? 180 : 0 }}
                           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                           style={{ color: '#FFFFFF', flexShrink: 0, marginLeft: '0.5rem' }}
                         >
-                          <svg width="16" height="10" viewBox="0 0 16 10" fill="none">
+                          <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true">
                             <path d="M1 1l7 7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         </motion.div>
-                      )}
-                    </button>
+                      </button>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          width: '100%',
+                          color: '#FFFFFF',
+                          textDecoration: 'none',
+                          padding: '1.125rem 0',
+                          fontSize: '1.05rem',
+                          fontFamily: 'var(--font-d-din)',
+                          fontWeight: 600,
+                        }}
+                      >
+                        {item.label}
+                      </Link>
+                    )}
 
                     {/* Accordion Items */}
                     <AnimatePresence>

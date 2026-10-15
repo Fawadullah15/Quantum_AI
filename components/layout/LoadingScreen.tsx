@@ -44,6 +44,8 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
   return (
     <div
+      role="status"
+      aria-live="polite"
       style={{
         position: 'fixed',
         top: 0,
@@ -72,7 +74,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             animation: 'fadeIn 0.5s ease-out forwards',
           }}
         >
-          SYSTEM INITIALIZATION
+          SYSTEM INITIALIZATION…
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-d-din)', fontSize: 'var(--text-sm)', fontWeight: 'var(--weight-medium)', color: 'var(--color-text-secondary)' }}>
@@ -91,6 +93,10 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         </div>
 
         <div
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="System initialization progress"
           style={{
             width: '100%',
             height: '2px',

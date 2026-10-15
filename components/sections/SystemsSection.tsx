@@ -59,7 +59,7 @@ const SystemsSection: React.FC<SystemsSectionProps> = ({ systems = DEFAULT_SYSTE
                 className={`${styles.chip} ${isVisible ? styles.visible : ''}`}
                 style={{ transitionDelay: `${index * 50}ms` }}
               >
-                <span className={styles.chipNumber}>
+                <span className={styles.chipNumber} aria-hidden="true">
                   {(index + 1).toString().padStart(2, '0')}
                 </span>
                 {system}

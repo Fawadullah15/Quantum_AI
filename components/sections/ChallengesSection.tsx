@@ -377,7 +377,6 @@ export default function ChallengesSection() {
                 onMouseLeave={() => setHoveredIdx(null)}
                 onFocus={() => setHoveredIdx(idx)}
                 onBlur={() => setHoveredIdx(null)}
-                aria-expanded={isExpanded}
               >
                 <div className="challenge-card-header">
                   <div className="challenge-card-title-group">
@@ -386,7 +385,7 @@ export default function ChallengesSection() {
                   </div>
                   <div className="challenge-card-indicator">
                     <span>{isExpanded ? item.action : '+'}</span>
-                    <span>→</span>
+                    <span aria-hidden="true">→</span>
                   </div>
                 </div>
 
@@ -395,7 +394,7 @@ export default function ChallengesSection() {
                     <p className="challenge-card-desc">{item.desc}</p>
                     <div className="challenge-card-cta">
                       <span>{item.action}</span>
-                      <span>→</span>
+                      <span aria-hidden="true">→</span>
                     </div>
                   </div>
                 </div>
@@ -415,7 +414,7 @@ export default function ChallengesSection() {
               <p className="mobile-block-desc">{item.desc}</p>
               <div className="mobile-block-action">
                 <span>{item.action}</span>
-                <span>→</span>
+                <span aria-hidden="true">→</span>
               </div>
             </Link>
           ))}

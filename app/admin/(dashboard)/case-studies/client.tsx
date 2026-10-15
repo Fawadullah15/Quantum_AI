@@ -507,7 +507,8 @@ export default function CaseStudiesClient({
               <div style={{ flex: 1, position: 'relative', minWidth: '220px' }}>
                 <input
                   type="text"
-                  placeholder="Search project title, owner, category, tech stack, keyword..."
+                  placeholder="Search project title, owner, category, tech stack, keyword…"
+                  aria-label="Search projects"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   style={{
@@ -527,6 +528,7 @@ export default function CaseStudiesClient({
               {industries.length > 0 && (
                 <select
                   value={industryFilter}
+                  aria-label="Filter by industry"
                   onChange={(e) => setIndustryFilter(e.target.value)}
                   style={{
                     backgroundColor: '#070B14',
@@ -713,6 +715,7 @@ export default function CaseStudiesClient({
                               <button
                                 type="button"
                                 title="Move up"
+                                aria-label="Move project up"
                                 disabled={index === 0}
                                 onClick={() => handleMoveOrder(index, 'UP')}
                                 style={{
@@ -732,6 +735,7 @@ export default function CaseStudiesClient({
                               <button
                                 type="button"
                                 title="Move down"
+                                aria-label="Move project down"
                                 disabled={index === filteredCaseStudies.length - 1}
                                 onClick={() => handleMoveOrder(index, 'DOWN')}
                                 style={{
@@ -1023,6 +1027,7 @@ export default function CaseStudiesClient({
             <button
               type="button"
               onClick={() => setIsEditing(false)}
+              aria-label="Close project editor"
               style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '1.25rem', cursor: 'pointer' }}
             >
               ✕
@@ -1200,7 +1205,7 @@ export default function CaseStudiesClient({
                           fontFamily: 'var(--font-mono, monospace)',
                         }}
                       >
-                        {isUploading ? 'Uploading...' : '📁 Upload Cover Image'}
+                        {isUploading ? 'Uploading…' : '📁 Upload Cover Image'}
                       </button>
                       {formData.heroImage && (
                         <button
@@ -1614,7 +1619,7 @@ export default function CaseStudiesClient({
                   boxShadow: '0 4px 14px rgba(22, 119, 255, 0.35)',
                 }}
               >
-                {isSubmitting ? 'Saving...' : currentId ? 'Save & Publish' : 'Publish Project'}
+                {isSubmitting ? 'Saving…' : currentId ? 'Save & Publish' : 'Publish Project'}
               </button>
             </div>
           </form>

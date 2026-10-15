@@ -128,6 +128,8 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
             <img
               src={client.logo}
               alt={`${client.name} logo`}
+              width={120}
+              height={40}
               className="marquee-logo-img"
               loading="lazy"
               onError={(e) => {
@@ -136,7 +138,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
             />
           ) : (
             <div className="marquee-placeholder">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
                 <path d="M3 21h18M3 7v14M21 7v14M6 11h4M6 15h4M14 11h4M14 15h4M9 3h6v4H9z" />
               </svg>
               <span>{client.name.slice(0, 12)}</span>

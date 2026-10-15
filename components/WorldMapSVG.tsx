@@ -5,7 +5,7 @@ export default function WorldMapSVG(props: React.SVGProps<SVGSVGElement>) {
     
 
 
-<svg viewBox="0 0 1000 500" {...props}><path
+<svg viewBox="0 0 1000 500" width="1000" height="500" role="img" aria-label="Global distribution map" {...props}><path
      
      d="M781.68,324.4l-2.31,8.68l-12.53,4.23l-3.75-4.4l-1.82,0.5l3.4,13.12l5.09,0.57l6.79,2.57v2.57l3.11-0.57l4.53-6.27v-5.13l2.55-5.13l2.83,0.57l-3.4-7.13l-0.52-4.59L781.68,324.4L781.68,324.4z" /><path
      

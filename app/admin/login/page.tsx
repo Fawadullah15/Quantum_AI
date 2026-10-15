@@ -46,19 +46,21 @@ export default function AdminLogin() {
         </div>
         <h1 className={styles.title}>ADMIN PANEL</h1>
         
-        {error && <div className={styles.error}>{error}</div>}
+        {error && <div className={styles.error} role="alert" aria-live="polite">{error}</div>}
         
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.inputGroup}>
             <label htmlFor="email" className={styles.label}>Email</label>
             <input
               id="email"
+              name="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={styles.input}
               required
               autoComplete="email"
+              spellCheck={false}
               placeholder="admin@quantumai.dev"
             />
           </div>
@@ -68,6 +70,7 @@ export default function AdminLogin() {
             <div className={styles.passwordWrapper}>
               <input
                 id="password"
+                name="password"
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -80,14 +83,15 @@ export default function AdminLogin() {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className={styles.toggleBtn}
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? "Hide" : "Show"}
               </button>
             </div>
           </div>
           
-          <button type="submit" className={styles.submitBtn} disabled={loading}>
-            {loading ? "Signing In..." : "Sign In"}
+          <button type="submit" className={styles.submitBtn} disabled={loading} aria-busy={loading}>
+            {loading ? "Signing In…" : "Sign In"}
           </button>
         </form>
       </div>

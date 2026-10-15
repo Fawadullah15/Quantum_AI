@@ -54,7 +54,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ services = DEFAULT_SE
             <div className={styles.serviceList}>
               {aiServices.map((service, i) => (
                 <div key={i} className={`${styles.serviceItem} ${styles.aiItem}`}>
-                  <div className={styles.serviceLine}></div>
+                  <div className={styles.serviceLine} aria-hidden="true"></div>
                   <div className={styles.serviceContent}>
                     <h4 className={styles.serviceName}>{service.name}</h4>
                     <p className={styles.serviceDesc}>{service.description}</p>
@@ -69,7 +69,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ services = DEFAULT_SE
             <div className={styles.serviceList}>
               {softwareServices.map((service, i) => (
                 <div key={i} className={`${styles.serviceItem} ${styles.softwareItem}`}>
-                  <div className={styles.serviceLine}></div>
+                  <div className={styles.serviceLine} aria-hidden="true"></div>
                   <div className={styles.serviceContent}>
                     <h4 className={styles.serviceName}>{service.name}</h4>
                     <p className={styles.serviceDesc}>{service.description}</p>

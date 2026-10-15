@@ -51,7 +51,14 @@ export default function MarsHeroVideo() {
       }
     };
 
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const tryPlay = () => {
+      if (reduceMotion) {
+        video.pause();
+        setIsPlaying(false);
+        return;
+      }
       const promise = video.play();
       if (promise !== undefined) {
         promise
@@ -64,7 +71,9 @@ export default function MarsHeroVideo() {
     };
 
     syncSourceForDevice(initialMobile);
-    tryPlay();
+    if (!reduceMotion) {
+      tryPlay();
+    }
 
     // Event listeners to ensure continuous playback
     const onPlay = () => setIsPlaying(true);
@@ -193,6 +202,7 @@ export default function MarsHeroVideo() {
         preload="auto"
         poster={isMobile ? MOBILE_POSTER : DESKTOP_POSTER}
         className="mars-hero-video"
+        aria-hidden="true"
       >
         {/* Mobile sources (loaded when screen <= 768px) */}
         <source

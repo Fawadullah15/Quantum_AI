@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -207,7 +207,7 @@ export default function WhoWeHelpSection() {
                         fontFamily: 'var(--font-d-din)',
                       }}
                     >
-                      <span style={{ color: '#FFFFFF', fontSize: '0.7rem' }}>▹</span>
+                      <span style={{ color: '#FFFFFF', fontSize: '0.7rem' }} aria-hidden="true">▹</span>
                       <span>{del}</span>
                     </div>
                   ))}

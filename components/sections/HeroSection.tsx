@@ -41,7 +41,7 @@ const HeroSection: React.FC = () => {
 
         <div className={`${styles.scrollIndicator} ${mounted ? styles.fadeInBottom : ''}`}>
           <span>[ SCROLL TO EXPLORE ]</span>
-          <div className={styles.arrow}>↓</div>
+          <div className={styles.arrow} aria-hidden="true">↓</div>
         </div>
       </div>
     </section>

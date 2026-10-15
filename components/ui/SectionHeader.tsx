@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 
 export interface SectionHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   eyebrow?: string;
@@ -46,7 +46,7 @@ export function SectionHeader({
         )}
         <TitleTag
           className={TitleTag === 'h1' ? 'heading-1' : 'heading-2'}
-          style={{ marginBottom: description ? 'var(--space-3)' : 0 }}
+          style={{ marginBottom: description ? 'var(--space-3)' : 0, textWrap: 'balance' }}
         >
           {title}
         </TitleTag>

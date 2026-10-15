@@ -320,12 +320,19 @@ export default function ProcessSection() {
             return (
               <div
                 key={idx}
+                role="button"
                 tabIndex={0}
                 className={`process-tab-card ${isExpanded ? 'is-expanded' : ''}`}
                 onMouseEnter={() => setHoveredIdx(idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
                 onFocus={() => setHoveredIdx(idx)}
                 onBlur={() => setHoveredIdx(null)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setHoveredIdx(isExpanded ? null : idx);
+                  }
+                }}
                 aria-expanded={isExpanded}
               >
                 <div className="process-card-header">
@@ -335,7 +342,7 @@ export default function ProcessSection() {
                   </div>
                   <div className="process-card-indicator">
                     <span>{isExpanded ? 'ACTIVE' : '+'}</span>
-                    <span>→</span>
+                    <span aria-hidden="true">→</span>
                   </div>
                 </div>
 
@@ -386,7 +393,7 @@ export default function ProcessSection() {
               transition: 'color 0.2s',
             }}
           >
-            DISCUSS YOUR PROJECT →
+            DISCUSS YOUR PROJECT <span aria-hidden="true">→</span>
           </Link>
         </div>
       </div>

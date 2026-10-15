@@ -590,6 +590,9 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                       <img
                         src={person.photo}
                         alt={person.name}
+                        width={300}
+                        height={300}
+                        loading="lazy"
                         style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
                       />
                     ) : (
@@ -744,7 +747,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                     overflowWrap: 'break-word',
                   }}
                 >
-                  Let's build something useful.
+                  Let’s build something useful.
                 </h2>
                 <p
                   className="section-desc"
@@ -779,7 +782,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                 boxSizing: 'border-box'
               }}>
                 {submitStatus === 'success' ? (
-                  <div style={{ textAlign: 'center', padding: '2rem 0' }}>
+                  <div role="status" aria-live="polite" style={{ textAlign: 'center', padding: '2rem 0' }}>
                     <div style={{ color: '#FFFFFF', fontSize: '2.5rem', marginBottom: '1rem' }}>✓</div>
                     <h3 style={{ fontSize: '1.5rem', color: '#FFFFFF', marginBottom: '0.5rem', textTransform: 'none' }}>Project Inquiry Sent</h3>
                     <p style={{ color: '#FFFFFF', fontSize: '0.95rem', marginBottom: '2rem', fontWeight: 300 }}>Thank you for reaching out. An engineer will review your inquiry and connect with you shortly.</p>
@@ -789,12 +792,14 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                   <form onSubmit={handleFormSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>NAME <span style={{ color: '#FFFFFF' }}>*</span></label>
+                      <label htmlFor="home-contact-name" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>NAME <span style={{ color: '#FFFFFF' }}>*</span></label>
                       <input
+                        id="home-contact-name"
                         type="text"
                         name="name"
                         value={formState.name}
                         onChange={handleFormChange}
+                        autoComplete="name"
                         placeholder="Your full name"
                         style={{
                           backgroundColor: '#0A181B',
@@ -814,12 +819,15 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>EMAIL <span style={{ color: '#FFFFFF' }}>*</span></label>
+                      <label htmlFor="home-contact-email" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>EMAIL <span style={{ color: '#FFFFFF' }}>*</span></label>
                       <input
+                        id="home-contact-email"
                         type="email"
                         name="email"
                         value={formState.email}
                         onChange={handleFormChange}
+                        autoComplete="email"
+                        spellCheck={false}
                         placeholder="name@company.com"
                         style={{
                           backgroundColor: '#0A181B',
@@ -839,12 +847,14 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>COMPANY</label>
+                      <label htmlFor="home-contact-company" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>COMPANY</label>
                       <input
+                        id="home-contact-company"
                         type="text"
                         name="company"
                         value={formState.company}
                         onChange={handleFormChange}
+                        autoComplete="organization"
                         placeholder="Company name (optional)"
                         style={{
                           backgroundColor: '#0A181B',
@@ -864,8 +874,9 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
 
                     <div className="form-selects-row" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>PROJECT TYPE</label>
+                        <label htmlFor="home-contact-project-type" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>PROJECT TYPE</label>
                         <select
+                          id="home-contact-project-type"
                           name="projectType"
                           value={formState.projectType}
                           onChange={handleFormChange}
@@ -881,7 +892,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                             cursor: 'pointer'
                           }}
                         >
-                          <option value="">Select project type...</option>
+                          <option value="">Select project type…</option>
                           <option value="AI System">AI System</option>
                           <option value="Business Software">Business Software</option>
                           <option value="Automation">Automation</option>
@@ -893,8 +904,9 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                       </div>
 
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                        <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>BUDGET RANGE</label>
+                        <label htmlFor="home-contact-budget" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>BUDGET RANGE</label>
                         <select
+                          id="home-contact-budget"
                           name="budget"
                           value={formState.budget}
                           onChange={handleFormChange}
@@ -910,7 +922,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                             cursor: 'pointer'
                           }}
                         >
-                          <option value="">Select budget...</option>
+                          <option value="">Select budget…</option>
                           <option value="< $5,000">&lt; $5,000</option>
                           <option value="$5,000 - $15,000">$5,000 - $15,000</option>
                           <option value="$15,000 - $50,000">$15,000 - $50,000</option>
@@ -921,12 +933,13 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                      <label style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>MESSAGE <span style={{ color: '#FFFFFF' }}>*</span></label>
+                      <label htmlFor="home-contact-message" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.6875rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600 }}>MESSAGE <span style={{ color: '#FFFFFF' }}>*</span></label>
                       <textarea
+                        id="home-contact-message"
                         name="message"
                         value={formState.message}
                         onChange={handleFormChange}
-                        placeholder="Describe your project, problems, and goals"
+                        placeholder="Describe your project, problems, and goals…"
                         rows={4}
                         style={{
                           background: 'transparent',
@@ -948,7 +961,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                     </div>
 
                     {submitStatus === 'error' && (
-                      <span style={{ color: '#EF4444', fontSize: '0.85rem' }}>Submission failed. Please check your network or try again.</span>
+                      <span role="alert" aria-live="polite" style={{ color: '#EF4444', fontSize: '0.85rem' }}>Submission failed. Please check your network or try again.</span>
                     )}
 
                     <NovaButton
@@ -956,7 +969,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                       disabled={isSubmitting}
                       style={{ marginTop: '0.5rem', width: '100%' }}
                     >
-                      {isSubmitting ? 'SENDING...' : 'SEND PROJECT INQUIRY'}
+                      {isSubmitting ? 'SENDING…' : 'SEND PROJECT INQUIRY'}
                     </NovaButton>
 
                     <p style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.7rem', color: '#FFFFFF', lineHeight: 1.5, margin: '0.5rem 0 0 0', textAlign: 'center' }}>

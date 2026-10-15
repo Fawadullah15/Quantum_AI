@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import Link from 'next/link';
@@ -42,9 +42,9 @@ export const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, Bu
 
     const content = (
       <>
-        {leftIcon && <span className="btn-icon-left" style={{ display: 'inline-flex', alignItems: 'center' }}>{leftIcon}</span>}
+        {leftIcon && <span className="btn-icon-left" aria-hidden="true" style={{ display: 'inline-flex', alignItems: 'center' }}>{leftIcon}</span>}
         <span>{children}</span>
-        {rightIcon && <span className="btn-icon-right" style={{ display: 'inline-flex', alignItems: 'center' }}>{rightIcon}</span>}
+        {rightIcon && <span className="btn-icon-right" aria-hidden="true" style={{ display: 'inline-flex', alignItems: 'center' }}>{rightIcon}</span>}
       </>
     );
 

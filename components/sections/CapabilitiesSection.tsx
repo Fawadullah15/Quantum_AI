@@ -344,7 +344,7 @@ export default function CapabilitiesSection() {
               letterSpacing: '0.05em',
             }}
           >
-            View full technology stack <span>→</span>
+            View full technology stack <span aria-hidden="true">→</span>
           </Link>
         </div>
 
@@ -356,12 +356,19 @@ export default function CapabilitiesSection() {
             return (
               <div
                 key={idx}
+                role="button"
                 tabIndex={0}
                 className={`tech-tab-card ${isExpanded ? 'is-expanded' : ''}`}
                 onMouseEnter={() => setHoveredIdx(idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
                 onFocus={() => setHoveredIdx(idx)}
                 onBlur={() => setHoveredIdx(null)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setHoveredIdx(isExpanded ? null : idx);
+                  }
+                }}
                 aria-expanded={isExpanded}
               >
                 <div className="tech-card-header">
@@ -371,7 +378,7 @@ export default function CapabilitiesSection() {
                   </div>
                   <div className="tech-card-indicator">
                     <span>{isExpanded ? 'VIEWING' : '+'}</span>
-                    <span>→</span>
+                    <span aria-hidden="true">→</span>
                   </div>
                 </div>
 

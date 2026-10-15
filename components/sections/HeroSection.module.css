@@ -79,7 +79,7 @@
   color: var(--color-bg-primary, #020708);
   background: var(--color-brand-cyan, #14B8A6);
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -102,7 +102,7 @@
   background: transparent;
   border: 1px solid var(--color-border, rgba(20, 184, 166, 0.20));
   text-decoration: none;
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
 }
 
 .secondaryBtn:hover {
@@ -172,5 +172,18 @@
   
   .scrollIndicator {
     align-self: center;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arrow,
+  .fadeInTop,
+  .fadeInTitle,
+  .fadeInDesc,
+  .fadeInActions,
+  .fadeInBottom {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
