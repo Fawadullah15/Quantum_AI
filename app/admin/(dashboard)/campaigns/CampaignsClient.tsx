@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAdminToast } from '@/components/admin/AdminToast';
 import { useAdminConfirm } from '@/components/admin/ConfirmDialog';
+import MediaLibrary from '@/components/admin/MediaLibrary';
 import { CampaignDisplay } from '@/components/public/CampaignDisplay';
 import {
   createCampaign,
@@ -99,6 +100,8 @@ export function CampaignsClient({
   const [isUploading, setIsUploading] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const mobileFileInputRef = useRef<HTMLInputElement>(null);
+  const [mediaPickerTarget, setMediaPickerTarget] = useState<'desktop' | 'mobile' | null>(null);
 
   // Live Preview Modal State
   const [previewCampaign, setPreviewCampaign] = useState<any | null>(null);
@@ -216,6 +219,9 @@ export function CampaignsClient({
     const file = e.target.files?.[0];
     if (!file) return;
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+
     try {
       setIsUploading(true);
       const data = new FormData();
@@ -224,7 +230,9 @@ export function CampaignsClient({
       const res = await fetch('/api/media', {
         method: 'POST',
         body: data,
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       if (!res.ok) {
         const errorData = await res.json().catch(() => ({}));
@@ -247,8 +255,13 @@ export function CampaignsClient({
       }
     } catch (err: any) {
       console.error('Upload error:', err);
-      toast.error(err?.message || 'Upload failed. Please check file format and size.', 'Upload Error');
+      if (err?.name === 'AbortError') {
+        toast.error('Upload timed out after 15 seconds. Please paste a direct image URL or select from Media Library.', 'Upload Timeout');
+      } else {
+        toast.error(err?.message || 'Upload failed. Please check file format and size.', 'Upload Error');
+      }
     } finally {
+      clearTimeout(timeoutId);
       setIsUploading(false);
       if (e.target) e.target.value = '';
     }
@@ -1253,6 +1266,24 @@ export function CampaignsClient({
                       {isUploading ? 'Uploading & Optimizing…' : '📁 Upload Creative Image'}
                     </button>
 
+                    <button
+                      type="button"
+                      onClick={() => setMediaPickerTarget('desktop')}
+                      style={{
+                        backgroundColor: 'rgba(20, 184, 166, 0.15)',
+                        border: '1px solid rgba(20, 184, 166, 0.35)',
+                        color: '#67E8F9',
+                        padding: '0.45rem 1rem',
+                        borderRadius: '6px',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        fontFamily: 'var(--font-mono, monospace)',
+                      }}
+                    >
+                      🗂️ Browse Media Library
+                    </button>
+
                     {formData.imageUrl && (
                       <button
                         type="button"
@@ -1602,7 +1633,7 @@ export function CampaignsClient({
               </button>
 
               <button
-                type="submit"
+                type="button"
                 disabled={isSubmitting}
                 aria-busy={isSubmitting}
                 onClick={(e) => handleSubmit(e, 'PUBLISHED')}
@@ -1781,6 +1812,71 @@ export function CampaignsClient({
                 Close Preview
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── MEDIA LIBRARY PICKER MODAL ── */}
+      {mediaPickerTarget && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(2, 6, 23, 0.88)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 10005,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem',
+          }}
+          onClick={() => setMediaPickerTarget(null)}
+        >
+          <div
+            style={{
+              backgroundColor: '#070B14',
+              border: '1px solid rgba(22, 119, 255, 0.35)',
+              borderRadius: '12px',
+              maxWidth: '960px',
+              width: '100%',
+              maxHeight: '85vh',
+              overflowY: 'auto',
+              padding: '1.5rem',
+              boxShadow: '0 25px 60px rgba(0, 0, 0, 0.9)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', borderBottom: '1px solid rgba(22, 119, 255, 0.2)', paddingBottom: '0.75rem' }}>
+              <div>
+                <h3 style={{ margin: 0, color: '#FFFFFF', fontSize: '1.15rem', fontWeight: 600 }}>Select Asset from Media Library</h3>
+                <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>Click any asset to link it directly to this campaign creative.</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setMediaPickerTarget(null)}
+                style={{ background: 'none', border: 'none', color: '#94A3B8', fontSize: '1.25rem', cursor: 'pointer' }}
+              >
+                ✕
+              </button>
+            </div>
+            <MediaLibrary
+              selectable={true}
+              onSelect={(item) => {
+                if (mediaPickerTarget === 'mobile') {
+                  setFormData((prev) => ({ ...prev, mobileImageUrl: item.url }));
+                } else {
+                  setFormData((prev) => ({
+                    ...prev,
+                    imageUrl: item.url,
+                    imageAlt: prev.imageAlt || prev.headline || prev.name,
+                  }));
+                }
+                setIsDirty(true);
+                setMediaPickerTarget(null);
+                toast.success('Asset selected from Media Library!', 'Asset Ready');
+              }}
+            />
           </div>
         </div>
       )}

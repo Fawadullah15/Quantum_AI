@@ -13,11 +13,12 @@ interface CampaignDisplayProps {
 }
 
 export function CampaignDisplay({
-  campaign,
+  campaign: initialCampaign,
   previewMode = false,
   onPreviewClose,
   previewDevice = 'desktop',
 }: CampaignDisplayProps) {
+  const [campaign, setCampaign] = useState<PublicCampaign | null>(initialCampaign || null);
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const [progress, setProgress] = useState(100);
@@ -29,6 +30,34 @@ export function CampaignDisplay({
   const startTimeRef = useRef<number>(0);
   const remainingTimeRef = useRef<number>(0);
   const hasTrackedImpressionRef = useRef(false);
+
+  // Sync prop changes (especially for preview mode)
+  useEffect(() => {
+    setCampaign(initialCampaign || null);
+  }, [initialCampaign]);
+
+  // Client-side hydration: Query /api/campaigns/active on mount
+  // Ensures newly published campaigns display immediately even if the parent page/layout was cached by CDN
+  useEffect(() => {
+    if (previewMode) return;
+
+    let isMounted = true;
+    fetch('/api/campaigns/active', { cache: 'no-store' })
+      .then((res) => {
+        if (!res.ok) return null;
+        return res.json();
+      })
+      .then((data) => {
+        if (isMounted && data?.campaign) {
+          setCampaign(data.campaign);
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
+  }, [previewMode]);
 
   // Check prefers-reduced-motion
   useEffect(() => {

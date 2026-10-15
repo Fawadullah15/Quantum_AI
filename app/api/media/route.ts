@@ -54,25 +54,52 @@ export async function POST(request: Request) {
     const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
     let url = '';
 
-    const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.DATABASE_URL_READ_WRITE_TOKEN;
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    const isValidToken = token && !token.includes('your-blob-token') && token.trim().length > 10;
 
-    if (token) {
-      // Use Vercel Blob if token is available
-      const blob = await put(fileName, file, { access: 'public', token });
-      url = blob.url;
-    } else {
-      // Fallback to local fs for local development
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const publicDir = join(process.cwd(), 'public', 'uploads');
-      
-      if (!existsSync(publicDir)) {
-         await mkdir(publicDir, { recursive: true });
+    if (isValidToken) {
+      try {
+        const blobPromise = put(fileName, file, { access: 'public', token });
+        const timeoutPromise = new Promise<never>((_, reject) =>
+          setTimeout(() => reject(new Error('Vercel Blob upload timeout')), 8000)
+        );
+        const blob = (await Promise.race([blobPromise, timeoutPromise])) as any;
+        url = blob.url;
+      } catch (blobErr) {
+        console.warn('[Media Upload] Vercel Blob failed, falling back:', blobErr);
       }
-      
-      const path = join(publicDir, fileName);
-      await writeFile(path, buffer);
-      url = `/uploads/${fileName}`;
+    }
+
+    // If Blob wasn't used or failed, try local file write
+    if (!url) {
+      try {
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const publicDir = join(process.cwd(), 'public', 'uploads');
+
+        if (!existsSync(publicDir)) {
+          await mkdir(publicDir, { recursive: true });
+        }
+
+        const path = join(publicDir, fileName);
+        await writeFile(path, buffer);
+        url = `/uploads/${fileName}`;
+      } catch (fsErr) {
+        // Local file system is read-only (e.g. Vercel Serverless environment without Blob store)
+        console.warn('[Media Upload] Filesystem write failed, falling back to data URL:', fsErr);
+
+        if (file.size <= 4 * 1024 * 1024) {
+          const bytes = await file.arrayBuffer();
+          const buffer = Buffer.from(bytes);
+          const base64 = buffer.toString('base64');
+          url = `data:${file.type};base64,${base64}`;
+        } else {
+          return NextResponse.json(
+            { error: 'Storage provider unavailable and file exceeds 4MB inline limit. Please configure BLOB_READ_WRITE_TOKEN or paste an image URL.' },
+            { status: 413 }
+          );
+        }
+      }
     }
 
     const media = await prisma.media.create({

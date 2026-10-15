@@ -10,6 +10,8 @@ import { getSiteSettings } from '@/lib/settings';
 import { getActiveCampaign } from '@/lib/campaigns';
 import { CampaignDisplay } from '@/components/public/CampaignDisplay';
 
+export const revalidate = 0;
+
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSiteSettings();
   const activeCampaign = await getActiveCampaign();
