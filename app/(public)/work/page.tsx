@@ -20,10 +20,53 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
   const resolvedParams = searchParams ? await searchParams : {};
   const activeCategory = resolvedParams?.category || 'ALL';
 
-  const allCaseStudies = await prisma.caseStudy.findMany({
+  let allCaseStudies = await prisma.caseStudy.findMany({
     where: { published: true },
     orderBy: { order: 'asc' },
   }).catch(() => []);
+
+  if (!allCaseStudies || allCaseStudies.length === 0) {
+    allCaseStudies = [
+      {
+        id: 'copilot-01',
+        title: 'Mechanical Engineering Design Copilot',
+        slug: 'mechanical-engineering-design-copilot',
+        client: 'Quantum AI',
+        industry: 'AI Product / Engineering Software',
+        year: 2026,
+        order: 0,
+        heroImage: '/uploads/mechanical-engineering-design-copilot.png',
+        gallery: JSON.stringify(['/uploads/mechanical-engineering-design-copilot.png']),
+        featured: true,
+        status: 'Prototype in Development',
+        problem: 'An AI powered engineering copilot designed to assist with mechanical component design, technical calculations, constraint analysis, material evaluation, and engineering recommendations.',
+        solution: 'We are developing an AI powered copilot that accepts mechanical engineering requirements and helps organize the process into clear engineering steps. It aims to connect user requirements with relevant equations, design parameters, engineering constraints, component evaluations, and technical recommendations.',
+        technologies: 'Artificial Intelligence, Mechanical Design, Engineering Analysis, Product Development, Python, CAD Integration',
+        published: true,
+      } as any,
+    ];
+  } else if (!allCaseStudies.some((s) => s.slug === 'mechanical-engineering-design-copilot')) {
+    allCaseStudies = [
+      {
+        id: 'copilot-01',
+        title: 'Mechanical Engineering Design Copilot',
+        slug: 'mechanical-engineering-design-copilot',
+        client: 'Quantum AI',
+        industry: 'AI Product / Engineering Software',
+        year: 2026,
+        order: 0,
+        heroImage: '/uploads/mechanical-engineering-design-copilot.png',
+        gallery: JSON.stringify(['/uploads/mechanical-engineering-design-copilot.png']),
+        featured: true,
+        status: 'Prototype in Development',
+        problem: 'An AI powered engineering copilot designed to assist with mechanical component design, technical calculations, constraint analysis, material evaluation, and engineering recommendations.',
+        solution: 'We are developing an AI powered copilot that accepts mechanical engineering requirements and helps organize the process into clear engineering steps. It aims to connect user requirements with relevant equations, design parameters, engineering constraints, component evaluations, and technical recommendations.',
+        technologies: 'Artificial Intelligence, Mechanical Design, Engineering Analysis, Product Development, Python, CAD Integration',
+        published: true,
+      } as any,
+      ...allCaseStudies,
+    ];
+  }
 
   // Collect images from published case studies for the 3D gallery background
   const workGalleryImages: string[] = [];
@@ -63,14 +106,14 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           return clientStr.includes('eden school') || clientStr.includes('youth development') || (clientStr && !clientStr.includes('internal') && !clientStr.includes('quantum ai'));
         }
         if (activeCategory === 'INTERNAL PRODUCTS') {
-          return clientStr.includes('product') || clientStr.includes('platform') || clientStr.includes('internal / custom') || study.title.includes('Offline Shop') || study.title.includes('Quantum AI');
+          return clientStr.includes('product') || clientStr.includes('platform') || clientStr.includes('internal / custom') || study.title.includes('Offline Shop') || study.title.includes('Quantum AI') || study.title.includes('Copilot') || (study as any).industry?.toLowerCase().includes('product');
         }
         if (activeCategory === 'R&D / CONCEPTS') {
-          return clientStr.includes('internal / quantum ai') || study.title.includes('Intelligence') || study.title.includes('Automation Platform');
+          return clientStr.includes('internal / quantum ai') || study.title.includes('Intelligence') || study.title.includes('Automation Platform') || ((study as any).status && String((study as any).status).toLowerCase().includes('prototype'));
         }
         if (activeCategory === 'EDUCATION') return ind.includes('EDUCATION') || ind.includes('SCHOOL');
         if (activeCategory === 'RETAIL') return ind.includes('RETAIL') || ind.includes('SHOP');
-        if (activeCategory === 'ARTIFICIAL INTELLIGENCE') return ind.includes('ARTIFICIAL INTELLIGENCE') || ind.includes('AI');
+        if (activeCategory === 'ARTIFICIAL INTELLIGENCE') return ind.includes('ARTIFICIAL INTELLIGENCE') || ind.includes('AI') || ind.includes('ENGINEERING');
         return true;
       });
 
@@ -372,6 +415,42 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
                       >
                         {originBadge.label}
                       </span>
+                      {(study as any).featured && (
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-d-din)',
+                            fontSize: '0.65rem',
+                            color: '#38BDF8',
+                            backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                            border: '1px solid rgba(56, 189, 248, 0.4)',
+                            padding: '0.15rem 0.5rem',
+                            borderRadius: '4px',
+                            textTransform: 'uppercase',
+                            fontWeight: 700,
+                            letterSpacing: '0.06em',
+                          }}
+                        >
+                          ★ FEATURED
+                        </span>
+                      )}
+                      {(study as any).status && (study as any).status !== 'Completed' && (
+                        <span
+                          style={{
+                            fontFamily: 'var(--font-d-din)',
+                            fontSize: '0.65rem',
+                            color: '#C4B5FD',
+                            backgroundColor: 'rgba(167, 139, 250, 0.15)',
+                            border: '1px solid rgba(167, 139, 250, 0.35)',
+                            padding: '0.15rem 0.5rem',
+                            borderRadius: '4px',
+                            textTransform: 'uppercase',
+                            fontWeight: 600,
+                            letterSpacing: '0.05em',
+                          }}
+                        >
+                          {(study as any).status}
+                        </span>
+                      )}
                     </div>
                     <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                       <span className="work-category-badge">
@@ -383,13 +462,36 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
                     </div>
                   </div>
 
-                  <h2 className="work-title">
-                    {study.title}
-                  </h2>
-
-                  <p className="work-desc">
-                    {study.problem || study.solution}
-                  </p>
+                  <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <h2 className="work-title">
+                        {study.title}
+                      </h2>
+                      <p className="work-desc">
+                        {(study as any).shortDescription || study.problem || study.solution}
+                      </p>
+                    </div>
+                    {study.heroImage && (
+                      <div
+                        style={{
+                          width: '130px',
+                          height: '80px',
+                          flexShrink: 0,
+                          borderRadius: '6px',
+                          overflow: 'hidden',
+                          border: '1px solid rgba(56, 189, 248, 0.25)',
+                          backgroundColor: '#020b14',
+                        }}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={study.heroImage}
+                          alt={study.title}
+                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        />
+                      </div>
+                    )}
+                  </div>
 
                   <div className="work-action-row">
                     {techList.length > 0 ? (

@@ -14,12 +14,25 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const caseStudy = await prisma.caseStudy.findUnique({ where: { slug } }).catch(() => null);
+  let caseStudy = await prisma.caseStudy.findUnique({ where: { slug } }).catch(() => null);
+  if (!caseStudy && slug === 'mechanical-engineering-design-copilot') {
+    caseStudy = {
+      title: 'Mechanical Engineering Design Copilot',
+      seoTitle: 'Mechanical Engineering Design Copilot — AI Engineering Tool | Quantum AI',
+      seoDescription: 'An AI powered engineering copilot designed by Quantum AI to assist with mechanical component design, technical calculations, constraint analysis, and material evaluation.',
+      problem: 'An AI powered engineering copilot designed to assist with mechanical component design, technical calculations, constraint analysis, material evaluation, and engineering recommendations.',
+      heroImage: '/uploads/mechanical-engineering-design-copilot.png',
+    } as any;
+  }
   if (!caseStudy) return { title: 'Case Study Not Found' };
-  
+
   return createPageMetadata({
-    title: `${caseStudy.title} — Case Study | Quantum AI`,
-    description: caseStudy.problem ? caseStudy.problem.slice(0, 160) : `Detailed engineering case study for ${caseStudy.title} built by Quantum AI.`,
+    title: (caseStudy as any).seoTitle || `${caseStudy.title} — Case Study | Quantum AI`,
+    description:
+      (caseStudy as any).seoDescription ||
+      (caseStudy.problem
+        ? caseStudy.problem.slice(0, 160)
+        : `Detailed engineering case study for ${caseStudy.title} built by Quantum AI.`),
     path: `/work/${slug}`,
     image: caseStudy.heroImage || undefined,
   });
@@ -27,16 +40,186 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export async function generateStaticParams() {
   const studies = await prisma.caseStudy.findMany({ where: { published: true }, select: { slug: true } }).catch(() => []);
-  return studies.map((study: { slug: string }) => ({ slug: study.slug }));
+  const slugs = new Set(studies.map((study: { slug: string }) => study.slug));
+  slugs.add('mechanical-engineering-design-copilot');
+  return Array.from(slugs).map((slug) => ({ slug }));
+}
+
+function FormattedDescription({ content }: { content: string }) {
+  if (!content) return null;
+
+  // Split into paragraphs / blocks
+  const blocks = content.split(/\n\s*\n/);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', color: '#FFFFFF', lineHeight: 1.7, fontSize: '0.94rem', fontWeight: 300 }}>
+      {blocks.map((block, idx) => {
+        const trimmed = block.trim();
+        if (!trimmed) return null;
+
+        // Heading 2
+        if (trimmed.startsWith('## ') || trimmed.startsWith('Overview') || trimmed.startsWith('The Problem') || trimmed.startsWith('Our Solution') || trimmed.startsWith('Planned Core Capabilities') || trimmed.startsWith('Example Engineering Use Case') || trimmed.startsWith('Development Approach') || trimmed.startsWith('Vision')) {
+          const headingText = trimmed.replace(/^##\s*/, '');
+          return (
+            <div key={idx} style={{ marginTop: idx === 0 ? '0' : '1.5rem', marginBottom: '0.25rem' }}>
+              <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>
+                // {headingText.toUpperCase()}
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.2rem, 2.2vw, 1.55rem)', fontWeight: 700, color: '#FFFFFF', margin: 0, textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
+                {headingText}
+              </h2>
+            </div>
+          );
+        }
+
+        // Heading 3
+        if (trimmed.startsWith('### ')) {
+          return (
+            <h3 key={idx} style={{ fontSize: '1.1rem', fontWeight: 600, color: '#38BDF8', margin: '0.5rem 0 0 0', textTransform: 'uppercase' }}>
+              {trimmed.replace(/^###\s*/, '')}
+            </h3>
+          );
+        }
+
+        // Numbered capability or item (e.g. "1. Engineering Calculations")
+        if (/^\d+\.\s+[A-Z]/.test(trimmed)) {
+          const lines = trimmed.split('\n');
+          const titleLine = lines[0];
+          const rest = lines.slice(1).join(' ');
+          return (
+            <div
+              key={idx}
+              style={{
+                backgroundColor: 'rgba(6, 21, 43, 0.55)',
+                border: '1px solid rgba(56, 189, 248, 0.2)',
+                borderRadius: '8px',
+                padding: '1rem 1.25rem',
+              }}
+            >
+              <div style={{ fontWeight: 700, color: '#38BDF8', fontSize: '0.92rem', marginBottom: '0.35rem', fontFamily: 'var(--font-d-din)', letterSpacing: '0.04em' }}>
+                {titleLine}
+              </div>
+              {rest && <p style={{ margin: 0, color: '#E2E8F0', fontSize: '0.88rem', lineHeight: 1.6 }}>{rest}</p>}
+            </div>
+          );
+        }
+
+        // Engineering parameters box (e.g. Applied torque: 500 N*m)
+        if (trimmed.includes('Applied torque') || trimmed.includes('Rotational speed') || trimmed.includes('Shaft length')) {
+          const paramLines = trimmed.split('\n');
+          return (
+            <div
+              key={idx}
+              style={{
+                backgroundColor: 'rgba(2, 6, 23, 0.85)',
+                border: '1px solid rgba(167, 139, 250, 0.35)',
+                borderRadius: '8px',
+                padding: '1.25rem',
+                margin: '0.5rem 0',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+              }}
+            >
+              <div style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', color: '#C4B5FD', letterSpacing: '0.15em', textTransform: 'uppercase', marginBottom: '0.75rem', fontWeight: 600 }}>
+                ⚙ SPECIFICATION PARAMETERS
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.85rem' }}>
+                {paramLines.map((line, pIdx) => (
+                  <div key={pIdx} style={{ padding: '0.5rem 0.75rem', backgroundColor: 'rgba(255, 255, 255, 0.04)', borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                    {line}
+                  </div>
+                ))}
+              </div>
+            </div>
+          );
+        }
+
+        // Bullet list
+        if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+          const items = trimmed.split('\n').map((l) => l.replace(/^[-*]\s*/, '').trim()).filter(Boolean);
+          return (
+            <ul key={idx} style={{ margin: 0, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.4rem', color: '#E2E8F0' }}>
+              {items.map((item, i) => (
+                <li key={i} style={{ lineHeight: 1.6 }}>{item}</li>
+              ))}
+            </ul>
+          );
+        }
+
+        // Quote / Vision / Brand Statement
+        if (trimmed.includes('Think. Calculate. Design. Verify.') || trimmed.startsWith('> ')) {
+          return (
+            <div
+              key={idx}
+              style={{
+                padding: '1.25rem 1.5rem',
+                backgroundColor: 'rgba(56, 189, 248, 0.08)',
+                borderLeft: '3px solid #38BDF8',
+                borderRadius: '0 8px 8px 0',
+                fontStyle: 'italic',
+                color: '#FFFFFF',
+                fontSize: '1rem',
+                margin: '1rem 0',
+              }}
+            >
+              {trimmed.replace(/^>\s*/, '')}
+            </div>
+          );
+        }
+
+        // Normal paragraph
+        return (
+          <p key={idx} style={{ margin: 0, color: '#E2E8F0', lineHeight: 1.7 }}>
+            {trimmed}
+          </p>
+        );
+      })}
+    </div>
+  );
 }
 
 export default async function CaseStudyPage({ params }: Props) {
   const { slug } = await params;
-  const study = await prisma.caseStudy.findUnique({
+  let study = await prisma.caseStudy.findUnique({
     where: { slug },
     include: { metrics: true },
   }).catch(() => null);
-  
+
+  if (!study && slug === 'mechanical-engineering-design-copilot') {
+    study = {
+      id: 'copilot-01',
+      title: 'Mechanical Engineering Design Copilot',
+      slug: 'mechanical-engineering-design-copilot',
+      client: 'Quantum AI',
+      industry: 'AI Product / Engineering Software',
+      year: 2026,
+      order: 0,
+      heroImage: '/uploads/mechanical-engineering-design-copilot.png',
+      gallery: JSON.stringify(['/uploads/mechanical-engineering-design-copilot.png']),
+      featured: true,
+      status: 'Prototype in Development',
+      shortDescription: 'An AI powered engineering copilot designed to assist with mechanical component design, technical calculations, constraint analysis, material evaluation, and engineering recommendations.',
+      fullDescription: `Mechanical Engineering Design Copilot\n\nOverview\nMechanical Engineering Design Copilot is an AI assisted engineering system developed by Quantum AI to help engineers work through mechanical design problems with greater clarity, structured calculations, and technical reasoning.\n\nTraditional mechanical design requires engineers to move between equations, material data, component specifications, engineering references, and repeated calculations. Our goal is to bring these activities into a unified workspace where engineering requirements can be translated into structured analysis and practical design recommendations.\n\nThe system is being developed as an engineering reasoning tool, not merely a general purpose chatbot.\n\nThe Problem\nMechanical engineers often need to perform multiple calculations, compare design options, evaluate component dimensions, check safety factors, and document their decisions. These tasks can require considerable time, repeated manual work, and careful cross checking.\n\nA single incorrect assumption or calculation can affect the entire design process.\n\nOur Solution\nWe are developing an AI powered copilot that accepts mechanical engineering requirements and helps organize the process into clear engineering steps. It aims to connect user requirements with relevant equations, design parameters, engineering constraints, component evaluations, and technical recommendations.\n\nThe engineer remains responsible for reviewing calculations, confirming applicable standards, and validating the final design.\n\nPlanned Core Capabilities\n1. Engineering Calculations and Sizing\nAssists with calculations for standard mechanical components such as shafts, keys, bearings, gears, fasteners, and simple structural elements.\n\n2. Material Selection Support\nProvides structured comparisons between candidate materials based on yield strength, tensile strength, fatigue considerations, weight, operating conditions, and availability.\n\n3. Constraint and Safety Factor Evaluation\nHelps engineers analyze design margins, determine appropriate factors of safety, and identify potential stress concentrations or failure modes.\n\n4. Engineering Reasoning and Recommendations\nSuggests practical design adjustments, standard commercial sizes, manufacturing considerations, and potential design alternatives.\n\n5. Technical Documentation and Calculation Summaries\nGenerates clear, step by step calculation reports that engineers can review, export, verify, and include in project documentation.\n\nExample Engineering Use Case\nShaft and Key Sizing for Power Transmission\nAn engineer needs to design a drive shaft connecting an electric motor to an industrial gearbox.\n\nInputs\nPower: 15 kW\nRotational speed: 1450 RPM\nApplied torque: Approximately 98.8 N·m\nMaterial: AISI 1045 steel\nDesign factor: 2.0\n\nCopilot Actions\nCalculates required shaft diameter based on torsional shear stress.\nEvaluates standard shaft diameters available from suppliers.\nRecommends compatible key and keyway dimensions according to engineering standards.\nPresents the full formula, intermediate values, and final engineering checks for human review.\n\nDevelopment Approach\nWe are approaching this project with engineering rigor:\n• Grounding in engineering fundamentals\n• Clear formulas and visible calculation steps\n• Support for standard mechanical engineering practices\n• Human engineer oversight for every critical output\n• Focus on practical utility for engineering workflows\n\nVision\nOur long term goal is to build an intelligent design companion that reduces routine engineering friction, accelerates preliminary design cycles, and helps engineering teams explore better technical solutions with confidence.`,
+      problem: 'Mechanical engineers often need to perform multiple calculations, compare design options, evaluate component dimensions, check safety factors, and document their decisions. These tasks can require considerable time, repeated manual work, and careful cross checking. A single incorrect assumption or calculation can affect the entire design process.',
+      solution: 'We are developing an AI powered copilot that accepts mechanical engineering requirements and helps organize the process into clear engineering steps. It aims to connect user requirements with relevant equations, design parameters, engineering constraints, component evaluations, and technical recommendations.',
+      implementation: 'Built around engineering reasoning, deterministic formula engines, parametric verification models, and CAD/design reference datasets. The system integrates standard component databases, material properties, and stress-strain calculations into an interactive engineering copilot workspace.',
+      results: 'Reduces routine engineering friction, accelerates preliminary component sizing cycles, and provides auditable step-by-step calculation reports.',
+      technologies: 'Artificial Intelligence, Mechanical Design, Engineering Analysis, Product Development, Python, CAD Integration, Fast Computational Solvers',
+      services: 'AI Product, Engineering Software, Internal Product, Research and Development',
+      primaryCtaLabel: 'Request Technical Demo',
+      primaryCtaUrl: '/contact?project=mechanical-engineering-copilot',
+      secondaryCtaLabel: 'View Research Scope',
+      secondaryCtaUrl: '#capabilities',
+      seoTitle: 'Mechanical Engineering Design Copilot — AI Engineering Tool | Quantum AI',
+      seoDescription: 'An AI powered engineering copilot designed by Quantum AI to assist with mechanical component design, technical calculations, constraint analysis, and material evaluation.',
+      published: true,
+      metrics: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      testimonialId: null,
+      externalUrl: null,
+    } as any;
+  }
+
   if (!study || !study.published) {
     notFound();
   }
@@ -62,8 +245,26 @@ export default async function CaseStudyPage({ params }: Props) {
     : rawGallery;
   const schemaJson = getCaseStudySchema(study);
 
+  const clientStr = (study.client || '').trim().toLowerCase();
+  let originLabel = 'CLIENT PROJECT';
+  let originColor = '#38BDF8';
+  let originBg = 'rgba(56, 189, 248, 0.12)';
+  let orgText = `CLIENT: ${study.client}`;
+
+  if (clientStr.includes('internal / quantum ai') || study.title.includes('Intelligence') || study.title.includes('Automation Platform') || study.title.includes('Copilot')) {
+    originLabel = 'R&D / CONCEPT';
+    originColor = '#A78BFA';
+    originBg = 'rgba(167, 139, 250, 0.12)';
+    orgText = 'BUILT BY QUANTUM AI';
+  } else if (clientStr.includes('quantum ai') || clientStr.includes('internal')) {
+    originLabel = 'INTERNAL PRODUCT';
+    originColor = '#34D399';
+    originBg = 'rgba(52, 211, 153, 0.12)';
+    orgText = 'BUILT BY QUANTUM AI';
+  }
+
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', paddingInline: 'clamp(1.25rem, 5vw, 4rem)', maxWidth: '1000px', margin: '0 auto', minHeight: '100vh' }}>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', paddingInline: 'clamp(1.25rem, 5vw, 4rem)', maxWidth: '1080px', margin: '0 auto', minHeight: '100vh' }}>
       {/* 3D Scene Gallery Bridge */}
       <GalleryConfigurator images={galleryImages} slug={study.slug} />
 
@@ -72,6 +273,7 @@ export default async function CaseStudyPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
       />
+      
       {/* Breadcrumb back link */}
       <div style={{ marginBottom: '1.5rem' }}>
         <Link
@@ -95,77 +297,117 @@ export default async function CaseStudyPage({ params }: Props) {
 
       <header style={{ marginBottom: '2.5rem' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.75rem', fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', marginBottom: '1rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-          {(() => {
-            const clientStr = (study.client || '').trim().toLowerCase();
-            let originLabel = 'CLIENT PROJECT';
-            let originColor = '#38BDF8';
-            let originBg = 'rgba(56, 189, 248, 0.12)';
-            let orgText = `CLIENT: ${study.client}`;
-
-            if (clientStr.includes('internal / quantum ai') || study.title.includes('Intelligence') || study.title.includes('Automation Platform')) {
-              originLabel = 'R&D / CONCEPT';
-              originColor = '#A78BFA';
-              originBg = 'rgba(167, 139, 250, 0.12)';
-              orgText = 'CONCEPT / R&D';
-            } else if (clientStr.includes('quantum ai') || clientStr.includes('internal')) {
-              originLabel = 'INTERNAL PRODUCT';
-              originColor = '#34D399';
-              originBg = 'rgba(52, 211, 153, 0.12)';
-              orgText = 'BUILT BY QUANTUM AI';
-            }
-            return (
-              <>
-                <span
-                  style={{
-                    color: originColor,
-                    backgroundColor: originBg,
-                    border: `1px solid ${originColor}33`,
-                    padding: '0.2rem 0.55rem',
-                    borderRadius: '4px',
-                    fontWeight: 600,
-                  }}
-                >
-                  {originLabel}
-                </span>
-                <span>{orgText}</span>
-                <span style={{ opacity: 0.4 }}>/</span>
-              </>
-            );
-          })()}
-          <span>INDUSTRY: {study.industry}</span>
+          <span
+            style={{
+              color: originColor,
+              backgroundColor: originBg,
+              border: `1px solid ${originColor}33`,
+              padding: '0.2rem 0.55rem',
+              borderRadius: '4px',
+              fontWeight: 600,
+            }}
+          >
+            {originLabel}
+          </span>
+          <span>{orgText}</span>
+          <span style={{ opacity: 0.4 }}>/</span>
+          <span>CATEGORY: {study.industry}</span>
           <span style={{ opacity: 0.4 }}>/</span>
           <span>YEAR: {study.year}</span>
+          {(study as any).status && (
+            <>
+              <span style={{ opacity: 0.4 }}>/</span>
+              <span
+                style={{
+                  color: '#C4B5FD',
+                  backgroundColor: 'rgba(167, 139, 250, 0.15)',
+                  border: '1px solid rgba(167, 139, 250, 0.35)',
+                  padding: '0.2rem 0.55rem',
+                  borderRadius: '4px',
+                  fontWeight: 600,
+                }}
+              >
+                STATUS: {String((study as any).status).toUpperCase()}
+              </span>
+            </>
+          )}
+          {(study as any).featured && (
+            <>
+              <span style={{ opacity: 0.4 }}>/</span>
+              <span
+                style={{
+                  color: '#38BDF8',
+                  backgroundColor: 'rgba(56, 189, 248, 0.15)',
+                  border: '1px solid rgba(56, 189, 248, 0.4)',
+                  padding: '0.2rem 0.55rem',
+                  borderRadius: '4px',
+                  fontWeight: 700,
+                }}
+              >
+                ★ FEATURED
+              </span>
+            </>
+          )}
         </div>
+
         <h1 style={{ fontSize: 'clamp(1.85rem, 4.5vw, 3rem)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '-0.03em', lineHeight: 1.1, color: '#FFFFFF', margin: '0 0 1.25rem 0' }}>
           {study.title}
         </h1>
 
-        {study.externalUrl && (
-          <div style={{ marginTop: '0.75rem' }}>
-            <a
-              href={study.externalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.4rem',
-                padding: '0.5rem 1.15rem',
-                backgroundColor: 'rgba(22, 119, 255, 0.12)',
-                border: '1px solid rgba(56, 189, 248, 0.35)',
-                color: '#FFFFFF',
-                borderRadius: '6px',
-                textDecoration: 'none',
-                fontFamily: 'var(--font-d-din)',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                transition: 'background-color 0.2s, border-color 0.2s',
-              }}
-            >
-              VISIT LIVE PLATFORM ↗
-            </a>
+        {/* Action CTAs */}
+        {((study as any).primaryCtaLabel || (study as any).primaryCtaUrl || study.externalUrl || (study as any).secondaryCtaLabel) && (
+          <div style={{ marginTop: '1.25rem', display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
+            {((study as any).primaryCtaLabel || (study as any).primaryCtaUrl || study.externalUrl) && (
+              <a
+                href={(study as any).primaryCtaUrl || study.externalUrl || `/work/${study.slug}`}
+                target={(study as any).primaryCtaUrl?.startsWith('http') || study.externalUrl?.startsWith('http') ? '_blank' : undefined}
+                rel="noopener noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.55rem 1.25rem',
+                  backgroundColor: '#1677FF',
+                  border: '1px solid #1677FF',
+                  color: '#FFFFFF',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontFamily: 'var(--font-d-din)',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  transition: 'background-color 0.2s',
+                  boxShadow: '0 4px 14px rgba(22, 119, 255, 0.35)',
+                }}
+              >
+                {(study as any).primaryCtaLabel || 'VISIT LIVE PLATFORM ↗'}
+              </a>
+            )}
+            {(study as any).secondaryCtaLabel && (
+              <Link
+                href={(study as any).secondaryCtaUrl || '/contact'}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.55rem 1.25rem',
+                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#FFFFFF',
+                  borderRadius: '6px',
+                  textDecoration: 'none',
+                  fontFamily: 'var(--font-d-din)',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  transition: 'background-color 0.2s',
+                }}
+              >
+                {(study as any).secondaryCtaLabel}
+              </Link>
+            )}
           </div>
         )}
       </header>
@@ -179,34 +421,46 @@ export default async function CaseStudyPage({ params }: Props) {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-          {/* Section: Problem / Challenge */}
-          <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '12px', padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
-            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
-              01 // THE CHALLENGE
-            </div>
-            <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.75rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
-              Problem &amp; Operational Friction
-            </h2>
-            <p style={{ color: '#FFFFFF', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
-              {study.problem}
-            </p>
-          </section>
+          
+          {/* Full Project Description Section if provided */}
+          {(study as any).fullDescription && (
+            <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.65)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '12px', padding: 'clamp(1.5rem, 3.5vw, 2.25rem)' }}>
+              <FormattedDescription content={(study as any).fullDescription} />
+            </section>
+          )}
+
+          {/* Section: Problem / Challenge (if not already fully covered in fullDescription or when provided) */}
+          {study.problem && !(study as any).fullDescription && (
+            <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '12px', padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
+              <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
+                01 // THE CHALLENGE
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.75rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
+                Problem &amp; Operational Friction
+              </h2>
+              <p style={{ color: '#E2E8F0', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
+                {study.problem}
+              </p>
+            </section>
+          )}
 
           {/* Section: Solution / What We Built */}
-          <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '12px', padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
-            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
-              02 // WHAT WE BUILT
-            </div>
-            <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.75rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
-              System Architecture &amp; Solution
-            </h2>
-            <p style={{ color: '#FFFFFF', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
-              {study.solution}
-            </p>
-          </section>
+          {study.solution && !(study as any).fullDescription && (
+            <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '12px', padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
+              <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
+                02 // WHAT WE BUILT
+              </div>
+              <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.75rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
+                System Architecture &amp; Solution
+              </h2>
+              <p style={{ color: '#E2E8F0', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
+                {study.solution}
+              </p>
+            </section>
+          )}
 
           {/* Section: Implementation / How It Works */}
-          {study.implementation && (
+          {study.implementation && !(study as any).fullDescription && (
             <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '12px', padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
               <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
                 03 // HOW IT WORKS
@@ -214,14 +468,14 @@ export default async function CaseStudyPage({ params }: Props) {
               <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.75rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
                 Engineering &amp; Workflow Integration
               </h2>
-              <p style={{ color: '#FFFFFF', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
+              <p style={{ color: '#E2E8F0', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
                 {study.implementation}
               </p>
             </section>
           )}
 
           {/* Section: Results / Business Value */}
-          {study.results && (
+          {study.results && !(study as any).fullDescription && (
             <section style={{ backgroundColor: 'rgba(6, 21, 43, 0.6)', border: '1px solid rgba(22, 119, 255, 0.15)', borderRadius: '12px', padding: 'clamp(1.25rem, 3vw, 2rem)' }}>
               <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
                 04 // RESULT &amp; IMPACT
@@ -229,7 +483,7 @@ export default async function CaseStudyPage({ params }: Props) {
               <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 700, color: '#FFFFFF', margin: '0 0 0.75rem 0', letterSpacing: '-0.02em', textTransform: 'uppercase' }}>
                 Operational Outcomes
               </h2>
-              <p style={{ color: '#FFFFFF', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
+              <p style={{ color: '#E2E8F0', lineHeight: 1.65, fontSize: '0.92rem', margin: 0, fontWeight: 300 }}>
                 {study.results}
               </p>
             </section>
@@ -309,10 +563,10 @@ export default async function CaseStudyPage({ params }: Props) {
                 <h3 style={{ fontSize: '1.05rem', color: '#FFFFFF', fontWeight: 600, margin: '0.2rem 0', lineHeight: 1.3 }}>
                   {item.title}
                 </h3>
-                <p style={{ color: '#FFFFFF', fontSize: '0.8rem', lineHeight: 1.45, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                <p style={{ color: '#E2E8F0', fontSize: '0.8rem', lineHeight: 1.45, margin: 0, fontWeight: 300, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                   {item.problem || item.solution}
                 </p>
-                <span style={{ marginTop: 'auto', paddingTop: '0.5rem', color: '#FFFFFF', fontSize: '0.72rem', fontFamily: 'var(--font-d-din)', fontWeight: 600, letterSpacing: '0.05em' }}>
+                <span style={{ marginTop: 'auto', paddingTop: '0.5rem', color: '#38BDF8', fontSize: '0.72rem', fontFamily: 'var(--font-d-din)', fontWeight: 600, letterSpacing: '0.05em' }}>
                   VIEW PROJECT →
                 </span>
               </Link>

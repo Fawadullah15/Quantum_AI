@@ -19,53 +19,77 @@ interface CaseStudyItem {
 const CASE_STUDIES: CaseStudyItem[] = [
   {
     step: '01',
+    industry: 'Engineering AI',
+    year: '2026',
+    title: 'Mechanical Engineering Design Copilot',
+    desc: 'An AI-powered engineering design copilot developed by Quantum AI to assist mechanical engineers with component sizing, technical equations, constraint analysis, and material evaluation.',
+    technologies: ['Artificial Intelligence', 'Mechanical Design', 'Engineering Analysis', 'Python', 'CAD Integration'],
+    slug: 'mechanical-engineering-design-copilot',
+    image: '/uploads/mechanical-engineering-design-copilot.png',
+    gradient: 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)',
+    accentIcon: '⚙️',
+  },
+  {
+    step: '02',
     industry: 'Education',
     year: '2026',
     title: 'School Operations Manager',
     desc: 'Built for educational institutions to eliminate fragmented paper records and spreadsheets by centralizing student registries, attendance, fee collection, and administrative reporting into one real-time platform.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Node.js'],
     slug: 'school-operations-manager',
-    gradient: 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)',
+    gradient: 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
     accentIcon: '🎓',
   },
   {
-    step: '02',
+    step: '03',
     industry: 'Retail',
     year: '2026',
     title: 'Offline Shop Management System',
     desc: 'Built for retail businesses operating in areas with unstable internet to ensure point-of-sale transactions, product inventory, and daily sales tracking work seamlessly offline with automatic cloud sync.',
     technologies: ['Python', 'FastAPI', 'SQLAlchemy', 'SQLite', 'React'],
     slug: 'offline-shop-management-system',
-    gradient: 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
+    gradient: 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)',
     accentIcon: '🛍️',
   },
   {
-    step: '03',
+    step: '04',
     industry: 'Technology',
     year: '2026',
     title: 'Quantum AI Corporate Website',
     desc: 'Designed as a high-performance corporate platform to showcase deployed software systems, interactive technology demos, and live client inquiry pipelines with zero layout latency.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Prisma'],
     slug: 'quantum-ai-corporate-website',
-    gradient: 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)',
+    gradient: 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
     accentIcon: '⚡',
-  },
-  {
-    step: '04',
-    industry: 'Nonprofit',
-    year: '2026',
-    title: 'Youth Development Program Website',
-    desc: 'Engineered for community organizations to centralize leadership registries, regional chapter initiatives, and public announcements into a secure, accessible web portal.',
-    technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Prisma'],
-    slug: 'youth-development-program-website',
-    gradient: 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)',
-    accentIcon: '🌐',
   },
 ];
 
+function formatCaseStudies(items: any[]) {
+  return items.slice(0, 4).map((s: any, i: number) => ({
+    step: s.step || String(i + 1).padStart(2, '0'),
+    industry: s.industry ? s.industry.split('/')[0].trim() : 'Technology',
+    year: String(s.year || new Date().getFullYear()),
+    title: s.title,
+    desc: s.desc || s.problem || s.solution || '',
+    technologies: Array.isArray(s.technologies)
+      ? s.technologies
+      : s.technologies
+      ? s.technologies.split(',').map((t: string) => t.trim()).filter(Boolean)
+      : ['Next.js', 'TypeScript', 'Prisma'],
+    slug: s.slug,
+    image: s.heroImage || s.image || undefined,
+    gradient: s.gradient || (i % 2 === 0 ? 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)' : 'linear-gradient(135deg, #071214 0%, #0D2023 100%)'),
+    accentIcon: s.accentIcon || '⚡',
+  }));
+}
+
 export default function CaseStudiesSection({ initialStudies }: { initialStudies?: any[] }) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
-  const [studies, setStudies] = useState<any[]>(initialStudies || CASE_STUDIES);
+  const [studies, setStudies] = useState<any[]>(() =>
+    initialStudies && initialStudies.length > 0
+      ? formatCaseStudies(initialStudies.filter((s: any) => s.published !== false))
+      : CASE_STUDIES
+  );
 
   React.useEffect(() => {
     fetch('/api/case-studies')
@@ -74,21 +98,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
         if (Array.isArray(data) && data.length > 0) {
           const published = data.filter((s: any) => s.published !== false);
           if (published.length > 0) {
-            const mapped = published.slice(0, 4).map((s: any, i: number) => ({
-              step: String(i + 1).padStart(2, '0'),
-              industry: s.industry ? s.industry.split('/')[0].trim() : 'Technology',
-              year: String(s.year || new Date().getFullYear()),
-              title: s.title,
-              desc: s.problem || s.solution || '',
-              technologies: s.technologies
-                ? s.technologies.split(',').map((t: string) => t.trim()).filter(Boolean)
-                : ['Next.js', 'TypeScript', 'Prisma'],
-              slug: s.slug,
-              image: s.heroImage || undefined,
-              gradient: i % 2 === 0 ? 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)' : 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
-              accentIcon: '⚡',
-            }));
-            setStudies(mapped);
+            setStudies(formatCaseStudies(published));
           }
         }
       })

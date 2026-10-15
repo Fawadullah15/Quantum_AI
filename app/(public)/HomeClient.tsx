@@ -76,6 +76,18 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
   const [caseStudies, setCaseStudies] = useState<any[]>(() =>
     initialData?.caseStudies?.length ? initialData.caseStudies : [
     {
+      id: '0',
+      title: 'Mechanical Engineering Design Copilot',
+      industry: 'AI Product / Engineering Software',
+      problem: 'An AI powered engineering copilot designed to assist with mechanical component design, technical calculations, constraint analysis, material evaluation, and engineering recommendations.',
+      technologies: 'Artificial Intelligence, Mechanical Design, Engineering Analysis, Python, CAD Integration',
+      results: 'Reduces routine engineering friction, accelerates preliminary design cycles, and provides auditable step-by-step calculation reports.',
+      slug: 'mechanical-engineering-design-copilot',
+      heroImage: '/uploads/mechanical-engineering-design-copilot.png',
+      featured: true,
+      status: 'Prototype in Development',
+    },
+    {
       id: '1',
       title: 'School Operations Manager',
       industry: 'Education / School Management',
@@ -440,7 +452,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
         {/* ═══════════════════════════════════════════════════════════
             04 // SELECTED WORK & DEPLOYMENTS
         ═══════════════════════════════════════════════════════════ */}
-        <CaseStudiesSection />
+        <CaseStudiesSection initialStudies={caseStudies} />
 
         {/* ═══════════════════════════════════════════════════════════
             05 // HOW WE WORK / DELIVERY PROCESS

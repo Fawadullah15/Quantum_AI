@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -8,15 +8,25 @@ import { useAdminToast } from '@/components/admin/AdminToast';
 import { useAdminConfirm } from '@/components/admin/ConfirmDialog';
 import StatusBadge from '@/components/admin/StatusBadge';
 import EmptyState from '@/components/admin/EmptyState';
-import { createCaseStudy, updateCaseStudy, deleteCaseStudy } from './actions';
+import {
+  createCaseStudy,
+  updateCaseStudy,
+  deleteCaseStudy,
+  togglePublishCaseStudy,
+  toggleFeaturedCaseStudy,
+} from './actions';
 import type { CaseStudy } from '@prisma/client';
 
-export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: { caseStudies: CaseStudy[] }) {
+export default function CaseStudiesClient({
+  caseStudies: initialCaseStudies,
+}: {
+  caseStudies: CaseStudy[];
+}) {
   const router = useRouter();
   const toast = useAdminToast();
   const { confirm } = useAdminConfirm();
 
-  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>(initialCaseStudies);
+  const [caseStudies, setCaseStudies] = useState<any[]>(initialCaseStudies);
   const [isEditing, setIsEditing] = useState(false);
   const [currentId, setCurrentId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,6 +36,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
 
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PUBLISHED' | 'DRAFT'>('ALL');
+  const [featuredFilter, setFeaturedFilter] = useState<'ALL' | 'FEATURED'>('ALL');
   const [industryFilter, setIndustryFilter] = useState('ALL');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -34,19 +45,28 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
-    client: '',
-    industry: 'Artificial Intelligence',
+    client: 'Quantum AI',
+    industry: 'AI Engineering Software',
     year: new Date().getFullYear(),
-    services: '',
-    technologies: '',
+    services: 'AI Engineering, Product Development',
+    technologies: 'Artificial Intelligence, Mechanical Engineering, Engineering Design, Calculations, Machine Learning',
     heroImage: '',
     gallery: [] as string[],
     externalUrl: '',
     problem: '',
+    fullDescription: '',
     solution: '',
     implementation: '',
     results: '',
     published: true,
+    featured: false,
+    status: 'Prototype in Development',
+    primaryCtaLabel: 'Explore the Project',
+    primaryCtaUrl: '',
+    secondaryCtaLabel: 'Contact Quantum AI',
+    secondaryCtaUrl: '/contact',
+    seoTitle: '',
+    seoDescription: '',
     order: 0,
   });
 
@@ -54,19 +74,28 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     setFormData({
       title: '',
       slug: '',
-      client: '',
-      industry: 'Artificial Intelligence',
+      client: 'Quantum AI',
+      industry: 'AI Engineering Software',
       year: new Date().getFullYear(),
-      services: 'AI Engineering, Custom Software',
-      technologies: 'Next.js, Python, TypeScript, PyTorch',
+      services: 'AI Engineering, Product Development',
+      technologies: 'Artificial Intelligence, Mechanical Engineering, Engineering Design, Calculations, Machine Learning',
       heroImage: '',
       gallery: [],
       externalUrl: '',
       problem: '',
+      fullDescription: '',
       solution: '',
       implementation: '',
       results: '',
       published: true,
+      featured: false,
+      status: 'Prototype in Development',
+      primaryCtaLabel: 'Explore the Project',
+      primaryCtaUrl: '',
+      secondaryCtaLabel: 'Contact Quantum AI',
+      secondaryCtaUrl: '/contact',
+      seoTitle: '',
+      seoDescription: '',
       order: caseStudies.length + 1,
     });
     setManualGalleryUrl('');
@@ -74,7 +103,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     setIsEditing(true);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       if (params.get('new') === '1' || params.get('create') === '1') {
@@ -83,14 +112,14 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     }
   }, []);
 
-  const handleEdit = (study: CaseStudy) => {
+  const handleEdit = (study: any) => {
     let initialGallery: string[] = [];
     if (study.gallery) {
       try {
         const parsed = typeof study.gallery === 'string' ? JSON.parse(study.gallery) : study.gallery;
         if (Array.isArray(parsed)) {
           initialGallery = parsed.filter(
-            (item): item is string => typeof item === 'string' && item.trim().length > 0
+            (item: any): item is string => typeof item === 'string' && item.trim().length > 0
           );
         }
       } catch (err) {
@@ -101,8 +130,8 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     setFormData({
       title: study.title || '',
       slug: study.slug || '',
-      client: study.client || '',
-      industry: study.industry || 'Artificial Intelligence',
+      client: study.client || 'Quantum AI',
+      industry: study.industry || 'AI Engineering Software',
       year: study.year || new Date().getFullYear(),
       services: study.services || '',
       technologies: study.technologies || '',
@@ -110,10 +139,19 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
       gallery: initialGallery,
       externalUrl: study.externalUrl || '',
       problem: study.problem || '',
+      fullDescription: study.fullDescription || '',
       solution: study.solution || '',
       implementation: study.implementation || '',
       results: study.results || '',
       published: study.published ?? true,
+      featured: study.featured ?? false,
+      status: study.status || 'Completed',
+      primaryCtaLabel: study.primaryCtaLabel || 'Explore the Project',
+      primaryCtaUrl: study.primaryCtaUrl || '',
+      secondaryCtaLabel: study.secondaryCtaLabel || 'Contact Quantum AI',
+      secondaryCtaUrl: study.secondaryCtaUrl || '/contact',
+      seoTitle: study.seoTitle || '',
+      seoDescription: study.seoDescription || '',
       order: study.order || 0,
     });
     setManualGalleryUrl('');
@@ -149,11 +187,11 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
       const result = await res.json();
       if (result.url) {
         setFormData((prev) => ({ ...prev, heroImage: result.url }));
-        toast.success('Hero image uploaded successfully!', 'Asset Ready');
+        toast.success('Cover image uploaded successfully!', 'Asset Ready');
       }
     } catch (err) {
       console.error('Upload error:', err);
-      toast.error('Failed to upload hero image.', 'Upload Error');
+      toast.error('Failed to upload cover image.', 'Upload Error');
     } finally {
       setIsUploading(false);
       if (e.target) {
@@ -197,7 +235,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
           return { ...prev, gallery: unique };
         });
         toast.success(
-          `${newUrls.length} gallery image${newUrls.length > 1 ? 's' : ''} uploaded successfully!`,
+          `${newUrls.length} screenshot${newUrls.length > 1 ? 's' : ''} uploaded!`,
           'Gallery Ready'
         );
       }
@@ -250,23 +288,43 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     });
   };
 
-  const handleTogglePublish = async (study: CaseStudy) => {
-    const newStatus = !study.published;
+  const handleTogglePublish = async (study: any) => {
+    const nextState = !study.published;
+    setCaseStudies((prev) =>
+      prev.map((s) => (s.id === study.id ? { ...s, published: nextState } : s))
+    );
     try {
-      await updateCaseStudy(study.id, {
-        ...study,
-        published: newStatus,
-      });
-      setCaseStudies((prev) =>
-        prev.map((s) => (s.id === study.id ? { ...s, published: newStatus } : s))
-      );
+      await togglePublishCaseStudy(study.id, nextState);
       toast.success(
-        `"${study.title}" is now ${newStatus ? 'Live on /work' : 'Hidden in Drafts'}`,
+        `"${study.title}" is now ${nextState ? 'LIVE on /work' : 'HIDDEN in Drafts'}`,
         'Visibility Updated'
       );
       router.refresh();
     } catch (err) {
-      toast.error('Failed to update status.', 'Error');
+      setCaseStudies((prev) =>
+        prev.map((s) => (s.id === study.id ? { ...s, published: study.published } : s))
+      );
+      toast.error('Failed to update publication status.', 'Error');
+    }
+  };
+
+  const handleToggleFeatured = async (study: any) => {
+    const nextState = !study.featured;
+    setCaseStudies((prev) =>
+      prev.map((s) => (s.id === study.id ? { ...s, featured: nextState } : s))
+    );
+    try {
+      await toggleFeaturedCaseStudy(study.id, nextState);
+      toast.success(
+        `"${study.title}" is now ${nextState ? 'FEATURED on /work' : 'UNFEATURED'}`,
+        'Featured Updated'
+      );
+      router.refresh();
+    } catch (err) {
+      setCaseStudies((prev) =>
+        prev.map((s) => (s.id === study.id ? { ...s, featured: study.featured } : s))
+      );
+      toast.error('Failed to update featured status.', 'Error');
     }
   };
 
@@ -292,17 +350,17 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
         updateCaseStudy(itemA.id, { order: itemA.order }),
         updateCaseStudy(itemB.id, { order: itemB.order }),
       ]);
-      toast.info('Case study order updated.', 'Reordered');
+      toast.info('Project display order updated.', 'Reordered');
       router.refresh();
     } catch (err) {
-      toast.error('Failed to save order.', 'Error');
+      toast.error('Failed to save display order.', 'Error');
     }
   };
 
   const handleDelete = async (id: string, title: string) => {
     const confirmed = await confirm({
-      title: 'Move this item to Recently Deleted?',
-      message: `Move "${title}" to Recently Deleted? It will be hidden from the website and can be restored at any time.`,
+      title: 'Move this project to Recently Deleted?',
+      message: `Move "${title}" to Recently Deleted? It will be hidden from the public website and can be restored at any time.`,
       confirmText: 'Move to Recently Deleted',
       confirmVariant: 'danger',
     });
@@ -314,36 +372,47 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
         toast.success(`"${title}" was moved to Recently Deleted.`, 'Moved to Bin');
         router.refresh();
       } catch (err) {
-        toast.error('Failed to move case study to Recently Deleted.', 'Error');
+        toast.error('Failed to delete project.', 'Error');
       }
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmitWithPublication = async (e: React.FormEvent, forcePublish?: boolean) => {
     e.preventDefault();
     if (!formData.title.trim()) {
       toast.warning('Please enter a project title', 'Validation');
       return;
     }
 
+    const payload = {
+      ...formData,
+      ...(forcePublish !== undefined ? { published: forcePublish } : {}),
+    };
+
     try {
       setIsSubmitting(true);
       if (currentId) {
-        const updated = await updateCaseStudy(currentId, formData);
+        const updated = await updateCaseStudy(currentId, payload);
         setCaseStudies((prev) =>
-          prev.map((s) => (s.id === currentId ? (updated as CaseStudy) : s))
+          prev.map((s) => (s.id === currentId ? (updated as any) : s))
         );
-        toast.success(`Case study "${formData.title}" updated!`, 'Saved');
+        toast.success(
+          `Project "${formData.title}" updated successfully!`,
+          'Changes Saved'
+        );
       } else {
-        const created = await createCaseStudy(formData);
-        setCaseStudies((prev) => [...prev, created as CaseStudy]);
-        toast.success(`Case study "${formData.title}" created!`, 'Created');
+        const created = await createCaseStudy(payload);
+        setCaseStudies((prev) => [...prev, created as any]);
+        toast.success(
+          `Project "${formData.title}" published successfully!`,
+          'Project Created'
+        );
       }
       setIsEditing(false);
       setCurrentId(null);
       router.refresh();
     } catch (err: any) {
-      toast.error(err?.message || 'Failed to save case study', 'Error');
+      toast.error(err?.message || 'Failed to save project', 'Error');
     } finally {
       setIsSubmitting(false);
     }
@@ -357,19 +426,24 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     const matchesSearch =
       !q ||
       study.title.toLowerCase().includes(q) ||
-      study.client.toLowerCase().includes(q) ||
-      study.industry.toLowerCase().includes(q) ||
-      study.technologies.toLowerCase().includes(q) ||
-      study.problem.toLowerCase().includes(q);
+      (study.client || '').toLowerCase().includes(q) ||
+      (study.industry || '').toLowerCase().includes(q) ||
+      (study.technologies || '').toLowerCase().includes(q) ||
+      (study.status || '').toLowerCase().includes(q) ||
+      (study.problem || '').toLowerCase().includes(q);
 
     const matchesStatus =
       statusFilter === 'ALL' ||
       (statusFilter === 'PUBLISHED' && study.published) ||
       (statusFilter === 'DRAFT' && !study.published);
 
+    const matchesFeatured =
+      featuredFilter === 'ALL' ||
+      (featuredFilter === 'FEATURED' && study.featured);
+
     const matchesIndustry = industryFilter === 'ALL' || study.industry === industryFilter;
 
-    return matchesSearch && matchesStatus && matchesIndustry;
+    return matchesSearch && matchesStatus && matchesFeatured && matchesIndustry;
   });
 
   const inputStyle: React.CSSProperties = {
@@ -382,6 +456,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
     fontSize: '0.875rem',
     outline: 'none',
     boxSizing: 'border-box',
+    fontFamily: 'var(--font-d-din, sans-serif)',
   };
 
   const labelStyle: React.CSSProperties = {
@@ -411,11 +486,11 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
             }}
           >
             {/* Search & Filter Controls */}
-            <div style={{ display: 'flex', gap: '0.65rem', flex: 1, minWidth: '260px', maxWidth: '600px', flexWrap: 'wrap' }}>
-              <div style={{ flex: 1, position: 'relative', minWidth: '200px' }}>
+            <div style={{ display: 'flex', gap: '0.65rem', flex: 1, minWidth: '260px', maxWidth: '750px', flexWrap: 'wrap' }}>
+              <div style={{ flex: 1, position: 'relative', minWidth: '220px' }}>
                 <input
                   type="text"
-                  placeholder="Search project title, client, tech stack, keyword..."
+                  placeholder="Search project title, owner, category, tech stack, keyword..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   style={{
@@ -447,7 +522,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     fontFamily: 'var(--font-mono, monospace)',
                   }}
                 >
-                  <option value="ALL">All Industries</option>
+                  <option value="ALL">All Categories</option>
                   {industries.map((ind) => (
                     <option key={ind} value={ind}>
                       {ind}
@@ -456,6 +531,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 </select>
               )}
 
+              {/* Status Filter */}
               <div style={{ display: 'flex', gap: '0.25rem' }}>
                 {(['ALL', 'PUBLISHED', 'DRAFT'] as const).map((st) => (
                   <button
@@ -465,7 +541,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     style={{
                       backgroundColor: statusFilter === st ? '#1677FF' : 'rgba(6, 21, 43, 0.65)',
                       border: statusFilter === st ? '1px solid #1677FF' : '1px solid rgba(22, 119, 255, 0.18)',
-                      color: statusFilter === st ? '#FFFFFF' : '#FFFFFF',
+                      color: '#FFFFFF',
                       padding: '0.45rem 0.75rem',
                       borderRadius: 6,
                       fontSize: '0.75rem',
@@ -477,6 +553,27 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     {st}
                   </button>
                 ))}
+              </div>
+
+              {/* Featured Filter */}
+              <div style={{ display: 'flex', gap: '0.25rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setFeaturedFilter(featuredFilter === 'FEATURED' ? 'ALL' : 'FEATURED')}
+                  style={{
+                    backgroundColor: featuredFilter === 'FEATURED' ? 'rgba(56, 189, 248, 0.2)' : 'rgba(6, 21, 43, 0.65)',
+                    border: featuredFilter === 'FEATURED' ? '1px solid #38BDF8' : '1px solid rgba(22, 119, 255, 0.18)',
+                    color: featuredFilter === 'FEATURED' ? '#38BDF8' : '#FFFFFF',
+                    padding: '0.45rem 0.75rem',
+                    borderRadius: 6,
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
+                  ★ FEATURED
+                </button>
               </div>
             </div>
 
@@ -500,7 +597,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 boxShadow: '0 4px 14px rgba(22, 119, 255, 0.35)',
               }}
             >
-              <span>+</span> NEW CASE STUDY
+              <span>+</span> ADD NEW PROJECT
             </button>
           </div>
 
@@ -508,11 +605,11 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
           {filteredCaseStudies.length === 0 ? (
             <EmptyState
               icon="📁"
-              title="No works or case studies found"
+              title="No projects or case studies found"
               description={
-                searchQuery || statusFilter !== 'ALL' || industryFilter !== 'ALL'
+                searchQuery || statusFilter !== 'ALL' || industryFilter !== 'ALL' || featuredFilter !== 'ALL'
                   ? 'No projects match your active search and filter criteria.'
-                  : 'Add completed portfolio deployments and case studies to feature them on the public /work page.'
+                  : 'Add engineering prototypes, software products, or client case studies to feature them on the public /work page.'
               }
               action={
                 <button
@@ -529,7 +626,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     fontFamily: 'var(--font-mono, monospace)',
                   }}
                 >
-                  + Add First Case Study
+                  + Add First Project
                 </button>
               }
             />
@@ -547,20 +644,23 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
                   <thead>
                     <tr style={{ backgroundColor: 'rgba(3, 7, 18, 0.8)', borderBottom: '1px solid rgba(22, 119, 255, 0.18)' }}>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', width: '70px' }}>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', width: '60px' }}>
                         Order
                       </th>
                       <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
-                        Project Title &amp; Client
+                        Project Title &amp; Owner
                       </th>
                       <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
-                        Industry &amp; Year
+                        Category &amp; Status
                       </th>
-                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
-                        Tech Stack
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'center' }}>
+                        Featured
                       </th>
                       <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
                         Live Status
+                      </th>
+                      <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase' }}>
+                        Updated
                       </th>
                       <th style={{ padding: '0.85rem 1.15rem', color: '#FFFFFF', fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', textTransform: 'uppercase', textAlign: 'right' }}>
                         Actions
@@ -568,204 +668,201 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredCaseStudies.map((study, index) => (
-                      <tr key={study.id} style={{ borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
-                        {/* Order Controls */}
-                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-                            <button
-                              type="button"
-                              title="Move up"
-                              disabled={index === 0}
-                              onClick={() => handleMoveOrder(index, 'UP')}
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: index === 0 ? '#334155' : '#38BDF8',
-                                cursor: index === 0 ? 'not-allowed' : 'pointer',
-                                fontSize: '0.85rem',
-                                padding: 0,
-                              }}
-                            >
-                              ▲
-                            </button>
-                            <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF', minWidth: '16px', textAlign: 'center' }}>
-                              {index + 1}
-                            </span>
-                            <button
-                              type="button"
-                              title="Move down"
-                              disabled={index === filteredCaseStudies.length - 1}
-                              onClick={() => handleMoveOrder(index, 'DOWN')}
-                              style={{
-                                background: 'transparent',
-                                border: 'none',
-                                color: index === filteredCaseStudies.length - 1 ? '#334155' : '#38BDF8',
-                                cursor: index === filteredCaseStudies.length - 1 ? 'not-allowed' : 'pointer',
-                                fontSize: '0.85rem',
-                                padding: 0,
-                              }}
-                            >
-                              ▼
-                            </button>
-                          </div>
-                        </td>
+                    {filteredCaseStudies.map((study, index) => {
+                      const statusUpper = (study.status || 'COMPLETED').toUpperCase();
+                      let statusBg = 'rgba(56, 189, 248, 0.12)';
+                      let statusBorder = 'rgba(56, 189, 248, 0.3)';
+                      let statusColor = '#38BDF8';
 
-                        {/* Title & Client */}
-                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                            {study.heroImage ? (
-                              <div
+                      if (statusUpper.includes('PROTOTYPE')) {
+                        statusBg = 'rgba(167, 139, 250, 0.15)';
+                        statusBorder = 'rgba(167, 139, 250, 0.35)';
+                        statusColor = '#C4B5FD';
+                      } else if (statusUpper.includes('DEV') || statusUpper.includes('IN_DEVELOPMENT')) {
+                        statusBg = 'rgba(251, 191, 36, 0.12)';
+                        statusBorder = 'rgba(251, 191, 36, 0.3)';
+                        statusColor = '#FCD34D';
+                      } else if (statusUpper.includes('LIVE') || statusUpper.includes('COMPLETED')) {
+                        statusBg = 'rgba(16, 185, 129, 0.12)';
+                        statusBorder = 'rgba(16, 185, 129, 0.3)';
+                        statusColor = '#34D399';
+                      }
+
+                      return (
+                        <tr key={study.id} style={{ borderBottom: '1px solid rgba(22, 119, 255, 0.1)' }}>
+                          {/* Order Controls */}
+                          <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                              <button
+                                type="button"
+                                title="Move up"
+                                disabled={index === 0}
+                                onClick={() => handleMoveOrder(index, 'UP')}
                                 style={{
-                                  width: '48px',
-                                  height: '36px',
-                                  borderRadius: '6px',
-                                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                                  position: 'relative',
-                                  overflow: 'hidden',
-                                  flexShrink: 0,
+                                  background: 'transparent',
+                                  border: 'none',
+                                  color: index === 0 ? '#334155' : '#38BDF8',
+                                  cursor: index === 0 ? 'not-allowed' : 'pointer',
+                                  fontSize: '0.85rem',
+                                  padding: 0,
                                 }}
                               >
-                                <Image
-                                  src={study.heroImage}
-                                  alt={study.title}
-                                  fill
-                                  sizes="48px"
-                                  style={{ objectFit: 'cover' }}
-                                />
-                              </div>
-                            ) : (
-                              <div
+                                ▲
+                              </button>
+                              <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.75rem', color: '#FFFFFF', minWidth: '16px', textAlign: 'center' }}>
+                                {index + 1}
+                              </span>
+                              <button
+                                type="button"
+                                title="Move down"
+                                disabled={index === filteredCaseStudies.length - 1}
+                                onClick={() => handleMoveOrder(index, 'DOWN')}
                                 style={{
-                                  width: '48px',
-                                  height: '36px',
-                                  borderRadius: '6px',
-                                  backgroundColor: 'rgba(22, 119, 255, 0.1)',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  fontSize: '1rem',
-                                  flexShrink: 0,
+                                  background: 'transparent',
+                                  border: 'none',
+                                  color: index === filteredCaseStudies.length - 1 ? '#334155' : '#38BDF8',
+                                  cursor: index === filteredCaseStudies.length - 1 ? 'not-allowed' : 'pointer',
+                                  fontSize: '0.85rem',
+                                  padding: 0,
                                 }}
                               >
-                                📁
-                              </div>
-                            )}
+                                ▼
+                              </button>
+                            </div>
+                          </td>
 
-                            <div style={{ minWidth: 0 }}>
-                              <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.92rem' }}>
-                                {study.title}
-                              </div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.15rem' }}>
-                                <span style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>{study.client}</span>
-                                <span style={{ color: '#475569', fontSize: '0.7rem' }}>•</span>
-                                <Link
-                                  href={`/work/${study.slug}`}
-                                  target="_blank"
-                                  style={{ fontSize: '0.72rem', color: '#FFFFFF', textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
+                          {/* Title & Owner */}
+                          <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                              {study.heroImage ? (
+                                <div
+                                  style={{
+                                    width: '52px',
+                                    height: '38px',
+                                    borderRadius: '6px',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                    position: 'relative',
+                                    overflow: 'hidden',
+                                    flexShrink: 0,
+                                    border: '1px solid rgba(56, 189, 248, 0.25)',
+                                  }}
                                 >
-                                  /work/{study.slug} ↗
-                                </Link>
-                                {(() => {
-                                  try {
-                                    const parsed = typeof study.gallery === 'string' ? JSON.parse(study.gallery) : study.gallery;
-                                    if (Array.isArray(parsed) && parsed.length > 0) {
-                                      return (
-                                        <span
-                                          style={{
-                                            backgroundColor: 'rgba(56, 189, 248, 0.1)',
-                                            color: '#FFFFFF',
-                                            fontSize: '0.68rem',
-                                            fontFamily: 'var(--font-mono, monospace)',
-                                            padding: '1px 6px',
-                                            borderRadius: '4px',
-                                            border: '1px solid rgba(56, 189, 248, 0.25)',
-                                          }}
-                                        >
-                                          {parsed.length} gallery img{parsed.length > 1 ? 's' : ''}
-                                        </span>
-                                      );
+                                  <Image
+                                    src={study.heroImage}
+                                    alt={study.title}
+                                    fill
+                                    sizes="52px"
+                                    style={{ objectFit: 'cover' }}
+                                    unoptimized={true}
+                                  />
+                                </div>
+                              ) : (
+                                <div
+                                  style={{
+                                    width: '52px',
+                                    height: '38px',
+                                    borderRadius: '6px',
+                                    backgroundColor: 'rgba(22, 119, 255, 0.1)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '1rem',
+                                    flexShrink: 0,
+                                    border: '1px solid rgba(22, 119, 255, 0.2)',
+                                  }}
+                                >
+                                  📁
+                                </div>
+                              )}
+
+                              <div style={{ minWidth: 0 }}>
+                                <div style={{ fontWeight: 600, color: '#FFFFFF', fontSize: '0.92rem' }}>
+                                  {study.title}
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.15rem', flexWrap: 'wrap' }}>
+                                  <span style={{ fontSize: '0.75rem', color: '#94A3B8' }}>{study.client || 'Quantum AI'}</span>
+                                  <span style={{ color: '#475569', fontSize: '0.7rem' }}>•</span>
+                                  <Link
+                                    href={`/work/${study.slug}`}
+                                    target="_blank"
+                                    style={{ fontSize: '0.72rem', color: '#38BDF8', textDecoration: 'none', fontFamily: 'var(--font-mono, monospace)' }}
+                                  >
+                                    /work/{study.slug} ↗
+                                  </Link>
+                                  {(() => {
+                                    try {
+                                      const parsed = typeof study.gallery === 'string' ? JSON.parse(study.gallery) : study.gallery;
+                                      if (Array.isArray(parsed) && parsed.length > 0) {
+                                        return (
+                                          <span
+                                            style={{
+                                              backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                                              color: '#38BDF8',
+                                              fontSize: '0.68rem',
+                                              fontFamily: 'var(--font-mono, monospace)',
+                                              padding: '1px 6px',
+                                              borderRadius: '4px',
+                                              border: '1px solid rgba(56, 189, 248, 0.25)',
+                                            }}
+                                          >
+                                            {parsed.length} img{parsed.length > 1 ? 's' : ''}
+                                          </span>
+                                        );
+                                      }
+                                    } catch {
+                                      return null;
                                     }
-                                  } catch {
                                     return null;
-                                  }
-                                  return null;
-                                })()}
+                                  })()}
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </td>
+                          </td>
 
-                        {/* Industry & Year */}
-                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
-                          <span
-                            style={{
-                              backgroundColor: 'rgba(22, 119, 255, 0.12)',
-                              border: '1px solid rgba(22, 119, 255, 0.25)',
-                              padding: '0.2rem 0.55rem',
-                              borderRadius: '4px',
-                              fontSize: '0.75rem',
-                              color: '#FFFFFF',
-                              fontFamily: 'var(--font-mono, monospace)',
-                            }}
-                          >
-                            {study.industry}
-                          </span>
-                          <div style={{ fontSize: '0.72rem', color: '#FFFFFF', marginTop: '0.2rem', fontFamily: 'var(--font-mono, monospace)' }}>
-                            Year: {study.year}
-                          </div>
-                        </td>
+                          {/* Category & Status */}
+                          <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', alignItems: 'flex-start' }}>
+                              <span
+                                style={{
+                                  backgroundColor: 'rgba(22, 119, 255, 0.12)',
+                                  border: '1px solid rgba(22, 119, 255, 0.25)',
+                                  padding: '0.15rem 0.5rem',
+                                  borderRadius: '4px',
+                                  fontSize: '0.72rem',
+                                  color: '#FFFFFF',
+                                  fontFamily: 'var(--font-mono, monospace)',
+                                }}
+                              >
+                                {study.industry}
+                              </span>
+                              <span
+                                style={{
+                                  backgroundColor: statusBg,
+                                  border: `1px solid ${statusBorder}`,
+                                  padding: '0.15rem 0.5rem',
+                                  borderRadius: '4px',
+                                  fontSize: '0.68rem',
+                                  color: statusColor,
+                                  fontFamily: 'var(--font-mono, monospace)',
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {study.status || 'Completed'}
+                              </span>
+                            </div>
+                          </td>
 
-                        {/* Tech Stack */}
-                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', maxWidth: '220px' }}>
-                          <div style={{ fontSize: '0.75rem', color: '#FFFFFF', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono, monospace)' }}>
-                            {study.technologies || '-'}
-                          </div>
-                        </td>
-
-                        {/* Published Status Toggle */}
-                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
-                          <button
-                            type="button"
-                            onClick={() => handleTogglePublish(study)}
-                            style={{
-                              backgroundColor: study.published ? 'rgba(16, 185, 129, 0.15)' : 'rgba(100, 116, 139, 0.15)',
-                              border: study.published ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(100, 116, 139, 0.35)',
-                              color: study.published ? '#34D399' : '#FFFFFF',
-                              padding: '0.25rem 0.6rem',
-                              borderRadius: '4px',
-                              fontSize: '0.72rem',
-                              fontWeight: 700,
-                              cursor: 'pointer',
-                              fontFamily: 'var(--font-mono, monospace)',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '0.35rem',
-                            }}
-                          >
-                            <span
-                              style={{
-                                width: '5px',
-                                height: '5px',
-                                borderRadius: '50%',
-                                backgroundColor: study.published ? '#34D399' : '#FFFFFF',
-                              }}
-                            />
-                            {study.published ? 'LIVE / PUBLISHED' : 'DRAFT (HIDDEN)'}
-                          </button>
-                        </td>
-
-                        {/* Actions */}
-                        <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', textAlign: 'right' }}>
-                          <div style={{ display: 'flex', gap: '0.45rem', justifyContent: 'flex-end' }}>
+                          {/* Featured Toggle */}
+                          <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', textAlign: 'center' }}>
                             <button
                               type="button"
-                              onClick={() => handleEdit(study)}
+                              onClick={() => handleToggleFeatured(study)}
+                              title={study.featured ? 'Click to unfeature' : 'Click to feature on /work'}
                               style={{
-                                backgroundColor: 'rgba(22, 119, 255, 0.15)',
-                                border: '1px solid rgba(22, 119, 255, 0.35)',
-                                color: '#FFFFFF',
-                                padding: '0.3rem 0.65rem',
+                                backgroundColor: study.featured ? 'rgba(56, 189, 248, 0.15)' : 'transparent',
+                                border: study.featured ? '1px solid rgba(56, 189, 248, 0.4)' : '1px solid rgba(148, 163, 184, 0.25)',
+                                color: study.featured ? '#38BDF8' : '#64748B',
+                                padding: '0.25rem 0.55rem',
                                 borderRadius: '4px',
                                 fontSize: '0.72rem',
                                 fontWeight: 600,
@@ -773,28 +870,111 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                                 fontFamily: 'var(--font-mono, monospace)',
                               }}
                             >
-                              Edit
+                              {study.featured ? '★ FEATURED' : '☆ Standard'}
                             </button>
+                          </td>
+
+                          {/* Live Status Toggle */}
+                          <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle' }}>
                             <button
                               type="button"
-                              onClick={() => handleDelete(study.id, study.title)}
+                              onClick={() => handleTogglePublish(study)}
                               style={{
-                                backgroundColor: 'rgba(239, 68, 68, 0.12)',
-                                border: '1px solid rgba(239, 68, 68, 0.3)',
-                                color: '#F87171',
-                                padding: '0.3rem 0.55rem',
+                                backgroundColor: study.published ? 'rgba(16, 185, 129, 0.15)' : 'rgba(100, 116, 139, 0.15)',
+                                border: study.published ? '1px solid rgba(16, 185, 129, 0.35)' : '1px solid rgba(100, 116, 139, 0.35)',
+                                color: study.published ? '#34D399' : '#94A3B8',
+                                padding: '0.25rem 0.6rem',
                                 borderRadius: '4px',
                                 fontSize: '0.72rem',
+                                fontWeight: 700,
                                 cursor: 'pointer',
                                 fontFamily: 'var(--font-mono, monospace)',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.35rem',
                               }}
                             >
-                              Delete
+                              <span
+                                style={{
+                                  width: '5px',
+                                  height: '5px',
+                                  borderRadius: '50%',
+                                  backgroundColor: study.published ? '#34D399' : '#94A3B8',
+                                }}
+                              />
+                              {study.published ? 'LIVE / PUBLISHED' : 'DRAFT (HIDDEN)'}
                             </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+
+                          {/* Updated Date */}
+                          <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', fontSize: '0.75rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)', whiteSpace: 'nowrap' }}>
+                            {study.updatedAt
+                              ? new Date(study.updatedAt).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                })
+                              : 'Recent'}
+                          </td>
+
+                          {/* Actions */}
+                          <td style={{ padding: '0.85rem 1.15rem', verticalAlign: 'middle', textAlign: 'right' }}>
+                            <div style={{ display: 'flex', gap: '0.45rem', justifyContent: 'flex-end' }}>
+                              <Link
+                                href={`/work/${study.slug}`}
+                                target="_blank"
+                                style={{
+                                  backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                                  border: '1px solid rgba(56, 189, 248, 0.25)',
+                                  color: '#38BDF8',
+                                  padding: '0.3rem 0.6rem',
+                                  borderRadius: '4px',
+                                  fontSize: '0.72rem',
+                                  fontWeight: 600,
+                                  textDecoration: 'none',
+                                  fontFamily: 'var(--font-mono, monospace)',
+                                }}
+                              >
+                                Preview ↗
+                              </Link>
+                              <button
+                                type="button"
+                                onClick={() => handleEdit(study)}
+                                style={{
+                                  backgroundColor: 'rgba(22, 119, 255, 0.15)',
+                                  border: '1px solid rgba(22, 119, 255, 0.35)',
+                                  color: '#FFFFFF',
+                                  padding: '0.3rem 0.65rem',
+                                  borderRadius: '4px',
+                                  fontSize: '0.72rem',
+                                  fontWeight: 600,
+                                  cursor: 'pointer',
+                                  fontFamily: 'var(--font-mono, monospace)',
+                                }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => handleDelete(study.id, study.title)}
+                                style={{
+                                  backgroundColor: 'transparent',
+                                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                                  color: '#F87171',
+                                  padding: '0.3rem 0.55rem',
+                                  borderRadius: '4px',
+                                  fontSize: '0.72rem',
+                                  cursor: 'pointer',
+                                  fontFamily: 'var(--font-mono, monospace)',
+                                }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -805,47 +985,47 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
         /* Create & Edit Modal Form */
         <div
           style={{
-            backgroundColor: 'rgba(6, 21, 43, 0.85)',
+            backgroundColor: 'rgba(6, 21, 43, 0.92)',
             border: '1px solid rgba(22, 119, 255, 0.25)',
             borderRadius: '12px',
-            padding: '1.75rem',
-            maxWidth: '840px',
+            padding: '2rem',
+            maxWidth: '920px',
             margin: '0 auto',
-            boxShadow: '0 20px 50px -10px rgba(0, 0, 0, 0.7)',
+            boxShadow: '0 20px 50px -10px rgba(0, 0, 0, 0.8)',
           }}
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid rgba(22, 119, 255, 0.15)', paddingBottom: '0.75rem' }}>
             <div>
-              <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0, color: '#FFFFFF' }}>
-                {currentId ? `Edit Work: ${formData.title}` : 'Create New Work / Case Study'}
+              <h2 style={{ fontSize: '1.35rem', fontWeight: 700, margin: 0, color: '#FFFFFF' }}>
+                {currentId ? `Edit Project: ${formData.title}` : 'Add New Project'}
               </h2>
-              <div style={{ fontSize: '0.75rem', color: '#FFFFFF', marginTop: '0.2rem' }}>
-                Fill out the project architecture, client problem, technical solution, and deployment results.
+              <div style={{ fontSize: '0.75rem', color: '#94A3B8', marginTop: '0.2rem' }}>
+                Configure project specifications, architecture, calculations, and public visibility on Quantum AI.
               </div>
             </div>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
-              style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '1.1rem', cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 'none', color: '#FFFFFF', fontSize: '1.25rem', cursor: 'pointer' }}
             >
               ✕
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <form onSubmit={(e) => handleSubmitWithPublication(e)} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
             
-            {/* Section 1: Overview */}
+            {/* Section 1: Identity & Classification */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
-                1. Overview &amp; Client Identity
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.85rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                1. Project Identity &amp; Classification
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
                 <div>
                   <label style={labelStyle}>Project Title *</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Autonomous School Operations Manager"
+                    placeholder="e.g. Mechanical Engineering Design Copilot"
                     value={formData.title}
                     onChange={(e) => handleTitleChange(e.target.value)}
                     style={inputStyle}
@@ -857,7 +1037,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. autonomous-school-operations-manager"
+                    placeholder="e.g. mechanical-engineering-design-copilot"
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                     style={inputStyle}
@@ -865,11 +1045,11 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Client / Organization *</label>
+                  <label style={labelStyle}>Project Owner / Organization *</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. EduSphere Global"
+                    placeholder="e.g. Quantum AI"
                     value={formData.client}
                     onChange={(e) => setFormData({ ...formData, client: e.target.value })}
                     style={inputStyle}
@@ -877,11 +1057,11 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Industry / Domain *</label>
+                  <label style={labelStyle}>Category / Domain *</label>
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Education, Fintech, HealthTech"
+                    placeholder="e.g. AI Product / Engineering Software"
                     value={formData.industry}
                     onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
                     style={inputStyle}
@@ -889,7 +1069,22 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Deployment Year *</label>
+                  <label style={labelStyle}>Project Status *</label>
+                  <select
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    style={{ ...inputStyle, fontFamily: 'var(--font-mono, monospace)' }}
+                  >
+                    <option value="Prototype in Development">Prototype in Development</option>
+                    <option value="In Development">In Development</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Beta">Beta</option>
+                    <option value="Planned">Planned</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={labelStyle}>Deployment / Release Year *</label>
                   <input
                     type="number"
                     required
@@ -898,32 +1093,14 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     style={inputStyle}
                   />
                 </div>
-
-                <div>
-                  <label style={labelStyle}>Live Project URL (Optional)</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. https://edusphere.io"
-                    value={formData.externalUrl}
-                    onChange={(e) => setFormData({ ...formData, externalUrl: e.target.value })}
-                    style={inputStyle}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Section 2: Media & Tech Stack */}
-            <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
-                2. Imagery &amp; Technology Stack
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem', marginTop: '1rem' }}>
                 <div>
-                  <label style={labelStyle}>Technologies Used (comma separated)</label>
+                  <label style={labelStyle}>Primary Tags &amp; Technologies (comma separated) *</label>
                   <input
                     type="text"
-                    placeholder="e.g. Next.js, Python, PostgreSQL, PyTorch"
+                    placeholder="e.g. Artificial Intelligence, Mechanical Engineering, Engineering Design, Calculations, Machine Learning"
                     value={formData.technologies}
                     onChange={(e) => setFormData({ ...formData, technologies: e.target.value })}
                     style={inputStyle}
@@ -931,27 +1108,34 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Services Delivered (comma separated)</label>
+                  <label style={labelStyle}>Services &amp; Capabilities (comma separated)</label>
                   <input
                     type="text"
-                    placeholder="e.g. AI Engineering, Systems Architecture"
+                    placeholder="e.g. AI Engineering, Product Development, Mechanical Design, Calculations"
                     value={formData.services}
                     onChange={(e) => setFormData({ ...formData, services: e.target.value })}
                     style={inputStyle}
                   />
                 </div>
               </div>
+            </div>
+
+            {/* Section 2: Visuals & Media */}
+            <div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.85rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                2. Imagery &amp; Visual Assets
+              </div>
 
               <div>
-                <label style={labelStyle}>Hero Cover Image</label>
+                <label style={labelStyle}>Cover Image (Hero Workspace Visual)</label>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
                   <div
                     style={{
-                      width: '90px',
-                      height: '60px',
+                      width: '100px',
+                      height: '65px',
                       borderRadius: '6px',
                       backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      border: '1px solid rgba(56, 189, 248, 0.25)',
                       position: 'relative',
                       overflow: 'hidden',
                       display: 'flex',
@@ -965,11 +1149,12 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                         src={formData.heroImage}
                         alt="Hero preview"
                         fill
-                        sizes="90px"
+                        sizes="100px"
                         style={{ objectFit: 'cover' }}
+                        unoptimized={true}
                       />
                     ) : (
-                      <span style={{ fontSize: '1.25rem', color: '#FFFFFF' }}>🖼️</span>
+                      <span style={{ fontSize: '1.25rem', color: '#94A3B8' }}>🖼️</span>
                     )}
                   </div>
 
@@ -998,7 +1183,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                           fontFamily: 'var(--font-mono, monospace)',
                         }}
                       >
-                        {isUploading ? 'Uploading...' : '📁 Upload Hero Image'}
+                        {isUploading ? 'Uploading...' : '📁 Upload Cover Image'}
                       </button>
                       {formData.heroImage && (
                         <button
@@ -1020,7 +1205,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     </div>
                     <input
                       type="text"
-                      placeholder="Or paste direct image URL (e.g. /images/work/project.jpg)"
+                      placeholder="Or paste direct image URL (e.g. /uploads/mechanical-engineering-design-copilot.png)"
                       value={formData.heroImage}
                       onChange={(e) => setFormData({ ...formData, heroImage: e.target.value })}
                       style={{ ...inputStyle, fontSize: '0.78rem', padding: '0.45rem 0.65rem' }}
@@ -1029,43 +1214,23 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 </div>
               </div>
 
-              {/* Gallery Images Component */}
+              {/* Gallery Component */}
               <div
                 style={{
-                  marginTop: '1.5rem',
+                  marginTop: '1.25rem',
                   backgroundColor: 'rgba(3, 10, 24, 0.75)',
-                  border: '1px solid rgba(56, 189, 248, 0.25)',
+                  border: '1px solid rgba(56, 189, 248, 0.2)',
                   borderRadius: '10px',
                   padding: '1.25rem',
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4)',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem', flexWrap: 'wrap', gap: '0.5rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                    <div
-                      style={{
-                        fontSize: '0.85rem',
-                        fontWeight: 700,
-                        color: '#FFFFFF',
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        fontFamily: 'var(--font-mono, monospace)',
-                      }}
-                    >
-                      Gallery Images
+                    <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)' }}>
+                      Additional Screenshots &amp; Technical Drawings
                     </div>
-                    <span
-                      style={{
-                        backgroundColor: 'rgba(56, 189, 248, 0.12)',
-                        border: '1px solid rgba(56, 189, 248, 0.3)',
-                        padding: '1px 8px',
-                        borderRadius: '12px',
-                        fontSize: '0.72rem',
-                        color: '#FFFFFF',
-                        fontFamily: 'var(--font-mono, monospace)',
-                      }}
-                    >
-                      {formData.gallery.length} image{formData.gallery.length !== 1 ? 's' : ''}
+                    <span style={{ backgroundColor: 'rgba(56, 189, 248, 0.12)', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '1px 8px', borderRadius: '12px', fontSize: '0.72rem', color: '#38BDF8', fontFamily: 'var(--font-mono, monospace)' }}>
+                      {formData.gallery.length} visual{formData.gallery.length !== 1 ? 's' : ''}
                     </span>
                   </div>
 
@@ -1073,28 +1238,15 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                     <button
                       type="button"
                       onClick={() => setFormData((prev) => ({ ...prev, gallery: [] }))}
-                      style={{
-                        backgroundColor: 'transparent',
-                        border: '1px solid rgba(239, 68, 68, 0.25)',
-                        color: '#F87171',
-                        padding: '0.3rem 0.65rem',
-                        borderRadius: '4px',
-                        fontSize: '0.72rem',
-                        cursor: 'pointer',
-                        fontFamily: 'var(--font-mono, monospace)',
-                      }}
+                      style={{ backgroundColor: 'transparent', border: '1px solid rgba(239, 68, 68, 0.25)', color: '#F87171', padding: '0.3rem 0.65rem', borderRadius: '4px', fontSize: '0.72rem', cursor: 'pointer', fontFamily: 'var(--font-mono, monospace)' }}
                     >
-                      Clear All Images
+                      Clear All
                     </button>
                   )}
                 </div>
 
-                <p style={{ fontSize: '0.78rem', color: '#FFFFFF', margin: '0 0 1rem 0', lineHeight: 1.4 }}>
-                  Additional project visuals, screenshots, or design renders. These images will automatically display inside the 3D TV screens in the background on the project detail page.
-                </p>
-
                 {/* Upload & Add Controls */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', margin: '0.75rem 0' }}>
                   <input
                     type="file"
                     ref={galleryFileInputRef}
@@ -1113,27 +1265,22 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                         backgroundColor: '#1677FF',
                         border: '1px solid #1677FF',
                         color: '#FFFFFF',
-                        padding: '0.55rem 1.15rem',
+                        padding: '0.45rem 1rem',
                         borderRadius: '6px',
-                        fontSize: '0.82rem',
+                        fontSize: '0.78rem',
                         fontWeight: 600,
                         cursor: isUploadingGallery ? 'not-allowed' : 'pointer',
                         fontFamily: 'var(--font-mono, monospace)',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                        boxShadow: '0 2px 8px rgba(22, 119, 255, 0.3)',
                       }}
                     >
-                      <span>📁</span> {isUploadingGallery ? 'Uploading images...' : 'Upload Gallery Images (Select Multiple)'}
+                      <span>📁</span> {isUploadingGallery ? 'Uploading images...' : 'Upload Screenshots (Select Multiple)'}
                     </button>
                   </div>
 
-                  {/* Manual URL Input */}
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <input
                       type="text"
-                      placeholder="Or paste direct image URL (e.g. /images/work/slide-1.jpg or https://...)"
+                      placeholder="Or paste screenshot URL (e.g. /uploads/cad-schematic.png or https://...)"
                       value={manualGalleryUrl}
                       onChange={(e) => setManualGalleryUrl(e.target.value)}
                       onKeyDown={(e) => {
@@ -1150,14 +1297,13 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                       style={{
                         backgroundColor: 'rgba(56, 189, 248, 0.15)',
                         border: '1px solid rgba(56, 189, 248, 0.3)',
-                        color: '#FFFFFF',
-                        padding: '0.5rem 1.15rem',
+                        color: '#38BDF8',
+                        padding: '0.5rem 1rem',
                         borderRadius: '6px',
-                        fontSize: '0.8rem',
+                        fontSize: '0.78rem',
                         fontWeight: 600,
                         cursor: 'pointer',
                         fontFamily: 'var(--font-mono, monospace)',
-                        whiteSpace: 'nowrap',
                       }}
                     >
                       + Add URL
@@ -1165,15 +1311,9 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                   </div>
                 </div>
 
-                {/* Gallery Previews Grid */}
-                {formData.gallery.length > 0 ? (
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))',
-                      gap: '0.85rem',
-                    }}
-                  >
+                {/* Previews Grid */}
+                {formData.gallery.length > 0 && (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '0.75rem' }}>
                     {formData.gallery.map((url, idx) => (
                       <div
                         key={`${url}-${idx}`}
@@ -1183,145 +1323,38 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                           borderRadius: '8px',
                           overflow: 'hidden',
                           position: 'relative',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
                         }}
                       >
-                        {/* Image Thumbnail */}
-                        <div
-                          style={{
-                            width: '100%',
-                            aspectRatio: '16/9',
-                            position: 'relative',
-                            backgroundColor: '#020714',
-                          }}
-                        >
-                          <Image
-                            src={url}
-                            alt={`Gallery image ${idx + 1}`}
-                            fill
-                            sizes="140px"
-                            style={{ objectFit: 'cover' }}
-                            unoptimized={true}
-                          />
-                          <div
-                            style={{
-                              position: 'absolute',
-                              top: '5px',
-                              left: '5px',
-                              backgroundColor: 'rgba(3, 7, 18, 0.9)',
-                              color: '#FFFFFF',
-                              fontSize: '0.68rem',
-                              fontFamily: 'var(--font-mono, monospace)',
-                              fontWeight: 700,
-                              padding: '2px 6px',
-                              borderRadius: '4px',
-                              border: '1px solid rgba(56, 189, 248, 0.4)',
-                            }}
-                          >
-                            #{idx + 1}
-                          </div>
+                        <div style={{ width: '100%', aspectRatio: '16/9', position: 'relative', backgroundColor: '#020714' }}>
+                          <Image src={url} alt={`Screenshot ${idx + 1}`} fill sizes="130px" style={{ objectFit: 'cover' }} unoptimized={true} />
                         </div>
-
-                        {/* Controls Bar */}
-                        <div
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            padding: '6px 8px',
-                            backgroundColor: 'rgba(7, 11, 20, 0.98)',
-                            borderTop: '1px solid rgba(56, 189, 248, 0.15)',
-                          }}
-                        >
-                          <div style={{ display: 'flex', gap: '4px' }}>
-                            <button
-                              type="button"
-                              title="Move earlier"
-                              disabled={idx === 0}
-                              onClick={() => handleMoveGalleryImage(idx, 'LEFT')}
-                              style={{
-                                background: 'transparent',
-                                border: '1px solid rgba(148, 163, 184, 0.2)',
-                                borderRadius: '4px',
-                                color: idx === 0 ? '#334155' : '#38BDF8',
-                                fontSize: '0.72rem',
-                                cursor: idx === 0 ? 'not-allowed' : 'pointer',
-                                padding: '2px 6px',
-                              }}
-                            >
-                              ◀
-                            </button>
-                            <button
-                              type="button"
-                              title="Move later"
-                              disabled={idx === formData.gallery.length - 1}
-                              onClick={() => handleMoveGalleryImage(idx, 'RIGHT')}
-                              style={{
-                                background: 'transparent',
-                                border: '1px solid rgba(148, 163, 184, 0.2)',
-                                borderRadius: '4px',
-                                color: idx === formData.gallery.length - 1 ? '#334155' : '#38BDF8',
-                                fontSize: '0.72rem',
-                                cursor: idx === formData.gallery.length - 1 ? 'not-allowed' : 'pointer',
-                                padding: '2px 6px',
-                              }}
-                            >
-                              ▶
-                            </button>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 6px', backgroundColor: 'rgba(7, 11, 20, 0.98)' }}>
+                          <div style={{ display: 'flex', gap: '3px' }}>
+                            <button type="button" disabled={idx === 0} onClick={() => handleMoveGalleryImage(idx, 'LEFT')} style={{ background: 'transparent', border: 'none', color: idx === 0 ? '#334155' : '#38BDF8', cursor: idx === 0 ? 'not-allowed' : 'pointer', fontSize: '0.7rem' }}>◀</button>
+                            <button type="button" disabled={idx === formData.gallery.length - 1} onClick={() => handleMoveGalleryImage(idx, 'RIGHT')} style={{ background: 'transparent', border: 'none', color: idx === formData.gallery.length - 1 ? '#334155' : '#38BDF8', cursor: idx === formData.gallery.length - 1 ? 'not-allowed' : 'pointer', fontSize: '0.7rem' }}>▶</button>
                           </div>
-                          <button
-                            type="button"
-                            title="Remove image"
-                            onClick={() => handleRemoveGalleryImage(idx)}
-                            style={{
-                              background: 'transparent',
-                              border: '1px solid rgba(239, 68, 68, 0.2)',
-                              borderRadius: '4px',
-                              color: '#F87171',
-                              fontSize: '0.72rem',
-                              cursor: 'pointer',
-                              padding: '2px 6px',
-                            }}
-                          >
-                            ✕
-                          </button>
+                          <button type="button" onClick={() => handleRemoveGalleryImage(idx)} style={{ background: 'transparent', border: 'none', color: '#F87171', cursor: 'pointer', fontSize: '0.7rem' }}>✕</button>
                         </div>
                       </div>
                     ))}
-                  </div>
-                ) : (
-                  <div
-                    style={{
-                      padding: '1.5rem',
-                      textAlign: 'center',
-                      color: '#FFFFFF',
-                      fontSize: '0.82rem',
-                      border: '1px dashed rgba(56, 189, 248, 0.25)',
-                      borderRadius: '8px',
-                      backgroundColor: 'rgba(2, 6, 23, 0.4)',
-                    }}
-                  >
-                    No gallery images added yet. Click &quot;Upload Gallery Images&quot; above to select multiple screenshots, or paste image URLs.
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Section 3: Deep Technical Narrative */}
+            {/* Section 3: Descriptions & Full Engineering Narrative */}
             <div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#FFFFFF', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.75rem', fontFamily: 'var(--font-mono, monospace)' }}>
-                3. Technical Narrative &amp; Outcomes
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.85rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                3. Project Descriptions &amp; Technical Narrative
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
-                  <label style={labelStyle}>Problem / Operational Challenge *</label>
+                  <label style={labelStyle}>Short Description * (Overview summary shown on project cards &amp; meta)</label>
                   <textarea
-                    rows={3}
+                    rows={2}
                     required
-                    placeholder="Describe the institutional challenges, bottlenecks, or scale constraints faced by the client..."
+                    placeholder="An AI assisted engineering design system intended to help mechanical engineers solve design problems, perform engineering calculations, evaluate components, and make informed technical decisions."
                     value={formData.problem}
                     onChange={(e) => setFormData({ ...formData, problem: e.target.value })}
                     style={{ ...inputStyle, resize: 'vertical' }}
@@ -1329,33 +1362,48 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Engineered Solution &amp; AI Architecture *</label>
+                  <label style={labelStyle}>Full Project Description (Headings, Markdown, Calculations &amp; Use Cases)</label>
                   <textarea
-                    rows={3}
-                    required
-                    placeholder="Detail the technical systems, algorithms, models, and infrastructure built by Quantum AI..."
-                    value={formData.solution}
-                    onChange={(e) => setFormData({ ...formData, solution: e.target.value })}
-                    style={{ ...inputStyle, resize: 'vertical' }}
+                    rows={8}
+                    placeholder="Overview, Problem, Solution, Planned Capabilities, Example Calculations, and Engineering Workflow..."
+                    value={formData.fullDescription}
+                    onChange={(e) => setFormData({ ...formData, fullDescription: e.target.value })}
+                    style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.5, fontFamily: 'monospace', fontSize: '0.82rem' }}
                   />
+                  <div style={{ fontSize: '0.72rem', color: '#94A3B8', marginTop: '0.25rem' }}>
+                    Tip: Supports markdown headings (##, ###), bullet lists (- or 1.), bold text (**), equations, and parameter breakdowns.
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+                  <div>
+                    <label style={labelStyle}>Engineered Solution &amp; AI Architecture</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Detail the technical systems, algorithms, models, and reasoning tools built by Quantum AI..."
+                      value={formData.solution}
+                      onChange={(e) => setFormData({ ...formData, solution: e.target.value })}
+                      style={{ ...inputStyle, resize: 'vertical' }}
+                    />
+                  </div>
+
+                  <div>
+                    <label style={labelStyle}>Implementation &amp; Workflow Integration</label>
+                    <textarea
+                      rows={3}
+                      placeholder="Describe the iterative prototyping, validation logic, equations, and software interface..."
+                      value={formData.implementation}
+                      onChange={(e) => setFormData({ ...formData, implementation: e.target.value })}
+                      style={{ ...inputStyle, resize: 'vertical' }}
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label style={labelStyle}>Implementation &amp; Deployment Process</label>
+                  <label style={labelStyle}>Results, Impact &amp; Technical Outcomes</label>
                   <textarea
                     rows={2}
-                    placeholder="Describe the rollout phases, testing, pipelines, and security compliance..."
-                    value={formData.implementation}
-                    onChange={(e) => setFormData({ ...formData, implementation: e.target.value })}
-                    style={{ ...inputStyle, resize: 'vertical' }}
-                  />
-                </div>
-
-                <div>
-                  <label style={labelStyle}>Results, Metrics &amp; Impact</label>
-                  <textarea
-                    rows={2}
-                    placeholder="Summarize quantifiable performance gains, throughput improvements, and business outcomes..."
+                    placeholder="Describe design clarity, structured calculations, safety evaluation outcomes, or metrics..."
                     value={formData.results}
                     onChange={(e) => setFormData({ ...formData, results: e.target.value })}
                     style={{ ...inputStyle, resize: 'vertical' }}
@@ -1364,28 +1412,144 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
               </div>
             </div>
 
-            {/* Publish Checkbox */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-              <input
-                type="checkbox"
-                id="studyPublished"
-                checked={formData.published}
-                onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-              />
-              <label htmlFor="studyPublished" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
-                Publish immediately to the public Works showcase (<span style={{ color: '#FFFFFF' }}>/work</span> and <span style={{ color: '#FFFFFF' }}>/work/[slug]</span>)
-              </label>
+            {/* Section 4: Calls to Action & Navigation */}
+            <div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.85rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                4. Calls to Action &amp; Navigation Links
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+                <div>
+                  <label style={labelStyle}>Primary CTA Label</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Explore the Project"
+                    value={formData.primaryCtaLabel}
+                    onChange={(e) => setFormData({ ...formData, primaryCtaLabel: e.target.value })}
+                    style={inputStyle}
+                  />
+                </div>
+
+                <div>
+                  <label style={labelStyle}>Primary CTA Destination URL</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. /work/mechanical-engineering-design-copilot"
+                    value={formData.primaryCtaUrl}
+                    onChange={(e) => setFormData({ ...formData, primaryCtaUrl: e.target.value })}
+                    style={inputStyle}
+                  />
+                </div>
+
+                <div>
+                  <label style={labelStyle}>Secondary CTA Label</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Contact Quantum AI"
+                    value={formData.secondaryCtaLabel}
+                    onChange={(e) => setFormData({ ...formData, secondaryCtaLabel: e.target.value })}
+                    style={inputStyle}
+                  />
+                </div>
+
+                <div>
+                  <label style={labelStyle}>Secondary CTA Destination URL</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. /contact"
+                    value={formData.secondaryCtaUrl}
+                    onChange={(e) => setFormData({ ...formData, secondaryCtaUrl: e.target.value })}
+                    style={inputStyle}
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginTop: '0.85rem' }}>
+                <label style={labelStyle}>Live Demo / External URL (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. https://copilot.quantumai.tech"
+                  value={formData.externalUrl}
+                  onChange={(e) => setFormData({ ...formData, externalUrl: e.target.value })}
+                  style={inputStyle}
+                />
+              </div>
+            </div>
+
+            {/* Section 5: SEO Metadata */}
+            <div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.85rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                5. Search Engine Optimization (SEO)
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+                <div>
+                  <label style={labelStyle}>SEO Title</label>
+                  <input
+                    type="text"
+                    placeholder="Mechanical Engineering Design Copilot | Quantum AI"
+                    value={formData.seoTitle}
+                    onChange={(e) => setFormData({ ...formData, seoTitle: e.target.value })}
+                    style={inputStyle}
+                  />
+                </div>
+
+                <div>
+                  <label style={labelStyle}>SEO Description</label>
+                  <input
+                    type="text"
+                    placeholder="Learn about Quantum AI's AI assisted mechanical engineering design copilot..."
+                    value={formData.seoDescription}
+                    onChange={(e) => setFormData({ ...formData, seoDescription: e.target.value })}
+                    style={inputStyle}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 6: Visibility & Publishing */}
+            <div style={{ backgroundColor: 'rgba(3, 10, 24, 0.65)', border: '1px solid rgba(22, 119, 255, 0.2)', borderRadius: '8px', padding: '1.25rem' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#38BDF8', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: '0.85rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                6. Visibility &amp; Publication Workflow
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  <input
+                    type="checkbox"
+                    id="projectFeatured"
+                    checked={formData.featured}
+                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                    style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+                  />
+                  <label htmlFor="projectFeatured" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
+                    <strong>Feature this project prominently</strong> on the public Work showcase (★ Featured badge)
+                  </label>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                  <input
+                    type="checkbox"
+                    id="projectPublished"
+                    checked={formData.published}
+                    onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                    style={{ cursor: 'pointer', width: '16px', height: '16px' }}
+                  />
+                  <label htmlFor="projectPublished" style={{ fontSize: '0.85rem', color: '#FFFFFF', cursor: 'pointer' }}>
+                    <strong>Publish immediately to the public website</strong> (Visible at <span style={{ color: '#38BDF8' }}>/work</span> and <span style={{ color: '#38BDF8' }}>/work/[slug]</span>)
+                  </label>
+                </div>
+              </div>
             </div>
 
             {/* Form Actions */}
-            <div style={{ display: 'flex', gap: '0.65rem', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+            <div style={{ display: 'flex', gap: '0.65rem', justifyContent: 'flex-end', marginTop: '0.5rem', flexWrap: 'wrap' }}>
               <button
                 type="button"
                 onClick={() => setIsEditing(false)}
                 style={{
                   backgroundColor: 'transparent',
                   border: '1px solid rgba(148, 163, 184, 0.3)',
-                  color: '#FFFFFF',
+                  color: '#94A3B8',
                   padding: '0.55rem 1.15rem',
                   borderRadius: '6px',
                   fontWeight: 600,
@@ -1398,13 +1562,33 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
               </button>
 
               <button
-                type="submit"
+                type="button"
                 disabled={isSubmitting}
+                onClick={(e) => handleSubmitWithPublication(e, false)}
+                style={{
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
+                  color: '#FFFFFF',
+                  padding: '0.55rem 1.25rem',
+                  borderRadius: '6px',
+                  fontWeight: 600,
+                  fontSize: '0.82rem',
+                  cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                  fontFamily: 'var(--font-mono, monospace)',
+                }}
+              >
+                Save as Draft
+              </button>
+
+              <button
+                type="button"
+                disabled={isSubmitting}
+                onClick={(e) => handleSubmitWithPublication(e, true)}
                 style={{
                   backgroundColor: '#1677FF',
                   border: 'none',
                   color: '#FFFFFF',
-                  padding: '0.55rem 1.45rem',
+                  padding: '0.55rem 1.65rem',
                   borderRadius: '6px',
                   fontWeight: 600,
                   fontSize: '0.82rem',
@@ -1413,7 +1597,7 @@ export default function CaseStudiesClient({ caseStudies: initialCaseStudies }: {
                   boxShadow: '0 4px 14px rgba(22, 119, 255, 0.35)',
                 }}
               >
-                {isSubmitting ? 'Saving...' : currentId ? 'Save Changes' : 'Create Case Study'}
+                {isSubmitting ? 'Saving...' : currentId ? 'Save & Publish' : 'Publish Project'}
               </button>
             </div>
           </form>

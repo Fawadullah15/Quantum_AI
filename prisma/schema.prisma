@@ -138,6 +138,15 @@ model CaseStudy {
   externalUrl    String?
   metrics        CaseStudyMetric[]
   published      Boolean           @default(false)
+  featured       Boolean           @default(false)
+  status         String            @default("Completed")
+  fullDescription String?
+  primaryCtaLabel String?
+  primaryCtaUrl   String?
+  secondaryCtaLabel String?
+  secondaryCtaUrl   String?
+  seoTitle        String?
+  seoDescription  String?
   order          Int               @default(0)
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt

@@ -22,7 +22,7 @@ export const navSections = [
     label: 'CONTENT',
     links: [
       { href: '/admin/clients', label: 'Clients / Worked With', icon: '🏢' },
-      { href: '/admin/case-studies', label: 'Works & Case Studies', icon: '📁' },
+      { href: '/admin/case-studies', label: 'Projects & Works', icon: '📁' },
       { href: '/admin/services', label: 'Services', icon: '⚡' },
       { href: '/admin/products', label: 'Products', icon: '📦' },
       { href: '/admin/technology', label: 'Technology Stack', icon: '💻' },

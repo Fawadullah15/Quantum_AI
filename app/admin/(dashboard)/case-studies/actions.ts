@@ -18,8 +18,11 @@ export interface CaseStudyInput {
   title: string;
   slug?: string;
   client?: string;
+  owner?: string;
   industry?: string;
+  category?: string;
   problem?: string;
+  shortDescription?: string;
   briefDescription?: string;
   solution?: string;
   implementation?: string;
@@ -32,6 +35,15 @@ export interface CaseStudyInput {
   externalUrl?: string | null;
   url?: string | null;
   published?: boolean | string;
+  featured?: boolean | string;
+  status?: string;
+  fullDescription?: string | null;
+  primaryCtaLabel?: string | null;
+  primaryCtaUrl?: string | null;
+  secondaryCtaLabel?: string | null;
+  secondaryCtaUrl?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
   order?: number | string;
   metrics?: Array<{ label: string; value: string; description?: string | null }>;
 }
@@ -103,9 +115,9 @@ export async function createCaseStudy(data: CaseStudyInput) {
     data: {
       title: data.title.trim(),
       slug,
-      client: data.client?.trim() || 'Enterprise Client',
-      industry: data.industry?.trim() || 'Artificial Intelligence',
-      problem: data.problem?.trim() || data.briefDescription?.trim() || '',
+      client: data.client?.trim() || data.owner?.trim() || 'Quantum AI',
+      industry: data.industry?.trim() || data.category?.trim() || 'Artificial Intelligence',
+      problem: data.problem?.trim() || data.shortDescription?.trim() || data.briefDescription?.trim() || '',
       solution: data.solution?.trim() || '',
       implementation: data.implementation?.trim() || '',
       technologies: data.technologies?.trim() || '',
@@ -116,6 +128,15 @@ export async function createCaseStudy(data: CaseStudyInput) {
       gallery: galleryString,
       externalUrl: data.externalUrl || data.url || null,
       published: data.published === 'true' || data.published === true || data.published === 'on',
+      featured: data.featured === 'true' || data.featured === true || data.featured === 'on',
+      status: data.status?.trim() || 'Completed',
+      fullDescription: data.fullDescription?.trim() || null,
+      primaryCtaLabel: data.primaryCtaLabel?.trim() || null,
+      primaryCtaUrl: data.primaryCtaUrl?.trim() || null,
+      secondaryCtaLabel: data.secondaryCtaLabel?.trim() || null,
+      secondaryCtaUrl: data.secondaryCtaUrl?.trim() || null,
+      seoTitle: data.seoTitle?.trim() || null,
+      seoDescription: data.seoDescription?.trim() || null,
       order: parseInt(String(data.order), 10) || 0,
       ...(validMetrics.length > 0 ? { metrics: { create: validMetrics } } : {}),
     },
@@ -127,6 +148,7 @@ export async function createCaseStudy(data: CaseStudyInput) {
   revalidatePath('/case-studies');
   revalidatePath(`/case-studies/${study.slug}`);
   revalidatePath('/admin/case-studies');
+  revalidatePath('/admin/projects');
   return study;
 }
 
@@ -149,10 +171,14 @@ export async function updateCaseStudy(id: string, data: Partial<CaseStudyInput>)
   const updateData: any = {};
   if (data.title !== undefined) updateData.title = data.title.trim();
   if (slug !== undefined) updateData.slug = slug;
-  if (data.client !== undefined) updateData.client = data.client.trim();
-  if (data.industry !== undefined) updateData.industry = data.industry.trim();
-  if (data.problem !== undefined || data.briefDescription !== undefined) {
-    updateData.problem = data.problem?.trim() || data.briefDescription?.trim() || '';
+  if (data.client !== undefined || data.owner !== undefined) {
+    updateData.client = (data.client || data.owner || '').trim();
+  }
+  if (data.industry !== undefined || data.category !== undefined) {
+    updateData.industry = (data.industry || data.category || '').trim();
+  }
+  if (data.problem !== undefined || data.shortDescription !== undefined || data.briefDescription !== undefined) {
+    updateData.problem = data.problem?.trim() || data.shortDescription?.trim() || data.briefDescription?.trim() || '';
   }
   if (data.solution !== undefined) updateData.solution = data.solution.trim();
   if (data.implementation !== undefined) updateData.implementation = data.implementation.trim();
@@ -167,6 +193,33 @@ export async function updateCaseStudy(id: string, data: Partial<CaseStudyInput>)
   }
   if (data.published !== undefined) {
     updateData.published = data.published === 'true' || data.published === true || data.published === 'on';
+  }
+  if (data.featured !== undefined) {
+    updateData.featured = data.featured === 'true' || data.featured === true || data.featured === 'on';
+  }
+  if (data.status !== undefined) {
+    updateData.status = data.status.trim() || 'Completed';
+  }
+  if (data.fullDescription !== undefined) {
+    updateData.fullDescription = data.fullDescription?.trim() || null;
+  }
+  if (data.primaryCtaLabel !== undefined) {
+    updateData.primaryCtaLabel = data.primaryCtaLabel?.trim() || null;
+  }
+  if (data.primaryCtaUrl !== undefined) {
+    updateData.primaryCtaUrl = data.primaryCtaUrl?.trim() || null;
+  }
+  if (data.secondaryCtaLabel !== undefined) {
+    updateData.secondaryCtaLabel = data.secondaryCtaLabel?.trim() || null;
+  }
+  if (data.secondaryCtaUrl !== undefined) {
+    updateData.secondaryCtaUrl = data.secondaryCtaUrl?.trim() || null;
+  }
+  if (data.seoTitle !== undefined) {
+    updateData.seoTitle = data.seoTitle?.trim() || null;
+  }
+  if (data.seoDescription !== undefined) {
+    updateData.seoDescription = data.seoDescription?.trim() || null;
   }
   if (data.order !== undefined) updateData.order = parseInt(String(data.order), 10) || 0;
 
@@ -196,6 +249,39 @@ export async function updateCaseStudy(id: string, data: Partial<CaseStudyInput>)
   revalidatePath('/case-studies');
   revalidatePath(`/case-studies/${study.slug}`);
   revalidatePath('/admin/case-studies');
+  revalidatePath('/admin/projects');
+  return study;
+}
+
+export async function togglePublishCaseStudy(id: string, published: boolean) {
+  await checkAuth();
+  const study = await prisma.caseStudy.update({
+    where: { id },
+    data: { published },
+  });
+
+  revalidatePath('/');
+  revalidatePath('/work');
+  revalidatePath(`/work/${study.slug}`);
+  revalidatePath('/case-studies');
+  revalidatePath(`/case-studies/${study.slug}`);
+  revalidatePath('/admin/case-studies');
+  revalidatePath('/admin/projects');
+  return study;
+}
+
+export async function toggleFeaturedCaseStudy(id: string, featured: boolean) {
+  await checkAuth();
+  const study = await prisma.caseStudy.update({
+    where: { id },
+    data: { featured },
+  });
+
+  revalidatePath('/');
+  revalidatePath('/work');
+  revalidatePath(`/work/${study.slug}`);
+  revalidatePath('/admin/case-studies');
+  revalidatePath('/admin/projects');
   return study;
 }
 
@@ -209,6 +295,10 @@ export async function deleteCaseStudy(id: string) {
     adminUser: { id: user?.id, name: user?.name, email: user?.email },
   });
 
+  revalidatePath('/');
+  revalidatePath('/work');
+  revalidatePath('/admin/case-studies');
+  revalidatePath('/admin/projects');
   return { success: true };
 }
 

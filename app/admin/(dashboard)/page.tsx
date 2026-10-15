@@ -113,7 +113,7 @@ export default async function AdminDashboardPage() {
       alert: newPartnershipCount > 0,
     },
     {
-      label: 'Case Studies / Works',
+      label: 'Projects & Works',
       count: caseStudyCount,
       total: `${publishedCaseStudyCount} published live`,
       subtext: 'Portfolio deployments',
@@ -200,7 +200,7 @@ export default async function AdminDashboardPage() {
     { label: '💬 Inquiries', href: '/admin/messages', variant: 'primary' },
     { label: '🤝 Careers / Partnerships', href: '/admin/careers-partnerships', variant: 'secondary' },
     { label: '+ Add Leader', href: '/admin/leadership/new', variant: 'secondary' },
-    { label: '+ New Case Study', href: '/admin/case-studies/new', variant: 'secondary' },
+    { label: '+ Add New Project', href: '/admin/case-studies?new=1', variant: 'secondary' },
     { label: '+ New Product', href: '/admin/products/new', variant: 'secondary' },
     { label: '+ New Service', href: '/admin/services/new', variant: 'secondary' },
     { label: '+ Write Article', href: '/admin/blog/new', variant: 'secondary' },
