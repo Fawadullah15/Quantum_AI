@@ -108,6 +108,10 @@ export function CampaignsClient({
   const [previewDevice, setPreviewDevice] = useState<'desktop' | 'mobile'>('desktop');
   const [previewKey, setPreviewKey] = useState(0);
 
+  // Settings Diagnostic State
+  const [activeCheckResult, setActiveCheckResult] = useState<any | null>(null);
+  const [isCheckingActive, setIsCheckingActive] = useState(false);
+
   // Form Data
   const defaultFormData: CampaignInput = {
     name: '',
@@ -404,6 +408,54 @@ export function CampaignsClient({
     }
   };
 
+  // Check Active Campaign Delivery via /api/campaigns/active
+  const handleCheckActiveCampaign = async () => {
+    setIsCheckingActive(true);
+    try {
+      const res = await fetch('/api/campaigns/active', { cache: 'no-store' });
+      const data = await res.json();
+      setActiveCheckResult(data);
+      if (data?.campaign) {
+        toast.success(`Live active campaign: "${data.campaign.headline || data.campaign.name || data.campaign.id}"`, 'Active Campaign API');
+      } else {
+        toast.info('No campaign is currently active for visitors', 'Active Campaign API');
+      }
+    } catch (err: any) {
+      toast.error('Failed to query /api/campaigns/active: ' + (err?.message || 'Network error'), 'Diagnostic Error');
+    } finally {
+      setIsCheckingActive(false);
+    }
+  };
+
+  // Clear Browser Testing Cache
+  const handleClearTestCache = () => {
+    try {
+      let count = 0;
+      if (typeof window !== 'undefined') {
+        const localKeys = Object.keys(localStorage);
+        for (const k of localKeys) {
+          if (k.startsWith('qa_cmp_')) {
+            localStorage.removeItem(k);
+            count++;
+          }
+        }
+        const sessionKeys = Object.keys(sessionStorage);
+        for (const k of sessionKeys) {
+          if (k.startsWith('qa_cmp_')) {
+            sessionStorage.removeItem(k);
+            count++;
+          }
+        }
+      }
+      toast.success(
+        `Cleared ${count} cached test flags. Published campaigns will now display immediately on the homepage!`,
+        'Testing Cache Reset'
+      );
+    } catch (e: any) {
+      toast.error('Could not clear storage: ' + (e?.message || 'Access denied'), 'Error');
+    }
+  };
+
   // Filtered and Sorted Campaigns
   const filteredCampaigns = campaigns
     .filter((c) => {
@@ -544,6 +596,27 @@ export function CampaignsClient({
             }}
           >
             📋 All Campaigns ({campaigns.length})
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (isEditing) handleCancelEdit();
+              setActiveTab('settings');
+            }}
+            style={{
+              backgroundColor: activeTab === 'settings' ? '#1677FF' : 'rgba(255, 255, 255, 0.06)',
+              border: '1px solid ' + (activeTab === 'settings' ? '#1677FF' : 'rgba(255, 255, 255, 0.15)'),
+              color: '#FFFFFF',
+              padding: '0.5rem 1rem',
+              borderRadius: '6px',
+              fontSize: '0.82rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              fontFamily: 'var(--font-mono, monospace)',
+            }}
+          >
+            ⚙️ Settings
           </button>
 
           <button
@@ -958,7 +1031,24 @@ export function CampaignsClient({
 
                         {/* Actions */}
                         <td style={{ padding: '0.85rem 1rem', verticalAlign: 'middle', textAlign: 'right', whiteSpace: 'nowrap' }}>
-                          <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end' }}>
+                          <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <Link
+                              href={`/announcements/${c.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="View Dedicated Public Announcement Page"
+                              style={{
+                                ...actionBtnStyle,
+                                textDecoration: 'none',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '3px',
+                                color: '#67E8F9',
+                                borderColor: 'rgba(103, 232, 249, 0.3)',
+                              }}
+                            >
+                              🔗 Page
+                            </Link>
                             <button
                               type="button"
                               onClick={() => {
@@ -1690,6 +1780,185 @@ export function CampaignsClient({
               </button>
             </div>
           </form>
+        </div>
+      )}
+
+      {/* ── VIEW 4: SETTINGS ── */}
+      {activeTab === 'settings' && !isEditing && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+          {/* Header Card */}
+          <div style={sectionBoxStyle}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
+                  ⚙️ System &amp; Delivery Settings
+                </h3>
+                <p style={{ fontSize: '0.8rem', color: '#94A3B8', margin: '0.35rem 0 0 0' }}>
+                  Manage delivery runtime configurations, media storage resilience, public cache revalidation, and browser testing tools.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleClearTestCache}
+                style={{
+                  backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                  border: '1px solid rgba(239, 68, 68, 0.4)',
+                  color: '#FCA5A5',
+                  padding: '0.6rem 1.25rem',
+                  borderRadius: '6px',
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  boxShadow: '0 4px 14px rgba(239, 68, 68, 0.2)',
+                }}
+              >
+                🧹 Reset Local Testing Cache
+              </button>
+            </div>
+          </div>
+
+          {/* Grid of Settings Panels */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '1.25rem' }}>
+            {/* Panel 1: Live Public Delivery Diagnostics */}
+            <div style={sectionBoxStyle}>
+              <div style={sectionHeaderStyle}>🛰️ Live Public Delivery Status</div>
+              <p style={{ fontSize: '0.8rem', color: '#94A3B8', marginBottom: '1.25rem' }}>
+                Verify what the public layout and visitor clients receive when querying active campaigns.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.65rem 0.85rem', backgroundColor: '#070B14', borderRadius: '6px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)' }}>Active Delivery API:</span>
+                  <span style={{ fontSize: '0.78rem', color: '#10B981', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)' }}>
+                    /api/campaigns/active (HTTP 200)
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.65rem 0.85rem', backgroundColor: '#070B14', borderRadius: '6px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)' }}>Telemetry API:</span>
+                  <span style={{ fontSize: '0.78rem', color: '#10B981', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)' }}>
+                    /api/campaigns/track (Live)
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.65rem 0.85rem', backgroundColor: '#070B14', borderRadius: '6px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)' }}>Page Revalidation:</span>
+                  <span style={{ fontSize: '0.78rem', color: '#38BDF8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)' }}>
+                    revalidate = 0 (Real-time SSR)
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.65rem 0.85rem', backgroundColor: '#070B14', borderRadius: '6px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
+                  <span style={{ fontSize: '0.78rem', color: '#94A3B8', fontFamily: 'var(--font-mono, monospace)' }}>Media Storage Engine:</span>
+                  <span style={{ fontSize: '0.78rem', color: '#38BDF8', fontWeight: 600, fontFamily: 'var(--font-mono, monospace)' }}>
+                    Vercel Blob + Base64 Fallback
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ marginTop: '1.25rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <button
+                  type="button"
+                  disabled={isCheckingActive}
+                  onClick={handleCheckActiveCampaign}
+                  style={{
+                    backgroundColor: '#1677FF',
+                    border: 'none',
+                    color: '#FFFFFF',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '6px',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    cursor: isCheckingActive ? 'not-allowed' : 'pointer',
+                    fontFamily: 'var(--font-mono, monospace)',
+                  }}
+                >
+                  {isCheckingActive ? 'Probing…' : '📡 Probe Active Delivery API'}
+                </button>
+                <Link
+                  href="/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    color: '#FFFFFF',
+                    padding: '0.5rem 1rem',
+                    borderRadius: '6px',
+                    fontSize: '0.8rem',
+                    fontWeight: 600,
+                    textDecoration: 'none',
+                    fontFamily: 'var(--font-mono, monospace)',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                  }}
+                >
+                  Open Live Homepage ↗
+                </Link>
+              </div>
+
+              {activeCheckResult && (
+                <div style={{ marginTop: '1rem', padding: '0.75rem', backgroundColor: '#020708', borderRadius: '6px', border: '1px solid rgba(22, 119, 255, 0.2)' }}>
+                  <div style={{ fontSize: '0.72rem', color: '#67E8F9', marginBottom: '0.35rem', fontFamily: 'var(--font-mono, monospace)' }}>
+                    {activeCheckResult.campaign ? `Active: "${activeCheckResult.campaign.headline || activeCheckResult.campaign.name}"` : 'No active campaign returned.'}
+                  </div>
+                  <pre style={{ margin: 0, fontSize: '0.7rem', color: '#94A3B8', maxHeight: '140px', overflowY: 'auto' }}>
+                    {JSON.stringify(activeCheckResult, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
+
+            {/* Panel 2: Browser Testing & Dismissal Policies */}
+            <div style={sectionBoxStyle}>
+              <div style={sectionHeaderStyle}>🧪 Testing &amp; Visitor Repeat Rules</div>
+              <p style={{ fontSize: '0.8rem', color: '#94A3B8', marginBottom: '1.25rem' }}>
+                How campaigns are recorded on visitor browsers to prevent annoyance and ensure smooth delivery.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                <div style={{ padding: '0.75rem', backgroundColor: '#070B14', borderRadius: '6px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.2rem' }}>
+                    1. Session Once (Default)
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                    Stored in browser <code style={{ color: '#67E8F9' }}>sessionStorage</code>. The popup shows once per tab session. Closing the tab or resetting test cache shows it again.
+                  </div>
+                </div>
+
+                <div style={{ padding: '0.75rem', backgroundColor: '#070B14', borderRadius: '6px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.2rem' }}>
+                    2. Once Persistent
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                    Stored in browser <code style={{ color: '#67E8F9' }}>localStorage</code>. Visitors never see it again after closing, unless you edit and save the campaign (which creates a new version key).
+                  </div>
+                </div>
+
+                <div style={{ padding: '0.75rem', backgroundColor: '#070B14', borderRadius: '6px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.2rem' }}>
+                    3. Cooldown Interval
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                    Shows once, then suppresses for the configured cooldown minutes (e.g. 1440 min = 24 hours), then shows again.
+                  </div>
+                </div>
+
+                <div style={{ padding: '0.75rem', backgroundColor: '#070B14', borderRadius: '6px', border: '1px solid rgba(22, 119, 255, 0.15)' }}>
+                  <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#FFFFFF', marginBottom: '0.2rem' }}>
+                    4. Always Show (Testing)
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#94A3B8' }}>
+                    Bypasses all dismissal cache on every single page load. Perfect for QA testing and demonstrations.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 

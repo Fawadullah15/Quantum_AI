@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import type { PublicCampaign } from '@/lib/campaigns';
 
 interface CampaignDisplayProps {
@@ -18,6 +19,7 @@ export function CampaignDisplay({
   onPreviewClose,
   previewDevice = 'desktop',
 }: CampaignDisplayProps) {
+  const router = useRouter();
   const [campaign, setCampaign] = useState<PublicCampaign | null>(initialCampaign || null);
   const [isVisible, setIsVisible] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
@@ -233,6 +235,19 @@ export function CampaignDisplay({
     } catch {}
   };
 
+  // Clicking the announcement anywhere opens the public announcement details page
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (!campaign) return;
+    const target = e.target as HTMLElement;
+    // Don't intercept if user clicked on a button or an anchor directly
+    if (target.closest('button') || target.closest('a')) {
+      return;
+    }
+    handleCtaClick();
+    if (previewMode) return;
+    router.push(`/announcements/${campaign.id}`);
+  };
+
   if (!campaign || !isVisible || isDismissed) {
     return null;
   }
@@ -315,6 +330,7 @@ export function CampaignDisplay({
       className={`qa-campaign-container ${prefersReducedMotion ? 'no-motion' : 'animate-in'}`}
     >
       <div
+        onClick={handleCardClick}
         style={{
           position: 'relative',
           backgroundColor: 'rgba(5, 12, 14, 0.94)',
@@ -329,6 +345,7 @@ export function CampaignDisplay({
           transition: prefersReducedMotion ? 'none' : 'border-color 0.25s ease, box-shadow 0.25s ease',
           fontFamily: 'var(--font-sans, system-ui, sans-serif)',
           color: '#F0FDFA',
+          cursor: previewMode ? 'default' : 'pointer',
         }}
       >
         {/* Countdown Progress Line */}
@@ -442,7 +459,7 @@ export function CampaignDisplay({
               )}
             </div>
 
-            {campaign.destinationUrl && campaign.ctaLabel && (
+            {campaign.destinationUrl ? (
               <Link
                 href={campaign.destinationUrl}
                 target={campaign.openInNewTab ? '_blank' : '_self'}
@@ -462,7 +479,27 @@ export function CampaignDisplay({
                   transition: 'background-color 0.2s',
                 }}
               >
-                {campaign.ctaLabel} →
+                {campaign.ctaLabel || 'Learn More'} →
+              </Link>
+            ) : (
+              <Link
+                href={`/announcements/${campaign.id}`}
+                onClick={handleCtaClick}
+                style={{
+                  backgroundColor: '#14B8A6',
+                  color: '#020708',
+                  padding: '0.35rem 0.95rem',
+                  borderRadius: '6px',
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  letterSpacing: '0.04em',
+                  whiteSpace: 'nowrap',
+                  fontFamily: 'var(--font-mono, monospace)',
+                  transition: 'background-color 0.2s',
+                }}
+              >
+                {campaign.ctaLabel || 'View Details'} →
               </Link>
             )}
           </div>
@@ -521,70 +558,49 @@ export function CampaignDisplay({
               )}
             </div>
 
-            {campaign.destinationUrl && (
-              <Link
-                href={campaign.destinationUrl}
-                target={campaign.openInNewTab ? '_blank' : '_self'}
-                rel={campaign.openInNewTab ? 'noopener noreferrer' : undefined}
-                onClick={handleCtaClick}
-                style={{
-                  fontSize: '0.78rem',
-                  color: '#67E8F9',
-                  fontWeight: 600,
-                  textDecoration: 'none',
-                  whiteSpace: 'nowrap',
-                  fontFamily: 'var(--font-mono, monospace)',
-                  flexShrink: 0,
-                }}
-              >
-                {campaign.ctaLabel || 'View'} →
-              </Link>
-            )}
+            <Link
+              href={campaign.destinationUrl || `/announcements/${campaign.id}`}
+              target={campaign.destinationUrl && campaign.openInNewTab ? '_blank' : '_self'}
+              rel={campaign.destinationUrl && campaign.openInNewTab ? 'noopener noreferrer' : undefined}
+              onClick={handleCtaClick}
+              style={{
+                fontSize: '0.78rem',
+                color: '#67E8F9',
+                fontWeight: 600,
+                textDecoration: 'none',
+                whiteSpace: 'nowrap',
+                fontFamily: 'var(--font-mono, monospace)',
+                flexShrink: 0,
+              }}
+            >
+              {campaign.ctaLabel || 'View Details'} →
+            </Link>
           </div>
         ) : isImageOnly ? (
           /* ── FORMAT 3: IMAGE ONLY CAMPAIGN ── */
           <div>
-            {campaign.destinationUrl ? (
-              <Link
-                href={campaign.destinationUrl}
-                target={campaign.openInNewTab ? '_blank' : '_self'}
-                rel={campaign.openInNewTab ? 'noopener noreferrer' : undefined}
-                onClick={handleCtaClick}
-                style={{ display: 'block', position: 'relative', width: '100%', aspectRatio: '16/9' }}
-              >
-                {displayImage ? (
-                  <Image
-                    src={displayImage}
-                    alt={campaign.imageAlt || 'Advertisement'}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 480px"
-                    style={{ objectFit: 'cover' }}
-                    unoptimized={true}
-                  />
-                ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#071214', color: '#67E8F9' }}>
-                    Visual Creative
-                  </div>
-                )}
-              </Link>
-            ) : (
-              <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9' }}>
-                {displayImage ? (
-                  <Image
-                    src={displayImage}
-                    alt={campaign.imageAlt || 'Advertisement'}
-                    fill
-                    sizes="(max-width: 640px) 100vw, 480px"
-                    style={{ objectFit: 'cover' }}
-                    unoptimized={true}
-                  />
-                ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#071214', color: '#67E8F9' }}>
-                    Visual Creative
-                  </div>
-                )}
-              </div>
-            )}
+            <Link
+              href={campaign.destinationUrl || `/announcements/${campaign.id}`}
+              target={campaign.destinationUrl && campaign.openInNewTab ? '_blank' : '_self'}
+              rel={campaign.destinationUrl && campaign.openInNewTab ? 'noopener noreferrer' : undefined}
+              onClick={handleCtaClick}
+              style={{ display: 'block', position: 'relative', width: '100%', aspectRatio: '16/9', cursor: 'pointer' }}
+            >
+              {displayImage ? (
+                <Image
+                  src={displayImage}
+                  alt={campaign.imageAlt || 'Advertisement'}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 480px"
+                  style={{ objectFit: 'cover' }}
+                  unoptimized={true}
+                />
+              ) : (
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#071214', color: '#67E8F9' }}>
+                  Visual Creative
+                </div>
+              )}
+            </Link>
           </div>
         ) : (
           /* ── FORMAT 4 & 5: IMAGE POPUP & ANNOUNCEMENT POPUP ── */
@@ -592,24 +608,13 @@ export function CampaignDisplay({
             {/* Optional Creative Visual Header */}
             {displayImage && campaign.type === 'IMAGE_POPUP' && (
               <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', backgroundColor: '#020708' }}>
-                {campaign.destinationUrl ? (
-                  <Link
-                    href={campaign.destinationUrl}
-                    target={campaign.openInNewTab ? '_blank' : '_self'}
-                    rel={campaign.openInNewTab ? 'noopener noreferrer' : undefined}
-                    onClick={handleCtaClick}
-                    style={{ display: 'block', width: '100%', height: '100%' }}
-                  >
-                    <Image
-                      src={displayImage}
-                      alt={campaign.imageAlt || campaign.headline || 'Announcement'}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 480px"
-                      style={{ objectFit: 'cover' }}
-                      unoptimized={true}
-                    />
-                  </Link>
-                ) : (
+                <Link
+                  href={campaign.destinationUrl || `/announcements/${campaign.id}`}
+                  target={campaign.destinationUrl && campaign.openInNewTab ? '_blank' : '_self'}
+                  rel={campaign.destinationUrl && campaign.openInNewTab ? 'noopener noreferrer' : undefined}
+                  onClick={handleCtaClick}
+                  style={{ display: 'block', width: '100%', height: '100%', cursor: 'pointer' }}
+                >
                   <Image
                     src={displayImage}
                     alt={campaign.imageAlt || campaign.headline || 'Announcement'}
@@ -618,7 +623,7 @@ export function CampaignDisplay({
                     style={{ objectFit: 'cover' }}
                     unoptimized={true}
                   />
-                )}
+                </Link>
               </div>
             )}
 
@@ -688,13 +693,56 @@ export function CampaignDisplay({
                 </p>
               )}
 
-              {/* Action Button */}
-              {campaign.destinationUrl && campaign.ctaLabel && (
-                <div style={{ marginTop: '0.5rem' }}>
+              {/* Action Button & Details Link */}
+              <div style={{ marginTop: '0.65rem', display: 'flex', alignItems: 'center', gap: '0.85rem', flexWrap: 'wrap' }}>
+                {campaign.destinationUrl ? (
+                  <>
+                    <Link
+                      href={campaign.destinationUrl}
+                      target={campaign.openInNewTab ? '_blank' : '_self'}
+                      rel={campaign.openInNewTab ? 'noopener noreferrer' : undefined}
+                      onClick={handleCtaClick}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.45rem',
+                        backgroundColor: '#14B8A6',
+                        color: '#020708',
+                        padding: '0.5rem 1.15rem',
+                        borderRadius: '6px',
+                        fontSize: '0.82rem',
+                        fontWeight: 700,
+                        textDecoration: 'none',
+                        letterSpacing: '0.04em',
+                        fontFamily: 'var(--font-mono, monospace)',
+                        transition: 'background-color 0.2s, transform 0.2s',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = '#67E8F9';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = '#14B8A6';
+                      }}
+                    >
+                      {campaign.ctaLabel || 'Learn More'} →
+                    </Link>
+
+                    <Link
+                      href={`/announcements/${campaign.id}`}
+                      onClick={handleCtaClick}
+                      style={{
+                        fontSize: '0.78rem',
+                        color: '#67E8F9',
+                        textDecoration: 'underline',
+                        fontFamily: 'var(--font-mono, monospace)',
+                      }}
+                    >
+                      View Details
+                    </Link>
+                  </>
+                ) : (
                   <Link
-                    href={campaign.destinationUrl}
-                    target={campaign.openInNewTab ? '_blank' : '_self'}
-                    rel={campaign.openInNewTab ? 'noopener noreferrer' : undefined}
+                    href={`/announcements/${campaign.id}`}
                     onClick={handleCtaClick}
                     style={{
                       display: 'inline-flex',
@@ -718,10 +766,10 @@ export function CampaignDisplay({
                       e.currentTarget.style.backgroundColor = '#14B8A6';
                     }}
                   >
-                    {campaign.ctaLabel} →
+                    {campaign.ctaLabel || 'View Details'} →
                   </Link>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
         )}
