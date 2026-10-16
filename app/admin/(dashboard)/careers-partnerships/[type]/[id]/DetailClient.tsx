@@ -402,6 +402,18 @@ export default function DetailClient({
                       <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>-</span>
                     )}
                   </div>
+                  <div>
+                    <div style={{ color: '#FFFFFF', fontSize: '0.72rem', textTransform: 'uppercase', fontFamily: 'var(--font-mono, monospace)', marginBottom: '0.2rem' }}>
+                      Attached Proposal / Deck
+                    </div>
+                    {submission.attachmentUrl ? (
+                      <a href={`/api/admin/files/download?type=partnership&id=${submission.id}&field=attachment`} style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.82rem', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600 }}>
+                        🔒 Download Proposal Deck ⤓
+                      </a>
+                    ) : (
+                      <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>Not attached</span>
+                    )}
+                  </div>
                 </>
               ) : (
                 <>
@@ -434,8 +446,8 @@ export default function DetailClient({
                       CV / Resume Document
                     </div>
                     {submission.resumeUrl ? (
-                      <a href={submission.resumeUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.82rem', fontFamily: 'var(--font-mono, monospace)' }}>
-                        📄 View Attached CV ↗
+                      <a href={`/api/admin/files/download?type=career&id=${submission.id}&field=resume`} style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.82rem', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600 }}>
+                        🔒 Download Secure CV ⤓
                       </a>
                     ) : (
                       <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>Not provided</span>
@@ -446,8 +458,8 @@ export default function DetailClient({
                       Additional Portfolio
                     </div>
                     {submission.additionalDocsUrl ? (
-                      <a href={submission.additionalDocsUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#FFFFFF', textDecoration: 'none', fontSize: '0.82rem', fontFamily: 'var(--font-mono, monospace)' }}>
-                        📁 View Attached Docs ↗
+                      <a href={`/api/admin/files/download?type=career&id=${submission.id}&field=additionalDocs`} style={{ color: '#38BDF8', textDecoration: 'none', fontSize: '0.82rem', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600 }}>
+                        🔒 Download Secure Portfolio ⤓
                       </a>
                     ) : (
                       <span style={{ color: '#FFFFFF', fontSize: '0.85rem' }}>Not provided</span>

@@ -1305,9 +1305,7 @@ export function AdminNotifications() {
                   <div style={{ marginTop: '1rem', display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                     {selectedNotification.details.resumeUrl && (
                       <a
-                        href={selectedNotification.details.resumeUrl}
-                        target="_blank"
-                        rel="noreferrer"
+                        href={selectedNotification.details.id ? `/api/admin/files/download?type=career&id=${selectedNotification.details.id}&field=resume` : selectedNotification.details.resumeUrl}
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -1321,16 +1319,14 @@ export function AdminNotifications() {
                           textDecoration: 'none',
                         }}
                       >
-                        <span>📄</span>
-                        <span>Download Resume (CV) ↗</span>
+                        <span>🔒</span>
+                        <span>Download Secure Resume (CV) ⤓</span>
                       </a>
                     )}
 
                     {selectedNotification.details.attachmentUrl && (
                       <a
-                        href={selectedNotification.details.attachmentUrl}
-                        target="_blank"
-                        rel="noreferrer"
+                        href={selectedNotification.details.id ? `/api/admin/files/download?type=partnership&id=${selectedNotification.details.id}&field=attachment` : selectedNotification.details.attachmentUrl}
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
@@ -1344,8 +1340,8 @@ export function AdminNotifications() {
                           textDecoration: 'none',
                         }}
                       >
-                        <span>📎</span>
-                        <span>View Attached Proposal Document ↗</span>
+                        <span>🔒</span>
+                        <span>Download Secure Proposal Document ⤓</span>
                       </a>
                     )}
 

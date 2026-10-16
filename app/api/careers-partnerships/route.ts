@@ -1,79 +1,13 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/lib/db';
-import { put } from '@vercel/blob';
-import { writeFile, mkdir } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import { savePrivateFile } from '@/lib/storage';
 import {
   sendEmail,
   getApplicantConfirmationEmailHtml,
 } from '@/lib/email';
 import { createAdminNotification } from '@/lib/notifications';
 
-
 export const dynamic = 'force-dynamic';
-
-async function saveFile(file: File, prefix: string): Promise<string> {
-  const allowedExtensions = ['.pdf', '.doc', '.docx', '.png', '.jpg', '.jpeg', '.webp', '.zip', '.txt'];
-  const ext = '.' + (file.name.split('.').pop() || '').toLowerCase();
-
-  const allowedMimeTypes = [
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'image/jpeg',
-    'image/png',
-    'image/webp',
-    'application/zip',
-    'application/x-zip-compressed',
-    'application/octet-stream',
-    'text/plain',
-  ];
-
-  const isTypeValid = allowedMimeTypes.includes((file.type || '').toLowerCase()) || allowedExtensions.includes(ext);
-  if (!isTypeValid) {
-    throw new Error('Supported file formats: PDF, DOC, DOCX, PNG, JPG, ZIP');
-  }
-
-  if (file.size > 15 * 1024 * 1024) {
-    throw new Error('File size exceeds 15MB limit');
-  }
-
-  const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-  const fileName = `${prefix}-${Date.now()}-${cleanName}`;
-
-  const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.DATABASE_URL_READ_WRITE_TOKEN;
-
-  if (token) {
-    try {
-      const blob = await put(`submissions/${fileName}`, file, {
-        access: 'public',
-        token,
-      });
-      return blob.url;
-    } catch (err) {
-      console.warn('[Upload] Blob upload failed, falling back:', err);
-    }
-  }
-
-  // Try local disk fallback, with graceful Base64 fallback if filesystem is read-only (e.g. Vercel)
-  try {
-    const uploadDir = join(process.cwd(), 'public', 'uploads', 'submissions');
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true });
-    }
-    const filePath = join(uploadDir, fileName);
-    const bytes = await file.arrayBuffer();
-    await writeFile(filePath, Buffer.from(bytes));
-    return `/uploads/submissions/${fileName}`;
-  } catch (fsErr) {
-    console.warn('[Upload] Local fs write failed (serverless read-only), using base64 data fallback:', fsErr);
-    const bytes = await file.arrayBuffer();
-    const base64 = Buffer.from(bytes).toString('base64');
-    const mime = file.type || 'application/pdf';
-    return `data:${mime};name=${encodeURIComponent(file.name)};base64,${base64}`;
-  }
-}
 
 export async function POST(request: Request) {
   try {
@@ -121,7 +55,8 @@ export async function POST(request: Request) {
       const attachment = formData.get('attachment') as File | null;
       if (attachment && attachment.size > 0 && attachment.name) {
         try {
-          attachmentUrl = await saveFile(attachment, 'ptr');
+          const saved = await savePrivateFile(attachment, 'ptr');
+          attachmentUrl = saved.storageRef;
         } catch (fileErr: any) {
           return NextResponse.json({ error: fileErr.message || 'Failed to upload attachment' }, { status: 400 });
         }
@@ -236,7 +171,8 @@ export async function POST(request: Request) {
       // Upload Resume / CV
       let resumeUrl = '';
       try {
-        resumeUrl = await saveFile(resumeFile, 'cv');
+        const savedResume = await savePrivateFile(resumeFile, 'cv');
+        resumeUrl = savedResume.storageRef;
       } catch (fileErr: any) {
         return NextResponse.json({ error: fileErr.message || 'Failed to upload Resume / CV' }, { status: 400 });
       }
@@ -260,7 +196,8 @@ export async function POST(request: Request) {
       }
 
       try {
-        photoUrl = await saveFile(photoFile, 'applicant-photo');
+        const savedPhoto = await savePrivateFile(photoFile, 'applicant-photo');
+        photoUrl = savedPhoto.storageRef;
       } catch (fileErr: any) {
         return NextResponse.json({ error: fileErr.message || 'Failed to upload Profile photo.' }, { status: 400 });
       }
@@ -270,7 +207,8 @@ export async function POST(request: Request) {
       const additionalDocs = formData.get('additionalDocs') as File | null;
       if (additionalDocs && additionalDocs.size > 0 && additionalDocs.name) {
         try {
-          additionalDocsUrl = await saveFile(additionalDocs, 'doc');
+          const savedDocs = await savePrivateFile(additionalDocs, 'doc');
+          additionalDocsUrl = savedDocs.storageRef;
         } catch (fileErr: any) {
           return NextResponse.json({ error: fileErr.message || 'Failed to upload additional document' }, { status: 400 });
         }

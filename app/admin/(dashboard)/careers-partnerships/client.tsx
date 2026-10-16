@@ -590,16 +590,14 @@ export default function CareersPartnershipsClient({
                         <td style={{ padding: '0.75rem 1rem' }} onClick={(e) => e.stopPropagation()}>
                           {a.resumeUrl ? (
                             <a
-                              href={a.resumeUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#FFFFFF', textDecoration: 'none', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)' }}
+                              href={`/api/admin/files/download?type=career&id=${a.id}&field=resume`}
+                              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: '#38BDF8', textDecoration: 'none', fontSize: '0.78rem', fontFamily: 'var(--font-mono, monospace)', fontWeight: 600 }}
                             >
-                              <span>📄 View Resume</span>
-                              <span>↗</span>
+                              <span>🔒 Download CV</span>
+                              <span>⤓</span>
                             </a>
                           ) : (
-                            <span style={{ color: '#FFFFFF', fontSize: '0.75rem' }}>No link</span>
+                            <span style={{ color: '#FFFFFF', fontSize: '0.75rem' }}>No CV</span>
                           )}
                         </td>
                         <td style={{ padding: '0.75rem 1rem' }}>

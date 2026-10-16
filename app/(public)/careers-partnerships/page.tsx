@@ -815,16 +815,20 @@ export default function CareersPartnershipsPage() {
                 )}
 
                 {/* Consent Checkbox */}
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '0.5rem' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginTop: '0.75rem' }}>
                   <input
                     required
                     type="checkbox"
                     name="consent"
                     id="consent"
-                    style={{ width: '18px', height: '18px', marginTop: '2px', cursor: 'pointer' }}
+                    style={{ width: '18px', height: '18px', marginTop: '2px', cursor: 'pointer', accentColor: '#38BDF8' }}
                   />
-                  <label htmlFor="consent" style={{ color: '#FFFFFF', fontSize: '0.8125rem', lineHeight: 1.5, cursor: 'pointer' }}>
-                    I agree to the processing of my submission and attached documents by Quantum AI in accordance with privacy and security policies. <span style={{ color: '#FFFFFF' }}>*</span>
+                  <label htmlFor="consent" style={{ color: '#E2E8F0', fontSize: '0.8125rem', lineHeight: 1.5, cursor: 'pointer' }}>
+                    I consent to the collection and processing of my application details, resume, and attached documents by Quantum AI in accordance with the{' '}
+                    <Link href="/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#38BDF8', textDecoration: 'underline', fontWeight: 600 }}>
+                      Privacy Policy
+                    </Link>{' '}
+                    for recruitment, technical evaluation, and communication purposes. <span style={{ color: '#38BDF8' }}>*</span>
                   </label>
                 </div>
 
@@ -867,6 +871,11 @@ export default function CareersPartnershipsPage() {
                     ? 'SUBMIT PARTNERSHIP PROPOSAL →'
                     : 'SUBMIT CAREER APPLICATION →'}
                 </button>
+
+                <p style={{ margin: '0.65rem 0 0 0', fontSize: '0.72rem', color: '#94A3B8', textAlign: 'center', lineHeight: 1.4 }}>
+                  🔒 All submissions and attachments are encrypted in transit and stored in protected storage accessible only to authorized reviewers.
+                </p>
+
               </form>
             </div>
           </div>

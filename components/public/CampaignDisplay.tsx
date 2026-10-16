@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import type { PublicCampaign } from '@/lib/campaigns';
+import { hasConsentFor, onConsentChange } from '@/lib/consent';
 
 interface CampaignDisplayProps {
   campaign?: PublicCampaign | null;
@@ -125,18 +126,32 @@ export function CampaignDisplay({
     }
   }, [campaign, previewMode]);
 
-  // Track impression once visible
+  // Track impression once visible and consent is granted
   useEffect(() => {
-    if (isVisible && campaign && !previewMode && !hasTrackedImpressionRef.current) {
-      hasTrackedImpressionRef.current = true;
-      try {
-        fetch('/api/campaigns/track', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ campaignId: campaign.id, event: 'impression' }),
-        }).catch(() => {});
-      } catch {}
-    }
+    const attemptTrackImpression = () => {
+      if (isVisible && campaign && !previewMode && !hasTrackedImpressionRef.current) {
+        if (!hasConsentFor('analytics')) return;
+        hasTrackedImpressionRef.current = true;
+        try {
+          fetch('/api/campaigns/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ campaignId: campaign.id, event: 'impression' }),
+          }).catch(() => {});
+        } catch {}
+      }
+    };
+
+    attemptTrackImpression();
+
+    // If user grants analytics consent later while campaign is visible
+    const unsubscribe = onConsentChange((consent) => {
+      if (consent.analytics) {
+        attemptTrackImpression();
+      }
+    });
+
+    return () => unsubscribe();
   }, [isVisible, campaign, previewMode]);
 
   // Handle countdown timer & progress line
@@ -223,9 +238,10 @@ export function CampaignDisplay({
     } catch {}
   };
 
-  // Track click telemetry
+  // Track click telemetry (only if analytics consent is granted)
   const handleCtaClick = () => {
     if (!campaign || previewMode) return;
+    if (!hasConsentFor('analytics')) return;
     try {
       fetch('/api/campaigns/track', {
         method: 'POST',

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import Link from 'next/link';
 import styles from './ContactSection.module.css';
 
 const ContactSection: React.FC = () => {
@@ -169,14 +170,22 @@ const ContactSection: React.FC = () => {
                 </div>
               )}
 
-              <button 
-                type="submit" 
-                disabled={isSubmitting} 
-                aria-busy={isSubmitting}
-                className={styles.submitBtn}
-              >
-                {isSubmitting ? 'SENDING…' : 'START THE CONVERSATION'}
-              </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '0.5rem' }}>
+                <p style={{ margin: 0, fontSize: '0.75rem', color: '#94A3B8', lineHeight: 1.5, textAlign: 'left' }}>
+                  Your details will be used solely to review and respond to your inquiry in accordance with our{' '}
+                  <Link href="/privacy" style={{ color: '#38BDF8', textDecoration: 'underline' }}>
+                    Privacy Policy
+                  </Link>.
+                </p>
+                <button 
+                  type="submit" 
+                  disabled={isSubmitting} 
+                  aria-busy={isSubmitting}
+                  className={styles.submitBtn}
+                >
+                  {isSubmitting ? 'SENDING…' : 'START THE CONVERSATION'}
+                </button>
+              </div>
             </form>
           )}
         </div>

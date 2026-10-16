@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 function Field({
   label,
@@ -563,7 +564,13 @@ export default function ContactPage() {
                 />
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginTop: '0.75rem' }}>
+                <p style={{ margin: 0, fontSize: '0.78rem', color: '#94A3B8', maxWidth: '440px', lineHeight: 1.5, fontFamily: 'var(--font-d-din)' }}>
+                  Your information will be used solely to review, evaluate, and respond to your inquiry in accordance with our{' '}
+                  <Link href="/privacy" style={{ color: '#38BDF8', textDecoration: 'underline' }}>
+                    Privacy Policy
+                  </Link>.
+                </p>
                 <button
                   type="submit"
                   disabled={status === 'submitting'}

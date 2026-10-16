@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { QuantumLogo } from '../ui/QuantumLogo';
+import { openCookiePreferencesModal } from '@/lib/consent';
 
 const footerLinks = {
   'COMPANY': [
@@ -209,6 +210,79 @@ export default function Footer({
           <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.7rem', color: '#FFFFFF', letterSpacing: '0.08em' }}>
             {displayCopyright}
           </span>
+
+          {/* Legal Links */}
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: '1.25rem',
+          }}>
+            <Link
+              href="/privacy"
+              style={{
+                fontFamily: 'var(--font-d-din)',
+                fontSize: '0.72rem',
+                color: 'rgba(255, 255, 255, 0.75)',
+                textDecoration: 'none',
+                letterSpacing: '0.05em',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#14B8A6')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)')}
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              href="/terms"
+              style={{
+                fontFamily: 'var(--font-d-din)',
+                fontSize: '0.72rem',
+                color: 'rgba(255, 255, 255, 0.75)',
+                textDecoration: 'none',
+                letterSpacing: '0.05em',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#14B8A6')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)')}
+            >
+              Terms & Conditions
+            </Link>
+            <Link
+              href="/cookies"
+              style={{
+                fontFamily: 'var(--font-d-din)',
+                fontSize: '0.72rem',
+                color: 'rgba(255, 255, 255, 0.75)',
+                textDecoration: 'none',
+                letterSpacing: '0.05em',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#14B8A6')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.75)')}
+            >
+              Cookie Policy
+            </Link>
+            <button
+              type="button"
+              onClick={() => openCookiePreferencesModal()}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: 0,
+                fontFamily: 'var(--font-d-din)',
+                fontSize: '0.72rem',
+                color: '#14B8A6',
+                cursor: 'pointer',
+                letterSpacing: '0.05em',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#2DD4BF')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#14B8A6')}
+            >
+              Cookie Settings
+            </button>
+          </div>
           <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
             <a href={`mailto:${email || 'hello@quantumai.dev'}`} style={{ 
               fontFamily: 'var(--font-d-din)', 

@@ -9,6 +9,7 @@ import { getOrganizationSchema, getWebSiteSchema } from '@/lib/seo';
 import { getSiteSettings } from '@/lib/settings';
 import { getActiveCampaign } from '@/lib/campaigns';
 import { CampaignDisplay } from '@/components/public/CampaignDisplay';
+import { CookieConsent } from '@/components/public/CookieConsent';
 
 export const revalidate = 0;
 
@@ -45,6 +46,8 @@ export default async function PublicLayout({ children }: { children: React.React
           />
           {/* Active Campaign Announcement / Popup */}
           <CampaignDisplay campaign={activeCampaign} />
+          {/* Privacy & Storage Preferences Banner / Dialog */}
+          <CookieConsent />
           <main id="main-content" tabIndex={-1} style={{ outline: 'none' }}>
             {children}
           </main>
