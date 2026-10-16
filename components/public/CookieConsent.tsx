@@ -119,171 +119,168 @@ export function CookieConsent() {
 
   return (
     <>
-      {/* 1. Cookie Notice Banner */}
+      {/* 1. Sleek, Compact Cookie Notification (Non-Intrusive) */}
       {showBanner && !showModal && (
         <aside
           role="region"
-          aria-label="Cookie consent banner"
-          style={{
-            position: 'fixed',
-            bottom: '1.25rem',
-            left: '1.25rem',
-            right: '1.25rem',
-            maxWidth: '680px',
-            margin: '0 auto',
-            zIndex: 9998,
-            backgroundColor: 'rgba(10, 15, 29, 0.96)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(20, 184, 166, 0.3)',
-            borderRadius: '12px',
-            boxShadow: '0 20px 45px -10px rgba(0, 0, 0, 0.7), 0 0 25px rgba(20, 184, 166, 0.1)',
-            padding: '1.25rem 1.5rem',
-            color: '#FFFFFF',
-            animation: 'fadeInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-          }}
+          aria-label="Cookie preferences"
+          className="qa-cookie-banner"
         >
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', flexWrap: 'wrap' }}>
-            <div style={{ flex: 1, minWidth: '260px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                <span
-                  style={{
-                    display: 'inline-block',
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '50%',
-                    backgroundColor: '#14B8A6',
-                    boxShadow: '0 0 8px #14B8A6',
-                  }}
-                />
-                <h2
-                  style={{
-                    fontFamily: 'var(--font-sans)',
-                    fontSize: '0.875rem',
-                    fontWeight: 600,
-                    letterSpacing: '0.05em',
-                    color: '#FFFFFF',
-                    margin: 0,
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Privacy & Cookie Preferences
-                </h2>
-              </div>
-              <p
+          {/* Header with teal indicator */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <span
                 style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: '0.8125rem',
-                  lineHeight: 1.55,
-                  color: 'rgba(255, 255, 255, 0.85)',
-                  margin: 0,
+                  display: 'inline-block',
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  backgroundColor: '#14B8A6',
+                  boxShadow: '0 0 8px #14B8A6',
+                }}
+              />
+              <span
+                style={{
+                  fontFamily: 'var(--font-d-din)',
+                  fontSize: '0.6875rem',
+                  fontWeight: 600,
+                  letterSpacing: '0.14em',
+                  color: '#14B8A6',
+                  textTransform: 'uppercase',
                 }}
               >
-                Quantum AI uses strictly necessary storage for system security, audio preferences, and announcement delivery.
-                Optional analytics measure anonymous campaign interactions to help us improve our engineering communications.
-                Read our{' '}
-                <Link
-                  href="/cookies"
-                  style={{ color: '#14B8A6', textDecoration: 'underline', textUnderlineOffset: '3px' }}
-                >
-                  Cookie Policy
-                </Link>{' '}
-                and{' '}
-                <Link
-                  href="/privacy"
-                  style={{ color: '#14B8A6', textDecoration: 'underline', textUnderlineOffset: '3px' }}
-                >
-                  Privacy Policy
-                </Link>
-                .
-              </p>
+                Cookie Preferences
+              </span>
             </div>
-
-            {/* Banner Action Buttons */}
-            <div
+            <button
+              type="button"
+              onClick={handleRejectOptional}
+              aria-label="Dismiss cookie notice with essential only"
+              title="Decline optional cookies"
               style={{
+                background: 'none',
+                border: 'none',
+                color: 'rgba(255, 255, 255, 0.45)',
+                cursor: 'pointer',
+                padding: '0.15rem',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem',
-                flexWrap: 'wrap',
-                alignSelf: 'center',
+                justifyContent: 'center',
+                fontSize: '0.85rem',
+                lineHeight: 1,
+                borderRadius: '4px',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#FFFFFF')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.45)')}
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Concise explanation */}
+          <p
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.78rem',
+              lineHeight: 1.45,
+              color: 'rgba(255, 255, 255, 0.8)',
+              margin: '0 0 0.75rem 0',
+            }}
+          >
+            We use essential and performance cookies to optimize site systems. View our{' '}
+            <Link
+              href="/cookies"
+              style={{ color: '#14B8A6', textDecoration: 'underline', textUnderlineOffset: '2px' }}
+            >
+              Cookie Policy
+            </Link>
+            .
+          </p>
+
+          {/* Action buttons */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+            }}
+          >
+            <button
+              type="button"
+              onClick={handleAcceptAll}
+              style={{
+                padding: '0.35rem 0.85rem',
+                fontSize: '0.72rem',
+                fontWeight: 600,
+                fontFamily: 'var(--font-d-din)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+                color: '#030712',
+                backgroundColor: '#14B8A6',
+                border: '1px solid #14B8A6',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s, transform 0.1s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#2DD4BF')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#14B8A6')}
+            >
+              Accept
+            </button>
+
+            <button
+              type="button"
+              onClick={handleRejectOptional}
+              style={{
+                padding: '0.35rem 0.75rem',
+                fontSize: '0.72rem',
+                fontWeight: 500,
+                fontFamily: 'var(--font-d-din)',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                color: 'rgba(255, 255, 255, 0.85)',
+                backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                transition: 'background-color 0.2s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)')}
+            >
+              Decline
+            </button>
+
+            <button
+              type="button"
+              onClick={openCustomizeModal}
+              style={{
+                padding: '0.35rem 0.65rem',
+                fontSize: '0.72rem',
+                fontWeight: 500,
+                fontFamily: 'var(--font-d-din)',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                color: '#14B8A6',
+                backgroundColor: 'transparent',
+                border: '1px solid rgba(20, 184, 166, 0.35)',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                marginLeft: 'auto',
+                transition: 'background-color 0.2s, border-color 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.1)';
+                e.currentTarget.style.borderColor = '#14B8A6';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.35)';
               }}
             >
-              <button
-                type="button"
-                onClick={handleAcceptAll}
-                style={{
-                  padding: '0.5rem 1rem',
-                  fontSize: '0.8125rem',
-                  fontWeight: 600,
-                  fontFamily: 'var(--font-d-din)',
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: '#030712',
-                  backgroundColor: '#14B8A6',
-                  border: '1px solid #14B8A6',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s, transform 0.1s',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#2DD4BF')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#14B8A6')}
-              >
-                Accept All
-              </button>
-
-              <button
-                type="button"
-                onClick={handleRejectOptional}
-                style={{
-                  padding: '0.5rem 0.875rem',
-                  fontSize: '0.8125rem',
-                  fontWeight: 500,
-                  fontFamily: 'var(--font-d-din)',
-                  letterSpacing: '0.05em',
-                  textTransform: 'uppercase',
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s',
-                }}
-                onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)')}
-                onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)')}
-              >
-                Reject Optional
-              </button>
-
-              <button
-                type="button"
-                onClick={openCustomizeModal}
-                style={{
-                  padding: '0.5rem 0.875rem',
-                  fontSize: '0.8125rem',
-                  fontWeight: 500,
-                  fontFamily: 'var(--font-d-din)',
-                  letterSpacing: '0.05em',
-                  textTransform: 'uppercase',
-                  color: '#14B8A6',
-                  backgroundColor: 'transparent',
-                  border: '1px solid rgba(20, 184, 166, 0.4)',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  transition: 'background-color 0.2s, border-color 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(20, 184, 166, 0.1)';
-                  e.currentTarget.style.borderColor = '#14B8A6';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.borderColor = 'rgba(20, 184, 166, 0.4)';
-                }}
-              >
-                Customize
-              </button>
-            </div>
+              Settings
+            </button>
           </div>
         </aside>
       )}
@@ -300,9 +297,9 @@ export function CookieConsent() {
             alignItems: 'center',
             justifyContent: 'center',
             padding: '1.25rem',
-            backgroundColor: 'rgba(3, 7, 18, 0.8)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
+            backgroundColor: 'rgba(3, 7, 18, 0.82)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
           }}
           onClick={(e) => {
             if (e.target === e.currentTarget) {
@@ -319,13 +316,13 @@ export function CookieConsent() {
             style={{
               position: 'relative',
               width: '100%',
-              maxWidth: '620px',
+              maxWidth: '560px',
               maxHeight: '90vh',
               overflowY: 'auto',
               backgroundColor: '#0A0F1D',
               border: '1px solid rgba(20, 184, 166, 0.35)',
               borderRadius: '14px',
-              padding: '1.75rem',
+              padding: '1.5rem',
               color: '#FFFFFF',
               boxShadow: '0 25px 60px -15px rgba(0, 0, 0, 0.85), 0 0 35px rgba(20, 184, 166, 0.15)',
               animation: 'scaleIn 0.2s ease-out forwards',
@@ -339,7 +336,7 @@ export function CookieConsent() {
                 alignItems: 'flex-start',
                 marginBottom: '1rem',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                paddingBottom: '1rem',
+                paddingBottom: '0.85rem',
               }}
             >
               <div>
@@ -347,26 +344,26 @@ export function CookieConsent() {
                   id="cookie-modal-title"
                   style={{
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '1.25rem',
+                    fontSize: '1.15rem',
                     fontWeight: 700,
-                    letterSpacing: '0.02em',
+                    letterSpacing: '0.01em',
                     color: '#FFFFFF',
-                    margin: '0 0 0.25rem 0',
+                    margin: '0 0 0.2rem 0',
                   }}
                 >
-                  Cookie & Storage Settings
+                  Cookie &amp; Storage Preferences
                 </h2>
                 <p
                   id="cookie-modal-desc"
                   style={{
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '0.8125rem',
+                    fontSize: '0.78rem',
                     color: 'rgba(255, 255, 255, 0.7)',
                     margin: 0,
-                    lineHeight: 1.5,
+                    lineHeight: 1.45,
                   }}
                 >
-                  Customize how Quantum AI stores information on your device. Strictly necessary technologies cannot be disabled as they are required for basic site operations.
+                  Choose which data categories you allow. Strictly necessary technologies are required for basic security and site stability.
                 </p>
               </div>
 
@@ -384,7 +381,7 @@ export function CookieConsent() {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '1.25rem',
+                  fontSize: '1.15rem',
                   lineHeight: 1,
                   borderRadius: '6px',
                   transition: 'color 0.2s, background-color 0.2s',
@@ -403,22 +400,22 @@ export function CookieConsent() {
             </div>
 
             {/* Storage Categories */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.75rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', marginBottom: '1.5rem' }}>
               {/* Category 1: Strictly Necessary */}
               <div
                 style={{
                   backgroundColor: 'rgba(255, 255, 255, 0.03)',
                   border: '1px solid rgba(255, 255, 255, 0.06)',
                   borderRadius: '8px',
-                  padding: '1rem 1.25rem',
+                  padding: '0.85rem 1rem',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <span
                       style={{
                         fontFamily: 'var(--font-sans)',
-                        fontSize: '0.9375rem',
+                        fontSize: '0.875rem',
                         fontWeight: 600,
                         color: '#FFFFFF',
                       }}
@@ -427,8 +424,8 @@ export function CookieConsent() {
                     </span>
                     <span
                       style={{
-                        fontSize: '0.6875rem',
-                        padding: '0.15rem 0.45rem',
+                        fontSize: '0.625rem',
+                        padding: '0.12rem 0.4rem',
                         borderRadius: '4px',
                         backgroundColor: 'rgba(20, 184, 166, 0.15)',
                         color: '#14B8A6',
@@ -446,9 +443,9 @@ export function CookieConsent() {
                     aria-label="Strictly necessary storage is always active"
                     style={{
                       display: 'inline-block',
-                      width: '42px',
-                      height: '24px',
-                      borderRadius: '12px',
+                      width: '38px',
+                      height: '20px',
+                      borderRadius: '10px',
                       backgroundColor: 'rgba(20, 184, 166, 0.4)',
                       position: 'relative',
                       opacity: 0.8,
@@ -458,10 +455,10 @@ export function CookieConsent() {
                     <span
                       style={{
                         position: 'absolute',
-                        top: '3px',
-                        right: '3px',
-                        width: '18px',
-                        height: '18px',
+                        top: '2px',
+                        right: '2px',
+                        width: '16px',
+                        height: '16px',
                         borderRadius: '50%',
                         backgroundColor: '#14B8A6',
                       }}
@@ -471,13 +468,13 @@ export function CookieConsent() {
                 <p
                   style={{
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '0.8125rem',
-                    lineHeight: 1.5,
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '0.78rem',
+                    lineHeight: 1.45,
+                    color: 'rgba(255, 255, 255, 0.68)',
                     margin: 0,
                   }}
                 >
-                  Essential for website security, CSRF protection, admin authentication sessions (<code>next-auth</code>), audio toggle state, announcement dismissal tracking, and recording your privacy preferences.
+                  Essential for website security, CSRF defense, administrative authentication, audio state, and recording your privacy preferences.
                 </p>
               </div>
 
@@ -487,19 +484,19 @@ export function CookieConsent() {
                   backgroundColor: 'rgba(255, 255, 255, 0.03)',
                   border: '1px solid rgba(255, 255, 255, 0.06)',
                   borderRadius: '8px',
-                  padding: '1rem 1.25rem',
+                  padding: '0.85rem 1rem',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
                   <span
                     style={{
                       fontFamily: 'var(--font-sans)',
-                      fontSize: '0.9375rem',
+                      fontSize: '0.875rem',
                       fontWeight: 600,
                       color: '#FFFFFF',
                     }}
                   >
-                    Performance & Analytics
+                    Performance &amp; Analytics
                   </span>
 
                   <button
@@ -509,9 +506,9 @@ export function CookieConsent() {
                     aria-label="Toggle performance and analytics storage"
                     onClick={() => setAnalyticsEnabled(!analyticsEnabled)}
                     style={{
-                      width: '44px',
-                      height: '24px',
-                      borderRadius: '12px',
+                      width: '40px',
+                      height: '22px',
+                      borderRadius: '11px',
                       backgroundColor: analyticsEnabled ? '#14B8A6' : 'rgba(255, 255, 255, 0.2)',
                       border: 'none',
                       position: 'relative',
@@ -525,9 +522,9 @@ export function CookieConsent() {
                       style={{
                         position: 'absolute',
                         top: '3px',
-                        left: analyticsEnabled ? '23px' : '3px',
-                        width: '18px',
-                        height: '18px',
+                        left: analyticsEnabled ? '21px' : '3px',
+                        width: '16px',
+                        height: '16px',
                         borderRadius: '50%',
                         backgroundColor: '#FFFFFF',
                         transition: 'left 0.2s',
@@ -539,13 +536,13 @@ export function CookieConsent() {
                 <p
                   style={{
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '0.8125rem',
-                    lineHeight: 1.5,
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '0.78rem',
+                    lineHeight: 1.45,
+                    color: 'rgba(255, 255, 255, 0.68)',
                     margin: 0,
                   }}
                 >
-                  Measures anonymous impression and interaction telemetry for engineering announcements (<code>/api/campaigns/track</code>). No third-party behavioral profiling or cross-site tracking scripts are loaded.
+                  Measures anonymous impression and interaction telemetry for engineering announcements (<code>/api/campaigns/track</code>). No third-party profiling.
                 </p>
               </div>
 
@@ -555,19 +552,19 @@ export function CookieConsent() {
                   backgroundColor: 'rgba(255, 255, 255, 0.03)',
                   border: '1px solid rgba(255, 255, 255, 0.06)',
                   borderRadius: '8px',
-                  padding: '1rem 1.25rem',
+                  padding: '0.85rem 1rem',
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
                   <span
                     style={{
                       fontFamily: 'var(--font-sans)',
-                      fontSize: '0.9375rem',
+                      fontSize: '0.875rem',
                       fontWeight: 600,
                       color: '#FFFFFF',
                     }}
                   >
-                    Marketing & Conversion Attribution
+                    Marketing &amp; Attribution
                   </span>
 
                   <button
@@ -577,9 +574,9 @@ export function CookieConsent() {
                     aria-label="Toggle marketing storage"
                     onClick={() => setMarketingEnabled(!marketingEnabled)}
                     style={{
-                      width: '44px',
-                      height: '24px',
-                      borderRadius: '12px',
+                      width: '40px',
+                      height: '22px',
+                      borderRadius: '11px',
                       backgroundColor: marketingEnabled ? '#14B8A6' : 'rgba(255, 255, 255, 0.2)',
                       border: 'none',
                       position: 'relative',
@@ -593,9 +590,9 @@ export function CookieConsent() {
                       style={{
                         position: 'absolute',
                         top: '3px',
-                        left: marketingEnabled ? '23px' : '3px',
-                        width: '18px',
-                        height: '18px',
+                        left: marketingEnabled ? '21px' : '3px',
+                        width: '16px',
+                        height: '16px',
                         borderRadius: '50%',
                         backgroundColor: '#FFFFFF',
                         transition: 'left 0.2s',
@@ -607,13 +604,13 @@ export function CookieConsent() {
                 <p
                   style={{
                     fontFamily: 'var(--font-sans)',
-                    fontSize: '0.8125rem',
-                    lineHeight: 1.5,
-                    color: 'rgba(255, 255, 255, 0.7)',
+                    fontSize: '0.78rem',
+                    lineHeight: 1.45,
+                    color: 'rgba(255, 255, 255, 0.68)',
                     margin: 0,
                   }}
                 >
-                  Used if we run partner attribution or sponsor campaigns. When disabled, promotional campaign telemetry and conversion signals will not be recorded.
+                  Used if we run partner attribution or sponsor campaigns. When disabled, promotional conversion signals are not recorded.
                 </p>
               </div>
             </div>
@@ -625,18 +622,18 @@ export function CookieConsent() {
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 flexWrap: 'wrap',
-                gap: '0.75rem',
+                gap: '0.65rem',
                 borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-                paddingTop: '1.25rem',
+                paddingTop: '1rem',
               }}
             >
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
                 <button
                   type="button"
                   onClick={handleRejectOptional}
                   style={{
-                    padding: '0.5rem 0.875rem',
-                    fontSize: '0.8125rem',
+                    padding: '0.45rem 0.75rem',
+                    fontSize: '0.75rem',
                     fontWeight: 500,
                     fontFamily: 'var(--font-d-din)',
                     letterSpacing: '0.05em',
@@ -644,22 +641,22 @@ export function CookieConsent() {
                     color: '#FFFFFF',
                     backgroundColor: 'rgba(255, 255, 255, 0.08)',
                     border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '6px',
+                    borderRadius: '5px',
                     cursor: 'pointer',
                     transition: 'background-color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)')}
                   onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)')}
                 >
-                  Reject All Optional
+                  Decline Optional
                 </button>
 
                 <button
                   type="button"
                   onClick={handleAcceptAll}
                   style={{
-                    padding: '0.5rem 0.875rem',
-                    fontSize: '0.8125rem',
+                    padding: '0.45rem 0.75rem',
+                    fontSize: '0.75rem',
                     fontWeight: 500,
                     fontFamily: 'var(--font-d-din)',
                     letterSpacing: '0.05em',
@@ -667,7 +664,7 @@ export function CookieConsent() {
                     color: '#14B8A6',
                     backgroundColor: 'transparent',
                     border: '1px solid rgba(20, 184, 166, 0.4)',
-                    borderRadius: '6px',
+                    borderRadius: '5px',
                     cursor: 'pointer',
                     transition: 'background-color 0.2s',
                   }}
@@ -682,8 +679,8 @@ export function CookieConsent() {
                 type="button"
                 onClick={handleSavePreferences}
                 style={{
-                  padding: '0.55rem 1.25rem',
-                  fontSize: '0.8125rem',
+                  padding: '0.5rem 1.15rem',
+                  fontSize: '0.75rem',
                   fontWeight: 600,
                   fontFamily: 'var(--font-d-din)',
                   letterSpacing: '0.08em',
@@ -691,14 +688,14 @@ export function CookieConsent() {
                   color: '#030712',
                   backgroundColor: '#14B8A6',
                   border: '1px solid #14B8A6',
-                  borderRadius: '6px',
+                  borderRadius: '5px',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s, transform 0.1s',
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#2DD4BF')}
                 onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#14B8A6')}
               >
-                Save Preferences
+                Save Choices
               </button>
             </div>
           </div>
@@ -706,16 +703,46 @@ export function CookieConsent() {
       )}
 
       <style>{`
-        @keyframes fadeInUp {
+        .qa-cookie-banner {
+          position: fixed;
+          bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+          left: calc(1.5rem + env(safe-area-inset-left, 0px));
+          width: 350px;
+          max-width: calc(100vw - 2.5rem);
+          z-index: 9998;
+          background: rgba(8, 14, 26, 0.92);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(20, 184, 166, 0.25);
+          border-radius: 12px;
+          box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.75), 0 0 20px rgba(20, 184, 166, 0.08);
+          padding: 0.9rem 1.1rem;
+          color: #FFFFFF;
+          animation: cookieFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @media (max-width: 640px) {
+          .qa-cookie-banner {
+            bottom: calc(1rem + env(safe-area-inset-bottom, 0px));
+            left: 1rem;
+            right: 1rem;
+            width: auto;
+            max-width: none;
+            padding: 0.85rem 1rem;
+          }
+        }
+
+        @keyframes cookieFadeIn {
           from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(12px) scale(0.98);
           }
           to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
           }
         }
+
         @keyframes scaleIn {
           from {
             opacity: 0;
