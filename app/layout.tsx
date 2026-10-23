@@ -65,10 +65,22 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${spaceGrotesk.variable} ${spaceMono.variable}`}>
+      <head>
+        {/* Anti-FOUC script placed safely inside Root Server Component head */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem('quantum-ai-brand-seen')!=='true'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('qa-intro-active');}}catch(e){}`,
+          }}
+        />
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `.qa-intro-active body{background-color:#020708!important;}.qa-intro-active #qa-website-content{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}`,
+          }}
+        />
+      </head>
       <body>
         {children}
       </body>
     </html>
   )
 }
-

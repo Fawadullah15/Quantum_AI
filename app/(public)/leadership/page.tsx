@@ -1,6 +1,8 @@
 import prisma from "@/lib/db";
 import Link from "next/link";
 import { createPageMetadata } from "@/lib/seo";
+import { ImageWithSkeleton } from "@/components/ui/Skeleton";
+import { getTeamPhoto, getTeamFallbackPhoto } from "@/lib/teamPhotos";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -38,7 +40,7 @@ const FALLBACK_MEMBERS: LeaderItem[] = [
     position: "Co-Founder & Chief Executive Officer",
     department: "Executive Leadership",
     shortBio: "Co-Founder and CEO of Quantum AI, directing AI-powered software systems, workflow automation architectures, and enterprise digital solutions.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
+    photo: "/images/team/muhammad-murtaza.jpg",
     linkedin: "https://www.linkedin.com/company/quantumai",
     github: "https://github.com/quantumai",
     location: "Global / Hybrid",
@@ -52,7 +54,7 @@ const FALLBACK_MEMBERS: LeaderItem[] = [
     position: "Co-Founder & Executive Chairman",
     department: "Executive Leadership",
     shortBio: "Co-Founder and Executive Chairman of Quantum AI, guiding strategic direction, engineering vision, and long-term organizational growth.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787236158396-98299.jpg",
+    photo: "/images/team/fahad-khan.jpg",
     linkedin: "https://www.linkedin.com/in/fahad-khan-650a783a4/",
     github: "https://github.com",
     location: "Peshawar",
@@ -66,7 +68,7 @@ const FALLBACK_MEMBERS: LeaderItem[] = [
     position: "Lead Software Engineer",
     department: "Software Development",
     shortBio: "Software developer focused on building reliable, modern web applications, scalable backends, and full-stack operational platforms.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787054190871-Screenshot_2026-08-18_165611.png",
+    photo: "/images/team/abdullah-mahmood.png",
     linkedin: "https://www.linkedin.com/in/abdullah-mahmood-323050346/",
     github: "https://github.com",
     location: "Peshawar",
@@ -80,7 +82,7 @@ const FALLBACK_MEMBERS: LeaderItem[] = [
     position: "Business Development Partner",
     department: "Business Development",
     shortBio: "Business Development Partner at Quantum AI, building client relationships, strategic partnerships, and enterprise market expansion.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787235947568-WhatsApp_Image_2026-08-20_at_7.09.26_PM.jpeg",
+    photo: "/images/team/hafizah-anisa-safdar.jpeg",
     linkedin: "https://www.linkedin.com/in/hafizah-anisa-safdar-89a00338b",
     location: "Pk/Remote",
     displayOrder: 4,
@@ -93,7 +95,7 @@ const FALLBACK_MEMBERS: LeaderItem[] = [
     position: "Digital Marketing & Strategic Growth Partner",
     department: "Business Development",
     shortBio: "Digital marketing and business development professional focused on strategic partnerships, digital reach, and sustainable business growth.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787227215810-Screenshot_2026-08-20_170002.png",
+    photo: "/images/team/waqas-ali-khan.png",
     linkedin: "https://www.linkedin.com/in/waqas-ali-khan-278b1b414/",
     location: "Peshawar",
     displayOrder: 5,
@@ -794,20 +796,15 @@ export default async function LeadershipPage() {
                         ? "CHIEF EXECUTIVE OFFICER"
                         : (leader.department || leader.position).toUpperCase()}
                     </div>
-                    {leader.photo ? (
-                      <img
-                        src={leader.photo}
-                        alt={leader.name}
-                        className="exec-photo-img principal-photo-img"
-                      />
-                    ) : (
-                        <div className="exec-photo-fallback">
-                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                            <path d="M12 2v4M12 18v4M2 12h4M18 12h4M12 7a5 5 0 1 0 0 10 5 5 0 1 0 0-10z" />
-                          </svg>
-                          <span>NO IMAGE DATA</span>
-                        </div>
-                    )}
+                    <ImageWithSkeleton
+                      src={getTeamPhoto(leader.slug, leader.photo)}
+                      fallbackSrc={getTeamFallbackPhoto(leader.slug)}
+                      alt={leader.name}
+                      aspectRatio="auto"
+                      containerClassName="exec-photo-img principal-photo-img"
+                      containerStyle={{ width: '100%', height: '100%' }}
+                      style={{ objectPosition: 'center top' }}
+                    />
                   </div>
 
                   <div className="exec-body">
@@ -883,20 +880,15 @@ export default async function LeadershipPage() {
                           {member.department.trim()}
                         </div>
                       )}
-                      {member.photo ? (
-                        <img
-                          src={member.photo}
-                          alt={member.name}
-                          className="exec-photo-img"
-                        />
-                      ) : (
-                        <div className="exec-photo-fallback">
-                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                            <path d="M12 2v4M12 18v4M2 12h4M18 12h4M12 7a5 5 0 1 0 0 10 5 5 0 1 0 0-10z" />
-                          </svg>
-                          <span>NO IMAGE DATA</span>
-                        </div>
-                      )}
+                      <ImageWithSkeleton
+                        src={getTeamPhoto(member.slug, member.photo)}
+                        fallbackSrc={getTeamFallbackPhoto(member.slug)}
+                        alt={member.name}
+                        aspectRatio="auto"
+                        containerClassName="exec-photo-img"
+                        containerStyle={{ width: '100%', height: '100%' }}
+                        style={{ objectPosition: 'center top' }}
+                      />
                     </div>
 
                     <div className="exec-body">

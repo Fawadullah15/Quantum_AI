@@ -2,6 +2,8 @@ import prisma from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createPageMetadata } from "@/lib/seo";
+import { ImageWithSkeleton } from "@/components/ui/Skeleton";
+import { getTeamPhoto, getTeamFallbackPhoto } from "@/lib/teamPhotos";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +36,7 @@ const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
     department: "Executive Leadership",
     shortBio: "Co-Founder and CEO of Quantum AI, directing AI-powered software systems, workflow automation architectures, and enterprise digital solutions.",
     fullBio: "Muhammad Murtaza is the Founder and CEO of Quantum AI. He focuses on building practical software powered by AI for education, businesses, and enterprise organizations. His engineering work covers neural systems, workflow automation pipelines, high-concurrency web applications, and custom software architectures engineered to eliminate operational friction and solve real-world problems.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787071914024-Screenshot_20260818-215108_WhatsApp.jpg",
+    photo: "/images/team/muhammad-murtaza.jpg",
     linkedin: "https://www.linkedin.com/company/quantumai",
     github: "https://github.com/quantumai",
     email: "contact@quantumai.dev",
@@ -51,7 +53,7 @@ const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
     department: "Executive Leadership",
     shortBio: "Co-Founder and Executive Chairman of Quantum AI, guiding strategic direction, engineering vision, and long-term organizational growth.",
     fullBio: "Fahad Khan is the Executive Chairman of Quantum AI. He contributes to the company's strategic direction, technical vision, major decisions, and long-term growth. With a background in mechatronics engineering and AI systems, he brings deep technical knowledge and leadership to Quantum AI's system architecture, research direction, and institutional governance.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787236158396-98299.jpg",
+    photo: "/images/team/fahad-khan.jpg",
     linkedin: "https://www.linkedin.com/in/fahad-khan-650a783a4/",
     github: "https://github.com",
     email: "fahad.off.707@gmail.com",
@@ -68,7 +70,7 @@ const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
     department: "Software Development",
     shortBio: "Software developer focused on building reliable, modern web applications, scalable backends, and full-stack operational platforms.",
     fullBio: "Abdullah is a software developer working on the design, development, testing, and improvement of software applications. He contributes to frontend and backend development and helps turn ideas into practical digital products for Quantum AI.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787054190871-Screenshot_2026-08-18_165611.png",
+    photo: "/images/team/abdullah-mahmood.png",
     linkedin: "https://www.linkedin.com/in/abdullah-mahmood-323050346/",
     email: "Abdullahmahmood@gmail.com",
     location: "Peshawar",
@@ -84,7 +86,7 @@ const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
     department: "Business Development",
     shortBio: "Business Development Partner at Quantum AI, building client relationships, strategic partnerships, and enterprise market expansion.",
     fullBio: "Anisa Safdar is a Business Development Partner at Quantum AI, dedicated to expanding the company's reach and connecting businesses with innovative AI and digital solutions. With strong communication and marketing skills, she works to identify new opportunities, build lasting client relationships, and represent Quantum AI with professionalism and integrity.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787235947568-WhatsApp_Image_2026-08-20_at_7.09.26_PM.jpeg",
+    photo: "/images/team/hafizah-anisa-safdar.jpeg",
     linkedin: "https://www.linkedin.com/in/hafizah-anisa-safdar-89a00338b",
     email: "risingstarstar21@gmail.com",
     location: "Pk/Remote",
@@ -100,7 +102,7 @@ const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
     department: "Business Development",
     shortBio: "Digital marketing and business development professional focused on strategic partnerships, digital reach, and sustainable business growth.",
     fullBio: "Waqas Ali Khan is a Digital Marketing & Business Development Partner focused on digital growth, strategic partnerships, client acquisition, and business development. He works on strengthening the company's digital presence, identifying new opportunities, developing partnerships, and creating strategies that support long-term business growth.",
-    photo: "https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787227215810-Screenshot_2026-08-20_170002.png",
+    photo: "/images/team/waqas-ali-khan.png",
     linkedin: "https://www.linkedin.com/in/waqas-ali-khan-278b1b414/",
     email: "waqasalikhan683@gmail.com",
     location: "Peshawar",
@@ -399,17 +401,15 @@ export default async function LeadershipProfilePage({ params }: { params: Promis
 
               return (
                 <div className={`prof-photo-box ${isPrincipal ? 'is-principal-profile' : ''}`}>
-                  {m.photo ? (
-                    <img
-                      src={m.photo}
-                      alt={m.name}
-                      className={`prof-photo-img ${isPrincipal ? 'is-principal-profile' : ''}`}
-                    />
-                  ) : (
-                    <div style={{ color: '#FFFFFF', fontFamily: "var(--font-d-din)", fontSize: "0.85rem" }}>
-                      QUANTUM AI
-                    </div>
-                  )}
+                  <ImageWithSkeleton
+                    src={getTeamPhoto(m.slug, m.photo)}
+                    fallbackSrc={getTeamFallbackPhoto(m.slug)}
+                    alt={m.name}
+                    aspectRatio="auto"
+                    containerClassName={`prof-photo-img ${isPrincipal ? 'is-principal-profile' : ''}`}
+                    containerStyle={{ width: '100%', height: '100%' }}
+                    style={{ objectPosition: 'center top' }}
+                  />
                 </div>
               );
             })()}

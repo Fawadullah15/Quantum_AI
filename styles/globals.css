@@ -848,3 +848,32 @@ a {
 .public-layout h4, .public-layout h5, .public-layout h6 {
   font-family: var(--font-sans);
 }
+
+
+/* ============================================================
+   FACEBOOK / INSTAGRAM STYLE SKELETON SHIMMER SYSTEM
+   ============================================================ */
+@keyframes qaShimmerSweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.qa-skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0%,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(103, 232, 249, 0.12) 50%,
+    rgba(255, 255, 255, 0.05) 80%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+  background-size: 200% 100%;
+  animation: qaShimmerSweep 1.8s ease-in-out infinite;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}

@@ -197,20 +197,9 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
   // Determine background opacity based on timeline (fades out 0.7s after travel starts)
   const isTravel = phase === 'travel';
 
-  // Anti-FOUC Script ensures the screen is pitch black before React hydrates if the intro should play.
-  // This prevents the raw website from flashing for 100ms before the overlay mounts.
-  const ANTI_FOUC_SCRIPT = `
-    try {
-      if (sessionStorage.getItem('${SESSION_KEY}') !== 'true' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        document.documentElement.classList.add('qa-intro-active');
-      }
-    } catch(e) {}
-  `;
-
   return (
     <>
-      <script dangerouslySetInnerHTML={{ __html: ANTI_FOUC_SCRIPT }} suppressHydrationWarning />
-      <style dangerouslySetInnerHTML={{ __html: `
+            <style dangerouslySetInnerHTML={{ __html: `
         .qa-intro-active body { background-color: #020708 !important; }
         .qa-intro-active #qa-website-content { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
       `}} suppressHydrationWarning />

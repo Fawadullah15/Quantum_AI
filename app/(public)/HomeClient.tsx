@@ -18,6 +18,8 @@ const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr
 const GlobalMapSection = dynamic(() => import('@/components/sections/GlobalMapSection'), { ssr: false });
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
 import MarsHeroVideo from '@/components/ui/MarsHeroVideo';
+import { ImageWithSkeleton } from '@/components/ui/Skeleton';
+import { getTeamPhoto, getTeamFallbackPhoto } from '@/lib/teamPhotos';
 
 export interface HomeInitialData {
   leaders?: any[] | null;
@@ -56,7 +58,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
       name: 'Muhammad Murtaza',
       position: 'Co-Founder & CEO',
       shortBio: 'Co-Founder and CEO of Quantum AI, building AI-powered software and digital solutions for enterprise and institutional clients.',
-      photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049252241-Screenshot_2025-02-11_170816.png',
+      photo: '/images/team/muhammad-murtaza.jpg',
       slug: 'muhammad-murtaza',
       publicId: 'QA-001'
     },
@@ -65,7 +67,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
       name: 'Fahad Khan',
       position: 'Co-Founder & Executive Chairman',
       shortBio: 'Co-Founder and Executive Chairman of Quantum AI, supporting strategic direction, technical vision, and long-term growth.',
-      photo: 'https://7495fnfcayak83c2.public.blob.vercel-storage.com/1787049467020-Screenshot_2026-08-18_153738.png',
+      photo: '/images/team/fahad-khan.jpg',
       slug: 'fahad-khan',
       publicId: 'QA-002'
     }
@@ -576,29 +578,20 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                     </span>
                   </div>
 
-                  {/* Photo Container */}
-                  <div style={{
-                    width: '100%',
-                    aspectRatio: '1/1',
-                    backgroundColor: '#020708',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}>
-                    {person.photo ? (
-                      <img
-                        src={person.photo}
-                        alt={person.name}
-                        width={300}
-                        height={300}
-                        loading="lazy"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
-                      />
-                    ) : (
-                      <div style={{ color: '#FFFFFF', fontSize: '2rem' }}>👤</div>
-                    )}
-                  </div>
+                  {/* Photo Container with Shimmer Skeleton and Fallback Doodle */}
+                  <ImageWithSkeleton
+                    src={getTeamPhoto(person.slug, person.photo)}
+                    fallbackSrc={getTeamFallbackPhoto(person.slug)}
+                    alt={person.name}
+                    aspectRatio="1/1"
+                    badge="EXEC"
+                    containerStyle={{
+                      borderBottom: '1px solid rgba(20, 184, 166, 0.1)',
+                    }}
+                    style={{
+                      objectPosition: 'center top',
+                    }}
+                  />
 
                   {/* Body Content */}
                   <div style={{ padding: '0.9rem', display: 'flex', flexDirection: 'column', flex: 1 }}>

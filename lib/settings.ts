@@ -139,8 +139,13 @@ export async function getSiteSettings(): Promise<SiteSettingsMap> {
 
     cachedSettings = { data: result, expires: now + 60000 };
     return result;
-  } catch (error) {
-    console.error('[Settings] Error fetching site settings from DB:', error);
+  } catch (error: any) {
+    const isConnErr = error?.name === 'PrismaClientInitializationError' || error?.code === 'P1001' || (error?.message && error.message.includes("Can't reach database"));
+    if (isConnErr) {
+      console.warn('[Settings] Database offline or unreachable. Serving DEFAULT_SETTINGS.');
+    } else {
+      console.warn('[Settings] Error fetching site settings from DB:', error?.message || error);
+    }
     return cachedSettings ? cachedSettings.data : DEFAULT_SETTINGS;
   }
 }
