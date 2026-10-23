@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import prisma from '@/lib/db';
+import { generateBackupPackage } from '@/lib/backup-engine';
+import { logDatabaseDiagnostic } from '@/lib/db-diagnostics';
 
 export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,8 +13,16 @@ export async function GET(request: NextRequest) {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
       return NextResponse.json(
-        { error: 'Unauthorized: Admin authentication required.' },
+        { error: 'Unauthorized: Admin authentication required to download database backups.' },
         { status: 401 }
+      );
+    }
+
+    const userRole = (session.user as any).role || 'EDITOR';
+    if (userRole !== 'ADMIN' && userRole !== 'SUPER_ADMIN') {
+      return NextResponse.json(
+        { error: 'Forbidden: Insufficient privileges to perform database backups.' },
+        { status: 403 }
       );
     }
 
@@ -22,44 +32,12 @@ export async function GET(request: NextRequest) {
     const pathname = searchParams.get('pathname');
     const requestedFilename = searchParams.get('filename');
 
-    // ─── MODE A: LIVE EXPORT ON THE FLY DIRECT FROM DATABASE ───
+    // ─── MODE A: LIVE DIRECT DATABASE EXPORT ───
     if (direct) {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const filename = `db-backup-${timestamp}.json`;
-
-      const data = {
-        timestamp: new Date().toISOString(),
-        version: '1.0',
-        tables: {
-          User: await prisma.user.findMany().catch(() => []),
-          SiteSettings: await prisma.siteSettings.findMany().catch(() => []),
-          NavigationItem: await prisma.navigationItem.findMany().catch(() => []),
-          Founder: await prisma.founder.findMany().catch(() => []),
-          TeamMember: await prisma.teamMember.findMany().catch(() => []),
-          Leadership: await prisma.leadership.findMany().catch(() => []),
-          Service: await prisma.service.findMany().catch(() => []),
-          Technology: await prisma.technology.findMany().catch(() => []),
-          BlogPost: await prisma.blogPost.findMany().catch(() => []),
-          Testimonial: await prisma.testimonial.findMany().catch(() => []),
-          Client: await prisma.client.findMany().catch(() => []),
-          ContactSubmission: await prisma.contactSubmission.findMany().catch(() => []),
-          Notification: await prisma.notification.findMany().catch(() => []),
-          Media: await prisma.media.findMany().catch(() => []),
-          CareerPosition: await prisma.careerPosition.findMany().catch(() => []),
-          CareerApplication: await prisma.careerApplication.findMany().catch(() => []),
-          PartnershipRequest: await prisma.partnershipRequest.findMany().catch(() => []),
-          Product: await prisma.product.findMany().catch(() => []),
-          CaseStudy: await prisma.caseStudy.findMany().catch(() => []),
-          ProductFeature: await prisma.productFeature.findMany().catch(() => []),
-          CaseStudyMetric: await prisma.caseStudyMetric.findMany().catch(() => []),
-          ActivityLog: await prisma.activityLog.findMany().catch(() => []),
-          SubmissionNote: await prisma.submissionNote.findMany().catch(() => []),
-          RecentlyDeleted: await prisma.recentlyDeleted.findMany().catch(() => []),
-          Campaign: await prisma.campaign.findMany().catch(() => []),
-        },
-      };
-
-      const jsonString = JSON.stringify(data, null, 2);
+      const backupPackage = await generateBackupPackage();
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+      const filename = `quantum-ai-backup-${timestamp}.json`;
+      const jsonString = JSON.stringify(backupPackage, null, 2);
 
       return new NextResponse(jsonString, {
         status: 200,
@@ -67,12 +45,14 @@ export async function GET(request: NextRequest) {
           'Content-Type': 'application/json; charset=utf-8',
           'Content-Disposition': `attachment; filename="${filename}"`,
           'Content-Length': Buffer.byteLength(jsonString, 'utf8').toString(),
+          'X-Backup-Checksum': backupPackage.meta.checksum,
+          'X-Backup-Total-Records': backupPackage.meta.totalRecords.toString(),
           'Cache-Control': 'no-store, no-cache, must-revalidate',
         },
       });
     }
 
-    // ─── MODE B: STREAM / DOWNLOAD STORED VERCEL BLOB BACKUP ───
+    // ─── MODE B: DOWNLOAD STORED BACKUP FROM VERCEL BLOB ───
     if (!url && !pathname) {
       return NextResponse.json(
         { error: 'Missing backup url or pathname parameter.' },
@@ -80,16 +60,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Determine target URL
     let targetUrl = url;
     if (!targetUrl && pathname) {
-      // If only pathname is given, we can reconstruct the blob url or fetch via Vercel Blob list
       const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.DATABASE_URL_READ_WRITE_TOKEN;
-      const { list } = await import('@vercel/blob');
-      const { blobs } = await list({ prefix: pathname, token });
-      const found = blobs.find((b) => b.pathname === pathname);
-      if (found) {
-        targetUrl = found.url;
+      if (token) {
+        try {
+          const { list } = await import('@vercel/blob');
+          const { blobs } = await list({ prefix: pathname, token });
+          const found = blobs.find((b) => b.pathname === pathname);
+          if (found) targetUrl = found.url;
+        } catch (storageErr) {
+          logDatabaseDiagnostic('download:listBlobs', storageErr);
+        }
       }
     }
 
@@ -100,11 +82,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch the file server-to-server (immune to browser CORS restrictions)
+    // NOTE: Public Vercel Blob URLs reject Authorization headers with 400/403.
+    // Fetch directly as a public resource or with credentials only if required.
+    const isPublicUrl = targetUrl.includes('.public.blob.vercel-storage.com');
     const token = process.env.BLOB_READ_WRITE_TOKEN || process.env.DATABASE_URL_READ_WRITE_TOKEN;
-    const fetchHeaders: HeadersInit = token ? { Authorization: `Bearer ${token}` } : {};
-    const blobResponse = await fetch(targetUrl, { headers: fetchHeaders });
+    const fetchHeaders: HeadersInit = (!isPublicUrl && token) ? { Authorization: `Bearer ${token}` } : {};
 
+    const blobResponse = await fetch(targetUrl, { headers: fetchHeaders });
     if (!blobResponse.ok) {
       return NextResponse.json(
         { error: `Failed to retrieve backup file from storage (HTTP ${blobResponse.status}).` },
@@ -112,32 +96,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const fallbackName = (pathname || targetUrl).split('/').pop() || 'backup.json';
+    const fallbackName = (pathname || targetUrl).split('/').pop() || 'quantum-ai-backup.json';
     const cleanFilename = (requestedFilename || fallbackName).replace(/[^a-zA-Z0-9_.-]/g, '_');
+    const content = await blobResponse.text();
 
-    // Stream the body directly to the client with attachment disposition
-    const blobBody = blobResponse.body;
-    const contentLength = blobResponse.headers.get('content-length');
-
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Content-Disposition': `attachment; filename="${cleanFilename}"`,
-      'Cache-Control': 'no-store, no-cache, must-revalidate',
-    };
-
-    if (contentLength) {
-      headers['Content-Length'] = contentLength;
-    }
-
-    return new NextResponse(blobBody as any, {
+    return new NextResponse(content, {
       status: 200,
-      headers,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Content-Disposition': `attachment; filename="${cleanFilename}"`,
+        'Content-Length': Buffer.byteLength(content, 'utf8').toString(),
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+      },
     });
-  } catch (error: any) {
-    console.error('[Backup Download Error]:', error);
-    return NextResponse.json(
-      { error: error?.message || 'Internal server error while preparing backup download.' },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    logDatabaseDiagnostic('app/api/admin/backup/download/route.ts', error);
+    const message = error instanceof Error ? error.message : 'Internal error preparing backup download.';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
