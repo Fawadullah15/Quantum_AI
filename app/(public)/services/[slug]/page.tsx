@@ -587,7 +587,7 @@ export default async function ServiceDetailPage({ params }: Props) {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.85rem' }}>
             {service.problems.map((p, idx) => (
               <div key={idx} className="svc-card">
-                <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', fontWeight: 600 }}>0{idx + 1} // PROBLEM</span>
+                <span style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.65rem', color: '#FFFFFF', fontWeight: 600 }}>0{idx + 1}{" // PROBLEM"}</span>
                 <h3 className="svc-card-title">{p.title}</h3>
                 <p className="svc-card-desc">{p.desc}</p>
               </div>

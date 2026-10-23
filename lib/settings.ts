@@ -1,4 +1,5 @@
 import prisma from '@/lib/db';
+import { logDatabaseDiagnostic } from '@/lib/db-diagnostics';
 
 export interface SiteSettingsMap {
   // General
@@ -15,26 +16,29 @@ export interface SiteSettingsMap {
   site_og_image: string;
   brand_accent_color: string;
 
-  // Contact
+  // Contact Information
   company_email: string;
   company_routing_email: string;
   company_phone: string;
+  company_address: string;
   company_location: string;
+  contact_form_recipient: string;
   response_time_text: string;
 
   // Social Links
-  company_linkedin: string;
   company_twitter: string;
+  company_linkedin: string;
   company_github: string;
   company_instagram: string;
   company_youtube: string;
   company_facebook: string;
 
-  // SEO & Metadata
+  // SEO & Verification
   meta_title: string;
   meta_description: string;
   meta_keywords: string;
   robots_index: string;
+  google_site_verification: string;
 
   // Homepage / Hero
   hero_eyebrow: string;
@@ -44,6 +48,16 @@ export interface SiteSettingsMap {
   hero_cta_primary_link: string;
   hero_cta_secondary_label: string;
   hero_cta_secondary_link: string;
+
+  // Analytics & Tracking
+  google_analytics_id: string;
+
+  // Compliance & Policy Settings
+  privacy_email: string;
+  dpo_contact: string;
+  terms_effective_date: string;
+  privacy_effective_date: string;
+  cookie_effective_date: string;
 
   // Navigation & Footer
   nav_cta_label: string;
@@ -56,37 +70,40 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
   // General
   QUANTUM_AI: 'Quantum AI',
   company_name: 'Quantum AI',
-  company_legal_name: 'Quantum AI Engineering Labs',
+  company_legal_name: 'Quantum AI Systems',
   company_tagline: 'One intelligence core. Many systems. Real products. Real results.',
-  company_description: 'Quantum AI builds AI systems, custom business software, and automation for organizations that need better ways to operate.',
-  company_founded_year: '2023',
+  company_description: 'Quantum AI engineers proprietary AI systems, custom business software, workflow automation pipelines, and high-performance digital products for modern enterprises.',
+  company_founded_year: '2024',
 
   // Branding
   site_logo: '/quantum-q-logo.png',
-  site_favicon: '/favicon.ico',
+  site_favicon: '/quantum-q-logo.png',
   site_og_image: '/quantum-q-logo.png',
   brand_accent_color: '#1677FF',
 
-  // Contact
-  company_email: 'hello@quantumai.dev',
-  company_routing_email: 'contact@quantumai.dev',
+  // Contact Information
+  company_email: 'quantumai.cmp@gmail.com',
+  company_routing_email: 'quantumai.cmp@gmail.com',
   company_phone: '',
-  company_location: 'San Francisco & Islamabad',
+  company_address: '',
+  company_location: 'Global / Hybrid',
+  contact_form_recipient: 'quantumai.cmp@gmail.com',
   response_time_text: 'We review all technical inquiries within 24 hours and respond with architectural scope and feasibility analysis.',
 
   // Social Links
-  company_linkedin: 'https://linkedin.com/company/quantumai',
-  company_twitter: 'https://x.com/quantumai',
-  company_github: 'https://github.com/quantumai',
+  company_twitter: 'https://twitter.com',
+  company_linkedin: 'https://linkedin.com',
+  company_github: 'https://github.com',
   company_instagram: '',
   company_youtube: '',
   company_facebook: '',
 
-  // SEO & Metadata
-  meta_title: 'Quantum AI | AI, Software & Automation Solutions',
-  meta_description: 'Quantum AI builds AI systems, custom business software, and automation for organizations that need better ways to operate.',
+  // SEO & Verification
+  meta_title: 'Quantum AI — Intelligent Software & AI Systems Engineering',
+  meta_description: 'Engineering intelligent software, autonomous workflows, scalable web architectures, and custom AI systems for modern enterprises.',
   meta_keywords: 'Artificial Intelligence, Machine Learning, AI Agents, Custom Business Software, Systems Engineering, Next.js',
   robots_index: 'true',
+  google_site_verification: '',
 
   // Homepage / Hero
   hero_eyebrow: 'SYS.CORE // INTELLIGENCE ARCHITECTURE',
@@ -96,6 +113,16 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
   hero_cta_primary_link: '/contact',
   hero_cta_secondary_label: 'EXPLORE OUR WORK',
   hero_cta_secondary_link: '/work',
+
+  // Analytics & Tracking
+  google_analytics_id: '',
+
+  // Compliance & Policy Settings
+  privacy_email: 'quantumai.cmp@gmail.com',
+  dpo_contact: 'quantumai.cmp@gmail.com',
+  terms_effective_date: 'October 2026',
+  privacy_effective_date: 'October 2026',
+  cookie_effective_date: 'October 2026',
 
   // Navigation & Footer
   nav_cta_label: 'Start a Project',
@@ -112,7 +139,8 @@ export function clearSettingsCache() {
 
 /**
  * Retrieves all site settings from the database merged with defaults.
- * Guaranteed to return full typed settings even if database is unavailable.
+ * Distinguishes an empty database from a failed database connection.
+ * Serves safe defaults if the database is offline so public layouts never crash.
  */
 export async function getSiteSettings(): Promise<SiteSettingsMap> {
   const now = Date.now();
@@ -124,9 +152,12 @@ export async function getSiteSettings(): Promise<SiteSettingsMap> {
     const dbSettings = await prisma.siteSettings.findMany();
     const result = { ...DEFAULT_SETTINGS };
 
-    for (const item of dbSettings) {
-      if (item.key && item.value !== null && item.value !== undefined) {
-        (result as any)[item.key] = item.value;
+    // Database is connected: process records if any exist (handles empty table gracefully)
+    if (dbSettings && dbSettings.length > 0) {
+      for (const item of dbSettings) {
+        if (item.key && item.value !== null && item.value !== undefined) {
+          (result as any)[item.key] = item.value;
+        }
       }
     }
 
@@ -139,13 +170,9 @@ export async function getSiteSettings(): Promise<SiteSettingsMap> {
 
     cachedSettings = { data: result, expires: now + 60000 };
     return result;
-  } catch (error: any) {
-    const isConnErr = error?.name === 'PrismaClientInitializationError' || error?.code === 'P1001' || (error?.message && error.message.includes("Can't reach database"));
-    if (isConnErr) {
-      console.warn('[Settings] Database offline or unreachable. Serving DEFAULT_SETTINGS.');
-    } else {
-      console.warn('[Settings] Error fetching site settings from DB:', error?.message || error);
-    }
+  } catch (error: unknown) {
+    logDatabaseDiagnostic('lib/settings.ts:getSiteSettings', error);
+    // Return resilient fallback settings so public pages render gracefully even during offline states
     return cachedSettings ? cachedSettings.data : DEFAULT_SETTINGS;
   }
 }
@@ -165,7 +192,8 @@ export async function getSetting<K extends keyof SiteSettingsMap>(
       return item.value as SiteSettingsMap[K];
     }
     return fallback ?? DEFAULT_SETTINGS[key];
-  } catch {
+  } catch (error: unknown) {
+    logDatabaseDiagnostic(`lib/settings.ts:getSetting(${String(key)})`, error);
     return fallback ?? DEFAULT_SETTINGS[key];
   }
 }

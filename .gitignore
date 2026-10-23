@@ -1,9 +1,28 @@
+# Dependencies
 node_modules/
+
+# Next.js build and cache
 .next/
+*.tsbuildinfo
+next.lock/data/
+
+# Environment and Secret Files (Strictly ignored - never commit credentials)
 .env
 .env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.development
+.env.test
 .env.production
-*.tgz
-next.lock/data/
+
+# Local private file storage
+.private_storage/
+
+# SQLite databases (if created locally)
 prisma/*.db
-*.tsbuildinfo
+prisma/*.db-journal
+
+# Archives and logs
+*.tgz
+*.log

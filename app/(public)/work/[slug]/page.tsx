@@ -58,7 +58,7 @@ function FormattedDescription({ content }: { content: string }) {
           return (
             <div key={idx} style={{ marginTop: idx === 0 ? '0' : '1.5rem', marginBottom: '0.25rem' }}>
               <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#38BDF8', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>
-                // {headingText.toUpperCase()}
+                {"// "}{headingText.toUpperCase()}
               </div>
               <h2 style={{ fontSize: 'clamp(1.2rem, 2.2vw, 1.55rem)', fontWeight: 700, color: '#FFFFFF', margin: 0, textTransform: 'uppercase', letterSpacing: '-0.02em' }}>
                 {headingText}

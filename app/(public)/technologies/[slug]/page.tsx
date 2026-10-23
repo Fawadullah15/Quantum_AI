@@ -284,7 +284,7 @@ export default async function TechnologyDetailPage({ params }: Props) {
                   boxShadow: '0 4px 20px -4px rgba(0,0,0,0.5)',
                 }}>
                   <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', marginBottom: '0.5rem', fontWeight: 600 }}>
-                    {String(index + 1).padStart(2, '0')} // FEATURE
+                    {String(index + 1).padStart(2, '0')}{" // FEATURE"}
                   </div>
                   <h3 style={{
                     fontSize: '1.05rem',

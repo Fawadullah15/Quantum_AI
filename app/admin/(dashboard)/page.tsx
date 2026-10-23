@@ -1,11 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
 import prisma from '@/lib/db';
+import { getDatabaseConnectionStatus } from '@/lib/db-diagnostics';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function AdminDashboardPage() {
+  const connStatus = await getDatabaseConnectionStatus(prisma);
   const [
     leadershipCount,
     productCount,
@@ -208,6 +210,22 @@ export default async function AdminDashboardPage() {
     },
   ];
 
+  const totalRecords =
+    leadershipCount +
+    productCount +
+    caseStudyCount +
+    blogPostCount +
+    clientCount +
+    serviceCount +
+    testimonialCount +
+    technologyCount +
+    mediaCount +
+    totalMessagesCount +
+    careerAppsCount +
+    partnershipCount +
+    campaignCount;
+
+
   // Quick Actions
   const quickActions = [
     { label: '💬 Inquiries', href: '/admin/messages', variant: 'primary' },
@@ -226,6 +244,64 @@ export default async function AdminDashboardPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem', width: '100%', boxSizing: 'border-box' }}>
       
+
+      {/* ─── Database Reliability & State Indicator ─── */}
+      {!connStatus.isConnected ? (
+        <div
+          style={{
+            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+            border: '1px solid rgba(239, 68, 68, 0.35)',
+            borderRadius: '8px',
+            padding: '1rem 1.25rem',
+            color: '#FCA5A5',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
+          }}
+        >
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.2rem' }}>
+              ⚠️ Database Connection Offline
+            </div>
+            <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>
+              Unable to reach PostgreSQL server. Displaying offline fallback state. Check DATABASE_URL in your .env or .env.local file.
+            </div>
+          </div>
+          <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', backgroundColor: 'rgba(239, 68, 68, 0.2)', padding: '0.25rem 0.6rem', borderRadius: '4px' }}>
+            STATUS: UNREACHABLE
+          </span>
+        </div>
+      ) : totalRecords === 0 ? (
+        <div
+          style={{
+            backgroundColor: 'rgba(20, 184, 166, 0.08)',
+            border: '1px solid rgba(20, 184, 166, 0.3)',
+            borderRadius: '8px',
+            padding: '0.85rem 1.25rem',
+            color: '#5EEAD4',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
+          }}
+        >
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '0.88rem', marginBottom: '0.2rem' }}>
+              ✓ Database Connected (Clean / Zero Records)
+            </div>
+            <div style={{ fontSize: '0.8rem', opacity: 0.9 }}>
+              Connected to PostgreSQL. The schema is initialized and empty. You can create content, publish services, or restore a backup from the Backup tab.
+            </div>
+          </div>
+          <span style={{ fontFamily: 'var(--font-mono, monospace)', fontSize: '0.72rem', backgroundColor: 'rgba(20, 184, 166, 0.2)', padding: '0.25rem 0.6rem', borderRadius: '4px' }}>
+            STATUS: READY (0 RECORDS)
+          </span>
+        </div>
+      ) : null}
+
       {/* ─── Top Header & Quick Actions Bar ─── */}
       <div
         style={{

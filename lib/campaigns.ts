@@ -1,4 +1,5 @@
 import prisma from '@/lib/db';
+import { logDatabaseDiagnostic } from '@/lib/db-diagnostics';
 
 export type CampaignType =
   | 'IMAGE_POPUP'
@@ -168,14 +169,8 @@ export async function getActiveCampaign(): Promise<PublicCampaign | null> {
       allowClickEmptySpace: campaign.allowClickEmptySpace,
       updatedAt: campaign.updatedAt.toISOString(),
     };
-  } catch (error: any) {
-    // Fail silently so advertisement issues never crash public pages
-    const isConnErr = error?.name === 'PrismaClientInitializationError' || error?.code === 'P1001' || (error?.message && error.message.includes("Can't reach database"));
-    if (isConnErr) {
-      console.warn('[Campaigns] Database offline or unreachable. Skipping active campaign display.');
-    } else {
-      console.warn('[Campaigns] Error querying active campaign:', error?.message || error);
-    }
+    } catch (error: unknown) {
+    logDatabaseDiagnostic('lib/campaigns.ts:getActiveCampaign', error);
     return null;
   }
 }
