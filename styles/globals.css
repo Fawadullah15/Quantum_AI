@@ -867,7 +867,7 @@ a {
     90deg,
     rgba(255, 255, 255, 0.03) 0%,
     rgba(255, 255, 255, 0.05) 20%,
-    rgba(103, 232, 249, 0.12) 50%,
+    rgba(255, 255, 255, 0.08) 50%,
     rgba(255, 255, 255, 0.05) 80%,
     rgba(255, 255, 255, 0.03) 100%
   );
@@ -876,4 +876,25 @@ a {
   display: block;
   position: relative;
   overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qa-skeleton {
+    animation: none !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+  }
+}
+
+/* Seamless Brand Reveal Transition */
+.qa-intro-active #navbar-quantum-logo {
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+.qa-intro-active body {
+  background-color: #020708 !important;
+}
+.qa-intro-active #qa-website-content {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }

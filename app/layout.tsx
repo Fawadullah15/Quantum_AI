@@ -68,11 +68,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* Anti-FOUC script placed safely inside Root Server Component head */}
         <script
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `try{if(sessionStorage.getItem('quantum-ai-brand-seen')!=='true'&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('qa-intro-active');}}catch(e){}`,
           }}
         />
         <style
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `.qa-intro-active body{background-color:#020708!important;}.qa-intro-active #qa-website-content{opacity:0!important;visibility:hidden!important;pointer-events:none!important;}`,
           }}

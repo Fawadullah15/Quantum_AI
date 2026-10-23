@@ -1,11 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import styles from './BrandReveal.module.css';
 
 /**
- * Premium Brand Reveal — Quantum AI Opening Identity Sequence (Revised)
+ * Premium Brand Reveal — Quantum AI Opening Identity Sequence
  *
  * Sequence:
  * 0.0s - 0.3s : init (dark screen)
@@ -28,7 +28,7 @@ type Phase = 'init' | 'entrance' | 'hold' | 'travel' | 'done';
 export default function WelcomeIntro({ children }: { children: React.ReactNode }) {
   const [phase, setPhase] = useState<Phase | null>(null); // null = SSR/first paint
   const [targetCoords, setTargetCoords] = useState<{ x: number; y: number; scale: number } | null>(null);
-  
+
   const phaseRef = useRef<Phase | null>(null);
   const timeoutsRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
@@ -39,8 +39,11 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
 
   // ── Sequence Orchestration ─────────────────────────────────
   useEffect(() => {
-    // Helper to clear FOUC class
-    const clearFouc = () => document.documentElement.classList.remove('qa-intro-active');
+    const clearFouc = () => {
+      if (typeof document !== 'undefined') {
+        document.documentElement.classList.remove('qa-intro-active');
+      }
+    };
 
     // 1. Reduced motion check
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -59,14 +62,13 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
         return;
       }
     } catch {
-      // Ignored
+      // Ignored in private/sandboxed modes
     }
 
     // 3. Start Sequence
     setPhase('init');
-    
-    // Once the overlay is mounted, clear the FOUC class so the website 
-    // is present in the DOM behind it, ready to be revealed.
+
+    // Once overlay is active, clear FOUC class so content underneath is ready for transition
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         clearFouc();
@@ -76,13 +78,12 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
     const t1 = setTimeout(() => setPhase('entrance'), 200);
     const t2 = setTimeout(() => setPhase('hold'), 1000); // 800ms entrance roll
     const t3 = setTimeout(() => {
-      // Before travelling, calculate the exact destination
       const target = document.getElementById('navbar-quantum-logo');
       if (target) {
         const rect = target.getBoundingClientRect();
         const startX = window.innerWidth / 2;
         const startY = window.innerHeight / 2;
-        
+
         setTargetCoords({
           x: rect.left + rect.width / 2 - startX,
           y: rect.top + rect.height / 2 - startY,
@@ -94,12 +95,13 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
 
     const t4 = setTimeout(() => {
       markSeen();
+      clearFouc();
       setPhase('done');
     }, 3000); // 1650ms for travel and settle
 
-    // Hard failsafe
     const tSafe = setTimeout(() => {
       markSeen();
+      clearFouc();
       setPhase('done');
     }, 4500);
 
@@ -117,8 +119,10 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
 
     timeoutsRef.current.forEach(clearTimeout);
     timeoutsRef.current = [];
-    
-    document.documentElement.classList.remove('qa-intro-active');
+
+    if (typeof document !== 'undefined') {
+      document.documentElement.classList.remove('qa-intro-active');
+    }
     markSeen();
     setPhase('done');
   }, []);
@@ -139,150 +143,153 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
     };
   }, [phase, handleSkip]);
 
-  // ── Render ─────────────────────────────────────────────────
-
-  if (phase === null || phase === 'done') {
-    return <>{children}</>;
-  }
-
   // Animation variants
   const logoVariants = {
     init: { scale: 0.75, rotate: -65, x: -40, y: 40, opacity: 0, filter: 'blur(4px)' },
-    entrance: { 
-      scale: 1, rotate: 0, x: 0, y: 0, opacity: 1, filter: 'blur(0px)',
-      transition: { duration: 0.8, ease: [0.2, 0.8, 0.2, 1] } 
-    },
-    hold: { 
-      scale: 1, rotate: 0, x: 0, y: 0, opacity: 1, filter: 'blur(0px)' 
-    },
-    travel: (coords: typeof targetCoords) => coords ? {
-      x: coords.x,
-      y: coords.y,
-      scale: coords.scale,
-      rotate: 0, // ensure perfectly upright
+    entrance: {
+      scale: 1,
+      rotate: 0,
+      x: 0,
+      y: 0,
       opacity: 1,
       filter: 'blur(0px)',
-      transition: {
-        x: { duration: 1.5, ease: [0.35, 1, 0.35, 1] }, // slightly slower start on X for curve
-        y: { duration: 1.5, ease: easePrecise }, // faster start on Y
-        scale: { duration: 1.5, ease: [0.25, 1, 0.3, 1] },
-        default: { duration: 1.5, ease: easePrecise }
-      }
-    } : {
-      // Failsafe fade-out if navbar logo wasn't found
-      opacity: 0,
-      transition: { duration: 0.4 }
-    }
+      transition: { duration: 0.8, ease: [0.2, 0.8, 0.2, 1] },
+    },
+    hold: {
+      scale: 1,
+      rotate: 0,
+      x: 0,
+      y: 0,
+      opacity: 1,
+      filter: 'blur(0px)',
+    },
+    travel: (coords: typeof targetCoords) =>
+      coords
+        ? {
+            x: coords.x,
+            y: coords.y,
+            scale: coords.scale,
+            rotate: 0,
+            opacity: 1,
+            filter: 'blur(0px)',
+            transition: {
+              x: { duration: 1.5, ease: [0.35, 1, 0.35, 1] },
+              y: { duration: 1.5, ease: easePrecise },
+              scale: { duration: 1.5, ease: [0.25, 1, 0.3, 1] },
+              default: { duration: 1.5, ease: easePrecise },
+            },
+          }
+        : {
+            opacity: 0,
+            transition: { duration: 0.4 },
+          },
   };
 
   const trailVariants = {
     init: { opacity: 0 },
     entrance: { opacity: 0 },
     hold: { opacity: 0 },
-    travel: (coords: typeof targetCoords) => coords ? {
-      x: coords.x,
-      y: coords.y,
-      scale: coords.scale * 1.15,
-      opacity: [0, 0.12, 0], // extremely restrained trace
-      filter: 'blur(8px)',
-      transition: { 
-        x: { duration: 1.5, ease: [0.35, 1, 0.35, 1] },
-        y: { duration: 1.5, ease: easePrecise },
-        scale: { duration: 1.5, ease: [0.25, 1, 0.3, 1] },
-        opacity: { times: [0, 0.2, 0.8], duration: 1.5 }
-      }
-    } : { opacity: 0 }
+    travel: (coords: typeof targetCoords) =>
+      coords
+        ? {
+            x: coords.x,
+            y: coords.y,
+            scale: coords.scale * 1.15,
+            opacity: [0, 0.12, 0],
+            filter: 'blur(8px)',
+            transition: {
+              x: { duration: 1.5, ease: [0.35, 1, 0.35, 1] },
+              y: { duration: 1.5, ease: easePrecise },
+              scale: { duration: 1.5, ease: [0.25, 1, 0.3, 1] },
+              opacity: { times: [0, 0.2, 0.8], duration: 1.5 },
+            },
+          }
+        : { opacity: 0 },
   };
 
-  // Determine background opacity based on timeline (fades out 0.7s after travel starts)
   const isTravel = phase === 'travel';
+  const showOverlay = phase !== null && phase !== 'done';
 
   return (
     <>
-            <style dangerouslySetInnerHTML={{ __html: `
-        .qa-intro-active body { background-color: #020708 !important; }
-        .qa-intro-active #qa-website-content { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
-      `}} suppressHydrationWarning />
-
-      {/* Hide the real navbar logo while the animation plays for a seamless handoff */}
-      <style>{`
-        #navbar-quantum-logo { visibility: hidden !important; opacity: 0 !important; }
-      `}</style>
-
-      <div 
-        className={styles.overlay} 
-        style={{ 
-          pointerEvents: isTravel ? 'none' : 'all', // Let clicks through during travel
-          background: 'transparent' // Background is handled by the motion.div below
-        }} 
-      >
-        {/* Background that reveals the website synchronized with travel */}
-        <motion.div
-          initial={{ opacity: 1 }}
-          animate={{ opacity: isTravel ? 0 : 1 }}
-          transition={{ duration: 1.0, delay: isTravel ? 0.25 : 0, ease: 'easeInOut' }}
+      {/* ── Overlay Animation (Rendered on top only while active) ── */}
+      {showOverlay && (
+        <div
+          className={styles.overlay}
           style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundColor: 'var(--color-void, #020708)',
-            zIndex: 1
-          }}
-        />
-
-        {/* Ambient atmospheric light (fades out as travel begins) */}
-        <motion.div
-          className={styles.glow}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{
-            opacity: isTravel ? 0 : phase === 'init' ? 0 : 0.6,
-            scale: isTravel ? 1.2 : 1.0,
-          }}
-          transition={{ duration: 0.8, ease: easePrecise }}
-          style={{ zIndex: 2 }}
-        />
-
-        {/* The travelling logo container */}
-        <motion.div
-          className={styles.logoContainer}
-          custom={targetCoords}
-          variants={logoVariants}
-          initial="init"
-          animate={phase}
-          style={{ zIndex: 4, transformOrigin: 'center' }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/quantum-q-logo.png"
-            alt=""
-            className={styles.logo}
-            draggable={false}
-          />
-        </motion.div>
-
-        {/* Light trail / motion blur behind the travelling logo */}
-        <motion.div
-          className={styles.logoContainer}
-          custom={targetCoords}
-          variants={trailVariants}
-          initial="init"
-          animate={phase}
-          style={{ 
-            position: 'absolute',
-            zIndex: 3, 
-            transformOrigin: 'center',
-            mixBlendMode: 'screen' 
+            pointerEvents: isTravel ? 'none' : 'all',
+            background: 'transparent',
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/quantum-q-logo.png"
-            alt=""
-            className={styles.logo}
-            draggable={false}
+          {/* Background that reveals the website synchronized with travel */}
+          <motion.div
+            initial={{ opacity: 1 }}
+            animate={{ opacity: isTravel ? 0 : 1 }}
+            transition={{ duration: 1.0, delay: isTravel ? 0.25 : 0, ease: 'easeInOut' }}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: 'var(--color-void, #020708)',
+              zIndex: 1,
+            }}
           />
-        </motion.div>
-      </div>
 
+          {/* Ambient atmospheric light */}
+          <motion.div
+            className={styles.glow}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{
+              opacity: isTravel ? 0 : phase === 'init' ? 0 : 0.6,
+              scale: isTravel ? 1.2 : 1.0,
+            }}
+            transition={{ duration: 0.8, ease: easePrecise }}
+            style={{ zIndex: 2 }}
+          />
+
+          {/* Travelling brand mark */}
+          <motion.div
+            className={styles.logoContainer}
+            custom={targetCoords}
+            variants={logoVariants}
+            initial="init"
+            animate={phase}
+            style={{ zIndex: 4, transformOrigin: 'center' }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/quantum-q-logo.png"
+              alt=""
+              className={styles.logo}
+              draggable={false}
+            />
+          </motion.div>
+
+          {/* Motion trail behind travelling logo */}
+          <motion.div
+            className={styles.logoContainer}
+            custom={targetCoords}
+            variants={trailVariants}
+            initial="init"
+            animate={phase}
+            style={{
+              position: 'absolute',
+              zIndex: 3,
+              transformOrigin: 'center',
+              mixBlendMode: 'screen',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/quantum-q-logo.png"
+              alt=""
+              className={styles.logo}
+              draggable={false}
+            />
+          </motion.div>
+        </div>
+      )}
+
+      {/* ── Always preserve website content in the DOM ── */}
       <div id="qa-website-content">
         {children}
       </div>
@@ -293,5 +300,7 @@ export default function WelcomeIntro({ children }: { children: React.ReactNode }
 function markSeen(): void {
   try {
     sessionStorage.setItem(SESSION_KEY, 'true');
-  } catch {}
+  } catch {
+    // Ignored in restricted environments
+  }
 }

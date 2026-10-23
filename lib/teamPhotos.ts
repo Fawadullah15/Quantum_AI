@@ -5,10 +5,11 @@
  */
 
 export const TEAM_LOCAL_PHOTOS: Record<string, string> = {
+  'fawadullah-imraj': '/images/team/fawadullah-imraj.jpg',
   'muhammad-murtaza': '/images/team/muhammad-murtaza.jpg',
   'fahad-khan': '/images/team/fahad-khan.jpg',
-  'abdullah-mahmook': '/images/team/abdullah-mahmood.png',
   'abdullah-mahmood': '/images/team/abdullah-mahmood.png',
+  'abdullah-mahmook': '/images/team/abdullah-mahmood.png',
   'hafizah-anisa-safdar': '/images/team/hafizah-anisa-safdar.jpeg',
   'waqas-ali-khan': '/images/team/waqas-ali-khan.png',
 };

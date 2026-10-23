@@ -1,5 +1,7 @@
 import React from 'react';
 import styles from './FoundersSection.module.css';
+import { ImageWithSkeleton } from '@/components/ui/Skeleton';
+import { getTeamPhoto, getTeamFallbackPhoto } from '@/lib/teamPhotos';
 
 interface FounderData {
   name: string;
@@ -17,15 +19,17 @@ interface FoundersSectionProps {
 
 const DEFAULT_FOUNDERS: FounderData[] = [
   {
-    name: 'Muhammad Murtaza',
+    name: 'Fawadullah Imraj',
     role: 'Co-Founder & CEO',
-    bio: '[Placeholder — edit in admin panel]'
+    bio: 'Co-Founder and CEO of Quantum AI, directing proprietary AI systems engineering, autonomous workflow architectures, and enterprise software products.',
+    photo: '/images/team/fawadullah-imraj.jpg',
   },
   {
     name: 'Fahad Khan',
-    role: 'Co-Founder & Executive chairman',
-    bio: '[Placeholder — edit in admin panel]'
-  }
+    role: 'Co-Founder & Engineering Strategy Lead',
+    bio: 'Co-Founder and Engineering Strategy Lead of Quantum AI, guiding technical architecture, engineering strategy, and scalable systems development.',
+    photo: '/images/team/fahad-khan.jpg',
+  },
 ];
 
 const FoundersSection: React.FC<FoundersSectionProps> = ({ founders = DEFAULT_FOUNDERS }) => {
@@ -37,65 +41,64 @@ const FoundersSection: React.FC<FoundersSectionProps> = ({ founders = DEFAULT_FO
       </div>
 
       <div className={styles.panels}>
-        {founders.map((founder, index) => (
-          <div key={index} className={`${styles.panel} ${index === 0 ? styles.panelLeft : styles.panelRight}`}>
-            <div className={styles.photoArea}>
-              {founder.photo ? (
-                <img
-                  src={founder.photo}
+        {founders.map((founder, index) => {
+          const slug = founder.name.toLowerCase().replace(/\s+/g, '-');
+          const resolvedPhoto = founder.photo || getTeamPhoto(slug);
+          const fallbackPhoto = getTeamFallbackPhoto(slug);
+
+          return (
+            <div key={index} className={`${styles.panel} ${index === 0 ? styles.panelLeft : styles.panelRight}`}>
+              <div className={styles.photoArea}>
+                <ImageWithSkeleton
+                  src={resolvedPhoto}
+                  fallbackSrc={fallbackPhoto}
                   alt={founder.name}
-                  width={400}
-                  height={480}
-                  loading="lazy"
-                  className={styles.photo}
+                  aspectRatio="400/480"
+                  containerStyle={{ width: '100%', height: '100%' }}
                 />
-              ) : (
-                <div className={styles.photoPlaceholder}>
-                  {founder.name.split(' ').map(n => n[0]).join('')}
+              </div>
+
+              <div className={styles.panelContent}>
+                <h3 className={styles.name}>{founder.name}</h3>
+                <div className={styles.role}>{founder.role}</div>
+                <p className={styles.bio}>{founder.bio}</p>
+
+                <div className={styles.socials}>
+                  {founder.linkedin && (
+                    <a
+                      href={founder.linkedin}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`${founder.name} on LinkedIn (opens in new tab)`}
+                    >
+                      LinkedIn
+                    </a>
+                  )}
+                  {founder.twitter && (
+                    <a
+                      href={founder.twitter}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`${founder.name} on Twitter (opens in new tab)`}
+                    >
+                      Twitter
+                    </a>
+                  )}
+                  {founder.github && (
+                    <a
+                      href={founder.github}
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-label={`${founder.name} on GitHub (opens in new tab)`}
+                    >
+                      GitHub
+                    </a>
+                  )}
                 </div>
-              )}
-            </div>
-            
-            <div className={styles.panelContent}>
-              <h3 className={styles.name}>{founder.name}</h3>
-              <div className={styles.role}>{founder.role}</div>
-              <p className={styles.bio}>{founder.bio}</p>
-              
-              <div className={styles.socials}>
-                {founder.linkedin && (
-                  <a
-                    href={founder.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`${founder.name} on LinkedIn (opens in new tab)`}
-                  >
-                    LinkedIn
-                  </a>
-                )}
-                {founder.twitter && (
-                  <a
-                    href={founder.twitter}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`${founder.name} on Twitter (opens in new tab)`}
-                  >
-                    Twitter
-                  </a>
-                )}
-                {founder.github && (
-                  <a
-                    href={founder.github}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`${founder.name} on GitHub (opens in new tab)`}
-                  >
-                    GitHub
-                  </a>
-                )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

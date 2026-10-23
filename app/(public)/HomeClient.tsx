@@ -55,18 +55,18 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
     initialData?.leaders?.length ? initialData.leaders : [
     {
       id: '1',
-      name: 'Muhammad Murtaza',
-      position: 'Co-Founder & CEO',
-      shortBio: 'Co-Founder and CEO of Quantum AI, building AI-powered software and digital solutions for enterprise and institutional clients.',
-      photo: '/images/team/muhammad-murtaza.jpg',
-      slug: 'muhammad-murtaza',
+      name: 'Fawadullah Imraj',
+      position: 'Co-Founder & Chief Executive Officer',
+      shortBio: 'Co-Founder and CEO of Quantum AI, directing proprietary AI systems engineering, autonomous workflow architectures, and enterprise software products.',
+      photo: '/images/team/fawadullah-imraj.jpg',
+      slug: 'fawadullah-imraj',
       publicId: 'QA-001'
     },
     {
       id: '2',
       name: 'Fahad Khan',
-      position: 'Co-Founder & Executive Chairman',
-      shortBio: 'Co-Founder and Executive Chairman of Quantum AI, supporting strategic direction, technical vision, and long-term growth.',
+      position: 'Co-Founder & Engineering Strategy Lead',
+      shortBio: 'Co-Founder and Engineering Strategy Lead of Quantum AI, guiding technical architecture, engineering strategy, and scalable systems development.',
       photo: '/images/team/fahad-khan.jpg',
       slug: 'fahad-khan',
       publicId: 'QA-002'
@@ -218,7 +218,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
         }
       })
       .catch(() => {});
-  }, []);
+  }, [hasServerCaseStudies, hasServerLeaders, hasServerServices, hasServerTech]);
 
   useEffect(() => {
     setIsMounted(true);
@@ -537,7 +537,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
               {leaders.slice(0, 2).map((person) => (
                 <Link
                   key={person.id || person.slug}
-                  href={`/leadership/${person.slug || 'muhammad-murtaza'}`}
+                  href={`/leadership/${person.slug || 'fawadullah-imraj'}`}
                   style={{
                     backgroundColor: 'rgba(7, 18, 20, 0.7)',
                     border: '1px solid rgba(20, 184, 166, 0.15)',
