@@ -40,7 +40,7 @@ export default function BackupClient() {
 
   const handleCreate = async () => {
     setIsCreating(true);
-    toast.info('Creating backup...', 'This may take a moment.');
+    toast.info('Creating backup...', 'Saving snapshot to storage.');
     const res = await createBackup();
     if (res.success) {
       toast.success('Backup completed successfully!');
@@ -51,13 +51,25 @@ export default function BackupClient() {
     setIsCreating(false);
   };
 
+  const handleDirectExport = () => {
+    toast.info('Exporting database...', 'Your database snapshot will start downloading directly.');
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `db-backup-${timestamp}.json`;
+    const link = document.createElement('a');
+    link.href = '/api/admin/backup/download?direct=true';
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const confirmed = await confirm({
       title: 'Upload External Backup',
-      message: 'You are about to upload an external backup file. After uploading, you will still need to manually click "Restore" to apply it to the database.',
+      message: 'You are about to upload an external backup file to storage. After uploading, you will be able to review and click "Restore" to apply it to the database.',
       confirmText: 'Upload File',
       confirmVariant: 'primary',
     });
@@ -68,7 +80,7 @@ export default function BackupClient() {
     }
 
     setIsUploading(true);
-    toast.info('Uploading backup file...');
+    toast.info('Uploading backup file...', 'Processing backup package.');
     
     try {
       const formData = new FormData();
@@ -84,7 +96,7 @@ export default function BackupClient() {
       }
     } catch (err: any) {
       console.error(err);
-      toast.error('Upload failed. The file might be too large (max 15MB) or network disconnected.');
+      toast.error('Upload failed. The file might be too large (max 50MB) or network disconnected.');
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
@@ -96,19 +108,15 @@ export default function BackupClient() {
   const handleRestore = async (b: BackupRecord) => {
     const confirmed = await confirm({
       title: 'CRITICAL WARNING: Restore Backup',
-      message: 'Restoring this backup will COMPLETELY WIPE the current database and replace it with the data from this backup. All new data since this backup will be PERMANENTLY LOST. Are you absolutely sure you want to proceed?',
+      message: 'Restoring this backup will replace current records with the data from this backup. Are you sure you want to proceed?',
       confirmText: 'YES, WIPE AND RESTORE',
       confirmVariant: 'danger',
     });
     
     if (!confirmed) return;
 
-    // Optional safety: auto-backup before restore
-    toast.info('Creating safety backup before restore...');
-    await createBackup();
-
     setIsRestoring(true);
-    toast.info('Restoring database...', 'Please wait. Do not close this page.');
+    toast.info('Restoring database...', 'Applying tables and records. Please do not close this page.');
     
     const res = await restoreBackup(b.url);
     if (res.success) {
@@ -139,30 +147,25 @@ export default function BackupClient() {
     }
   };
 
-  const handleDownload = async (url: string, filename: string) => {
-    try {
-      toast.info('Starting download...', 'Fetching file');
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Network response was not ok');
-      const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
-      
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = blobUrl;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      
-      window.URL.revokeObjectURL(blobUrl);
-      document.body.removeChild(a);
-    } catch (error) {
-      console.error('Download failed:', error);
-      toast.error('Failed to download backup file.', 'Download Error');
-    }
+  const handleDownload = (b: BackupRecord) => {
+    const filename = b.pathname.split('/').pop() || 'backup.json';
+    const downloadUrl = `/api/admin/backup/download?pathname=${encodeURIComponent(b.pathname)}&url=${encodeURIComponent(b.url)}&filename=${encodeURIComponent(filename)}`;
+    
+    toast.info('Starting backup download...', 'Streaming file to your device.');
+
+    // Using anchor click to trigger native browser download directly via dedicated server route
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const formatSize = (bytes: number) => {
+    if (bytes >= 1024 * 1024) {
+      return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    }
     return (bytes / 1024).toFixed(2) + ' KB';
   };
 
@@ -182,7 +185,7 @@ export default function BackupClient() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h2 style={{ fontSize: '1.25rem', fontWeight: 600, margin: 0 }}>System Backups</h2>
         
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <input
             type="file"
             accept=".json"
@@ -190,6 +193,29 @@ export default function BackupClient() {
             onChange={handleUpload}
             style={{ display: 'none' }}
           />
+
+          <button
+            onClick={handleDirectExport}
+            disabled={isCreating || isRestoring || isUploading}
+            title="Download complete current database directly to your device as JSON"
+            style={{
+              backgroundColor: 'rgba(56, 189, 248, 0.12)',
+              color: '#38BDF8',
+              padding: '0.5rem 1rem',
+              borderRadius: '6px',
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              border: '1px solid rgba(56, 189, 248, 0.35)',
+              cursor: isCreating || isRestoring || isUploading ? 'not-allowed' : 'pointer',
+              fontFamily: 'var(--font-mono, monospace)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+            }}
+          >
+            <span>↓</span> EXPORT CURRENT DB
+          </button>
+
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={isCreating || isRestoring || isUploading}
@@ -247,7 +273,7 @@ export default function BackupClient() {
               </tr>
             ) : backups.length === 0 ? (
               <tr>
-                <td colSpan={3} style={{ padding: '2rem', textAlign: 'center', color: '#FFFFFF' }}>No backups found. Create one to get started.</td>
+                <td colSpan={3} style={{ padding: '2rem', textAlign: 'center', color: '#FFFFFF' }}>No backups found. Create one or export current database to get started.</td>
               </tr>
             ) : (
               backups.map((b) => (
@@ -262,7 +288,7 @@ export default function BackupClient() {
                   <td style={{ padding: '0.85rem 1rem', textAlign: 'right' }}>
                     <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
                       <button
-                        onClick={() => handleDownload(b.url, b.pathname.split('/').pop() || 'backup.json')}
+                        onClick={() => handleDownload(b)}
                         style={{
                           backgroundColor: 'rgba(56, 189, 248, 0.1)',
                           border: '1px solid rgba(56, 189, 248, 0.25)',
