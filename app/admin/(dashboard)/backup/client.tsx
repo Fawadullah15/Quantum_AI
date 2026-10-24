@@ -85,6 +85,10 @@ export default function BackupClient() {
       const response = await fetch('/api/admin/backup/download?direct=true', {
         method: 'GET',
         headers: { Accept: 'application/json' },
+        credentials: 'include',
+      });
+        method: 'GET',
+        headers: { Accept: 'application/json' },
       });
 
       if (!response.ok) {
