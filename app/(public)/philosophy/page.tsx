@@ -1,8 +1,8 @@
 import { createPageMetadata } from '@/lib/seo';
 
 export const metadata = createPageMetadata({
-  title: 'Engineering Philosophy & Design Tenets — Quantum AI',
-  description: 'How we think: aesthetics as utility, architectural scale, computational precision, and systemic intelligence.',
+  title: 'How We Work - Quantum AI',
+  description: 'The principles Quantum AI follows when building software and AI systems: simple, clear, and connected to how businesses operate.',
   path: '/philosophy',
 });
 
@@ -18,23 +18,23 @@ export default function PhilosophyPage() {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem', borderTop: '1px solid var(--color-border, rgba(30,58,138,0.22))', paddingTop: '1.75rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
-          <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 600, color: 'var(--color-text-primary, #FFFFFF)' }}>1 / AESTHETICS = UTILITY</h2>
+          <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 600, color: 'var(--color-text-primary, #FFFFFF)' }}>1 / SIMPLE AND USEFUL</h2>
           <p style={{ color: 'var(--color-text-secondary, #FFFFFF)', lineHeight: 1.65, fontSize: '0.92rem' }}>
-            We do not believe in decoration. True premium design emerges from the perfect, friction-less alignment of structure, function, and extreme legibility. Every pixel must earn its place.
+            We do not build for decoration. Good software is clear, easy to read, and does exactly what your team needs. Every screen and feature has a purpose.
           </p>
         </div>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
-          <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 600, color: 'var(--color-text-primary, #FFFFFF)' }}>2 / ARCHITECTURAL SCALE</h2>
+          <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 600, color: 'var(--color-text-primary, #FFFFFF)' }}>2 / CLEAR INFORMATION</h2>
           <p style={{ color: 'var(--color-text-secondary, #FFFFFF)', lineHeight: 1.65, fontSize: '0.92rem' }}>
-            Information hierarchy is dictated by size, contrast, and space. We use clean typography and structured space to command attention and guide the eye, treating software interfaces like high-precision instruments.
+            We organize information so people can find what they need quickly. Clean layouts and plain text help staff work accurately with our software.
           </p>
         </div>
         
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.25rem' }}>
-          <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 600, color: 'var(--color-text-primary, #FFFFFF)' }}>3 / SYSTEMIC INTELLIGENCE</h2>
+          <h2 style={{ fontSize: 'clamp(1.15rem, 2vw, 1.45rem)', fontWeight: 600, color: 'var(--color-text-primary, #FFFFFF)' }}>3 / CONNECTED SYSTEMS</h2>
           <p style={{ color: 'var(--color-text-secondary, #FFFFFF)', lineHeight: 1.65, fontSize: '0.92rem' }}>
-            We do not build isolated features. We engineer interconnected computational environments. Every product is a node within a larger, self-sustaining intelligence ecosystem.
+            We do not build isolated features. We build systems that connect with each other and with the tools you already use, so information flows without being re-entered.
           </p>
         </div>
       </div>

@@ -201,7 +201,7 @@ export default function CareersPartnershipsPage() {
               margin: 0,
             }}
           >
-            Join our engineering network or partner with Quantum AI to build and deploy advanced intelligent software systems.
+            Join our team or partner with Quantum AI to build AI, software, and automation systems for business and industry.
           </p>
         </div>
 
@@ -772,7 +772,7 @@ export default function CareersPartnershipsPage() {
                       <textarea
                         name="whyQuantumAI"
                         rows={2}
-                        placeholder="What drives your interest in our neural architectures and team?"
+                        placeholder="What interests you about Quantum AI and our work?"
                         style={inputBoxStyle}
                       />
                     </div>

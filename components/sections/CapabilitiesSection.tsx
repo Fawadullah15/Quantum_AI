@@ -14,25 +14,25 @@ const TECH_CATEGORIES: TechCategory[] = [
   {
     num: '01',
     title: 'AI & MACHINE LEARNING',
-    desc: 'Models, neural networks, retrieval platforms, and agentic workflows.',
+    desc: 'AI models, intelligent agents, knowledge retrieval, and automated decision systems.',
     tags: ['Python', 'PyTorch', 'TensorFlow', 'LLMs', 'RAG', 'AI Agents'],
   },
   {
     num: '02',
-    title: 'APPLICATIONS',
-    desc: 'Frontend applications and scalable backend APIs.',
+    title: 'SOFTWARE ENGINEERING',
+    desc: 'Custom applications, enterprise software, web platforms, and backend systems.',
     tags: ['Next.js', 'React', 'TypeScript', 'Node.js', 'FastAPI'],
   },
   {
     num: '03',
     title: 'DATA SYSTEMS',
-    desc: 'Transactional, document, cache, and vector data systems.',
-    tags: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Vector DB'],
+    desc: 'Database management, business information systems, and intelligent data processing.',
+    tags: ['PostgreSQL', 'MySQL', 'MongoDB', 'Redis', 'Vector Databases'],
   },
   {
     num: '04',
-    title: 'INFRASTRUCTURE',
-    desc: 'Cloud infrastructure, containers, security, and automation.',
+    title: 'CLOUD & SYSTEM INTEGRATION',
+    desc: 'Cloud infrastructure, software deployment, system connectivity, and automated development operations.',
     tags: ['Docker', 'AWS', 'Linux', 'REST APIs', 'DevOps'],
   },
 ];
@@ -312,7 +312,7 @@ export default function CapabilitiesSection() {
                 textTransform: 'uppercase',
               }}
             >
-              Our tech stack.
+              Technology we use.
             </h2>
             <p
               className="section-desc"
@@ -325,7 +325,7 @@ export default function CapabilitiesSection() {
                 fontWeight: 300,
               }}
             >
-              Production technologies engineered for high uptime, clean code maintainability, and domain intelligence.
+              The tools and platforms we use to build reliable AI, software, and automation systems for our clients.
             </p>
           </div>
 

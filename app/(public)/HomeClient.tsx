@@ -377,7 +377,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
           <MarsHeroVideo />
 
           {/* Semantic H1 for SEO & accessibility — visually hidden */}
-          <h1 className="sr-only">We Build Intelligent Software — Quantum AI</h1>
+          <h1 className="sr-only">Quantum AI — AI, Custom Software, and Automation for Industrial and Business Operations</h1>
 
           <div style={{ maxWidth: 860, pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
             <p
@@ -392,7 +392,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                 fontWeight: 600,
               }}
             >
-              [SYS.01] AI SYSTEMS · BUSINESS SOFTWARE · AUTOMATION
+              [SYS.01] AI · SOFTWARE · AUTOMATION · INDUSTRIAL SYSTEMS
             </p>
 
             {/* ParticleText visual headline */}
@@ -425,7 +425,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
               maxWidth: 620,
               fontWeight: 300,
             }}>
-              Quantum AI builds AI systems, custom business software, and automation designed around the way your organization actually works.
+              Quantum AI is an AI and software engineering company. We build custom software, business automation, and AI systems for manufacturers, engineering firms, and businesses with complex operations.
             </p>
 
             {/* CTAs */}
@@ -519,7 +519,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                 fontWeight: 300
               }}
             >
-              Engineers and architects building enterprise products.
+              The engineering team behind our AI and software systems.
             </p>
 
             <div
@@ -659,13 +659,13 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
           }}>
             <div style={{ maxWidth: 640 }}>
               <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', letterSpacing: '0.2em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.4rem', fontWeight: 600 }}>
-                CUSTOM SOFTWARE ARCHITECTURES
+                CUSTOM SOFTWARE &amp; AI SERVICES
               </div>
               <h3 style={{ fontSize: 'clamp(1.3rem, 2.4vw, 1.75rem)', fontWeight: 700, color: '#FFFFFF', textTransform: 'uppercase', margin: '0 0 0.5rem 0', letterSpacing: '-0.02em', lineHeight: 1.15 }}>
-                Tailored solutions engineered for your operations.
+                Software and automation built for your operations.
               </h3>
               <p style={{ color: '#FFFFFF', fontSize: '0.9rem', lineHeight: 1.55, margin: 0, fontWeight: 300 }}>
-                From autonomous agentic workflows and automated pipelines to enterprise operations platforms, discover our complete software systems catalog.
+                From AI agents and workflow automation to enterprise and industrial software, see everything we can build for your business.
               </p>
             </div>
             <Link

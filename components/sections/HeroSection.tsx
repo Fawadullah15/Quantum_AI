@@ -19,11 +19,11 @@ const HeroSection: React.FC = () => {
         </div>
         
         <div className={styles.content}>
-          <h1 className={`${styles.headline} ${mounted ? styles.fadeInTitle : ''}`}>
-            WE BUILD<br />
-            INTELLIGENT<br />
-            SOFTWARES
-          </h1>
+          <h1 className={`${styles.headline} ${mounted ? styles.fadeInTitle : ''}`}>Software and AI that solve real business problems.</h1>
+
+
+
+
           
           <p className={`${styles.description} ${mounted ? styles.fadeInDesc : ''}`}>
             AI systems, software products, and intelligent infrastructure for real problems.

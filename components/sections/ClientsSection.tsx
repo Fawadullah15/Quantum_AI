@@ -406,7 +406,7 @@ export default function ClientsSection({ initialClients }: { initialClients?: Cl
         <div className="clients-marquee-tag">SYS.07 / CLIENTS & COLLABORATIONS</div>
         <h2 className="clients-marquee-title">WITH WHOM WE HAVE WORKED.</h2>
         <p className="clients-marquee-subtitle">
-          Trusted by organizations that believe in building what comes next. Real software systems, custom AI platforms, and operational engineering.
+          Organizations we have built software, AI, and automation systems for.
         </p>
       </div>
 

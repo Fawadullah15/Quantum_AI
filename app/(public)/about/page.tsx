@@ -2,8 +2,8 @@ import Link from 'next/link';
 import { createPageMetadata } from '@/lib/seo';
 
 export const metadata = createPageMetadata({
-  title: 'About Quantum AI — Engineering Philosophy & Business Identity',
-  description: 'Learn who Quantum AI is, what we build, the operational problems we solve, and our core principles for engineering reliable AI systems and custom business software.',
+  title: 'About Quantum AI — AI, Software Engineering & Industrial Technology',
+  description: 'Quantum AI is an AI and software engineering company. Learn what we build, who we serve, and the business and industrial problems we solve.',
   path: '/about',
 });
 
@@ -11,41 +11,41 @@ const principles = [
   {
     num: "01",
     title: ["Understand", "First."],
-    body: "Study operational bottlenecks before writing code. By understanding how your business actually runs, we avoid unnecessary complexity and build direct, effective software solutions.",
+    body: "Study how your operations work before writing any code. Understanding how your business actually runs lets us build direct, effective software without unnecessary complexity.",
   },
   {
     num: "02",
     title: ["Build", "Smarter."],
-    body: "Choose architecture for business value, not hype. Every database model, API endpoint, and AI workflow is engineered with clear operational justification.",
+    body: "Choose technology for business value, not hype. Every database, integration, and AI workflow we build has a clear practical purpose.",
   },
   {
     num: "03",
     title: ["Keep", "It Usable."],
-    body: "Powerful backend systems must feel intuitive to everyday staff. Complex domain logic is packaged into clean, responsive, and frictionless digital interfaces.",
+    body: "Powerful systems must be easy for everyday staff to use. We turn complex business and technical rules into clean, simple screens.",
   },
   {
     num: "04",
     title: ["Create", "What Lasts."],
-    body: "Engineer reliable digital foundations that scale with organizational growth — from offline point-of-sale systems to campus operations and multi-agent AI pipelines.",
+    body: "Build reliable systems that grow with your organization, from engineering tools and offline point-of-sale systems to AI-driven workflows.",
   },
 ];
 
 const capabilities = [
   {
     title: "AI Systems",
-    desc: "AI assistants, agentic workflows, document intelligence, and semantic search pipelines.",
+    desc: "AI assistants and agents, document search, and tools that support technical and business decisions.",
   },
   {
     title: "Business Software",
-    desc: "Custom management portals, operations dashboards, inventory systems, and internal platforms.",
+    desc: "Manufacturing, production, inventory, and business management software, including ERP and CRM systems.",
   },
   {
     title: "Automation",
-    desc: "Event-driven data workflows, API integrations, and repetitive task elimination.",
+    desc: "Automated workflows and system connections that replace repetitive manual work.",
   },
   {
     title: "Digital Products",
-    desc: "Scalable SaaS platforms, web applications, and customer-facing software products.",
+    desc: "SaaS platforms, web applications, and custom software products.",
   },
 ];
 
@@ -118,9 +118,9 @@ export default function AboutPage() {
         <div className="abt-inner">
           <section style={{ marginBottom: '2.5rem' }}>
             <p className="abt-eyebrow">[00 — ABOUT QUANTUM AI]</p>
-            <h1 className="abt-h1">Engineering Systems<br />That Run Businesses.</h1>
+            <h1 className="abt-h1">AI &amp; Software<br />For Industry &amp; Business.</h1>
             <p className="abt-lead">
-              Quantum AI is a technology company specializing in custom AI systems, enterprise software, workflow automation, and digital products. We build digital architectures that fit how organizations actually operate.
+              Quantum AI is an AI and software engineering company. We build custom software, business automation, and AI systems for manufacturers, engineering firms, established businesses, and technology companies.
             </p>
           </section>
 
@@ -146,27 +146,27 @@ export default function AboutPage() {
             </div>
             <div className="abt-grid-2">
               <div className="abt-card">
-                <h3>Education &amp; Schools</h3>
-                <p>Campus management portals, student registries, automated fee tracking, and academic record systems.</p>
+                <h3>Manufacturing &amp; Industrial Companies</h3>
+                <p>Manufacturing management, production monitoring, inventory and warehouse management, quality control, and industrial process automation.</p>
               </div>
               <div className="abt-card">
-                <h3>Businesses &amp; Retailers</h3>
-                <p>Offline-first POS engines, inventory management, supply tracking, and order fulfillment systems.</p>
+                <h3>Engineering &amp; Technical Companies</h3>
+                <p>Engineering software, AI-powered engineering tools, technical data management, and engineering workflow automation.</p>
               </div>
               <div className="abt-card">
-                <h3>Startups &amp; Founders</h3>
-                <p>AI-native MVPs, custom software architectures, and scalable full-stack web applications.</p>
+                <h3>Business &amp; Enterprise Operations</h3>
+                <p>Enterprise management software, ERP and CRM systems, business intelligence dashboards, and business process automation.</p>
               </div>
               <div className="abt-card">
-                <h3>Enterprises &amp; Organizations</h3>
-                <p>Document intelligence, automated customer support agents, and custom workflow pipelines.</p>
+                <h3>Technology &amp; Software Companies</h3>
+                <p>SaaS development, AI agent integration, custom application development, cloud software, and API and backend development.</p>
               </div>
             </div>
           </section>
 
           {/* Our Principles Section */}
           <section style={{ marginBottom: '3.5rem' }}>
-            <p className="abt-principles-header">[03 — HOW WE APPROACH ENGINEERING]</p>
+            <p className="abt-principles-header">[03 — HOW WE WORK]</p>
             {principles.map((p) => (
               <div key={p.num} className="principle">
                 <span className="principle-num">{p.num}</span>
@@ -189,7 +189,7 @@ export default function AboutPage() {
                   Meet the People Building Quantum AI
                 </h2>
                 <p style={{ color: '#FFFFFF', fontSize: '0.88rem', margin: 0, fontWeight: 300, maxWidth: '560px', lineHeight: 1.6 }}>
-                  Our leadership team and software engineers bring together artificial intelligence, systems engineering, and business understanding.
+                  Our team combines software engineering, artificial intelligence, and an understanding of how businesses operate.
                 </p>
               </div>
               <Link

@@ -18,10 +18,10 @@ const NAV_ITEMS: NavItem[] = [
     href: '/services', label: 'Solutions',
     hideOnDesktop: true,
     dropdown: [
-      { href: '/services#ai', label: 'AI Systems', desc: 'Intelligent systems built on real models' },
-      { href: '/services#software', label: 'Business Software', desc: 'Platforms that run your operations' },
+      { href: '/services#ai', label: 'AI Systems', desc: 'AI agents and assistants for business' },
+      { href: '/services#software', label: 'Business Software', desc: 'Software that runs your operations' },
       { href: '/services#automation', label: 'Automation', desc: 'Eliminate repetitive manual work' },
-      { href: '/services#products', label: 'Digital Products', desc: 'Complete software for real users' },
+      { href: '/services#product', label: 'Digital Products', desc: 'SaaS platforms and software products' },
     ],
   },
   { href: '/work', label: 'Work' },

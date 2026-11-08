@@ -6,26 +6,26 @@ import { createPageMetadata } from '@/lib/seo';
 export const dynamic = 'force-dynamic';
 
 export const metadata = createPageMetadata({
-  title: 'Core Technology Stack & Architecture — Quantum AI',
-  description: 'AI & machine learning architectures, application engineering, transactional data systems, and resilient cloud infrastructure engineered by Quantum AI.',
+  title: 'Technology Stack - Quantum AI',
+  description: 'The AI, software engineering, data, and cloud technologies Quantum AI uses to build business and industrial software.',
   path: '/technology',
 });
 
 const TECH_PILLARS: Record<string, { desc: string; order: number }> = {
   'AI & Machine Learning': {
-    desc: 'Intelligent agent frameworks, document AI, and neural retrieval pipelines that automate decision making and information processing.',
+    desc: 'AI models, intelligent agents, knowledge retrieval, and automated decision systems.',
     order: 1,
   },
   'Application Engineering': {
-    desc: 'High-performance web platforms, resilient APIs, and operational software that give staff and customers fast, reliable digital tools.',
+    desc: 'Custom applications, enterprise software, web platforms, and backend systems.',
     order: 2,
   },
   'Data Systems': {
-    desc: 'Transactional relational databases, in-memory caches, and vector stores engineered for data integrity and high-concurrency querying.',
+    desc: 'Database management, business information systems, and intelligent data processing.',
     order: 3,
   },
   'Infrastructure': {
-    desc: 'Cloud compute instances, containerized deployments, and automated pipelines ensuring security, high uptime, and global availability.',
+    desc: 'Cloud infrastructure, software deployment, system connectivity, and automated development operations.',
     order: 4,
   },
 };
@@ -36,7 +36,7 @@ const DEFAULT_TECHS = [
     name: 'Artificial Intelligence & Agents',
     slug: 'artificial-intelligence',
     category: 'AI & Machine Learning',
-    shortDescription: 'Multi-agent coordination, document intelligence models, and domain-tuned retrieval systems.',
+    shortDescription: 'AI agents, document understanding, and knowledge search for business use.',
     usage: 'Multi-Agent Automation & Neural Reasoning',
     icon: '⚡',
   },
@@ -45,7 +45,7 @@ const DEFAULT_TECHS = [
     name: 'Machine Learning & Embeddings',
     slug: 'machine-learning',
     category: 'AI & Machine Learning',
-    shortDescription: 'Vector search embeddings, predictive models, and real-time inference microservices.',
+    shortDescription: 'Smart search, prediction models, and fast AI services.',
     usage: 'Semantic Vector Retrieval & Inference',
     icon: '◈',
   },
@@ -54,7 +54,7 @@ const DEFAULT_TECHS = [
     name: 'Full-Stack Web Architecture',
     slug: 'application-engineering',
     category: 'Application Engineering',
-    shortDescription: 'Modern server-rendered web applications, reactive client portals, and typed API backends.',
+    shortDescription: 'Web applications, client portals, and the backend systems behind them.',
     usage: 'Next.js, TypeScript, React & FastAPI',
     icon: '⬡',
   },
@@ -63,7 +63,7 @@ const DEFAULT_TECHS = [
     name: 'Transactional & Vector Data',
     slug: 'data-systems',
     category: 'Data Systems',
-    shortDescription: 'PostgreSQL relational schemas, Redis real-time caching, and vector memory instances.',
+    shortDescription: 'PostgreSQL databases, Redis caching, and vector databases for AI search.',
     usage: 'PostgreSQL, Prisma, Redis & SQLite',
     icon: '⬢',
   },
@@ -72,7 +72,7 @@ const DEFAULT_TECHS = [
     name: 'Cloud & Container Systems',
     slug: 'cloud-systems',
     category: 'Infrastructure',
-    shortDescription: 'Docker containerization, automated CI/CD deployment pipelines, and secure cloud environments.',
+    shortDescription: 'Docker, automated deployment, and secure cloud environments.',
     usage: 'Docker, Linux, AWS & Vercel Edge',
     icon: '☁',
   },

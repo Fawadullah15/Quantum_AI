@@ -27,8 +27,8 @@ const PHILOSOPHY_ITEMS: PhilosophyItem[] = [
   },
   {
     step: '04',
-    title: 'Create What Matters',
-    desc: 'Build technology with real purpose and value.',
+    title: 'Focus on Results',
+    desc: 'Every system should save time or reduce errors.',
   },
 ];
 
@@ -212,7 +212,7 @@ export default function WhyQuantumSection() {
               overflowWrap: 'break-word',
             }}
           >
-            We turn complex problems into intelligent, useful systems.
+            We build software and AI that solve real operational problems.
           </h2>
           <p
             className="section-desc"
@@ -228,7 +228,7 @@ export default function WhyQuantumSection() {
               overflowWrap: 'break-word',
             }}
           >
-            We combine AI, software, and thoughtful engineering to build technology that solves real problems and creates lasting value.
+            We combine AI, software engineering, and automation to help manufacturers, engineering firms, and businesses run their operations more efficiently.
           </p>
           <NovaButton href="/about">LEARN MORE ABOUT US</NovaButton>
         </div>

@@ -70,8 +70,8 @@ export default function ContactPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [textFocused, setTextFocused] = useState(false);
   const [contactSettings, setContactSettings] = useState({
-    email: 'hello@quantumai.dev',
-    responseTime: 'We review all technical inquiries within 24 hours and respond with architectural scope and feasibility analysis.',
+    email: 'quantumai.cmp@gmail.com',
+    responseTime: 'We review all inquiries within 24 hours and reply with next steps and a feasibility assessment.',
     location: 'San Francisco & Islamabad',
   });
 
@@ -82,7 +82,7 @@ export default function ContactPage() {
         if (data) {
           setContactSettings({
             email: data.company_email || 'hello@quantumai.dev',
-            responseTime: data.response_time_text || 'We review all technical inquiries within 24 hours and respond with architectural scope and feasibility analysis.',
+            responseTime: data.response_time_text || 'We review all inquiries within 24 hours and reply with next steps and a feasibility assessment.',
             location: data.company_location || 'San Francisco & Islamabad',
           });
         }
@@ -235,7 +235,7 @@ export default function ContactPage() {
                 maxWidth: '520px',
               }}
             >
-              Have an engineering challenge, intelligent software project, or enterprise partnership to explore? We architect and build systems that scale.
+              Have a software, automation, or AI project to discuss? Tell us about your business or industrial operation and we will explain how we can help.
             </p>
           </div>
 
@@ -328,7 +328,7 @@ export default function ContactPage() {
                 ENGINEERING FOCUS
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
-                {['AI Systems', 'Machine Learning', 'Cloud Infra', 'Data Architecture'].map((tag) => (
+                {['AI Systems', 'Machine Learning', 'Cloud Infra', 'Data Systems'].map((tag) => (
                   <span
                     key={tag}
                     style={{

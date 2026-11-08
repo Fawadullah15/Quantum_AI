@@ -5,10 +5,10 @@ import HomeClient, { type HomeInitialData } from './HomeClient';
 export const revalidate = 60;
 
 const TECH_DESC: Record<string, string> = {
-  'AI & Machine Learning': 'Models, neural networks, retrieval platforms, and agentic workflows.',
-  'Applications': 'Robust frontend rendering engines and high-throughput backend APIs.',
-  'Data Systems': 'Transactional, document-store, cache, and vector memory instances.',
-  'Infrastructure': 'Virtualization, cloud computation, secure configurations, and automation pipelines.',
+  'AI & Machine Learning': 'AI models, intelligent agents, knowledge retrieval, and automated decision systems.',
+  'Applications': 'Custom applications, enterprise software, web platforms, and backend systems.',
+  'Data Systems': 'Database management, business information systems, and intelligent data processing.',
+  'Infrastructure': 'Cloud infrastructure, software deployment, system connectivity, and automated development operations.',
 };
 
 // Plain JSON so Dates etc. serialize safely across the server/client boundary.

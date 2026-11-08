@@ -14,26 +14,26 @@ const SOLUTIONS: SolutionItem[] = [
   {
     step: '01',
     name: 'AI Systems',
-    desc: 'AI assistants, multi-agent workflows, document intelligence, and knowledge retrieval systems designed to assist human teams and automate decision making.',
+    desc: 'AI assistants and agents that read documents, answer questions from your company data, and support your team in daily decisions.',
     href: '/services#ai',
   },
   {
     step: '02',
     name: 'Business Software',
-    desc: 'Custom management portals, internal operations platforms, real-time dashboards, and ERP/CRM-style systems built specifically for your organization’s workflow.',
+    desc: 'Custom software for factories, engineering teams, and businesses: management systems, production and inventory tracking, dashboards, and ERP/CRM tools built around how you work.',
     href: '/services#software',
   },
   {
     step: '03',
     name: 'Automation',
-    desc: 'Workflow automation pipelines, API integrations, and event-driven data flows that eliminate repetitive manual tasks and accelerate business execution.',
+    desc: 'Automated workflows and system connections that replace repetitive manual work, such as data entry, reporting, and approvals.',
     href: '/services#automation',
   },
   {
     step: '04',
     name: 'Digital Products',
-    desc: 'Scalable SaaS platforms, web applications, and customer-facing digital products engineered with modern architectures, security, and high reliability.',
-    href: '/services#products',
+    desc: 'SaaS platforms, web applications, and software products for companies that want to launch or improve their own technology.',
+    href: '/services#product',
   },
 ];
 
@@ -311,7 +311,7 @@ export default function SolutionsSection() {
             textTransform: 'uppercase',
           }}
         >
-          Systems built to execute.
+          Software and AI that solve real business problems.
         </h2>
         <p
           className="section-desc"
@@ -324,8 +324,7 @@ export default function SolutionsSection() {
             fontWeight: 300,
           }}
         >
-          We construct custom software architectures designed to fit directly into your business model and operational workflow.
-        </p>
+          We design software, AI, and automation that fit the way your business already operates.</p>
 
         {/* ─── Desktop View: Interactive Expanding Horizontal Cards ─── */}
         <div className="solutions-desktop-list">

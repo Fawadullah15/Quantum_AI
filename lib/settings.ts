@@ -71,8 +71,8 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
   QUANTUM_AI: 'Quantum AI',
   company_name: 'Quantum AI',
   company_legal_name: 'Quantum AI Systems',
-  company_tagline: 'One intelligence core. Many systems. Real products. Real results.',
-  company_description: 'Quantum AI engineers proprietary AI systems, custom business software, workflow automation pipelines, and high-performance digital products for modern enterprises.',
+  company_tagline: 'AI, software, and automation for industry and business.',
+  company_description: 'Quantum AI is an AI and software engineering company that builds custom software, business automation, and AI systems for manufacturers, engineering firms, and businesses.',
   company_founded_year: '2024',
 
   // Branding
@@ -88,7 +88,7 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
   company_address: '',
   company_location: 'Global / Hybrid',
   contact_form_recipient: 'quantumai.cmp@gmail.com',
-  response_time_text: 'We review all technical inquiries within 24 hours and respond with architectural scope and feasibility analysis.',
+  response_time_text: 'We review all inquiries within 24 hours and reply with next steps and a feasibility assessment.',
 
   // Social Links
   company_twitter: 'https://twitter.com',
@@ -99,16 +99,16 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
   company_facebook: '',
 
   // SEO & Verification
-  meta_title: 'Quantum AI — Intelligent Software & AI Systems Engineering',
-  meta_description: 'Engineering intelligent software, autonomous workflows, scalable web architectures, and custom AI systems for modern enterprises.',
+  meta_title: 'Quantum AI - AI, Custom Software & Automation for Industry and Business',
+  meta_description: 'Custom software, business automation, and AI systems for manufacturers, engineering firms, and businesses.',
   meta_keywords: 'Artificial Intelligence, Machine Learning, AI Agents, Custom Business Software, Systems Engineering, Next.js',
   robots_index: 'true',
   google_site_verification: '',
 
   // Homepage / Hero
-  hero_eyebrow: 'SYS.CORE // INTELLIGENCE ARCHITECTURE',
+  hero_eyebrow: 'SYS.CORE // AI, SOFTWARE & AUTOMATION',
   hero_headline: 'WE BUILD\nINTELLIGENT\nSOFTWARE',
-  hero_description: 'Quantum AI builds AI systems, custom business software, and automation for organizations that need better ways to operate.',
+  hero_description: 'Quantum AI is an AI and software engineering company. We build custom software, business automation, and AI systems for manufacturers, engineering firms, and businesses with complex operations.',
   hero_cta_primary_label: 'START A PROJECT',
   hero_cta_primary_link: '/contact',
   hero_cta_secondary_label: 'EXPLORE OUR WORK',
@@ -127,7 +127,7 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
   // Navigation & Footer
   nav_cta_label: 'Start a Project',
   nav_cta_link: '/contact',
-  footer_tagline: 'Intelligent software for a connected world.',
+  footer_tagline: 'AI, software, and automation for industry and business.',
   footer_copyright: `© ${new Date().getFullYear()} Quantum AI. All rights reserved.`,
 };
 

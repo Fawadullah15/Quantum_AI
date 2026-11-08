@@ -22,7 +22,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     industry: 'Engineering AI',
     year: '2026',
     title: 'Mechanical Engineering Design Copilot',
-    desc: 'An AI-powered engineering design copilot developed by Quantum AI to assist mechanical engineers with component sizing, technical equations, constraint analysis, and material evaluation.',
+    desc: 'An AI assistant for mechanical engineers that helps with component sizing, technical calculations, constraint checks, and material selection.',
     technologies: ['Artificial Intelligence', 'Mechanical Design', 'Engineering Analysis', 'Python', 'CAD Integration'],
     slug: 'mechanical-engineering-design-copilot',
     image: '/uploads/mechanical-engineering-design-copilot.png',
@@ -34,7 +34,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     industry: 'Education',
     year: '2026',
     title: 'School Operations Manager',
-    desc: 'Built for educational institutions to eliminate fragmented paper records and spreadsheets by centralizing student registries, attendance, fee collection, and administrative reporting into one real-time platform.',
+    desc: 'Built for schools to replace paper records and spreadsheets by keeping student records, attendance, fee collection, and reports in one system.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Node.js'],
     slug: 'school-operations-manager',
     gradient: 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
@@ -45,7 +45,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     industry: 'Retail',
     year: '2026',
     title: 'Offline Shop Management System',
-    desc: 'Built for retail businesses operating in areas with unstable internet to ensure point-of-sale transactions, product inventory, and daily sales tracking work seamlessly offline with automatic cloud sync.',
+    desc: 'Built for retail shops with unstable internet so sales, inventory, and daily tracking keep working offline and sync to the cloud when a connection is available.',
     technologies: ['Python', 'FastAPI', 'SQLAlchemy', 'SQLite', 'React'],
     slug: 'offline-shop-management-system',
     gradient: 'linear-gradient(135deg, #050C0E 0%, #0A181B 100%)',
@@ -56,7 +56,7 @@ const CASE_STUDIES: CaseStudyItem[] = [
     industry: 'Technology',
     year: '2026',
     title: 'Quantum AI Corporate Website',
-    desc: 'Designed as a high-performance corporate platform to showcase deployed software systems, interactive technology demos, and live client inquiry pipelines with zero layout latency.',
+    desc: 'The Quantum AI company website, which presents our projects and technology demos and collects client inquiries.',
     technologies: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'Prisma'],
     slug: 'quantum-ai-corporate-website',
     gradient: 'linear-gradient(135deg, #071214 0%, #0D2023 100%)',
@@ -487,7 +487,7 @@ export default function CaseStudiesSection({ initialStudies }: { initialStudies?
                 margin: 0,
               }}
             >
-              Selected deployments.
+              Selected projects.
             </h2>
           </div>
 

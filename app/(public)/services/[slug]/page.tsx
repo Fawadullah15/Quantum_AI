@@ -28,38 +28,38 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
     slug: 'ai-development',
     name: 'AI Development & Systems',
     categoryTag: 'SYS.01 / ARTIFICIAL INTELLIGENCE',
-    h1: 'CUSTOM AI DEVELOPMENT & AGENTIC SYSTEMS.',
-    lead: 'We architect production-grade artificial intelligence systems, multi-agent coordination frameworks, and retrieval-augmented generation (RAG) pipelines designed to solve high-value operational bottlenecks.',
+    h1: 'CUSTOM AI DEVELOPMENT & AI AGENTS.',
+    lead: 'We build AI systems and agents that search company documents, answer questions, and automate routine decisions, so your team spends less time on manual review.',
     problems: [
       {
-        title: 'Manual Cognitive Bottlenecks',
-        desc: 'Teams spend hundreds of hours manually reviewing documents, routing inquiries, and synthesizing data that intelligent algorithms can process in seconds.',
+        title: 'Slow Manual Review',
+        desc: 'Teams spend hours reviewing documents, routing inquiries, and compiling data that AI can process in seconds.',
       },
       {
-        title: 'Unstructured Enterprise Knowledge',
-        desc: 'Critical company knowledge is scattered across static PDFs, emails, and isolated databases where employees cannot search or extract answers reliably.',
+        title: 'Scattered Company Knowledge',
+        desc: 'Important company knowledge is spread across PDFs, emails, and separate databases where staff cannot reliably search it.',
       },
       {
-        title: 'AI Hallucinations & Unreliability',
-        desc: 'Standard AI models produce inconsistent outputs without deterministic guardrails, structured schemas, and domain-tuned retrieval systems.',
+        title: 'Unreliable AI Answers',
+        desc: 'Standard AI models can give inconsistent answers unless they are tied to your own verified documents and clear rules.',
       },
     ],
     capabilities: [
       {
-        title: 'Autonomous Multi-Agent Networks',
-        desc: 'Coordinated AI agents executing sequential and parallel decision workflows, role delegation, and structured verification.',
+        title: 'AI Agents',
+        desc: 'Several AI agents working together on multi-step tasks, with clear roles and checks along the way.',
       },
       {
-        title: 'Enterprise RAG & Semantic Retrieval',
-        desc: 'High-speed vector similarity indexing over proprietary document archives with sub-100ms response latency.',
+        title: 'Company Knowledge Search',
+        desc: 'Search across your own documents that finds answers by meaning, not just exact keywords.',
       },
       {
-        title: 'Deterministic AI Guardrails',
-        desc: 'Strict output validation, schema enforcement, and hallucination filters ensuring 100% compliance with business logic.',
+        title: 'AI Safety Checks',
+        desc: 'Output checks and rules that keep AI responses consistent with your business logic.',
       },
       {
-        title: 'Operational Copilots & Assistants',
-        desc: 'Custom context-aware assistants embedded directly into internal ERPs, customer platforms, and administrative workflows.',
+        title: 'Business AI Assistants',
+        desc: 'AI assistants built into your internal systems, customer platforms, and daily workflows.',
       },
     ],
     process: [
@@ -86,15 +86,15 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
     faqs: [
       {
         question: 'What types of custom AI systems does Quantum AI build?',
-        answer: 'We build domain-specific RAG knowledge search systems, multi-agent automation workflows, automated document synthesis engines, and intelligent copilots embedded into internal software.',
+        answer: 'We build AI agents, knowledge search over company documents, document summarization tools, and AI assistants built into internal software.',
       },
       {
         question: 'How do you prevent AI hallucinations in business applications?',
-        answer: 'We enforce strict deterministic guardrails, ground all outputs strictly in retrieved verified documents (RAG), and validate responses against structured JSON schemas before presentation.',
+        answer: 'We base answers on your verified documents, apply clear rules, and check responses against a required format before they are shown to users.',
       },
       {
         question: 'Can you integrate custom AI into our existing software stack?',
-        answer: 'Yes. We engineer lightweight REST and GraphQL APIs that connect our AI inference pipelines into your existing web, desktop, or mobile applications.',
+        answer: 'Yes. We connect AI features to your existing web, desktop, or mobile applications through standard APIs.',
       },
     ],
   },
@@ -103,14 +103,14 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
     name: 'Custom Software Development',
     categoryTag: 'SYS.02 / CUSTOM SOFTWARE',
     h1: 'CUSTOM SOFTWARE BUILT AROUND YOUR WORKFLOW.',
-    lead: 'We construct tailored web applications, internal operations platforms, management portals, and desktop-ready systems designed to match your exact business model.',
+    lead: 'We build custom business and industrial software, including management systems, production and inventory tools, and internal portals, designed to match how your organization works.',
     problems: [
       {
         title: 'Rigid Off-The-Shelf Limitations',
         desc: 'Generic SaaS tools force your team to adjust your operations to their software, creating friction and subscription bloat.',
       },
       {
-        title: 'Fragmented Spreadsheets & Chaos',
+        title: 'Scattered Spreadsheets and Paper Records',
         desc: 'Critical business records live in disconnected spreadsheets and paper files, leading to version confusion and lost revenue.',
       },
       {
@@ -120,11 +120,11 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
     ],
     capabilities: [
       {
-        title: 'Enterprise Management Platforms',
+        title: 'Management Platforms',
         desc: 'Centralized platforms unifying operations, staff, customers, attendance, billing, and reporting into one unified interface.',
       },
       {
-        title: 'Offline-First Desktop & Web Engines',
+        title: 'Offline-Capable Desktop & Web Software',
         desc: 'High-availability software capable of local transactional execution with automatic cloud synchronization when online.',
       },
       {
@@ -132,8 +132,8 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
         desc: 'Granular user permission models, audit logs, and customizable dashboard views tailored to specific job responsibilities.',
       },
       {
-        title: 'High-Performance Database Architectures',
-        desc: 'Normalized relational schemas and transactional integrity engineered for millions of operational records.',
+        title: 'Reliable Data Storage',
+        desc: 'Well-structured databases that keep large volumes of operational records accurate and consistent.',
       },
     ],
     process: [
@@ -177,18 +177,18 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
     name: 'Business Workflow Automation',
     categoryTag: 'SYS.03 / AUTOMATION',
     h1: 'WORKFLOW AUTOMATION THAT ELIMINATES MANUAL WORK.',
-    lead: 'We engineer automated event-driven pipelines, CRM routing engines, document processing bots, and notification loops that free your team from repetitive tasks.',
+    lead: 'We build automated workflows, CRM routing, document processing, and notifications that free your team from repetitive tasks.',
     problems: [
       {
         title: 'Repetitive Manual Tasks',
         desc: 'Staff wasting valuable time on manual data entry, copy-pasting between systems, and routine status updates.',
       },
       {
-        title: 'Slow Response & Lead Leakage',
+        title: 'Slow Responses and Missed Leads',
         desc: 'Delays in routing customer inquiries or processing approvals result in lost opportunities and frustrated clients.',
       },
       {
-        title: 'Human Data-Entry Errors',
+        title: 'Data-Entry Mistakes',
         desc: 'Manual data transfers across platforms inevitably cause typos, missed entries, and reconciliation discrepancies.',
       },
     ],
@@ -198,7 +198,7 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
         desc: 'Instant lead ingestion, enrichment, qualification scoring, and assignment to the right team members in seconds.',
       },
       {
-        title: 'Event-Driven Data Pipelines',
+        title: 'Automatic Data Syncing',
         desc: 'Automated data transformations and synchronization triggers running 24/7 across multiple internal databases.',
       },
       {
@@ -206,7 +206,7 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
         desc: 'Extracting structured data from incoming receipts, PDFs, and invoices directly into financial ledgers.',
       },
       {
-        title: 'Cross-Platform Notification Loops',
+        title: 'Automatic Notifications',
         desc: 'Automated alerts via email, SMS, and messaging channels triggered by milestone completions or threshold alerts.',
       },
     ],
@@ -245,10 +245,10 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
     name: 'Software & API Integration',
     categoryTag: 'SYS.04 / INTEGRATION',
     h1: 'CONNECTING DISCONNECTED BUSINESS SYSTEMS.',
-    lead: 'We build unified API connectors, bidirectional data pipelines, and middleware architectures that bridge isolated business tools into one cohesive digital ecosystem.',
+    lead: 'We connect your separate business tools, databases, and applications so information moves between them automatically.',
     problems: [
       {
-        title: 'Siloed Data & Fragmented Tools',
+        title: 'Disconnected Tools',
         desc: 'Sales, operations, and finance use different software tools that cannot communicate, leaving leadership without a unified view.',
       },
       {
@@ -262,11 +262,11 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
     ],
     capabilities: [
       {
-        title: 'Custom API Middleware',
-        desc: 'High-throughput translation layers transforming data formats between disparate legacy and modern platforms.',
+        title: 'Custom System Connectors',
+        desc: 'Tools that translate data between older and modern systems.',
       },
       {
-        title: 'Bidirectional Database Sync',
+        title: 'Two-Way Data Sync',
         desc: 'Real-time synchronization keeping inventory, customer accounts, and transactions consistent across all platforms.',
       },
       {
@@ -274,8 +274,8 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
         desc: 'Seamless integration with payment gateways, SMS/email providers, logistics platforms, and cloud services.',
       },
       {
-        title: 'Webhook & Streaming Fabric',
-        desc: 'Low-latency event streaming ensuring every sub-system reacts instantly when new records are created.',
+        title: 'Real-Time Updates',
+        desc: 'Real-time updates so every connected system reacts as soon as new records are created.',
       },
     ],
     process: [
@@ -315,29 +315,29 @@ const SERVICE_CATALOG: Record<string, ServiceData> = {
     name: 'Digital Products & SaaS Platforms',
     categoryTag: 'SYS.05 / DIGITAL PRODUCTS',
     h1: 'SCALABLE DIGITAL PRODUCTS & SAAS PLATFORMS.',
-    lead: 'We design and engineer customer-facing software applications, subscription SaaS platforms, and organizational portals built for high user concurrency and scale.',
+    lead: 'We build SaaS platforms, web applications, and customer-facing software products that are secure, reliable, and ready to grow with your users.',
     problems: [
       {
-        title: 'Unscalable MVP Architecture',
+        title: 'Prototypes That Cannot Grow',
         desc: 'Quickly built prototypes often crash under real user traffic or lack the modularity needed to add new features.',
       },
       {
-        title: 'Poor User Experience & High Churn',
+        title: 'Poor User Experience',
         desc: 'Clunky interfaces and slow page load times frustrate users and reduce adoption rates.',
       },
       {
-        title: 'Security & Multi-Tenancy Risks',
+        title: 'Data Privacy and Security Risks',
         desc: 'Improper data isolation between business accounts can lead to privacy leaks and architectural rebuilds.',
       },
     ],
     capabilities: [
       {
-        title: 'Multi-Tenant SaaS Architectures',
+        title: 'Multi-Customer SaaS Platforms',
         desc: 'Secure tenant data isolation, subscription management, and role-based access for business customers.',
       },
       {
-        title: 'Responsive High-Speed Web Portals',
-        desc: 'Next.js and React frontend applications optimized for sub-second page loads and mobile usability.',
+        title: 'Fast, Mobile-Friendly Web Portals',
+        desc: 'Fast Next.js and React web applications that work well on mobile devices.',
       },
       {
         title: 'Scalable Backend APIs',
@@ -581,7 +581,7 @@ export default async function ServiceDetailPage({ params }: Props) {
         <div style={{ marginBottom: 'clamp(2.5rem, 5vw, 3.5rem)', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.25rem' }}>
           <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>CHALLENGES</div>
           <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#FFFFFF', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
-            WHAT OPERATIONAL PROBLEMS WE SOLVE
+            PROBLEMS WE SOLVE
           </h2>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.85rem' }}>
@@ -640,9 +640,9 @@ export default async function ServiceDetailPage({ params }: Props) {
         {/* ─── Relevant Case Studies ─── */}
         {service.relevantCaseStudies.length > 0 && (
           <div style={{ marginBottom: 'clamp(2.5rem, 5vw, 3.5rem)', borderTop: '1px solid rgba(22, 119, 255, 0.14)', paddingTop: '2.25rem' }}>
-            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>PROOF OF EXECUTION</div>
+            <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.68rem', color: '#FFFFFF', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.35rem', fontWeight: 600 }}>RELATED PROJECTS</div>
             <h2 style={{ fontSize: 'clamp(1.25rem, 2.2vw, 1.6rem)', color: '#FFFFFF', fontWeight: 700, textTransform: 'uppercase', margin: '0 0 1.25rem 0', letterSpacing: '-0.02em' }}>
-              RELEVANT DEPLOYMENTS
+              RELEVANT PROJECTS
             </h2>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '0.85rem' }}>
@@ -691,7 +691,7 @@ export default async function ServiceDetailPage({ params }: Props) {
             READY TO ARCHITECT YOUR {service.name.toUpperCase()}?
           </h2>
           <p style={{ color: '#FFFFFF', marginBottom: '1.5rem', maxWidth: 520, margin: '0 auto 1.5rem', fontSize: '0.9rem', lineHeight: 1.55 }}>
-            Consult with our engineering team to review your technical requirements and build a production-ready roadmap.
+            Talk to our team about your requirements and get a clear plan for your project.
           </p>
           <Link
             href="/contact"

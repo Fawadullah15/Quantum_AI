@@ -8,7 +8,7 @@ export const SITE_URL =
 export const SITE_NAME = 'Quantum AI';
 export const DEFAULT_TITLE = 'Quantum AI | AI, Software & Automation Solutions';
 export const DEFAULT_DESCRIPTION =
-  'Quantum AI builds AI systems, custom business software, and automation for organizations that need better ways to operate.';
+  'Quantum AI is an AI and software engineering company building custom software, business automation, and AI systems for manufacturers, engineering firms, and businesses.';
 
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/quantum-ai-og.png`;
 
@@ -144,9 +144,9 @@ export function getOrganizationSchema(settings?: {
       'Machine Learning Engineering',
       'Custom Business Software',
       'Workflow Automation',
-      'Enterprise Data Architecture',
+      'Industrial Software Solutions',
       'Cloud Infrastructure',
-      'Autonomous Multi-Agent Networks',
+      'AI Agents',
       'Retrieval-Augmented Generation (RAG)',
     ],
   };

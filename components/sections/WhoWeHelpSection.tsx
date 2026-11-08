@@ -15,38 +15,61 @@ interface TargetAudience {
 const AUDIENCES: TargetAudience[] = [
   {
     code: '01',
-    category: 'Businesses & Enterprises',
-    subtitle: 'Streamline Operations',
-    description: 'Companies that need custom internal software, central operations dashboards, inventory systems, or automated workflows to replace slow, manual spreadsheets.',
-    deliverables: ['Custom Operations Software', 'Internal Management Portals', 'Automated Reporting Pipelines'],
+    category: 'Manufacturing & Industrial Companies',
+    subtitle: 'Factories & Production',
+    description: 'Factories, manufacturers, production facilities, and industrial businesses.',
+    deliverables: [
+      'Manufacturing Management Software',
+      'Production Monitoring Systems',
+      'Inventory & Warehouse Management',
+      'Quality Control Software',
+      'Industrial Process Automation',
+    ],
     link: '/services#software',
   },
   {
     code: '02',
-    category: 'Educational Institutions',
-    subtitle: 'School & Campus Systems',
-    description: 'Schools, colleges, and educational organizations seeking unified platforms for student records, attendance, fee collection, staff coordination, and academic reporting.',
-    deliverables: ['School Operations Suites', 'Administrative Portals', 'Attendance & Fee Management'],
-    link: '/work/school-operations-manager',
+    category: 'Engineering & Technical Companies',
+    subtitle: 'Engineering Teams',
+    description: 'Engineering firms, industrial consultancies, and technical product development teams.',
+    deliverables: [
+      'Engineering Software',
+      'AI-Powered Engineering Tools',
+      'Technical Data Management',
+      'Engineering Workflow Automation',
+      'Custom Engineering Applications',
+    ],
+    link: '/services#ai',
   },
   {
     code: '03',
-    category: 'Startups & Tech Founders',
-    subtitle: 'From Concept to Product',
-    description: 'Early-stage and growing tech ventures that require reliable full-stack software architecture, AI agent integration, or MVP product development ready to scale.',
-    deliverables: ['SaaS Product Engineering', 'AI & RAG Integrations', 'Scalable Cloud Architectures'],
-    link: '/services#products',
+    category: 'Business & Enterprise Operations',
+    subtitle: 'Business Systems',
+    description: 'Established businesses requiring custom digital systems to manage their operations.',
+    deliverables: [
+      'Enterprise Management Software',
+      'ERP & CRM Systems',
+      'Business Intelligence Dashboards',
+      'Inventory Management',
+      'Business Process Automation',
+    ],
+    link: '/services#software',
   },
   {
     code: '04',
-    category: 'Organizations & Nonprofits',
-    subtitle: 'Digital Coordination',
-    description: 'Structured organizations, member associations, and non-profits that need centralized digital hubs to manage chapters, public communications, and program activities.',
-    deliverables: ['Centralized Web Portals', 'Member & Chapter Management', 'Public Content Hubs'],
-    link: '/work/youth-development-program-website',
+    category: 'Technology & Software Companies',
+    subtitle: 'Software Products',
+    description: 'Companies developing software products or improving existing technology systems.',
+    deliverables: [
+      'SaaS Development',
+      'AI Agent Integration',
+      'Custom Application Development',
+      'Cloud Software Systems',
+      'API & Backend Development',
+    ],
+    link: '/services#product',
   },
 ];
-
 export default function WhoWeHelpSection() {
   return (
     <section
@@ -87,7 +110,7 @@ export default function WhoWeHelpSection() {
             textTransform: 'uppercase',
           }}
         >
-          Built for organizations that need to operate better.
+          Software for factories, engineers, and growing businesses.
         </h2>
 
         <p
@@ -101,7 +124,7 @@ export default function WhoWeHelpSection() {
             fontWeight: 300,
           }}
         >
-          We engineer software and AI systems for established businesses, educational institutions, tech startups, and organizations that have outgrown generic off-the-shelf tools.
+          We build custom software, automation, and AI systems for manufacturers, engineering firms, established businesses, and technology companies that need more than off-the-shelf tools.
         </p>
 
         <div

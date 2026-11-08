@@ -5,8 +5,8 @@ import { createPageMetadata } from '@/lib/seo';
 export const dynamic = 'force-dynamic';
 
 export const metadata = createPageMetadata({
-  title: 'Digital Products & Intelligent Software Engines — Quantum AI',
-  description: 'Explore custom software products, internal tools, intelligent portals, and autonomous operational platforms engineered by Quantum AI.',
+  title: 'Software Products - Quantum AI',
+  description: 'Explore software products, internal business tools, and AI-powered platforms built by Quantum AI.',
   path: '/products',
 });
 
@@ -204,7 +204,7 @@ export default async function ProductsPage() {
             SOFTWARE PRODUCTS &amp; PLATFORMS.
           </h1>
           <p style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#FFFFFF', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
-            Proprietary software engines, autonomous workflow frameworks, and intelligent platforms engineered by Quantum AI.
+            Software products and AI-powered platforms built by Quantum AI.
           </p>
         </div>
 
@@ -223,7 +223,7 @@ export default async function ProductsPage() {
               Software Catalog Under Deployment
             </h2>
             <p style={{ color: '#FFFFFF', maxWidth: 440, margin: '0 auto 1.5rem', fontSize: '0.9rem', lineHeight: 1.6 }}>
-              Our proprietary digital products are being prepared for public documentation. Contact our engineering team for architecture inquiries.
+              Our software products are being prepared for public documentation. Contact our team for more information.
             </p>
             <Link
               href="/contact"

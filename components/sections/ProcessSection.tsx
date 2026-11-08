@@ -18,22 +18,22 @@ const PROCESS_STEPS: ProcessStep[] = [
   {
     step: '02',
     name: 'DEFINE',
-    desc: 'Scope the technical architecture, data workflows, user roles, and success milestones.',
+    desc: 'Agree on what the system will do, who will use it, and how success will be measured.',
   },
   {
     step: '03',
     name: 'DESIGN',
-    desc: 'Plan the product interface, system data models, and API interfaces for maximum clarity.',
+    desc: 'Plan how the software will look, how information will be stored, and how it will connect to your other systems.',
   },
   {
     step: '04',
     name: 'BUILD',
-    desc: 'Develop, test, and refine the system using production-grade frameworks and rigorous validation.',
+    desc: 'Develop and test the software, and refine it based on your feedback.',
   },
   {
     step: '05',
     name: 'DEPLOY',
-    desc: 'Launch, monitor, document, and support the solution in secure cloud environments.',
+    desc: 'Launch the system, document it, and support it after it goes live.',
   },
 ];
 
@@ -309,7 +309,7 @@ export default function ProcessSection() {
             fontWeight: 300,
           }}
         >
-          We eliminate uncertainty from development through clear, iterative milestones from discovery to production launch.
+          We work in clear steps, from understanding your business to launching the finished system, so you always know what comes next.
         </p>
 
         {/* ─── Desktop View: Interactive Horizontal Process Rows with Hover Reveal ─── */}
@@ -375,7 +375,7 @@ export default function ProcessSection() {
         {/* ─── Process Next Step ─── */}
         <div style={{ marginTop: '1.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem', borderTop: '1px solid rgba(20, 184, 166, 0.12)', paddingTop: '1.25rem' }}>
           <p style={{ color: '#FFFFFF', fontSize: '0.85rem', margin: 0, fontWeight: 300 }}>
-            Have a system to engineer or operational workflow to automate?
+            Have a business process to improve or automate?
           </p>
           <Link
             href="/contact"

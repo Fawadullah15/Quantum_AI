@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = createPageMetadata({
   title: 'Selected Deployments & Client Case Studies — Quantum AI',
-  description: 'Explore production deployments, operational software platforms, and custom AI systems engineered for enterprise clients.',
+  description: 'Explore Quantum AI projects: engineering tools, business software, automation systems, and custom AI applications.',
   path: '/work',
 });
 
@@ -283,7 +283,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
             SELECTED DEPLOYMENTS &amp; CASE STUDIES.
           </h1>
           <p style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#FFFFFF', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
-            Production software platforms, enterprise automation engines, and custom AI systems delivered by Quantum AI.
+            Software platforms, automation systems, and AI applications delivered by Quantum AI.
           </p>
         </div>
 
@@ -320,7 +320,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
               No Case Studies Found in This Category
             </h2>
             <p style={{ color: '#FFFFFF', maxWidth: 440, margin: '0 auto 1.5rem', fontSize: '0.9rem', lineHeight: 1.6 }}>
-              Explore all case studies or reach out to discuss how we can build custom intelligence for your organization.
+              Explore all case studies or reach out to discuss how we can build custom software, automation, or AI for your organization.
             </p>
             <Link
               href="/work"

@@ -5,8 +5,8 @@ import { createPageMetadata, getFAQSchema } from '@/lib/seo';
 export const dynamic = 'force-dynamic';
 
 export const metadata = createPageMetadata({
-  title: 'AI & Custom Software Development Services — Quantum AI',
-  description: 'Custom AI systems, enterprise web applications, workflow automation, and digital products engineered by Quantum AI to scale business operations.',
+  title: 'AI, Custom Software & Automation Services — Quantum AI',
+  description: 'Quantum AI builds AI systems, custom software, business automation, and system integrations for manufacturers, engineering firms, and businesses.',
   path: '/services',
 });
 
@@ -15,7 +15,7 @@ const DEFAULT_SERVICES = [
     id: 's-ai',
     name: 'AI Systems & Agentic Workflows',
     category: 'AI / ML',
-    description: 'Custom artificial intelligence systems, multi-agent workflows, retrieval-augmented generation (RAG), and neural reasoning architectures engineered for intelligent business decision making.',
+    description: 'AI assistants and agents that search company documents and data, answer questions, and support day-to-day decisions.',
     link: '/services/ai-development',
     linkLabel: 'VIEW AI SERVICE →',
     order: 1,
@@ -24,7 +24,7 @@ const DEFAULT_SERVICES = [
     id: 's-software',
     name: 'Custom Business Software',
     category: 'SOFTWARE',
-    description: 'Scalable enterprise web applications, administrative management portals, offline-capable retail engines, and internal ERP platforms designed around real operational workflows.',
+    description: 'Manufacturing, production, inventory, and business management software, including ERP and CRM systems, built around how your teams work.',
     link: '/services/custom-software-development',
     linkLabel: 'VIEW SOFTWARE SERVICE →',
     order: 2,
@@ -33,7 +33,7 @@ const DEFAULT_SERVICES = [
     id: 's-automation',
     name: 'Business Workflow Automation',
     category: 'AUTOMATION',
-    description: 'End-to-end process automation, event-driven data pipelines, CRM synchronization bots, and API integrations that eliminate repetitive manual operational tasks.',
+    description: 'Automated workflows that replace repetitive manual work such as data entry, reporting, and approvals.',
     link: '/services/business-automation',
     linkLabel: 'VIEW AUTOMATION SERVICE →',
     order: 3,
@@ -42,7 +42,7 @@ const DEFAULT_SERVICES = [
     id: 's-integration',
     name: 'Software & API Integration',
     category: 'INTEGRATION',
-    description: 'Unified API connectors, bidirectional database synchronization, and middleware architectures that bridge isolated tools into one cohesive ecosystem.',
+    description: 'Connections between your existing software, databases, and tools so information is shared instead of re-entered.',
     link: '/services/software-integration',
     linkLabel: 'VIEW INTEGRATION SERVICE →',
     order: 4,
@@ -51,7 +51,7 @@ const DEFAULT_SERVICES = [
     id: 's-products',
     name: 'Digital Products & SaaS Platforms',
     category: 'PRODUCT',
-    description: 'Consumer-facing SaaS platforms, educational management systems, and full-stack software products built for high user concurrency, data security, and long-term maintainability.',
+    description: 'SaaS platforms and software products for technology companies, built to be secure, reliable, and easy to maintain.',
     link: '/services/digital-products',
     linkLabel: 'VIEW PRODUCTS SERVICE →',
     order: 5,
@@ -61,23 +61,23 @@ const DEFAULT_SERVICES = [
 const SERVICE_FAQS = [
   {
     question: 'What does Quantum AI build as an AI and software development company?',
-    answer: 'Quantum AI engineers custom artificial intelligence systems, enterprise business software, workflow automation pipelines, and scalable digital products tailored directly to business operational requirements.',
+    answer: 'Quantum AI is an AI and software engineering company. We build AI systems and agents, custom business and industrial software, workflow automation, system integrations, and SaaS products.',
   },
   {
     question: 'Can Quantum AI integrate AI and automation into existing business systems?',
-    answer: 'Yes. We build custom API connectors, retrieval-augmented search pipelines (RAG), and automation microservices that seamlessly connect with your existing databases, ERPs, CRMs, and web platforms.',
+    answer: 'Yes. We connect new software, AI tools, and automation to your existing databases, ERP and CRM systems, and web platforms through custom integrations.',
   },
   {
     question: 'What industries does Quantum AI specialize in?',
-    answer: 'We have delivered software architectures across education (school operations management), retail and e-commerce (inventory and POS), enterprise sales pipelines, logistics, and data intelligence platforms.',
+    answer: 'Our focus is manufacturing and industrial companies, engineering and technical firms, established businesses, and technology companies. Our past projects include engineering design tools, school operations, retail inventory and point-of-sale, and sales pipeline automation.',
   },
   {
     question: 'Where is Quantum AI based and what clients do you serve?',
-    answer: 'Quantum AI operates from Pakistan (Khyber Pakhtunkhwa / Peshawar) with global engineering standards, serving domestic businesses, educational institutions, and international organizations seeking reliable software architecture.',
+    answer: 'Quantum AI operates from Peshawar, Khyber Pakhtunkhwa, Pakistan, and works with local businesses and international organizations that need reliable custom software.',
   },
   {
     question: 'How does the custom software development process work at Quantum AI?',
-    answer: 'Our structured engineering lifecycle consists of 5 clear stages: 01 Understand (requirements & operational context) -> 02 Define (technical scope & data workflows) -> 03 Design (architecture & interface) -> 04 Build (iterative development & automated testing) -> 05 Deploy (cloud infrastructure & continuous support).',
+    answer: 'We work in five clear stages: 01 Understand your business problem, 02 Define what the system will do, 03 Design how it will work, 04 Build and test it, and 05 Deploy and support it.',
   },
 ];
 
@@ -217,17 +217,17 @@ export default async function ServicesPage() {
         <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
           <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.08 / SERVICES</div>
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: 'var(--color-text-primary, #FFFFFF)', textTransform: 'uppercase', margin: '0 0 0.65rem 0' }}>
-            AI & SOFTWARE DEVELOPMENT SERVICES.
+            AI, SOFTWARE & AUTOMATION SERVICES.
           </h1>
           <p style={{ fontSize: 'clamp(0.9rem, 1.1vw, 1.05rem)', color: '#FFFFFF', maxWidth: 640, lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
-            Custom software architectures, enterprise AI systems, and automated workflow pipelines engineered to eliminate operational friction and scale productivity.
+            Custom software, AI systems, and automation for manufacturers, engineering firms, and businesses that need to manage complex operations.
           </p>
         </div>
 
         {/* Services List */}
         <div className="services-list-container">
           {services.map((service, idx) => {
-            const anchorId = (service.category?.toLowerCase() || service.name.toLowerCase().replace(/\s+/g, '-'));
+            const anchorId = (service.category?.toLowerCase().split(/[^a-z0-9]+/)[0] || service.name.toLowerCase().replace(/\s+/g, '-'));
             const linkTarget = (service as any).link || '/contact';
             const linkText = (service as any).linkLabel || 'DISCUSS REQUIREMENTS →';
 

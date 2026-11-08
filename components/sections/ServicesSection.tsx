@@ -37,14 +37,10 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({ services = DEFAULT_SE
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles.header}>
-          <div className={styles.label}>[04 — CAPABILITIES]</div>
-          <h2 className={styles.heading}>
-            WE BUILD.<br />
-            WE DEPLOY.<br />
-            WE MAINTAIN.
-          </h2>
+          <div className={styles.label}>[04 — SERVICES]</div>
+          <h2 className={styles.heading}>Software and AI that solve real business problems.</h2>
           <p className={styles.subheading}>
-            A business can come to us with an idea or problem. We design, build, deploy, and maintain the complete system.
+            We build custom software, AI applications, and automated workflows that help businesses manage complex operations, connect their systems, and make better decisions.
           </p>
         </div>
 

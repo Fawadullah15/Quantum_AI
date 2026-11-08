@@ -19,9 +19,9 @@ const NAV_GROUPS = [
     label: 'SERVICES',
     links: [
       { href: '/services#ai', label: 'AI Systems' },
-      { href: '/services#software', label: 'Business Software' },
+      { href: '/services#software', label: 'Business & Industrial Software' },
       { href: '/services#automation', label: 'Automation' },
-      { href: '/services#products', label: 'Digital Products' },
+      { href: '/services#product', label: 'Digital Products' },
     ],
   },
   {
@@ -46,7 +46,7 @@ const NAV_GROUPS = [
 // ─── Component ───────────────────────────────────────────────────────────────
 export default function Footer({
   companyName = 'QUANTUM AI',
-  tagline = 'Intelligent software for a connected world.',
+  tagline = 'AI, software, and automation for industry and business.',
   email = 'quantumai.cmp@gmail.com',
   copyright,
 }: {

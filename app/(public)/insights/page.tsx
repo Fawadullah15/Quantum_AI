@@ -5,8 +5,8 @@ import { createPageMetadata } from '@/lib/seo';
 export const dynamic = 'force-dynamic';
 
 export const metadata = createPageMetadata({
-  title: 'Insights & Technical Perspectives — Quantum AI',
-  description: 'Perspectives, technical deep dives, and analysis on artificial intelligence and software systems from the engineers at Quantum AI.',
+  title: 'Insights - Quantum AI',
+  description: 'Articles on AI, software, and automation for business and industrial operations from the Quantum AI team.',
   path: '/insights',
 });
 

@@ -4,8 +4,8 @@ import { createPageMetadata } from '@/lib/seo';
 export const dynamic = 'force-dynamic';
 
 export const metadata = createPageMetadata({
-  title: 'Intelligent Systems & Neural Architecture — Quantum AI',
-  description: 'Neural systems, autonomous agent nodes, and operational computational architectures built for businesses.',
+  title: 'AI Systems & Automation - Quantum AI',
+  description: 'AI agents, automation, and intelligent software systems that Quantum AI builds for businesses and industrial operations.',
   path: '/systems',
 });
 
@@ -19,9 +19,9 @@ export default async function SystemsPage() {
     <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '4rem', minHeight: '100vh', paddingInline: 'var(--container-px, clamp(1.25rem, 5vw, 4rem))' }} className="container">
       <div style={{ maxWidth: 'var(--max-width, 1000px)', margin: '0 auto' }}>
         <div style={{ marginBottom: '2rem' }}>
-          <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.03 / NEURAL NETWORK</div>
+          <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.03 / SERVICES</div>
           <h1 style={{ fontSize: 'clamp(1.75rem, 3.5vw, 2.5rem)', fontWeight: 700, lineHeight: 1.1, letterSpacing: '-0.03em', color: 'var(--color-text-primary, #FFFFFF)', textTransform: 'uppercase', margin: 0 }}>
-            INTELLIGENT SYSTEMS.
+            AI & SOFTWARE SYSTEMS.
           </h1>
         </div>
 

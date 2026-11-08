@@ -14,36 +14,36 @@ interface ChallengeItem {
 
 const CHALLENGES: ChallengeItem[] = [
   {
-    code: '01 // OPERATIONS',
-    title: 'Manual Operations',
-    desc: 'Eliminate repetitive data entry and manual paperwork with reliable automated software pipelines that run around the clock without errors.',
-    shortDesc: 'Automated 24/7 pipelines that eliminate repetitive manual errors and paperwork.',
+    code: '01 // MANUAL OPERATIONS',
+    title: 'Manual Work and Repetitive Tasks',
+    desc: 'Reduce paperwork, spreadsheets, repetitive data entry, and manual business operations through custom software and automation.',
+    shortDesc: 'Less paperwork and data entry, through custom software and automation.',
     link: '/services#automation',
     action: 'Automate',
   },
   {
-    code: '02 // INTEGRATION',
-    title: 'Disconnected Data',
-    desc: 'Unify scattered spreadsheets, legacy databases, and separate software tools into a single, cohesive source of truth for your entire team.',
-    shortDesc: 'Unify scattered spreadsheets and tools into a single source of truth.',
+    code: '02 // DISCONNECTED SYSTEMS',
+    title: 'Scattered Business Information',
+    desc: 'Connect different business systems, databases, inventory records, and operational information.',
+    shortDesc: 'Connect your systems, databases, and inventory records.',
     link: '/services#software',
     action: 'Integrate',
   },
   {
-    code: '03 // SPEED',
-    title: 'Slow Workflows',
-    desc: 'Replace slow, bottlenecked business procedures with responsive internal tools and clear operational dashboards that keep execution moving fast.',
-    shortDesc: 'Custom internal tools and clear dashboards that keep execution moving fast.',
+    code: '03 // PRODUCTION EFFICIENCY',
+    title: 'Inefficient Production Workflows',
+    desc: 'Improve production coordination, operational tracking, and process management through digital systems.',
+    shortDesc: 'Better production coordination, tracking, and process management.',
     link: '/services#software',
-    action: 'Accelerate',
+    action: 'Improve',
   },
   {
-    code: '04 // PROCESS',
-    title: 'Complex Business Processes',
-    desc: 'Translate complicated operational rules, approval chains, and domain workflows into structured, intuitive digital systems that your staff can actually use.',
-    shortDesc: 'Turn complex domain rules and approval chains into structured, usable software.',
+    code: '04 // COMPLEX PROCESSES',
+    title: 'Difficult Operational Management',
+    desc: 'Simplify complex business procedures, approval processes, reporting, and technical workflows.',
+    shortDesc: 'Simpler procedures, approvals, reporting, and technical workflows.',
     link: '/services#ai',
-    action: 'Streamline',
+    action: 'Simplify',
   },
 ];
 
@@ -360,7 +360,7 @@ export default function ChallengesSection() {
             fontWeight: 300,
           }}
         >
-          Modern organizations face operational bottlenecks and disconnected data. We engineer software systems to eliminate friction and scale productivity.
+          Paperwork, scattered records, and slow processes cost businesses time and money. We build software that removes these problems from daily operations.
         </p>
 
         {/* ─── Desktop View: Interactive Expanding Horizontal Bars ─── */}

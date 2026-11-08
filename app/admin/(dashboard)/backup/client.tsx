@@ -87,9 +87,6 @@ export default function BackupClient() {
         headers: { Accept: 'application/json' },
         credentials: 'include',
       });
-        method: 'GET',
-        headers: { Accept: 'application/json' },
-      });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
