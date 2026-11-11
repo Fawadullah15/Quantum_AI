@@ -154,6 +154,7 @@ export default function MarsHeroVideo() {
           height: 100%;
           object-fit: cover;
           object-position: right center;
+          filter: brightness(1.28) contrast(1.10) saturate(1.22);
           transition: opacity 0.5s ease-in-out;
         }
 
@@ -177,19 +178,19 @@ export default function MarsHeroVideo() {
             display: block !important;
             background: linear-gradient(
               180deg,
-              rgba(2, 7, 8, 0.45) 0%,
-              rgba(2, 7, 8, 0.05) 20%,
+              rgba(2, 7, 8, 0.35) 0%,
+              rgba(2, 7, 8, 0.0) 22%,
               transparent 45%,
-              rgba(2, 7, 8, 0.3) 72%,
-              rgba(2, 7, 8, 0.88) 88%,
+              rgba(2, 7, 8, 0.15) 75%,
+              rgba(2, 7, 8, 0.85) 90%,
               #020708 100%
             ) !important;
           }
           .mars-hero-top-dissolve {
-            height: 70px !important;
+            height: 60px !important;
           }
           .mars-hero-bottom-dissolve {
-            height: 110px !important;
+            height: 90px !important;
           }
         }
 
@@ -247,7 +248,7 @@ export default function MarsHeroVideo() {
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(90deg, #020708 0%, rgba(2, 7, 8, 0.95) 28%, rgba(2, 7, 8, 0.6) 55%, rgba(2, 7, 8, 0.05) 80%, transparent 100%)',
+            'linear-gradient(90deg, #020708 0%, rgba(2, 7, 8, 0.95) 24%, rgba(2, 7, 8, 0.45) 45%, transparent 65%)',
           pointerEvents: 'none',
         }}
       />
