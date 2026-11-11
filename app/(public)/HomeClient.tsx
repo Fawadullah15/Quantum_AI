@@ -469,7 +469,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                 order: 1,
               }}
             >
-              [SYS.01] AI · SOFTWARE · AUTOMATION · INDUSTRIAL SYSTEMS
+              AI · SOFTWARE · AUTOMATION · INDUSTRIAL SYSTEMS
             </p>
 
             {/* ParticleText visual headline */}
