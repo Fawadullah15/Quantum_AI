@@ -333,14 +333,14 @@ export default async function LeadershipPage() {
           font-family: var(--font-d-din);
           font-size: 0.62rem;
           letter-spacing: 0.15em;
-          color: #FFFFFF;
-          background: rgba(3, 7, 18, 0.75);
+          color: #38BDF8;
+          background: rgba(3, 7, 18, 0.8);
           backdrop-filter: blur(8px);
-          border: 1px solid rgba(56, 189, 248, 0.3);
+          border: 1px solid rgba(56, 189, 248, 0.35);
           padding: 0.25rem 0.55rem;
           border-radius: 4px;
           text-transform: uppercase;
-          font-weight: 600;
+          font-weight: 700;
           z-index: 2;
         }
 
@@ -354,24 +354,24 @@ export default async function LeadershipPage() {
         }
         .exec-name {
           font-size: clamp(1.2rem, 2.2vw, 1.45rem);
-          font-weight: 600;
-          color: #FFFFFF;
+          font-weight: 700;
+          color: #F8FAFC;
           letter-spacing: -0.015em;
           margin: 0;
           line-height: 1.25;
         }
         .exec-position {
           font-family: var(--font-d-din);
-          font-size: 0.68rem;
-          color: #FFFFFF;
+          font-size: 0.72rem;
+          color: #38BDF8;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-          font-weight: 600;
+          font-weight: 700;
           margin-bottom: 0.25rem;
         }
         .exec-bio {
           font-size: 0.86rem;
-          color: #FFFFFF;
+          color: #CBD5E1;
           line-height: 1.6;
           margin: 0;
           font-weight: 300;
@@ -395,17 +395,17 @@ export default async function LeadershipPage() {
           align-items: center;
           gap: 0.35rem;
           font-size: 0.72rem;
-          color: #FFFFFF;
+          color: #94A3B8;
           text-decoration: none;
           transition: color 0.2s;
         }
         .exec-social-link:hover {
-          color: #FFFFFF;
+          color: #38BDF8;
         }
         .exec-action-text {
           font-size: 0.72rem;
-          color: #FFFFFF;
-          font-weight: 600;
+          color: #38BDF8;
+          font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
           display: inline-flex;

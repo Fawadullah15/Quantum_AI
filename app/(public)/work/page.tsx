@@ -84,7 +84,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
       });
 
   return (
-    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '5rem', paddingInline: 'clamp(1rem, 4vw, 3rem)', minHeight: '100vh', background: 'var(--color-void, #030712)' }}>
+    <div style={{ paddingTop: 'calc(var(--nav-height, 72px) + 2rem)', paddingBottom: '5rem', paddingInline: 'clamp(1rem, 4vw, 3rem)', minHeight: '100vh', background: 'transparent' }}>
       {/* 3D Scene Gallery Bridge for Portfolio Overview */}
       <GalleryConfigurator images={workGalleryImages} slug="work-index" />
       <style>{`
@@ -103,24 +103,24 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           font-size: 0.72rem;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          padding: 0.4rem 0.85rem;
+          padding: 0.45rem 0.9rem;
           border-radius: 6px;
           text-decoration: none;
           transition: all 0.2s ease;
-          border: 1px solid rgba(22, 119, 255, 0.18);
-          background: rgba(6, 21, 43, 0.5);
-          color: #FFFFFF;
+          border: 1px solid rgba(56, 189, 248, 0.22);
+          background: rgba(6, 21, 43, 0.65);
+          color: #94A3B8;
         }
         .work-filter-btn:hover {
           color: #FFFFFF;
-          border-color: rgba(56, 189, 248, 0.4);
-          background: rgba(8, 28, 58, 0.8);
+          border-color: rgba(56, 189, 248, 0.5);
+          background: rgba(8, 28, 58, 0.85);
         }
         .work-filter-btn.active {
-          background: rgba(22, 119, 255, 0.2);
-          border-color: #FFFFFF;
-          color: #FFFFFF;
-          font-weight: 600;
+          background: rgba(22, 119, 255, 0.25);
+          border-color: #38BDF8;
+          color: #38BDF8;
+          font-weight: 700;
         }
         .works-grid-container {
           display: flex;
@@ -129,8 +129,9 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           width: 100%;
         }
         .work-card {
-          background-color: rgba(6, 21, 43, 0.65);
-          border: 1px solid rgba(22, 119, 255, 0.16);
+          background-color: rgba(6, 21, 43, 0.7);
+          border: 1px solid rgba(56, 189, 248, 0.16);
+          border-left: 3px solid #1677FF;
           border-radius: 12px;
           padding: 1.25rem clamp(1rem, 2.5vw, 1.75rem);
           display: flex;
@@ -143,13 +144,14 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           outline: none;
         }
         .work-card:hover {
-          background-color: rgba(8, 28, 58, 0.85);
-          border-color: rgba(56, 189, 248, 0.45);
+          background-color: rgba(8, 28, 58, 0.9);
+          border-color: rgba(56, 189, 248, 0.5);
+          border-left-color: #38BDF8;
           transform: translateY(-2px);
-          box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(56, 189, 248, 0.2);
+          box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.7), 0 0 20px -6px rgba(56, 189, 248, 0.25);
         }
         .work-card:focus-visible {
-          border-color: #FFFFFF;
+          border-color: #38BDF8;
           box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.4);
         }
         .work-card-header {
@@ -158,42 +160,45 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           align-items: center;
           flex-wrap: wrap;
           gap: 0.75rem;
-          border-bottom: 1px solid rgba(22, 119, 255, 0.12);
+          border-bottom: 1px solid rgba(56, 189, 248, 0.12);
           padding-bottom: 0.75rem;
         }
         .work-num {
           font-family: var(--font-d-din);
-          font-size: 1.1rem;
+          font-size: 1.15rem;
           font-weight: 700;
-          color: #FFFFFF;
+          color: #38BDF8;
         }
         .work-client {
           font-family: var(--font-d-din);
           font-size: 0.72rem;
-          color: #FFFFFF;
-          letter-spacing: 0.08em;
+          color: #94A3B8;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
+          font-weight: 600;
         }
         .work-category-badge {
           font-family: var(--font-d-din);
           font-size: 0.68rem;
-          color: #FFFFFF;
-          background-color: rgba(22, 119, 255, 0.12);
-          border: 1px solid rgba(56, 189, 248, 0.25);
+          color: #38BDF8;
+          background-color: rgba(56, 189, 248, 0.1);
+          border: 1px solid rgba(56, 189, 248, 0.3);
           padding: 0.2rem 0.55rem;
           border-radius: 4px;
           text-transform: uppercase;
           font-weight: 600;
+          letter-spacing: 0.05em;
         }
         .work-year {
           font-family: var(--font-d-din);
           font-size: 0.72rem;
-          color: #FFFFFF;
+          color: #64748B;
+          font-weight: 600;
         }
         .work-title {
-          font-size: clamp(1.15rem, 2vw, 1.4rem);
-          font-weight: 600;
-          color: #FFFFFF;
+          font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+          font-weight: 700;
+          color: #F8FAFC;
           letter-spacing: -0.015em;
           text-transform: none;
           line-height: 1.25;
@@ -201,10 +206,10 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           transition: color 0.2s;
         }
         .work-card:hover .work-title {
-          color: #FFFFFF;
+          color: #38BDF8;
         }
         .work-desc {
-          color: #FFFFFF;
+          color: #CBD5E1;
           font-size: 0.88rem;
           line-height: 1.6;
           max-width: 860px;
@@ -215,6 +220,21 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           -webkit-box-orient: vertical;
           overflow: hidden;
         }
+        .work-content-row {
+          display: flex;
+          gap: 1.25rem;
+          align-items: flex-start;
+          justify-content: space-between;
+        }
+        .work-thumb-box {
+          width: 130px;
+          height: 80px;
+          flex-shrink: 0;
+          border-radius: 6px;
+          overflow: hidden;
+          border: 1px solid rgba(56, 189, 248, 0.25);
+          background-color: #020b14;
+        }
         .work-tech-container {
           display: flex;
           flex-wrap: wrap;
@@ -224,10 +244,10 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
           font-size: 0.72rem;
           font-family: var(--font-d-din);
           padding: 0.2rem 0.55rem;
-          background-color: rgba(22, 119, 255, 0.08);
-          border: 1px solid rgba(22, 119, 255, 0.16);
+          background-color: rgba(56, 189, 248, 0.08);
+          border: 1px solid rgba(56, 189, 248, 0.2);
           border-radius: 4px;
-          color: #FFFFFF;
+          color: #E2E8F0;
         }
         .work-action-row {
           display: flex;
@@ -238,9 +258,9 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         }
         .work-action-text {
           font-size: 0.75rem;
-          color: #FFFFFF;
-          font-weight: 600;
-          letter-spacing: 0.08em;
+          color: #38BDF8;
+          font-weight: 700;
+          letter-spacing: 0.1em;
           text-transform: uppercase;
           display: inline-flex;
           align-items: center;
@@ -249,21 +269,42 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
         }
         .work-card:hover .work-action-text {
           color: #FFFFFF;
-          transform: translateX(3px);
+          transform: translateX(4px);
         }
 
         @media (max-width: 767px) {
+          .work-filters {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+            padding-bottom: 0.5rem !important;
+          }
+          .work-filters::-webkit-scrollbar {
+            display: none !important;
+          }
+          .work-filter-btn {
+            flex-shrink: 0 !important;
+            white-space: nowrap !important;
+          }
           .work-card {
-            padding: 1rem;
-            gap: 0.6rem;
-            border-radius: 10px;
+            padding: 1.15rem !important;
+            gap: 0.75rem !important;
+          }
+          .work-content-row {
+            flex-direction: column-reverse !important;
+            gap: 0.85rem !important;
+          }
+          .work-thumb-box {
+            width: 100% !important;
+            height: 150px !important;
           }
           .work-title {
-            font-size: 1rem !important;
+            font-size: 1.1rem !important;
           }
           .work-desc {
-            font-size: 0.82rem !important;
-            line-height: 1.45 !important;
+            font-size: 0.84rem !important;
+            line-height: 1.5 !important;
             -webkit-line-clamp: 2 !important;
           }
           .work-tech-tag {
@@ -276,8 +317,8 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
       <div className="work-page-container">
         {/* Header */}
         <div style={{ marginBottom: 'clamp(1.75rem, 3.5vw, 2.75rem)' }}>
-          <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
-            [04 — OUR WORK]
+          <div style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', letterSpacing: '0.25em', color: '#38BDF8', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 700 }}>
+            [SYS.04 // INDUSTRIAL PORTFOLIO]
           </div>
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: '#FFFFFF', textTransform: 'uppercase', marginBottom: '0.65rem' }}>
             SELECTED DEPLOYMENTS &amp; CASE STUDIES.
@@ -428,7 +469,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                  <div className="work-content-row">
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <h2 className="work-title">
                         {study.title}
@@ -438,17 +479,7 @@ export default async function WorkPage({ searchParams }: WorkPageProps) {
                       </p>
                     </div>
                     {study.heroImage && (
-                      <div
-                        style={{
-                          width: '130px',
-                          height: '80px',
-                          flexShrink: 0,
-                          borderRadius: '6px',
-                          overflow: 'hidden',
-                          border: '1px solid rgba(56, 189, 248, 0.25)',
-                          backgroundColor: '#020b14',
-                        }}
-                      >
+                      <div className="work-thumb-box">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={study.heroImage}

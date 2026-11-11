@@ -106,8 +106,9 @@ export default async function ServicesPage() {
           width: 100%;
         }
         .service-horizontal-card {
-          background-color: rgba(6, 21, 43, 0.65);
-          border: 1px solid rgba(22, 119, 255, 0.14);
+          background-color: rgba(6, 21, 43, 0.7);
+          border: 1px solid rgba(56, 189, 248, 0.16);
+          border-left: 3px solid #1677FF;
           border-radius: 10px;
           padding: 1.15rem clamp(1rem, 2.5vw, 1.75rem);
           display: grid;
@@ -119,35 +120,36 @@ export default async function ServicesPage() {
           width: 100%;
         }
         .service-horizontal-card:hover {
-          background-color: rgba(8, 28, 58, 0.8);
-          border-color: rgba(56, 189, 248, 0.4);
-          transform: translateY(-1px);
-          box-shadow: 0 8px 24px -6px rgba(22, 119, 255, 0.2);
+          background-color: rgba(8, 28, 58, 0.9);
+          border-color: rgba(56, 189, 248, 0.5);
+          border-left-color: #38BDF8;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 28px -6px rgba(22, 119, 255, 0.3);
         }
         .service-card-left {
           display: flex;
           flex-direction: column;
-          gap: 0.2rem;
+          gap: 0.25rem;
         }
         .service-card-eyebrow {
           font-family: var(--font-d-din);
-          font-size: 0.65rem;
-          color: #FFFFFF;
+          font-size: 0.68rem;
+          color: #38BDF8;
           letter-spacing: 0.15em;
-          font-weight: 600;
+          font-weight: 700;
           text-transform: uppercase;
         }
         .service-card-title {
-          font-size: 1.1rem;
-          font-weight: 600;
-          color: #FFFFFF;
+          font-size: 1.15rem;
+          font-weight: 700;
+          color: #F8FAFC;
           letter-spacing: -0.01em;
           margin: 0;
           line-height: 1.3;
         }
         .service-card-desc {
-          color: #FFFFFF;
-          font-size: 0.875rem;
+          color: #CBD5E1;
+          font-size: 0.88rem;
           line-height: 1.55;
           margin: 0;
           font-weight: 300;
@@ -155,21 +157,22 @@ export default async function ServicesPage() {
         .service-card-action {
           font-family: var(--font-d-din);
           font-size: 0.72rem;
-          color: #FFFFFF;
+          color: #38BDF8;
           text-decoration: none;
           letter-spacing: 0.08em;
-          font-weight: 600;
+          font-weight: 700;
           white-space: nowrap;
-          padding: 0.4rem 0.8rem;
+          padding: 0.45rem 0.85rem;
           border-radius: 6px;
-          background: rgba(22, 119, 255, 0.08);
-          border: 1px solid rgba(22, 119, 255, 0.3);
+          background: rgba(56, 189, 248, 0.08);
+          border: 1px solid rgba(56, 189, 248, 0.3);
           transition: all 0.2s;
         }
         .service-card-action:hover {
-          background: rgba(22, 119, 255, 0.2);
+          background: rgba(56, 189, 248, 0.2);
           color: #FFFFFF;
-          border-color: #FFFFFF;
+          border-color: #38BDF8;
+          transform: translateX(3px);
         }
 
         .faq-item {
@@ -215,7 +218,7 @@ export default async function ServicesPage() {
       `}</style>
       <div style={{ maxWidth: 'var(--max-width, 1200px)', margin: '0 auto' }}>
         <div style={{ marginBottom: 'clamp(1.5rem, 3.5vw, 2.5rem)' }}>
-          <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#FFFFFF', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>SYS.08 / SERVICES</div>
+          <div className="tech-label" style={{ fontFamily: 'var(--font-d-din)', fontSize: '0.72rem', color: '#38BDF8', letterSpacing: '0.25em', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 700 }}>[SYS.08 // ENGINEERING &amp; APPLIED SERVICES]</div>
           <h1 style={{ fontSize: 'clamp(2.5rem, 5vw, 4.25rem)', fontWeight: 700, lineHeight: 1.02, letterSpacing: '-0.035em', color: 'var(--color-text-primary, #FFFFFF)', textTransform: 'uppercase', margin: '0 0 0.65rem 0' }}>
             AI, SOFTWARE & AUTOMATION SERVICES.
           </h1>
