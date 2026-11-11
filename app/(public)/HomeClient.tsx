@@ -305,16 +305,22 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
         @media (max-width: 768px) {
           .hero-mars-section {
             align-items: flex-start !important;
+            min-height: 100vh !important;
+            min-height: 100svh !important;
             padding-top: calc(var(--nav-height, 68px) + 0.85rem) !important;
-            padding-bottom: 2rem !important;
+            padding-bottom: 2.25rem !important;
             padding-left: clamp(1rem, 4vw, 1.5rem) !important;
             padding-right: clamp(1rem, 4vw, 1.5rem) !important;
+            box-sizing: border-box !important;
           }
           .hero-content-block {
             width: 100% !important;
             max-width: 100% !important;
             display: flex !important;
             flex-direction: column !important;
+            min-height: calc(100vh - var(--nav-height, 68px) - 3.8rem) !important;
+            min-height: calc(100svh - var(--nav-height, 68px) - 3.8rem) !important;
+            box-sizing: border-box !important;
           }
           .hero-eyebrow {
             order: 1 !important;
@@ -326,7 +332,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
           }
           .hero-headline-wrap {
             order: 2 !important;
-            height: clamp(155px, 23vh, 190px) !important;
+            height: clamp(150px, 22vh, 180px) !important;
             width: 100% !important;
             max-width: 360px !important;
             margin-bottom: 0.85rem !important;
@@ -334,25 +340,31 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
           .hero-actions {
             order: 3 !important;
             margin-top: 0.2rem !important;
-            margin-bottom: 1.15rem !important;
+            margin-bottom: 1.5rem !important;
             display: flex !important;
-            flex-direction: row !important;
-            flex-wrap: wrap !important;
-            gap: 0.6rem !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.75rem !important;
           }
           .hero-actions a, .hero-actions button {
-            padding: 0.62rem 1.15rem !important;
-            font-size: 0.74rem !important;
+            padding: 0.65rem 1.45rem !important;
+            font-size: 0.76rem !important;
+            min-width: 170px !important;
+            justify-content: center !important;
+            text-align: center !important;
           }
           .hero-description {
             order: 4 !important;
-            margin-top: 0 !important;
-            margin-bottom: 1rem !important;
-            font-size: 0.82rem !important;
-            line-height: 1.5 !important;
+            margin-top: auto !important;
+            margin-bottom: 0.25rem !important;
+            padding-top: 1rem !important;
+            font-size: 0.78rem !important;
+            line-height: 1.55 !important;
             color: #CBD5E1 !important;
-            max-width: 340px !important;
+            max-width: calc(100% - 3.5rem) !important;
             font-weight: 300 !important;
+            position: relative !important;
+            z-index: 2 !important;
           }
         }
 
