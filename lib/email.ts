@@ -22,7 +22,7 @@ export const ADMIN_NOTIFICATION_EMAIL =
   process.env.ADMIN_NOTIFICATION_EMAIL ||
   process.env.COMPANY_NOTIFICATION_EMAIL ||
   process.env.ADMIN_EMAIL ||
-  'quantumai.cmp@gmail.com';
+  'support@quantumaitech.org';
 
 /**
  * Universal, ultra-resilient server-side email dispatcher optimized for Vercel Serverless.

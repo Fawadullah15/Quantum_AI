@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     revalidatePath('/admin/testimonials');
     revalidatePath('/admin');
 
-    // Centralized Admin Notification & Email Copy to quantumai.cmp@gmail.com
+    // Centralized Admin Notification & Email Copy to support@quantumaitech.org
     await createAdminNotification({
       type: 'TESTIMONIAL',
       title: `New Client Review from ${name.trim()}`,

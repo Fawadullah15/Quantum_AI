@@ -30,12 +30,12 @@ async function runEmailResilienceTests() {
 
   // 1. Recipient Target Verification
   console.log('[Test Group 1: Configuration & Recipient Targets]');
-  assert(ADMIN_NOTIFICATION_EMAIL === 'quantumai.cmp@gmail.com', 'ADMIN_NOTIFICATION_EMAIL defaults strictly to quantumai.cmp@gmail.com');
+  assert(ADMIN_NOTIFICATION_EMAIL === 'support@quantumaitech.org', 'ADMIN_NOTIFICATION_EMAIL defaults strictly to support@quantumaitech.org');
 
   // 2. Unconfigured / Missing Credentials Graceful Handling
   console.log('\n[Test Group 2: Graceful Error Handling on Missing Transport]');
   const unconfiguredResult = await sendEmailDetailed({
-    to: 'quantumai.cmp@gmail.com',
+    to: 'support@quantumaitech.org',
     subject: '[Test] Graceful Failure Test',
     html: '<p>Testing non-crashing behavior without transport credentials</p>',
   });

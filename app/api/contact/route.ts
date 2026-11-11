@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       },
     });
 
-    // Centralized Admin Notification & Email Dispatch to quantumai.cmp@gmail.com
+    // Centralized Admin Notification & Email Dispatch to support@quantumaitech.org
     await createAdminNotification({
       type: cleanProjectType ? 'PROJECT_INQUIRY' : 'CONTACT',
       title: cleanProjectType ? `New ${cleanProjectType} Inquiry` : `New Contact Message from ${cleanName}`,

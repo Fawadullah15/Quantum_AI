@@ -388,7 +388,7 @@ model Notification {
   emailSentAt     DateTime?
   emailFailedAt   DateTime?
   emailRetryCount Int       @default(0)
-  emailRecipient  String?   @default("quantumai.cmp@gmail.com")
+  emailRecipient  String?   @default("support@quantumaitech.org")
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 

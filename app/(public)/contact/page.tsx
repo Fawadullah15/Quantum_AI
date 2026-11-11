@@ -70,7 +70,7 @@ export default function ContactPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [textFocused, setTextFocused] = useState(false);
   const [contactSettings, setContactSettings] = useState({
-    email: 'quantumai.cmp@gmail.com',
+    email: 'support@quantumaitech.org',
     responseTime: 'We review all inquiries within 24 hours and reply with next steps and a feasibility assessment.',
     location: 'San Francisco & Islamabad',
   });
@@ -81,7 +81,7 @@ export default function ContactPage() {
       .then((data) => {
         if (data) {
           setContactSettings({
-            email: data.company_email || 'hello@quantumai.dev',
+            email: data.company_email || 'support@quantumaitech.org',
             responseTime: data.response_time_text || 'We review all inquiries within 24 hours and reply with next steps and a feasibility assessment.',
             location: data.company_location || 'San Francisco & Islamabad',
           });

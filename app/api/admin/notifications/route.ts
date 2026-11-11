@@ -43,7 +43,7 @@ export async function GET(request: Request) {
             read: c.status !== 'NEW',
             readAt: c.status !== 'NEW' ? c.updatedAt : null,
             emailStatus: 'SENT',
-            emailRecipient: 'quantumai.cmp@gmail.com',
+            emailRecipient: 'support@quantumaitech.org',
             createdAt: c.createdAt,
             updatedAt: c.updatedAt,
           });
@@ -63,7 +63,7 @@ export async function GET(request: Request) {
             read: a.status !== 'NEW',
             readAt: a.status !== 'NEW' ? a.updatedAt : null,
             emailStatus: 'SENT',
-            emailRecipient: 'quantumai.cmp@gmail.com',
+            emailRecipient: 'support@quantumaitech.org',
             createdAt: a.createdAt,
             updatedAt: a.updatedAt,
           });
@@ -83,7 +83,7 @@ export async function GET(request: Request) {
             read: p.status !== 'NEW',
             readAt: p.status !== 'NEW' ? p.updatedAt : null,
             emailStatus: 'SENT',
-            emailRecipient: 'quantumai.cmp@gmail.com',
+            emailRecipient: 'support@quantumaitech.org',
             createdAt: p.createdAt,
             updatedAt: p.updatedAt,
           });
@@ -154,7 +154,7 @@ export async function GET(request: Request) {
           emailSentAt: n.emailSentAt || null,
           emailFailedAt: n.emailFailedAt || null,
           emailRetryCount: n.emailRetryCount || 0,
-          emailRecipient: n.emailRecipient || 'quantumai.cmp@gmail.com',
+          emailRecipient: n.emailRecipient || 'support@quantumaitech.org',
           createdAt: n.createdAt,
           updatedAt: n.updatedAt,
         };
@@ -185,7 +185,7 @@ export async function POST(request: Request) {
       if (result.success) {
         return NextResponse.json({
           success: true,
-          message: 'Email dispatched successfully to quantumai.cmp@gmail.com',
+          message: 'Email dispatched successfully to support@quantumaitech.org',
           notification: result.notification,
           provider: result.provider,
           messageId: result.messageId,

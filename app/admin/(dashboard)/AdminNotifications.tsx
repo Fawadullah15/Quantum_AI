@@ -158,7 +158,7 @@ export function AdminNotifications() {
 
       if (res.ok && data.success) {
         setRetryToast({
-          message: '✓ Email copy dispatched successfully to quantumai.cmp@gmail.com',
+          message: '✓ Email copy dispatched successfully to support@quantumaitech.org',
           type: 'success',
         })
         const nowStr = new Date().toISOString()
@@ -322,7 +322,7 @@ export function AdminNotifications() {
     if (status === 'SENT') {
       return (
         <span
-          title="Email copy delivered to quantumai.cmp@gmail.com"
+          title="Email copy delivered to support@quantumaitech.org"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -1001,7 +1001,7 @@ export function AdminNotifications() {
                           : 'Email Copy Pending Dispatch'}
                       </div>
                       <div style={{ fontSize: '0.75rem', color: '#FFFFFF' }}>
-                        Target: <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{selectedNotification.emailRecipient || 'quantumai.cmp@gmail.com'}</span>
+                        Target: <span style={{ color: '#FFFFFF', fontWeight: 600 }}>{selectedNotification.emailRecipient || 'support@quantumaitech.org'}</span>
                       </div>
                     </div>
                   </div>

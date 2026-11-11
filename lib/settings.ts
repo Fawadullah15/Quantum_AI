@@ -82,12 +82,12 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
   brand_accent_color: '#1677FF',
 
   // Contact Information
-  company_email: 'quantumai.cmp@gmail.com',
-  company_routing_email: 'quantumai.cmp@gmail.com',
+  company_email: 'support@quantumaitech.org',
+  company_routing_email: 'support@quantumaitech.org',
   company_phone: '',
   company_address: '',
   company_location: 'Global / Hybrid',
-  contact_form_recipient: 'quantumai.cmp@gmail.com',
+  contact_form_recipient: 'support@quantumaitech.org',
   response_time_text: 'We review all inquiries within 24 hours and reply with next steps and a feasibility assessment.',
 
   // Social Links
@@ -118,8 +118,8 @@ export const DEFAULT_SETTINGS: SiteSettingsMap = {
   google_analytics_id: '',
 
   // Compliance & Policy Settings
-  privacy_email: 'quantumai.cmp@gmail.com',
-  dpo_contact: 'quantumai.cmp@gmail.com',
+  privacy_email: 'support@quantumaitech.org',
+  dpo_contact: 'support@quantumaitech.org',
   terms_effective_date: 'October 2026',
   privacy_effective_date: 'October 2026',
   cookie_effective_date: 'October 2026',

@@ -39,7 +39,7 @@ const FALLBACK_MEMBERS_MAP: Record<string, LeaderItem> = {
     photo: "/images/team/fawadullah-imraj.jpg",
     linkedin: "https://www.linkedin.com/company/quantumai",
     github: "https://github.com/quantumai",
-    email: "quantumai.cmp@gmail.com",
+    email: "support@quantumaitech.org",
     location: "Global / Hybrid",
     displayOrder: 1,
     isActive: true,

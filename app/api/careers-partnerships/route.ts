@@ -86,7 +86,7 @@ export async function POST(request: Request) {
         },
       });
 
-      // Centralized Admin Notification & Email Dispatch to quantumai.cmp@gmail.com
+      // Centralized Admin Notification & Email Dispatch to support@quantumaitech.org
       await createAdminNotification({
         type: 'PARTNERSHIP',
         title: `New Partnership: ${subject}`,
@@ -242,7 +242,7 @@ export async function POST(request: Request) {
         },
       });
 
-      // Centralized Admin Notification & Email Dispatch to quantumai.cmp@gmail.com
+      // Centralized Admin Notification & Email Dispatch to support@quantumaitech.org
       await createAdminNotification({
         type: 'CAREER',
         title: `New Career Application: ${fullName}`,

@@ -47,7 +47,7 @@ const NAV_GROUPS = [
 export default function Footer({
   companyName = 'QUANTUM AI',
   tagline = 'AI, software, and automation for industry and business.',
-  email = 'quantumai.cmp@gmail.com',
+  email = 'support@quantumaitech.org',
   copyright,
 }: {
   companyName?: string;

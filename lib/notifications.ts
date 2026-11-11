@@ -140,7 +140,7 @@ export function buildNotificationEmailContent(params: {
 
 /**
  * Creates a centralized Notification record in the database,
- * attempts to dispatch an email copy to quantumai.cmp@gmail.com,
+ * attempts to dispatch an email copy to support@quantumaitech.org,
  * records the email delivery status (SENT / FAILED), and revalidates caches.
  *
  * Guaranteed NEVER to throw or fail the public caller if email dispatch fails.
