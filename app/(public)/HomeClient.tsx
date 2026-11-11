@@ -300,10 +300,64 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
         /* ── Prevent horizontal overflow on all screens ── */
         html, body { width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important; }
         * { box-sizing: border-box !important; }
+
+        /* ── Hero Mobile Positioning & Order ── */
+        @media (max-width: 768px) {
+          .hero-mars-section {
+            align-items: flex-start !important;
+            padding-top: calc(var(--nav-height, 68px) + 0.85rem) !important;
+            padding-bottom: 2rem !important;
+            padding-left: clamp(1rem, 4vw, 1.5rem) !important;
+            padding-right: clamp(1rem, 4vw, 1.5rem) !important;
+          }
+          .hero-content-block {
+            width: 100% !important;
+            max-width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+          }
+          .hero-eyebrow {
+            order: 1 !important;
+            margin-top: 0 !important;
+            margin-bottom: 0.35rem !important;
+            font-size: 0.68rem !important;
+            letter-spacing: 0.16em !important;
+            color: #38BDF8 !important;
+          }
+          .hero-headline-wrap {
+            order: 2 !important;
+            height: clamp(155px, 23vh, 190px) !important;
+            width: 100% !important;
+            max-width: 360px !important;
+            margin-bottom: 0.85rem !important;
+          }
+          .hero-actions {
+            order: 3 !important;
+            margin-top: 0.2rem !important;
+            margin-bottom: 1.15rem !important;
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 0.6rem !important;
+          }
+          .hero-actions a, .hero-actions button {
+            padding: 0.62rem 1.15rem !important;
+            font-size: 0.74rem !important;
+          }
+          .hero-description {
+            order: 4 !important;
+            margin-top: 0 !important;
+            margin-bottom: 1rem !important;
+            font-size: 0.82rem !important;
+            line-height: 1.5 !important;
+            color: #CBD5E1 !important;
+            max-width: 340px !important;
+            font-weight: 300 !important;
+          }
+        }
+
         /* ── Mobile Responsive Overrides ── */
         @media (max-width: 640px) {
-          /* Hero heading */
-          .hero-eyebrow { letter-spacing: 0.15em !important; font-size: 0.7rem !important; }
           /* Section padding */
           section:not(.continuous-clients-section):not(.test-marquee-section) {
             padding-left: clamp(0.75rem, 4vw, 1.5rem) !important;
@@ -364,6 +418,7 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
             HERO SECTION — MARS SPACE ARRIVAL
         ═══════════════════════════════════════════════════════════ */}
         <section
+          className="hero-mars-section"
           style={{
             minHeight: '100vh',
             display: 'flex',
@@ -379,7 +434,17 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
           {/* Semantic H1 for SEO & accessibility — visually hidden */}
           <h1 className="sr-only">Quantum AI — AI, Custom Software, and Automation for Industrial and Business Operations</h1>
 
-          <div style={{ maxWidth: 860, pointerEvents: 'auto', position: 'relative', zIndex: 2 }}>
+          <div
+            className="hero-content-block"
+            style={{
+              maxWidth: 860,
+              pointerEvents: 'auto',
+              position: 'relative',
+              zIndex: 2,
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
             <p
               className="hero-eyebrow"
               style={{
@@ -387,21 +452,26 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
                 fontSize: '0.72rem',
                 letterSpacing: '0.22em',
                 textTransform: 'uppercase',
-                color: '#FFFFFF',
+                color: '#38BDF8',
                 marginBottom: '0.85rem',
                 fontWeight: 600,
+                order: 1,
               }}
             >
               [SYS.01] AI · SOFTWARE · AUTOMATION · INDUSTRIAL SYSTEMS
             </p>
 
             {/* ParticleText visual headline */}
-            <div style={{
-              height: 'clamp(190px, 30vw, 300px)',
-              width: 'clamp(280px, 90vw, 840px)',
-              marginBottom: '1.25rem',
-              filter: 'drop-shadow(0 4px 24px rgba(2, 7, 8, 0.95))',
-            }}>
+            <div
+              className="hero-headline-wrap"
+              style={{
+                height: 'clamp(190px, 30vw, 300px)',
+                width: 'clamp(280px, 90vw, 840px)',
+                marginBottom: '1.25rem',
+                filter: 'drop-shadow(0 4px 24px rgba(2, 7, 8, 0.95))',
+                order: 2,
+              }}
+            >
               <ParticleText
                 text={`WE BUILD\nINTELLIGENT\nSOFTWARE`}
                 fontSize={95}
@@ -417,19 +487,32 @@ export default function HomeClient({ initialData }: { initialData?: HomeInitialD
             </div>
 
             {/* Supporting copy */}
-            <p style={{
-              fontSize: 'clamp(0.9rem, 1.3vw, 1.05rem)',
-              color: '#FFFFFF',
-              lineHeight: 1.6,
-              marginBottom: '1.75rem',
-              maxWidth: 620,
-              fontWeight: 300,
-            }}>
+            <p
+              className="hero-description"
+              style={{
+                fontSize: 'clamp(0.9rem, 1.3vw, 1.05rem)',
+                color: '#FFFFFF',
+                lineHeight: 1.6,
+                marginBottom: '1.75rem',
+                maxWidth: 620,
+                fontWeight: 300,
+                order: 3,
+              }}
+            >
               Quantum AI is an AI and software engineering company. We build custom software, business automation, and AI systems for manufacturers, engineering firms, and businesses with complex operations.
             </p>
 
             {/* CTAs */}
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div
+              className="hero-actions"
+              style={{
+                display: 'flex',
+                gap: '1rem',
+                flexWrap: 'wrap',
+                alignItems: 'center',
+                order: 4,
+              }}
+            >
               <NovaButton href="/contact">START A PROJECT</NovaButton>
               <GalaxyButton href="/work">EXPLORE OUR WORK</GalaxyButton>
             </div>
