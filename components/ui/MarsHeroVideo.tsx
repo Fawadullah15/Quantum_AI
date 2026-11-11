@@ -154,14 +154,36 @@ export default function MarsHeroVideo() {
           height: 100%;
           object-fit: cover;
           object-position: right center;
-          filter: brightness(1.28) contrast(1.10) saturate(1.22);
+          filter: brightness(1.58) contrast(1.14) saturate(1.38);
           transition: opacity 0.5s ease-in-out;
+        }
+
+        /* Desktop top & bottom dissolves: minimal height to avoid encroaching on Mars sphere */
+        .mars-hero-top-dissolve {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 70px;
+          background: linear-gradient(180deg, #020708 0%, transparent 100%);
+          pointer-events: none;
+        }
+
+        .mars-hero-bottom-dissolve {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 120px;
+          background: linear-gradient(0deg, #020708 0%, rgba(2, 7, 8, 0.6) 50%, transparent 100%);
+          pointer-events: none;
         }
 
         /* Tablet responsive adjustment (769px to 1024px) */
         @media (max-width: 1024px) and (min-width: 769px) {
           .mars-hero-video {
             object-position: 85% center;
+            filter: brightness(1.52) contrast(1.12) saturate(1.34);
           }
         }
 
@@ -170,6 +192,7 @@ export default function MarsHeroVideo() {
           .mars-hero-video {
             object-position: 25% center;
             opacity: 1.0;
+            filter: brightness(1.48) contrast(1.12) saturate(1.32);
           }
           .mars-hero-vignette-desktop {
             display: none !important;
@@ -241,14 +264,14 @@ export default function MarsHeroVideo() {
         <source src={DESKTOP_LOCAL} type="video/mp4" />
       </video>
 
-      {/* Desktop Deep Space Void Vignette: ensures headline & buttons on the left have pure contrast */}
+      {/* Desktop Deep Space Void Vignette: ensures headline & buttons on the left have pure contrast without dimming Mars on the right */}
       <div
         className="mars-hero-vignette-desktop"
         style={{
           position: 'absolute',
           inset: 0,
           background:
-            'linear-gradient(90deg, #020708 0%, rgba(2, 7, 8, 0.95) 24%, rgba(2, 7, 8, 0.45) 45%, transparent 65%)',
+            'linear-gradient(90deg, #020708 0%, rgba(2, 7, 8, 0.92) 20%, rgba(2, 7, 8, 0.3) 36%, transparent 46%)',
           pointerEvents: 'none',
         }}
       />
@@ -264,32 +287,10 @@ export default function MarsHeroVideo() {
       />
 
       {/* Top Navbar dissolve */}
-      <div
-        className="mars-hero-top-dissolve"
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '120px',
-          background: 'linear-gradient(180deg, #020708 0%, transparent 100%)',
-          pointerEvents: 'none',
-        }}
-      />
+      <div className="mars-hero-top-dissolve" />
 
       {/* Bottom dissolve into next section */}
-      <div
-        className="mars-hero-bottom-dissolve"
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: '240px',
-          background: 'linear-gradient(0deg, #020708 0%, rgba(2, 7, 8, 0.85) 45%, transparent 100%)',
-          pointerEvents: 'none',
-        }}
-      />
+      <div className="mars-hero-bottom-dissolve" />
     </div>
   );
 }
