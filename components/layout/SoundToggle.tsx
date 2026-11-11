@@ -242,8 +242,7 @@ export function SoundToggle() {
             right: calc(1rem + env(safe-area-inset-right, 0px));
           }
           .qa-sound-prompt-card {
-            width: 245px;
-            padding: 12px 13px 13px;
+            display: none !important;
           }
         }
         @media (prefers-reduced-motion: reduce) {

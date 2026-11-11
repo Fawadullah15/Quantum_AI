@@ -150,14 +150,16 @@ export default function ParticleText({
 
     const init = () => {
       const rect = container.getBoundingClientRect();
-      cw = rect.width;
-      ch = rect.height;
+      cw = rect.width || container.clientWidth || container.offsetWidth;
+      ch = rect.height || container.clientHeight || container.offsetHeight;
+      if (!cw || !ch) return;
 
       canvas.width = cw * dpr;
       canvas.height = ch * dpr;
       canvas.style.width = `${cw}px`;
       canvas.style.height = `${ch}px`;
       
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
 
       // Create offscreen canvas for text rendering
@@ -167,14 +169,15 @@ export default function ParticleText({
 
       offCanvas.width = cw * dpr;
       offCanvas.height = ch * dpr;
+      offCtx.setTransform(1, 0, 0, 1, 0, 0);
       offCtx.scale(dpr, dpr);
 
       // Responsive font size adjustments
       let actualFontSize = fontSize;
       let actualDensity = particleDensity;
       if (cw < 768) {
-        actualFontSize = fontSize * 0.5; // Scale down font on mobile
-        actualDensity = particleDensity * 1.5; // Less dense on mobile for perf
+        actualFontSize = fontSize * 0.44; // Scale down font on mobile
+        actualDensity = 2.4; // Crisp matrix dot density on mobile
       } else if (cw < 1024) {
         actualFontSize = fontSize * 0.75;
       }
@@ -210,9 +213,9 @@ export default function ParticleText({
             const logicalX = x / dpr;
             const logicalY = y / dpr;
             
-            // Randomize spawn position slightly for an entrance effect
-            const spawnX = logicalX + (Math.random() - 0.5) * 50;
-            const spawnY = logicalY + (Math.random() - 0.5) * 50;
+            // Instant crisp placement on load, dynamic physics on user interaction
+            const spawnX = logicalX;
+            const spawnY = logicalY;
 
             newParticles.push(
               new Particle(spawnX, spawnY, textColor, particleSize, friction, ease)
@@ -271,8 +274,26 @@ export default function ParticleText({
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    init();
-    animate();
+    let initRafId = 0;
+    const tryInit = () => {
+      const rect = container.getBoundingClientRect();
+      const w = rect.width || container.clientWidth || container.offsetWidth;
+      const h = rect.height || container.clientHeight || container.offsetHeight;
+      if (!w || !h) {
+        initRafId = requestAnimationFrame(tryInit);
+        return;
+      }
+      init();
+      animate();
+    };
+
+    tryInit();
+
+    if (typeof document !== 'undefined' && document.fonts?.ready) {
+      document.fonts.ready.then(() => {
+        init();
+      }).catch(() => {});
+    }
 
     // Pause animation when hero is outside the viewport
     const observer = new IntersectionObserver(
@@ -294,6 +315,7 @@ export default function ParticleText({
       observer.observe(container);
     }
 
+    let resizeObserver: ResizeObserver | null = null;
     const handleResize = () => {
       cancelAnimationFrame(animationRef.current);
       init();
@@ -301,6 +323,17 @@ export default function ParticleText({
         animate();
       }
     };
+
+    if (typeof ResizeObserver !== 'undefined' && container) {
+      resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.contentRect.width > 0 && entry.contentRect.height > 0) {
+            handleResize();
+          }
+        }
+      });
+      resizeObserver.observe(container);
+    }
 
     const lastMovePos = { x: -9999, y: -9999 };
 
@@ -405,6 +438,7 @@ export default function ParticleText({
     container.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
+      if (resizeObserver) resizeObserver.disconnect();
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('mousemove', handleMouseMove);
       container?.removeEventListener('pointerdown', handlePointerDown);
@@ -412,9 +446,10 @@ export default function ParticleText({
       container?.removeEventListener('touchmove', handleTouchMove);
       container?.removeEventListener('mouseleave', handleMouseLeave);
       observer.disconnect();
+      cancelAnimationFrame(initRafId);
       cancelAnimationFrame(animationRef.current);
     };
-  }, [text, lines, fontSize, fontFamily, fontWeight, textColor, particleDensity, particleSize, friction, ease, mouseRadius, mouseRepelForce]);
+  }, [text, fontSize, fontFamily, fontWeight, textColor, particleDensity, particleSize, friction, ease, mouseRadius, mouseRepelForce]);
 
   return (
     <div 

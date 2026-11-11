@@ -14,7 +14,7 @@ import CapabilitiesSection from '@/components/sections/CapabilitiesSection';
 import ClientsSection from '@/components/sections/ClientsSection';
 import WhyQuantumSection from '@/components/sections/WhyQuantumSection';
 
-const ParticleText = dynamic(() => import('@/components/ui/ParticleText'), { ssr: false });
+import ParticleText from '@/components/ui/ParticleText';
 const GlobalMapSection = dynamic(() => import('@/components/sections/GlobalMapSection'), { ssr: false });
 import TestimonialsSection from '@/components/sections/TestimonialsSection';
 import MarsHeroVideo from '@/components/ui/MarsHeroVideo';

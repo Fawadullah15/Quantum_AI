@@ -167,8 +167,8 @@ export default function MarsHeroVideo() {
         /* Mobile phones responsive adjustment (<= 768px) */
         @media (max-width: 768px) {
           .mars-hero-video {
-            object-position: 0% center;
-            opacity: 0.90;
+            object-position: 25% center;
+            opacity: 1.0;
           }
           .mars-hero-vignette-desktop {
             display: none !important;
@@ -177,11 +177,19 @@ export default function MarsHeroVideo() {
             display: block !important;
             background: linear-gradient(
               180deg,
-              rgba(2, 7, 8, 0.35) 0%,
-              rgba(2, 7, 8, 0.65) 40%,
-              rgba(2, 7, 8, 0.92) 80%,
+              rgba(2, 7, 8, 0.45) 0%,
+              rgba(2, 7, 8, 0.05) 20%,
+              transparent 45%,
+              rgba(2, 7, 8, 0.3) 72%,
+              rgba(2, 7, 8, 0.88) 88%,
               #020708 100%
             ) !important;
+          }
+          .mars-hero-top-dissolve {
+            height: 70px !important;
+          }
+          .mars-hero-bottom-dissolve {
+            height: 110px !important;
           }
         }
 
@@ -256,6 +264,7 @@ export default function MarsHeroVideo() {
 
       {/* Top Navbar dissolve */}
       <div
+        className="mars-hero-top-dissolve"
         style={{
           position: 'absolute',
           top: 0,
@@ -269,6 +278,7 @@ export default function MarsHeroVideo() {
 
       {/* Bottom dissolve into next section */}
       <div
+        className="mars-hero-bottom-dissolve"
         style={{
           position: 'absolute',
           bottom: 0,
