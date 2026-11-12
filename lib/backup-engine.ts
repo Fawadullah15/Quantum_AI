@@ -403,7 +403,7 @@ export function preflightValidateBackup(data: any): PreflightValidationResult {
 async function insertRowsBatched(
   rows: any[],
   insertFn: (batch: any[]) => Promise<unknown>,
-  maxBatchBytes = 1_500_000
+  maxBatchBytes = 4_000_000
 ): Promise<number> {
   if (!rows || rows.length === 0) return 0;
 
@@ -459,38 +459,14 @@ export async function executeRestorePackage(
 
   let totalRestored = 0;
 
-  // 3. Atomic transaction with 60s timeout
+  // 3. Atomic transaction with generous timeout for large base64 media payloads
   await prisma.$transaction(
     async (tx) => {
-      // ─── STEP A: DELETE DEPENDENT CHILD RECORDS FIRST ───
-      await tx.submissionNote.deleteMany();
-      await tx.activityLog.deleteMany();
-      await tx.productFeature.deleteMany();
-      await tx.caseStudyMetric.deleteMany();
-
-      // ─── STEP B: DELETE RELATIONAL PARENT RECORDS ───
-      await tx.product.deleteMany();
-      await tx.caseStudy.deleteMany();
-      await tx.careerApplication.deleteMany();
-      await tx.partnershipRequest.deleteMany();
-
-      // ─── STEP C: DELETE INDEPENDENT APPLICATION RECORDS ───
-      await tx.campaign.deleteMany();
-      await tx.siteSettings.deleteMany();
-      await tx.navigationItem.deleteMany();
-      await tx.founder.deleteMany();
-      await tx.teamMember.deleteMany();
-      await tx.leadership.deleteMany();
-      await tx.service.deleteMany();
-      await tx.technology.deleteMany();
-      await tx.blogPost.deleteMany();
-      await tx.testimonial.deleteMany();
-      await tx.client.deleteMany();
-      await tx.contactSubmission.deleteMany();
-      await tx.notification.deleteMany();
-      await tx.media.deleteMany();
-      await tx.careerPosition.deleteMany();
-      await tx.recentlyDeleted.deleteMany();
+      // ─── STEP A-D PREP: CLEAR MANAGED TABLES IN A SINGLE ROUND TRIP ───
+      // Note: BotUser/BotConversation/BotGovernance tables are not part of CMS backups and remain untouched.
+      await tx.$executeRawUnsafe(
+        `TRUNCATE TABLE "SubmissionNote", "ActivityLog", "ProductFeature", "CaseStudyMetric", "Product", "CaseStudy", "CareerApplication", "PartnershipRequest", "Campaign", "SiteSettings", "NavigationItem", "Founder", "TeamMember", "Leadership", "Service", "Technology", "BlogPost", "Testimonial", "Client", "ContactSubmission", "Notification", "Media", "CareerPosition", "RecentlyDeleted", "User" RESTART IDENTITY CASCADE`
+      );
 
       // ─── STEP D: USER MANAGEMENT ───
       let rawUsers = sanitizeTableData(tables.User || [], 'User').map((u: any) => ({
@@ -511,8 +487,6 @@ export async function executeRestorePackage(
           matchingBackupUser.tokenVersion = currentAdmin.tokenVersion;
         }
       }
-
-      await tx.user.deleteMany();
 
       if (rawUsers.length > 0) {
         await tx.user.createMany({ data: rawUsers, skipDuplicates: true });
@@ -711,7 +685,7 @@ export async function executeRestorePackage(
         },
       });
     },
-    { timeout: 55000, maxWait: 10000 }
+    { timeout: 120000, maxWait: 15000 }
   );
 
   clearSettingsCache();
