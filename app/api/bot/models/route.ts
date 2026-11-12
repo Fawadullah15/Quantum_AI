@@ -1,7 +1,10 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getRegisteredModels, resolveActiveModel, getModelById, isModelExplicitlyDisabled } from '@/lib/bot/models';
 import { getProviderAdapter } from '@/lib/bot/providers';
 import { ensureAdminConfigLoaded, recordProviderConnectivityCheck } from '@/lib/bot/admin-config';
+import { requireBotAdmin } from '@/lib/bot/admin-guard';
+import { checkRateLimit } from '@/lib/rate-limit';
+import { enforceSameOrigin } from '@/lib/bot/http-security';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -27,7 +30,21 @@ export async function GET() {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+  const originErr = enforceSameOrigin(req);
+  if (originErr) return originErr;
+
+  const forwardedFor = req.headers.get('x-forwarded-for');
+  const realIp = req.headers.get('x-real-ip');
+  const clientIp = (forwardedFor ? forwardedFor.split(',')[0].trim() : realIp) || '127.0.0.1';
+  const rl = checkRateLimit(`bot:models:test:${clientIp}`, 15, 60 * 1000);
+  if (!rl.allowed) {
+    return NextResponse.json(
+      { success: false, error: `Rate limit exceeded. Wait ${rl.resetInSeconds}s.` },
+      { status: 429, headers: { 'Retry-After': String(rl.resetInSeconds) } }
+    );
+  }
+
   try {
     await ensureAdminConfigLoaded();
     const body = await req.json().catch(() => ({}));
@@ -58,7 +75,14 @@ export async function POST(req: Request) {
 
     const adapter = getProviderAdapter(model.provider);
     const verification = await adapter.verifyConnection();
-    await recordProviderConnectivityCheck(model.provider, verification).catch(() => {});
+
+    // Only write connectivity telemetry to persistent admin config when an authorized admin initiates it
+    try {
+      await requireBotAdmin({ write: true });
+      await recordProviderConnectivityCheck(model.provider, verification).catch(() => {});
+    } catch {
+      // Public visitors get ephemeral test result only without mutating admin telemetry
+    }
 
     return NextResponse.json({
       success: verification.success,

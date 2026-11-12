@@ -5,11 +5,27 @@ import {
   loginBotUser,
 } from '@/lib/bot/auth';
 import { OWNER_COOKIE_NAME, verifySignedOwnerToken } from '@/lib/bot/file-security';
+import { enforceSameOrigin } from '@/lib/bot/http-security';
+import { checkRateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
+  const originErr = enforceSameOrigin(req);
+  if (originErr) return originErr;
+
+  const forwardedFor = req.headers.get('x-forwarded-for');
+  const realIp = req.headers.get('x-real-ip');
+  const clientIp = (forwardedFor ? forwardedFor.split(',')[0].trim() : realIp) || '127.0.0.1';
+  const ipRl = checkRateLimit(`bot:auth:login-ip:${clientIp}`, 25, 5 * 60 * 1000);
+  if (!ipRl.allowed) {
+    return NextResponse.json(
+      { error: `Too many sign-in attempts from this network. Please wait ${ipRl.resetInSeconds}s.` },
+      { status: 429, headers: { 'Retry-After': String(ipRl.resetInSeconds) } }
+    );
+  }
+
   let body: any;
   try {
     body = await req.json();

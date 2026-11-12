@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { enforceSameOrigin } from '@/lib/bot/http-security';
 import { attachActorCookies, resolveBotActor } from '@/lib/bot/auth';
 import { ensureAdminConfigLoaded, getEffectiveUsageLimits } from '@/lib/bot/admin-config';
 import { validateFileUploadPolicy } from '@/lib/bot/file-security';
@@ -17,6 +18,9 @@ export const dynamic = 'force-dynamic';
  * POST /api/bot/files — Validates, extracts, and stores a user-uploaded document or image privately.
  */
 export async function POST(req: NextRequest) {
+  const originErr = enforceSameOrigin(req);
+  if (originErr) return originErr;
+
   await ensureAdminConfigLoaded().catch(() => {});
   const limits = getEffectiveUsageLimits();
 

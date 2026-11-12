@@ -81,6 +81,12 @@ export function useChat(options: UseChatOptions = {}) {
   const [streamingToolCalls, setStreamingToolCalls] = useState<BotToolCall[]>([]);
   const [streamingToolResults, setStreamingToolResults] = useState<BotToolResult[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [sessionNotice, setSessionNotice] = useState<string | null>(null);
+  const [restoredDraft, setRestoredDraft] = useState<{
+    key: number;
+    content: string;
+    attachments: BotAttachment[];
+  } | null>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const conversationIdRef = useRef<string>(conversationId);
@@ -162,6 +168,13 @@ export function useChat(options: UseChatOptions = {}) {
           setIsAuthenticated(isAuthedNow);
           setAuthType(sData?.authType || 'anonymous');
           setAuthUser(sData?.user || null);
+          if (sData?.sessionExpired) {
+            setSessionNotice(
+              'Your previous QuantumBot session expired. You can continue as a guest or sign back in to access synced account history.'
+            );
+          } else if (isAuthedNow) {
+            setSessionNotice(null);
+          }
           if (sData?.preferences) {
             setPreferences(sData.preferences);
             if (sData.preferences.defaultModelId && !options.defaultModelId) {
@@ -316,6 +329,7 @@ export function useChat(options: UseChatOptions = {}) {
       if ((!content.trim() && attachments.length === 0) || isGenerating) return;
 
       setError(null);
+      setRestoredDraft(null);
       setStreamingContent('');
       setStreamingThought('');
       setActiveToolCall(null);
@@ -323,15 +337,17 @@ export function useChat(options: UseChatOptions = {}) {
       setStreamingToolCalls([]);
       setStreamingToolResults([]);
 
+      const trimmedContent = content.trim();
       const userMessage: BotMessage = {
         id: `msg_user_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
         role: 'user',
-        content: content.trim(),
+        content: trimmedContent,
         attachments: attachments.length > 0 ? attachments : undefined,
         createdAt: new Date().toISOString(),
       };
 
-      const updatedHistory = [...messages, userMessage];
+      const baseMessages = messages;
+      const updatedHistory = [...baseMessages, userMessage];
       setMessages(updatedHistory);
       persist(updatedHistory);
 
@@ -341,8 +357,21 @@ export function useChat(options: UseChatOptions = {}) {
 
       let accumulatedContent = '';
       let actualResponseModel = modelId;
+      let streamErrorReceived: string | null = null;
       const toolCallsAccumulator: BotToolCall[] = [];
       const toolResultsAccumulator: BotToolResult[] = [];
+
+      const restoreUnsentUserTurn = () => {
+        setMessages(baseMessages);
+        if (baseMessages.length > 0) {
+          persist(baseMessages);
+        }
+        setRestoredDraft({
+          key: Date.now() + Math.random(),
+          content: trimmedContent,
+          attachments,
+        });
+      };
 
       try {
         const response = await fetch('/api/bot/chat', {
@@ -360,6 +389,9 @@ export function useChat(options: UseChatOptions = {}) {
 
         if (!response.ok) {
           const errData = await response.json().catch(() => ({}));
+          if (response.status === 401) {
+            setSessionNotice('Your session expired. Please sign in again or continue as guest.');
+          }
           throw new Error(errData?.error || `Request failed with status ${response.status}`);
         }
 
@@ -434,7 +466,8 @@ export function useChat(options: UseChatOptions = {}) {
                   break;
 
                 case 'error':
-                  setError(chunk.error || 'Generation error encountered.');
+                  streamErrorReceived = chunk.error || 'Generation error encountered.';
+                  setError(streamErrorReceived);
                   break;
 
                 case 'done':
@@ -463,6 +496,12 @@ export function useChat(options: UseChatOptions = {}) {
           const finalMessages = [...updatedHistory, assistantMessage];
           setMessages(finalMessages);
           persist(finalMessages);
+        } else if (streamErrorReceived || !accumulatedContent) {
+          // Provider/SSE failed before delivering any answer -> preserve user's unsent message & attachments
+          if (!streamErrorReceived) {
+            setError('No response received from the AI provider. Your message was restored below.');
+          }
+          restoreUnsentUserTurn();
         }
       } catch (err: any) {
         if (err?.name === 'AbortError' || controller.signal.aborted) {
@@ -477,10 +516,19 @@ export function useChat(options: UseChatOptions = {}) {
             const finalMessages = [...updatedHistory, partialMessage];
             setMessages(finalMessages);
             persist(finalMessages, undefined, undefined, true);
+          } else {
+            restoreUnsentUserTurn();
           }
         } else {
-          const errMsg = err?.message || 'Chat generation failed.';
-          setError(errMsg);
+          const rawMsg = err?.message || '';
+          const friendlyMsg =
+            rawMsg === 'Failed to fetch' || err?.name === 'TypeError'
+              ? 'Network connection interrupted while contacting QuantumBot. Your unsent message has been restored below.'
+              : rawMsg || 'Chat generation failed. Your unsent message has been restored below.';
+          setError(friendlyMsg);
+          if (!accumulatedContent && toolCallsAccumulator.length === 0) {
+            restoreUnsentUserTurn();
+          }
         }
       } finally {
         setIsGenerating(false);
@@ -552,9 +600,16 @@ export function useChat(options: UseChatOptions = {}) {
     }
   }, []);
 
-  // 7. Regenerate last response
-  const regenerate = useCallback(async () => {
-    if (isGenerating || messages.length === 0) return;
+  // 7. Regenerate last response (or resend preserved failed draft)
+  const retryFailed = useCallback(async () => {
+    if (isGenerating) return;
+    if (restoredDraft) {
+      const draft = restoredDraft;
+      setRestoredDraft(null);
+      await sendMessage(draft.content, draft.attachments);
+      return;
+    }
+    if (messages.length === 0) return;
 
     const lastMsg = messages[messages.length - 1];
     const trimmedHistory = [...messages];
@@ -573,7 +628,9 @@ export function useChat(options: UseChatOptions = {}) {
       persist(baseHistory);
       await sendMessage(lastUserMsg.content, lastUserMsg.attachments);
     }
-  }, [isGenerating, messages, persist, sendMessage]);
+  }, [isGenerating, messages, persist, restoredDraft, sendMessage]);
+
+  const regenerate = retryFailed;
 
   // 8. Edit user message and re-send
   const editUserMessage = useCallback(
@@ -709,6 +766,9 @@ export function useChat(options: UseChatOptions = {}) {
     streamingToolCalls,
     streamingToolResults,
     error,
+    sessionNotice,
+    dismissSessionNotice: () => setSessionNotice(null),
+    restoredDraft,
     // Auth & Preferences (Phase 7)
     authUser,
     authType,

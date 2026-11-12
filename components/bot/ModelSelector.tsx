@@ -8,6 +8,7 @@ interface ModelSelectorProps {
   models: ModelDefinition[];
   onSelectModel: (modelId: string) => void;
   disabled?: boolean;
+  compact?: boolean;
 }
 
 export function ModelSelector({
@@ -15,6 +16,7 @@ export function ModelSelector({
   models,
   onSelectModel,
   disabled = false,
+  compact = false,
 }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -55,18 +57,20 @@ export function ModelSelector({
         type="button"
         disabled={disabled}
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gray-900/60 hover:bg-gray-800/80 border border-gray-800/80 hover:border-cyan-500/30 text-xs font-mono text-gray-200 transition-colors select-none"
+        className={`flex items-center gap-1.5 rounded-lg bg-gray-900/60 hover:bg-gray-800/80 border border-gray-800/80 hover:border-cyan-500/30 font-mono text-gray-200 transition-colors select-none ${
+          compact ? 'px-2 py-1 text-[11px] max-w-[148px]' : 'px-2.5 py-1.5 text-xs'
+        }`}
         title="Select AI Model"
       >
-        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-        <span className="font-semibold text-gray-100">{activeModel.name}</span>
-        {activeModel.capabilities && !activeModel.capabilities.includes('vision') && (
-          <span className="text-[9px] px-1 rounded bg-gray-800 text-amber-300 border border-amber-700/40">
+        <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shrink-0" />
+        <span className="font-semibold text-gray-100 truncate">{activeModel.name}</span>
+        {!compact && activeModel.capabilities && !activeModel.capabilities.includes('vision') && (
+          <span className="text-[9px] px-1 rounded bg-gray-800 text-amber-300 border border-amber-700/40 shrink-0">
             Text
           </span>
         )}
         <svg
-          className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-3.5 h-3.5 text-gray-400 shrink-0 transition-transform duration-150 ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -76,7 +80,11 @@ export function ModelSelector({
       </button>
 
       {isOpen && (
-        <div className="absolute left-0 mt-1.5 w-80 rounded-xl bg-[#090E1D] border border-gray-800 shadow-2xl z-50 overflow-hidden divide-y divide-gray-800/60 animate-in fade-in duration-100">
+        <div
+          className={`absolute mt-1.5 w-80 max-w-[calc(100vw-2rem)] rounded-xl bg-[#090E1D] border border-gray-800 shadow-2xl z-50 overflow-hidden divide-y divide-gray-800/60 animate-in fade-in duration-100 ${
+            compact ? 'right-0 sm:left-0 sm:right-auto' : 'left-0'
+          }`}
+        >
           <div className="px-3 py-2 bg-[#0c1326] text-[11px] font-mono uppercase tracking-wider text-gray-400 flex items-center justify-between">
             <span>Intelligence Engines</span>
             <span className="text-[10px] text-gray-500">Capabilities</span>

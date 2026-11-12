@@ -13,6 +13,7 @@ import {
   updateProviderConfig,
 } from '@/lib/bot/admin-config';
 import { getRegisteredModels } from '@/lib/bot/models';
+import { enforceSameOrigin } from '@/lib/bot/http-security';
 import { AIProvider } from '@/lib/bot/types';
 
 export const runtime = 'nodejs';
@@ -53,6 +54,9 @@ export async function GET() {
  * PATCH /api/admin/bot/config — Updates a provider configuration (key encrypted immediately on write).
  */
 export async function PATCH(req: NextRequest) {
+  const originErr = enforceSameOrigin(req);
+  if (originErr) return originErr;
+
   try {
     const admin = await requireBotAdmin({ write: true });
     const body = await req.json().catch(() => null);

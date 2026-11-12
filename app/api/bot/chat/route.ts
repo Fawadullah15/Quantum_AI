@@ -17,6 +17,7 @@ import {
 } from '@/lib/bot/usage-tracker';
 import { BotMessage, StreamChunk } from '@/lib/bot/types';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { enforceSameOrigin } from '@/lib/bot/http-security';
 import { attachActorCookies, resolveBotActor } from '@/lib/bot/auth';
 import {
   ConversationForbiddenError,
@@ -45,6 +46,9 @@ interface BotChatRequestBody {
  * POST /api/bot/chat
  */
 export async function POST(req: NextRequest) {
+  const originErr = enforceSameOrigin(req);
+  if (originErr) return originErr;
+
   await ensureAdminConfigLoaded().catch(() => {});
 
   // 1. IP-based coarse burst protection

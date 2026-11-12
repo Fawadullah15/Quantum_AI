@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { enforceSameOrigin } from '@/lib/bot/http-security';
 import { attachActorCookies, resolveBotActor } from '@/lib/bot/auth';
 import { computeActionKey, executeToolCall, getToolByName } from '@/lib/bot/tools';
 
@@ -19,6 +20,9 @@ interface ConfirmToolBody {
  * POST /api/bot/tools/confirm
  */
 export async function POST(req: NextRequest) {
+  const originErr = enforceSameOrigin(req);
+  if (originErr) return originErr;
+
   const forwardedFor = req.headers.get('x-forwarded-for');
   const realIp = req.headers.get('x-real-ip');
   const clientIp = (forwardedFor ? forwardedFor.split(',')[0].trim() : realIp) || '127.0.0.1';

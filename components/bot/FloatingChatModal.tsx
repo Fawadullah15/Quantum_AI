@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useChat } from '@/lib/bot/use-chat';
 import { QuantumBotIcon } from './QuantumBotIcon';
+import { ModelSelector } from './ModelSelector';
 import { MessageItem, describeToolCallLabel } from './MessageItem';
 import { MessageComposer } from './MessageComposer';
 import { WelcomeScreen } from './WelcomeScreen';
@@ -31,6 +32,9 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
     streamingToolCalls,
     streamingToolResults,
     error,
+    sessionNotice,
+    dismissSessionNotice,
+    restoredDraft,
     sendMessage,
     stopGeneration,
     regenerate,
@@ -100,6 +104,13 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
         </div>
 
         <div className="flex items-center gap-1">
+          <ModelSelector
+            compact
+            currentModelId={modelId}
+            models={availableModels}
+            onSelectModel={(id) => setModelId(id)}
+            disabled={isGenerating}
+          />
           {!isAuthenticated && (
             <button
               type="button"
@@ -200,21 +211,35 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
                 </div>
               </div>
             )}
-
-            {/* Error Banner */}
-            {error && (
-              <div className="p-2.5 rounded-xl bg-rose-950/30 border border-rose-800/50 text-rose-300 text-xs flex items-center justify-between">
-                <span className="line-clamp-2">{error}</span>
-                <button
-                  type="button"
-                  onClick={regenerate}
-                  className="px-2 py-0.5 rounded bg-rose-900/60 hover:bg-rose-800 text-white font-mono text-[10px] shrink-0 ml-2"
-                >
-                  Retry
-                </button>
-              </div>
-            )}
           </>
+        )}
+
+        {/* Session Expiry Notice */}
+        {sessionNotice && (
+          <div className="p-2.5 rounded-xl bg-amber-950/30 border border-amber-700/50 text-amber-200 text-xs flex items-center justify-between gap-2">
+            <span>{sessionNotice}</span>
+            <button
+              type="button"
+              onClick={dismissSessionNotice}
+              className="px-2 py-0.5 rounded bg-amber-900/60 hover:bg-amber-800 text-white font-mono text-[10px] shrink-0"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
+
+        {/* Error Banner */}
+        {error && (
+          <div className="p-2.5 rounded-xl bg-rose-950/30 border border-rose-800/50 text-rose-300 text-xs flex items-center justify-between">
+            <span className="line-clamp-2">{error}</span>
+            <button
+              type="button"
+              onClick={regenerate}
+              className="px-2 py-0.5 rounded bg-rose-900/60 hover:bg-rose-800 text-white font-mono text-[10px] shrink-0 ml-2"
+            >
+              Retry
+            </button>
+          </div>
         )}
       </div>
 
@@ -231,6 +256,7 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
           enableWebSearch={enableWebSearch}
           onToggleWebSearch={() => setEnableWebSearch((prev) => !prev)}
           enterToSend={preferences?.enterToSend !== false}
+          restoredDraft={restoredDraft}
         />
       </div>
 

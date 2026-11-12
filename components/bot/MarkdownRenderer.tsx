@@ -411,24 +411,36 @@ function renderInline(str: string): React.ReactNode[] {
         </span>
       );
     }
-    // Markdown Link
+    // Markdown Link (strictly sanitize URL protocol to prevent javascript:/data: XSS)
     else if (token.startsWith('[') && token.includes('](')) {
       const linkMatch = token.match(/\[([^\]]+)\]\(([^)]+)\)/);
       if (linkMatch) {
-        parts.push(
-          <a
-            key={match.index}
-            href={linkMatch[2]}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 inline-flex items-center gap-0.5"
-          >
-            {linkMatch[1]}
-            <svg className="w-3 h-3 inline ml-0.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-            </svg>
-          </a>
-        );
+        const safeUrl = sanitizeMarkdownHref(linkMatch[2]);
+        if (safeUrl) {
+          const isExternal = /^https?:\/\//i.test(safeUrl);
+          parts.push(
+            <a
+              key={match.index}
+              href={safeUrl}
+              target={isExternal ? '_blank' : undefined}
+              rel={isExternal ? 'noopener noreferrer' : undefined}
+              className="text-cyan-400 hover:text-cyan-300 underline underline-offset-2 inline-flex items-center gap-0.5"
+            >
+              {linkMatch[1]}
+              {isExternal && (
+                <svg className="w-3 h-3 inline ml-0.5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              )}
+            </a>
+          );
+        } else {
+          parts.push(
+            <span key={match.index} className="text-gray-400 font-mono text-xs" title="Unsafe link protocol blocked">
+              {linkMatch[1]}
+            </span>
+          );
+        }
       }
     }
     // Bold
@@ -456,4 +468,27 @@ function renderInline(str: string): React.ReactNode[] {
   }
 
   return parts;
+}
+
+/**
+ * Only permit safe URL schemes inside rendered Markdown anchors to block javascript:/data:/vbscript: XSS.
+ */
+export function sanitizeMarkdownHref(rawHref: string): string | null {
+  const cleaned = (rawHref || '').trim().replace(/[\x00-\x1f\x7f]/g, '');
+  if (!cleaned) return null;
+  if (cleaned.startsWith('/') && !cleaned.startsWith('//')) return cleaned;
+  if (cleaned.startsWith('#')) return cleaned;
+  try {
+    const parsed = new URL(cleaned);
+    if (
+      parsed.protocol === 'https:' ||
+      parsed.protocol === 'http:' ||
+      parsed.protocol === 'mailto:'
+    ) {
+      return parsed.toString();
+    }
+    return null;
+  } catch {
+    return null;
+  }
 }

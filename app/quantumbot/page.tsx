@@ -41,6 +41,9 @@ function QuantumBotWorkspace() {
     streamingToolCalls,
     streamingToolResults,
     error,
+    sessionNotice,
+    dismissSessionNotice,
+    restoredDraft,
     sendMessage,
     stopGeneration,
     regenerate,
@@ -308,25 +311,39 @@ function QuantumBotWorkspace() {
                     </div>
                   </div>
                 )}
+              </div>
+            )}
 
-                {/* Error Banner */}
-                {error && (
-                  <div className="p-3 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-300 text-xs flex items-center justify-between shadow-lg">
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                      <span>{error}</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={regenerate}
-                      className="px-3 py-1 rounded bg-rose-900/80 hover:bg-rose-800 text-white font-mono text-xs shrink-0 ml-3 transition-colors"
-                    >
-                      Retry
-                    </button>
-                  </div>
-                )}
+            {/* Session Expiry Notice */}
+            {sessionNotice && (
+              <div className="mt-3 p-3 rounded-xl bg-amber-950/35 border border-amber-700/50 text-amber-200 text-xs flex items-center justify-between gap-3 shadow-lg">
+                <span>{sessionNotice}</span>
+                <button
+                  type="button"
+                  onClick={dismissSessionNotice}
+                  className="px-2.5 py-1 rounded bg-amber-900/70 hover:bg-amber-800 text-white font-mono text-xs shrink-0 transition-colors"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
+
+            {/* Error Banner (always visible even if failed on first turn) */}
+            {error && (
+              <div className="mt-3 p-3 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-300 text-xs flex items-center justify-between shadow-lg">
+                <div className="flex items-center gap-2">
+                  <svg className="w-4 h-4 text-rose-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  <span>{error}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={regenerate}
+                  className="px-3 py-1 rounded bg-rose-900/80 hover:bg-rose-800 text-white font-mono text-xs shrink-0 ml-3 transition-colors"
+                >
+                  Retry
+                </button>
               </div>
             )}
           </div>
@@ -360,6 +377,7 @@ function QuantumBotWorkspace() {
               enableWebSearch={enableWebSearch}
               onToggleWebSearch={() => setEnableWebSearch((prev) => !prev)}
               enterToSend={preferences?.enterToSend !== false}
+              restoredDraft={restoredDraft}
             />
             <div className="flex items-center justify-between mt-2 px-1 text-[11px] text-gray-500 font-mono">
               <span>QuantumBot can assist with code, mathematics, and complex engineering.</span>

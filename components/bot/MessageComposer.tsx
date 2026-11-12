@@ -15,6 +15,7 @@ interface MessageComposerProps {
   enableWebSearch?: boolean;
   onToggleWebSearch?: () => void;
   enterToSend?: boolean;
+  restoredDraft?: { key: number; content: string; attachments: BotAttachment[] } | null;
 }
 
 const ACCEPTED_FILE_EXTENSIONS =
@@ -32,6 +33,7 @@ export function MessageComposer({
   enableWebSearch = false,
   onToggleWebSearch,
   enterToSend = true,
+  restoredDraft,
 }: MessageComposerProps) {
   const [input, setInput] = useState('');
   const [attachments, setAttachments] = useState<BotAttachment[]>([]);
@@ -42,6 +44,19 @@ export function MessageComposer({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const activeXhrsRef = useRef<Map<string, XMLHttpRequest>>(new Map());
   const uploadQueueRef = useRef<Promise<void>>(Promise.resolve());
+  const lastRestoredKeyRef = useRef<number | null>(null);
+
+  // Restore unsent user message & attachments cleanly if a send attempt fails
+  useEffect(() => {
+    if (!restoredDraft || restoredDraft.key === lastRestoredKeyRef.current) return;
+    lastRestoredKeyRef.current = restoredDraft.key;
+    if (restoredDraft.content) {
+      setInput((prev) => prev || restoredDraft.content);
+    }
+    if (restoredDraft.attachments?.length) {
+      setAttachments((prev) => (prev.length > 0 ? prev : restoredDraft.attachments));
+    }
+  }, [restoredDraft]);
 
   const supportsVision = activeModel ? activeModel.capabilities.includes('vision') : true;
   const hasUploading = attachments.some((a) => a.status === 'uploading' || a.status === 'processing');
