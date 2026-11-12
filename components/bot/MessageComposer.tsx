@@ -45,18 +45,29 @@ export function MessageComposer({
   const activeXhrsRef = useRef<Map<string, XMLHttpRequest>>(new Map());
   const uploadQueueRef = useRef<Promise<void>>(Promise.resolve());
   const lastRestoredKeyRef = useRef<number | null>(null);
+  const lastRestoredContentRef = useRef<string | null>(null);
 
   // Restore unsent user message & attachments cleanly if a send attempt fails
   useEffect(() => {
-    if (!restoredDraft || restoredDraft.key === lastRestoredKeyRef.current) return;
+    if (!restoredDraft) {
+      if (isGenerating && lastRestoredContentRef.current !== null) {
+        const consumedContent = lastRestoredContentRef.current;
+        lastRestoredContentRef.current = null;
+        setInput((prev) => (prev === consumedContent ? '' : prev));
+        setAttachments((prev) => (prev.length > 0 ? [] : prev));
+      }
+      return;
+    }
+    if (restoredDraft.key === lastRestoredKeyRef.current) return;
     lastRestoredKeyRef.current = restoredDraft.key;
+    lastRestoredContentRef.current = restoredDraft.content || '';
     if (restoredDraft.content) {
       setInput((prev) => prev || restoredDraft.content);
     }
     if (restoredDraft.attachments?.length) {
       setAttachments((prev) => (prev.length > 0 ? prev : restoredDraft.attachments));
     }
-  }, [restoredDraft]);
+  }, [restoredDraft, isGenerating]);
 
   const supportsVision = activeModel ? activeModel.capabilities.includes('vision') : true;
   const hasUploading = attachments.some((a) => a.status === 'uploading' || a.status === 'processing');

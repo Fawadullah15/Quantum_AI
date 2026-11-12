@@ -9,42 +9,50 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  const { actor, anonCookieToAttach } = await resolveBotActor(req, true);
-  const prefs = await getUserPreferencesForOwner(actor.ownerId);
+  try {
+    const { actor, anonCookieToAttach } = await resolveBotActor(req, true);
+    const prefs = await getUserPreferencesForOwner(actor.ownerId);
 
-  const res = NextResponse.json({
-    success: true,
-    preferences: prefs,
-  });
-  attachActorCookies(res, anonCookieToAttach, req);
-  return res;
+    const res = NextResponse.json({
+      success: true,
+      preferences: prefs,
+    });
+    attachActorCookies(res, anonCookieToAttach, req);
+    return res;
+  } catch {
+    return NextResponse.json({ error: 'Failed to load preferences.' }, { status: 500 });
+  }
 }
 
 export async function PATCH(req: NextRequest) {
-  const { actor, anonCookieToAttach } = await resolveBotActor(req, true);
-
-  let body: any;
   try {
-    body = await req.json();
+    const { actor, anonCookieToAttach } = await resolveBotActor(req, true);
+
+    let body: any;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON request body.' }, { status: 400 });
+    }
+
+    const patch: Record<string, any> = {};
+    if ('displayName' in body) patch.displayName = body.displayName;
+    if ('responseStyle' in body) patch.responseStyle = body.responseStyle;
+    if ('language' in body) patch.language = body.language;
+    if ('customInstructions' in body) patch.customInstructions = body.customInstructions;
+    if ('defaultModelId' in body) patch.defaultModelId = body.defaultModelId;
+    if ('defaultWebSearch' in body) patch.defaultWebSearch = body.defaultWebSearch;
+    if ('enterToSend' in body) patch.enterToSend = body.enterToSend;
+
+    const updated = await updateUserPreferencesForOwner(actor.ownerId, patch);
+
+    const res = NextResponse.json({
+      success: true,
+      preferences: updated,
+    });
+    attachActorCookies(res, anonCookieToAttach, req);
+    return res;
   } catch {
-    return NextResponse.json({ error: 'Invalid JSON request body.' }, { status: 400 });
+    return NextResponse.json({ error: 'Failed to save preferences.' }, { status: 500 });
   }
-
-  const patch: Record<string, any> = {};
-  if ('displayName' in body) patch.displayName = body.displayName;
-  if ('responseStyle' in body) patch.responseStyle = body.responseStyle;
-  if ('language' in body) patch.language = body.language;
-  if ('customInstructions' in body) patch.customInstructions = body.customInstructions;
-  if ('defaultModelId' in body) patch.defaultModelId = body.defaultModelId;
-  if ('defaultWebSearch' in body) patch.defaultWebSearch = body.defaultWebSearch;
-  if ('enterToSend' in body) patch.enterToSend = body.enterToSend;
-
-  const updated = await updateUserPreferencesForOwner(actor.ownerId, patch);
-
-  const res = NextResponse.json({
-    success: true,
-    preferences: updated,
-  });
-  attachActorCookies(res, anonCookieToAttach, req);
-  return res;
 }

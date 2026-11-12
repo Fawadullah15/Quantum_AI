@@ -5,6 +5,7 @@ import prisma from '@/lib/db';
 import { DEFAULT_SETTINGS } from '@/lib/settings';
 import { DEFAULT_KNOWLEDGE_DOCUMENTS } from './default-docs';
 import { KnowledgeSearchIndex } from './indexer';
+import { resolveWritableStorageDirSync } from '../storage-dir';
 import {
   KNOWLEDGE_CATEGORIES,
   KnowledgeCategory,
@@ -17,7 +18,6 @@ import {
 } from './types';
 
 const STORE_SETTINGS_KEY = 'bot_knowledge_store_v1';
-const DEFAULT_STORAGE_DIR = path.join(process.cwd(), '.private_storage', 'bot-knowledge');
 const DB_REFRESH_TTL_MS = 60_000;
 
 interface PersistedKnowledgeOverlay {
@@ -66,7 +66,7 @@ function getCacheKey(options?: KnowledgeStoreOptions): string {
 }
 
 function getStoreFilePath(options?: KnowledgeStoreOptions): string {
-  const dir = options?.storageDir || DEFAULT_STORAGE_DIR;
+  const dir = options?.storageDir || resolveWritableStorageDirSync('bot-knowledge');
   return path.join(dir, 'store.json');
 }
 

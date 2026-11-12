@@ -16,13 +16,13 @@ type RouteContext = {
 };
 
 export async function GET(req: NextRequest, context: RouteContext) {
-  const { id } = await context.params;
-  const { actor } = await resolveBotActor(req, false);
-  if (!actor.ownerId) {
-    return NextResponse.json({ error: 'Conversation not found.' }, { status: 404 });
-  }
-
   try {
+    const { id } = await context.params;
+    const { actor } = await resolveBotActor(req, false);
+    if (!actor.ownerId) {
+      return NextResponse.json({ error: 'Conversation not found.' }, { status: 404 });
+    }
+
     const conv = await getConversationForOwner(id, actor.ownerId);
     if (!conv) {
       return NextResponse.json({ error: 'Conversation not found.' }, { status: 404 });
@@ -37,20 +37,20 @@ export async function GET(req: NextRequest, context: RouteContext) {
 }
 
 export async function PATCH(req: NextRequest, context: RouteContext) {
-  const { id } = await context.params;
-  const { actor } = await resolveBotActor(req, false);
-  if (!actor.ownerId) {
-    return NextResponse.json({ error: 'Unauthorized: no active session.' }, { status: 401 });
-  }
-
-  let body: any;
   try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: 'Invalid JSON request body.' }, { status: 400 });
-  }
+    const { id } = await context.params;
+    const { actor } = await resolveBotActor(req, false);
+    if (!actor.ownerId) {
+      return NextResponse.json({ error: 'Unauthorized: no active session.' }, { status: 401 });
+    }
 
-  try {
+    let body: any;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON request body.' }, { status: 400 });
+    }
+
     const patch: Record<string, any> = {};
     if ('title' in body) patch.title = String(body.title || '');
     if ('pinned' in body) patch.pinned = Boolean(body.pinned);
@@ -71,13 +71,13 @@ export async function PATCH(req: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(req: NextRequest, context: RouteContext) {
-  const { id } = await context.params;
-  const { actor } = await resolveBotActor(req, false);
-  if (!actor.ownerId) {
-    return NextResponse.json({ error: 'Unauthorized: no active session.' }, { status: 401 });
-  }
-
   try {
+    const { id } = await context.params;
+    const { actor } = await resolveBotActor(req, false);
+    if (!actor.ownerId) {
+      return NextResponse.json({ error: 'Unauthorized: no active session.' }, { status: 401 });
+    }
+
     const deleted = await deleteConversationForOwner(id, actor.ownerId);
     if (!deleted) {
       return NextResponse.json({ error: 'Conversation not found.' }, { status: 404 });

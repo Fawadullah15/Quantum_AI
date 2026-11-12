@@ -15,6 +15,11 @@ import {
   getConversationAggregateCounts,
 } from './conversation-store';
 import {
+  isBotDatabaseInCooldown,
+  markBotDatabaseUnavailable,
+  resolveWritableStorageDirSync,
+} from './storage-dir';
+import {
   AIProvider,
   AdminBotUserSummary,
   AuthActor,
@@ -30,8 +35,6 @@ import {
   SpendingAlertItem,
   TokenUsage,
 } from './types';
-
-const DEFAULT_EVENTS_FILE = path.join(process.cwd(), '.private_storage', 'bot_admin', 'usage_events.jsonl');
 
 export interface UsageTrackerOptions {
   storageDir?: string;
@@ -49,11 +52,17 @@ function enqueueEventWrite<T>(fn: () => Promise<T>): Promise<T> {
 }
 
 function shouldUseDatabase(options?: UsageTrackerOptions): boolean {
-  return !options?.skipDatabase && !options?.storageDir && Boolean(process.env.DATABASE_URL);
+  return (
+    !options?.skipDatabase &&
+    !options?.storageDir &&
+    Boolean(process.env.DATABASE_URL) &&
+    !isBotDatabaseInCooldown()
+  );
 }
 
 function getEventsFilePath(options?: UsageTrackerOptions): string {
-  return path.join(options?.storageDir || path.dirname(DEFAULT_EVENTS_FILE), 'usage_events.jsonl');
+  const dir = options?.storageDir || resolveWritableStorageDirSync('bot_admin');
+  return path.join(dir, 'usage_events.jsonl');
 }
 
 function toConfigOpts(options?: UsageTrackerOptions): AdminConfigStoreOptions | undefined {
@@ -179,6 +188,7 @@ export async function recordBotUsageEvent(
         errorMessage: created.errorMessage,
       };
     } catch {
+      markBotDatabaseUnavailable();
       // Fall back to local log on transient DB errors so requests aren't broken
     }
   }
@@ -203,9 +213,13 @@ export async function recordBotUsageEvent(
   };
 
   await enqueueEventWrite(async () => {
-    const filePath = getEventsFilePath(options);
-    await fs.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.appendFile(filePath, `${JSON.stringify(record)}\n`, 'utf8');
+    try {
+      const filePath = getEventsFilePath(options);
+      await fs.mkdir(path.dirname(filePath), { recursive: true });
+      await fs.appendFile(filePath, `${JSON.stringify(record)}\n`, 'utf8');
+    } catch {
+      // Telemetry write must never break core chat/file flows
+    }
   });
 
   return record;
@@ -240,6 +254,7 @@ export async function readUsageEventsSince(
         errorMessage: r.errorMessage,
       }));
     } catch {
+      markBotDatabaseUnavailable();
       // Fallback below
     }
   }

@@ -10,8 +10,21 @@ import {
   UserPreferences,
 } from './types';
 import { generateSmartConversationTitle } from './title-generator';
+import {
+  isBotDatabaseInCooldown,
+  markBotDatabaseUnavailable,
+  resolveWritableStorageDirSync,
+} from './storage-dir';
 
-const DEFAULT_STORE_DIR = path.join(process.cwd(), '.private_storage', 'bot_conversations');
+function getStoreDir(options?: ConversationStoreOptions): string {
+  return options?.storageDir || resolveWritableStorageDirSync('bot_conversations');
+}
+
+function logDbFallbackWarning(scope: string, err: unknown): void {
+  markBotDatabaseUnavailable();
+  const code = (err as any)?.code || (err as any)?.name || 'DB_ERROR';
+  console.warn(`[QuantumBot ConversationStore] DB fallback in ${scope} (${code})`);
+}
 
 export interface ConversationStoreOptions {
   storageDir?: string;
@@ -63,7 +76,12 @@ function enqueueWrite<T>(fn: () => Promise<T>): Promise<T> {
 }
 
 function shouldUseDatabase(options?: ConversationStoreOptions): boolean {
-  return !options?.skipDatabase && !options?.storageDir && Boolean(process.env.DATABASE_URL);
+  return (
+    !options?.skipDatabase &&
+    !options?.storageDir &&
+    Boolean(process.env.DATABASE_URL) &&
+    !isBotDatabaseInCooldown()
+  );
 }
 
 export function assertValidConversationId(rawId: string): string {
@@ -124,12 +142,12 @@ export function compactMessagesForStorage(messages: BotMessage[]): {
 }
 
 function getLocalConvPath(id: string, options?: ConversationStoreOptions): string {
-  const dir = options?.storageDir || DEFAULT_STORE_DIR;
+  const dir = getStoreDir(options);
   return path.join(dir, 'chats', `${id}.json`);
 }
 
 function getLocalPrefsPath(ownerId: string, options?: ConversationStoreOptions): string {
-  const dir = options?.storageDir || DEFAULT_STORE_DIR;
+  const dir = getStoreDir(options);
   const ownerHash = crypto.createHash('sha256').update(ownerId).digest('hex').slice(0, 32);
   return path.join(dir, 'prefs', `${ownerHash}.json`);
 }
@@ -194,12 +212,26 @@ export async function assertConversationOwnership(
   const id = assertValidConversationId(rawId);
 
   if (shouldUseDatabase(options)) {
-    const row = await prisma.botConversation.findUnique({ where: { id } });
-    if (!row) return null;
-    if (row.ownerId !== actorOwnerId) {
-      throw new ConversationForbiddenError();
+    try {
+      const row = await prisma.botConversation.findUnique({ where: { id } });
+      if (!row) {
+        // Also check local/tmp fallback record if created during transient DB fallback
+        const localFallback = await readLocalConversation(id, options);
+        if (localFallback && localFallback.ownerId !== actorOwnerId) {
+          throw new ConversationForbiddenError();
+        }
+        return localFallback;
+      }
+      if (row.ownerId !== actorOwnerId) {
+        throw new ConversationForbiddenError();
+      }
+      return mapDbConversation(row);
+    } catch (err) {
+      if (err instanceof ConversationForbiddenError || err instanceof ConversationValidationError) {
+        throw err;
+      }
+      logDbFallbackWarning('assertConversationOwnership', err);
     }
-    return mapDbConversation(row);
   }
 
   const existing = await readLocalConversation(id, options);
@@ -223,20 +255,28 @@ export async function listConversationsForOwner(
 
   let items: ServerConversation[] = [];
 
+  let loadedFromDb = false;
   if (shouldUseDatabase(options)) {
-    const where: any = { ownerId: actorOwnerId };
-    if (filters?.archivedOnly) {
-      where.archived = true;
-    } else if (!filters?.includeArchived) {
-      where.archived = false;
+    try {
+      const where: any = { ownerId: actorOwnerId };
+      if (filters?.archivedOnly) {
+        where.archived = true;
+      } else if (!filters?.includeArchived) {
+        where.archived = false;
+      }
+      const rows = await prisma.botConversation.findMany({
+        where,
+        orderBy: [{ pinned: 'desc' }, { updatedAt: 'desc' }],
+      });
+      items = rows.map(mapDbConversation);
+      loadedFromDb = true;
+    } catch (err) {
+      logDbFallbackWarning('listConversationsForOwner', err);
     }
-    const rows = await prisma.botConversation.findMany({
-      where,
-      orderBy: [{ pinned: 'desc' }, { updatedAt: 'desc' }],
-    });
-    items = rows.map(mapDbConversation);
-  } else {
-    const chatsDir = path.join(options?.storageDir || DEFAULT_STORE_DIR, 'chats');
+  }
+
+  if (!loadedFromDb) {
+    const chatsDir = path.join(getStoreDir(options), 'chats');
     try {
       const files = await fs.readdir(chatsDir);
       for (const file of files) {
@@ -321,30 +361,34 @@ export async function upsertConversationForOwner(
     };
 
     if (shouldUseDatabase(options)) {
-      const botUserId = getBotUserIdFromOwner(actorOwnerId);
-      const saved = await prisma.botConversation.upsert({
-        where: { id },
-        update: {
-          title: record.title,
-          modelId: record.modelId,
-          pinned: record.pinned,
-          archived: record.archived,
-          messagesJson: JSON.stringify(record.messages),
-          attachmentIdsJson: JSON.stringify(record.attachmentIds),
-        },
-        create: {
-          id: record.id,
-          ownerId: actorOwnerId,
-          botUserId,
-          title: record.title,
-          modelId: record.modelId,
-          pinned: record.pinned,
-          archived: record.archived,
-          messagesJson: JSON.stringify(record.messages),
-          attachmentIdsJson: JSON.stringify(record.attachmentIds),
-        },
-      });
-      return mapDbConversation(saved);
+      try {
+        const botUserId = getBotUserIdFromOwner(actorOwnerId);
+        const saved = await prisma.botConversation.upsert({
+          where: { id },
+          update: {
+            title: record.title,
+            modelId: record.modelId,
+            pinned: record.pinned,
+            archived: record.archived,
+            messagesJson: JSON.stringify(record.messages),
+            attachmentIdsJson: JSON.stringify(record.attachmentIds),
+          },
+          create: {
+            id: record.id,
+            ownerId: actorOwnerId,
+            botUserId,
+            title: record.title,
+            modelId: record.modelId,
+            pinned: record.pinned,
+            archived: record.archived,
+            messagesJson: JSON.stringify(record.messages),
+            attachmentIdsJson: JSON.stringify(record.attachmentIds),
+          },
+        });
+        return mapDbConversation(saved);
+      } catch (err) {
+        logDbFallbackWarning('upsertConversationForOwner', err);
+      }
     }
 
     await atomicWriteJson(getLocalConvPath(id, options), record);
@@ -384,16 +428,20 @@ export async function updateConversationMetaForOwner(
     };
 
     if (shouldUseDatabase(options)) {
-      const saved = await prisma.botConversation.update({
-        where: { id },
-        data: {
-          title: updated.title,
-          pinned: updated.pinned,
-          archived: updated.archived,
-          modelId: updated.modelId,
-        },
-      });
-      return mapDbConversation(saved);
+      try {
+        const saved = await prisma.botConversation.update({
+          where: { id },
+          data: {
+            title: updated.title,
+            pinned: updated.pinned,
+            archived: updated.archived,
+            modelId: updated.modelId,
+          },
+        });
+        return mapDbConversation(saved);
+      } catch (err) {
+        logDbFallbackWarning('updateConversationMetaForOwner', err);
+      }
     }
 
     await atomicWriteJson(getLocalConvPath(id, options), updated);
@@ -413,8 +461,12 @@ export async function deleteConversationForOwner(
     if (!existing) return false;
 
     if (shouldUseDatabase(options)) {
-      await prisma.botConversation.delete({ where: { id } });
-      return true;
+      try {
+        await prisma.botConversation.delete({ where: { id } });
+        return true;
+      } catch (err) {
+        logDbFallbackWarning('deleteConversationForOwner', err);
+      }
     }
 
     await fs.unlink(getLocalConvPath(id, options)).catch(() => {});
@@ -430,11 +482,15 @@ export async function deleteAllConversationsForOwner(
 
   return enqueueWrite(async () => {
     if (shouldUseDatabase(options)) {
-      const res = await prisma.botConversation.deleteMany({ where: { ownerId: actorOwnerId } });
-      return res.count;
+      try {
+        const res = await prisma.botConversation.deleteMany({ where: { ownerId: actorOwnerId } });
+        return res.count;
+      } catch (err) {
+        logDbFallbackWarning('deleteAllConversationsForOwner', err);
+      }
     }
 
-    const chatsDir = path.join(options?.storageDir || DEFAULT_STORE_DIR, 'chats');
+    const chatsDir = path.join(getStoreDir(options), 'chats');
     let deleted = 0;
     try {
       const files = await fs.readdir(chatsDir);
@@ -466,15 +522,19 @@ export async function migrateConversationsOwner(
 
   return enqueueWrite(async () => {
     if (shouldUseDatabase(options)) {
-      const botUserId = getBotUserIdFromOwner(toOwnerId);
-      const res = await prisma.botConversation.updateMany({
-        where: { ownerId: fromAnonOwnerId },
-        data: { ownerId: toOwnerId, botUserId },
-      });
-      return res.count;
+      try {
+        const botUserId = getBotUserIdFromOwner(toOwnerId);
+        const res = await prisma.botConversation.updateMany({
+          where: { ownerId: fromAnonOwnerId },
+          data: { ownerId: toOwnerId, botUserId },
+        });
+        return res.count;
+      } catch (err) {
+        logDbFallbackWarning('migrateConversationsOwner', err);
+      }
     }
 
-    const chatsDir = path.join(options?.storageDir || DEFAULT_STORE_DIR, 'chats');
+    const chatsDir = path.join(getStoreDir(options), 'chats');
     let migrated = 0;
     try {
       const files = await fs.readdir(chatsDir);
@@ -540,36 +600,40 @@ export async function getUserPreferencesForOwner(
   if (!ownerId) return { ...DEFAULT_USER_PREFERENCES };
 
   if (shouldUseDatabase(options)) {
-    const botUserId = getBotUserIdFromOwner(ownerId);
-    if (botUserId) {
-      const acct = await prisma.botUser.findUnique({ where: { id: botUserId } });
-      if (acct) {
+    try {
+      const botUserId = getBotUserIdFromOwner(ownerId);
+      if (botUserId) {
+        const acct = await prisma.botUser.findUnique({ where: { id: botUserId } });
+        if (acct) {
+          return sanitizePreferences({
+            displayName: acct.displayName ?? acct.name,
+            responseStyle: acct.responseStyle as ResponseStyle,
+            language: acct.language,
+            customInstructions: acct.customInstructions ?? undefined,
+            defaultModelId: acct.defaultModelId ?? undefined,
+            defaultWebSearch: acct.defaultWebSearch,
+            enterToSend: acct.enterToSend,
+            updatedAt: acct.updatedAt.toISOString(),
+          });
+        }
+      }
+      const pref = await prisma.botPreference.findUnique({ where: { ownerId } });
+      if (pref) {
         return sanitizePreferences({
-          displayName: acct.displayName ?? acct.name,
-          responseStyle: acct.responseStyle as ResponseStyle,
-          language: acct.language,
-          customInstructions: acct.customInstructions ?? undefined,
-          defaultModelId: acct.defaultModelId ?? undefined,
-          defaultWebSearch: acct.defaultWebSearch,
-          enterToSend: acct.enterToSend,
-          updatedAt: acct.updatedAt.toISOString(),
+          displayName: pref.displayName ?? undefined,
+          responseStyle: pref.responseStyle as ResponseStyle,
+          language: pref.language,
+          customInstructions: pref.customInstructions ?? undefined,
+          defaultModelId: pref.defaultModelId ?? undefined,
+          defaultWebSearch: pref.defaultWebSearch,
+          enterToSend: pref.enterToSend,
+          updatedAt: pref.updatedAt.toISOString(),
         });
       }
+      return { ...DEFAULT_USER_PREFERENCES };
+    } catch (err) {
+      logDbFallbackWarning('getUserPreferencesForOwner', err);
     }
-    const pref = await prisma.botPreference.findUnique({ where: { ownerId } });
-    if (pref) {
-      return sanitizePreferences({
-        displayName: pref.displayName ?? undefined,
-        responseStyle: pref.responseStyle as ResponseStyle,
-        language: pref.language,
-        customInstructions: pref.customInstructions ?? undefined,
-        defaultModelId: pref.defaultModelId ?? undefined,
-        defaultWebSearch: pref.defaultWebSearch,
-        enterToSend: pref.enterToSend,
-        updatedAt: pref.updatedAt.toISOString(),
-      });
-    }
-    return { ...DEFAULT_USER_PREFERENCES };
   }
 
   try {
@@ -594,10 +658,10 @@ export async function updateUserPreferencesForOwner(
     });
 
     if (shouldUseDatabase(options)) {
-      const botUserId = getBotUserIdFromOwner(ownerId);
-      if (botUserId) {
-        await prisma.botUser
-          .update({
+      try {
+        const botUserId = getBotUserIdFromOwner(ownerId);
+        if (botUserId) {
+          await prisma.botUser.update({
             where: { id: botUserId },
             data: {
               displayName: merged.displayName ?? null,
@@ -608,34 +672,36 @@ export async function updateUserPreferencesForOwner(
               defaultWebSearch: merged.defaultWebSearch,
               enterToSend: merged.enterToSend,
             },
-          })
-          .catch(() => {});
-        return merged;
-      }
+          });
+          return merged;
+        }
 
-      await prisma.botPreference.upsert({
-        where: { ownerId },
-        update: {
-          displayName: merged.displayName ?? null,
-          responseStyle: merged.responseStyle,
-          language: merged.language,
-          customInstructions: merged.customInstructions ?? null,
-          defaultModelId: merged.defaultModelId ?? null,
-          defaultWebSearch: merged.defaultWebSearch,
-          enterToSend: merged.enterToSend,
-        },
-        create: {
-          ownerId,
-          displayName: merged.displayName ?? null,
-          responseStyle: merged.responseStyle,
-          language: merged.language,
-          customInstructions: merged.customInstructions ?? null,
-          defaultModelId: merged.defaultModelId ?? null,
-          defaultWebSearch: merged.defaultWebSearch,
-          enterToSend: merged.enterToSend,
-        },
-      });
-      return merged;
+        await prisma.botPreference.upsert({
+          where: { ownerId },
+          update: {
+            displayName: merged.displayName ?? null,
+            responseStyle: merged.responseStyle,
+            language: merged.language,
+            customInstructions: merged.customInstructions ?? null,
+            defaultModelId: merged.defaultModelId ?? null,
+            defaultWebSearch: merged.defaultWebSearch,
+            enterToSend: merged.enterToSend,
+          },
+          create: {
+            ownerId,
+            displayName: merged.displayName ?? null,
+            responseStyle: merged.responseStyle,
+            language: merged.language,
+            customInstructions: merged.customInstructions ?? null,
+            defaultModelId: merged.defaultModelId ?? null,
+            defaultWebSearch: merged.defaultWebSearch,
+            enterToSend: merged.enterToSend,
+          },
+        });
+        return merged;
+      } catch (err) {
+        logDbFallbackWarning('updateUserPreferencesForOwner', err);
+      }
     }
 
     await atomicWriteJson(getLocalPrefsPath(ownerId, options), merged);
@@ -684,7 +750,7 @@ export async function getConversationAggregateCounts(
     }
   }
 
-  const chatsDir = path.join(options?.storageDir || DEFAULT_STORE_DIR, 'chats');
+  const chatsDir = path.join(getStoreDir(options), 'chats');
   try {
     const entries = await fs.readdir(chatsDir);
     const byBotUserId: Record<string, number> = {};

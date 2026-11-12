@@ -12,8 +12,12 @@ import {
   OpenWeightBackend,
   SafeProviderConfig,
 } from './types';
+import {
+  isBotDatabaseInCooldown,
+  markBotDatabaseUnavailable,
+  resolveWritableStorageDirSync,
+} from './storage-dir';
 
-const DEFAULT_ADMIN_DIR = path.join(process.cwd(), '.private_storage', 'bot_admin');
 const CONFIG_FILENAME = 'admin_config.json';
 
 export interface AdminConfigStoreOptions {
@@ -134,8 +138,13 @@ function shouldUseDatabase(options?: AdminConfigStoreOptions): boolean {
   return !options?.skipDatabase && !options?.storageDir && Boolean(process.env.DATABASE_URL);
 }
 
+function shouldUseDatabaseForRead(options?: AdminConfigStoreOptions): boolean {
+  return shouldUseDatabase(options) && !isBotDatabaseInCooldown();
+}
+
 function getLocalConfigFile(options?: AdminConfigStoreOptions): string {
-  return path.join(options?.storageDir || DEFAULT_ADMIN_DIR, CONFIG_FILENAME);
+  const dir = options?.storageDir || resolveWritableStorageDirSync('bot_admin');
+  return path.join(dir, CONFIG_FILENAME);
 }
 
 // ─── AES-256-GCM Secret Encryption (API keys never returned plaintext after save) ──
@@ -315,7 +324,7 @@ export async function ensureAdminConfigLoaded(
     return globalCache.__qbAdminConfigSnapshot;
   }
 
-  if (shouldUseDatabase(options)) {
+  if (shouldUseDatabaseForRead(options)) {
     try {
       const [dbProviders, dbModels, dbLimits] = await Promise.all([
         prisma.botProviderConfig.findMany(),
@@ -401,6 +410,7 @@ export async function ensureAdminConfigLoaded(
       globalCache.__qbAdminConfigSnapshot = snap;
       return snap;
     } catch {
+      markBotDatabaseUnavailable();
       // Fallback gracefully to local file if DB isn't migrated yet
     }
   }
@@ -654,28 +664,37 @@ export async function updateProviderConfig(
     snap.loadedAt = Date.now();
 
     if (shouldUseDatabase(options)) {
-      await prisma.botProviderConfig.upsert({
-        where: { provider },
-        update: {
-          enabled: updatedState.enabled,
-          encryptedApiKey: updatedState.encryptedApiKey,
-          maskedKeyHint: updatedState.maskedKeyHint,
-          baseUrl: updatedState.baseUrl,
-          openweightBackend: updatedState.openweightBackend,
-          monthlyBudgetUsd: updatedState.monthlyBudgetUsd,
-          alertThresholdPct: updatedState.alertThresholdPct,
-        },
-        create: {
-          provider,
-          enabled: updatedState.enabled,
-          encryptedApiKey: updatedState.encryptedApiKey,
-          maskedKeyHint: updatedState.maskedKeyHint,
-          baseUrl: updatedState.baseUrl,
-          openweightBackend: updatedState.openweightBackend,
-          monthlyBudgetUsd: updatedState.monthlyBudgetUsd,
-          alertThresholdPct: updatedState.alertThresholdPct,
-        },
-      });
+      try {
+        await prisma.botProviderConfig.upsert({
+          where: { provider },
+          update: {
+            enabled: updatedState.enabled,
+            encryptedApiKey: updatedState.encryptedApiKey,
+            maskedKeyHint: updatedState.maskedKeyHint,
+            baseUrl: updatedState.baseUrl,
+            openweightBackend: updatedState.openweightBackend,
+            monthlyBudgetUsd: updatedState.monthlyBudgetUsd,
+            alertThresholdPct: updatedState.alertThresholdPct,
+          },
+          create: {
+            provider,
+            enabled: updatedState.enabled,
+            encryptedApiKey: updatedState.encryptedApiKey,
+            maskedKeyHint: updatedState.maskedKeyHint,
+            baseUrl: updatedState.baseUrl,
+            openweightBackend: updatedState.openweightBackend,
+            monthlyBudgetUsd: updatedState.monthlyBudgetUsd,
+            alertThresholdPct: updatedState.alertThresholdPct,
+          },
+        });
+      } catch (err) {
+        const code = (err as any)?.code || 'DB_ERROR';
+        console.warn(`[QuantumBot AdminConfig] DB write failed in updateProviderConfig (${code})`);
+        throw new AdminConfigError(
+          503,
+          'Database is unavailable or schema is not initialized (run prisma db push), or configure provider API keys via Vercel Environment Variables.'
+        );
+      }
     } else {
       await writeLocalSnapshot(snap, options);
     }
@@ -869,45 +888,54 @@ export async function upsertAdminModelConfig(
     snap.loadedAt = Date.now();
 
     if (shouldUseDatabase(options)) {
-      if (willBeDefault) {
-        await prisma.botModelConfig.updateMany({ data: { isDefault: false } }).catch(() => {});
+      try {
+        if (willBeDefault) {
+          await prisma.botModelConfig.updateMany({ data: { isDefault: false } }).catch(() => {});
+        }
+        await prisma.botModelConfig.upsert({
+          where: { id: cleanId },
+          update: {
+            name: record.name,
+            provider: record.provider,
+            modelIdentifier: record.modelIdentifier,
+            description: record.description,
+            capabilitiesJson: JSON.stringify(record.capabilities),
+            contextWindow: record.contextWindow,
+            maxOutputTokens: record.maxOutputTokens,
+            inputPerMillion: record.pricing.inputPerMillion,
+            outputPerMillion: record.pricing.outputPerMillion,
+            family: record.family ?? null,
+            recommendedFor: record.recommendedFor ?? null,
+            enabled: record.enabled,
+            isDefault: record.isDefault,
+            isCustom: record.isCustom,
+          },
+          create: {
+            id: cleanId,
+            name: record.name,
+            provider: record.provider,
+            modelIdentifier: record.modelIdentifier,
+            description: record.description,
+            capabilitiesJson: JSON.stringify(record.capabilities),
+            contextWindow: record.contextWindow,
+            maxOutputTokens: record.maxOutputTokens,
+            inputPerMillion: record.pricing.inputPerMillion,
+            outputPerMillion: record.pricing.outputPerMillion,
+            family: record.family ?? null,
+            recommendedFor: record.recommendedFor ?? null,
+            enabled: record.enabled,
+            isDefault: record.isDefault,
+            isCustom: record.isCustom,
+          },
+        });
+      } catch (err) {
+        const code = (err as any)?.code || 'DB_ERROR';
+        console.warn(`[QuantumBot AdminConfig] DB write failed in upsertAdminModelConfig (${code})`);
+        throw new AdminConfigError(
+          503,
+          'Database is unavailable or schema is not initialized (run prisma db push) for saving model settings.'
+        );
       }
-      await prisma.botModelConfig.upsert({
-        where: { id: cleanId },
-        update: {
-          name: record.name,
-          provider: record.provider,
-          modelIdentifier: record.modelIdentifier,
-          description: record.description,
-          capabilitiesJson: JSON.stringify(record.capabilities),
-          contextWindow: record.contextWindow,
-          maxOutputTokens: record.maxOutputTokens,
-          inputPerMillion: record.pricing.inputPerMillion,
-          outputPerMillion: record.pricing.outputPerMillion,
-          family: record.family ?? null,
-          recommendedFor: record.recommendedFor ?? null,
-          enabled: record.enabled,
-          isDefault: record.isDefault,
-          isCustom: record.isCustom,
-        },
-        create: {
-          id: cleanId,
-          name: record.name,
-          provider: record.provider,
-          modelIdentifier: record.modelIdentifier,
-          description: record.description,
-          capabilitiesJson: JSON.stringify(record.capabilities),
-          contextWindow: record.contextWindow,
-          maxOutputTokens: record.maxOutputTokens,
-          inputPerMillion: record.pricing.inputPerMillion,
-          outputPerMillion: record.pricing.outputPerMillion,
-          family: record.family ?? null,
-          recommendedFor: record.recommendedFor ?? null,
-          enabled: record.enabled,
-          isDefault: record.isDefault,
-          isCustom: record.isCustom,
-        },
-      });
     } else {
       await writeLocalSnapshot(snap, options);
     }
@@ -1088,40 +1116,49 @@ export async function updateUsageLimitsConfig(
     snap.loadedAt = Date.now();
 
     if (shouldUseDatabase(options)) {
-      await prisma.botUsageLimits.upsert({
-        where: { id: 'default' },
-        update: {
-          anonMessagesPerHour: merged.anonMessagesPerHour,
-          anonMessagesPerDay: merged.anonMessagesPerDay,
-          authMessagesPerHour: merged.authMessagesPerHour,
-          authMessagesPerDay: merged.authMessagesPerDay,
-          perUserRequestsPerMinute: merged.perUserRequestsPerMinute,
-          maxMessageChars: merged.maxMessageChars,
-          maxMessagesPerRequest: merged.maxMessagesPerRequest,
-          maxAttachmentsPerMessage: merged.maxAttachmentsPerMessage,
-          maxDocImageBytes: merged.maxDocImageBytes,
-          maxTextCodeBytes: merged.maxTextCodeBytes,
-          dailySpendingAlertUsd: merged.dailySpendingAlertUsd,
-          monthlySpendingAlertUsd: merged.monthlySpendingAlertUsd,
-          enforceSpendingHardStop: merged.enforceSpendingHardStop,
-        },
-        create: {
-          id: 'default',
-          anonMessagesPerHour: merged.anonMessagesPerHour,
-          anonMessagesPerDay: merged.anonMessagesPerDay,
-          authMessagesPerHour: merged.authMessagesPerHour,
-          authMessagesPerDay: merged.authMessagesPerDay,
-          perUserRequestsPerMinute: merged.perUserRequestsPerMinute,
-          maxMessageChars: merged.maxMessageChars,
-          maxMessagesPerRequest: merged.maxMessagesPerRequest,
-          maxAttachmentsPerMessage: merged.maxAttachmentsPerMessage,
-          maxDocImageBytes: merged.maxDocImageBytes,
-          maxTextCodeBytes: merged.maxTextCodeBytes,
-          dailySpendingAlertUsd: merged.dailySpendingAlertUsd,
-          monthlySpendingAlertUsd: merged.monthlySpendingAlertUsd,
-          enforceSpendingHardStop: merged.enforceSpendingHardStop,
-        },
-      });
+      try {
+        await prisma.botUsageLimits.upsert({
+          where: { id: 'default' },
+          update: {
+            anonMessagesPerHour: merged.anonMessagesPerHour,
+            anonMessagesPerDay: merged.anonMessagesPerDay,
+            authMessagesPerHour: merged.authMessagesPerHour,
+            authMessagesPerDay: merged.authMessagesPerDay,
+            perUserRequestsPerMinute: merged.perUserRequestsPerMinute,
+            maxMessageChars: merged.maxMessageChars,
+            maxMessagesPerRequest: merged.maxMessagesPerRequest,
+            maxAttachmentsPerMessage: merged.maxAttachmentsPerMessage,
+            maxDocImageBytes: merged.maxDocImageBytes,
+            maxTextCodeBytes: merged.maxTextCodeBytes,
+            dailySpendingAlertUsd: merged.dailySpendingAlertUsd,
+            monthlySpendingAlertUsd: merged.monthlySpendingAlertUsd,
+            enforceSpendingHardStop: merged.enforceSpendingHardStop,
+          },
+          create: {
+            id: 'default',
+            anonMessagesPerHour: merged.anonMessagesPerHour,
+            anonMessagesPerDay: merged.anonMessagesPerDay,
+            authMessagesPerHour: merged.authMessagesPerHour,
+            authMessagesPerDay: merged.authMessagesPerDay,
+            perUserRequestsPerMinute: merged.perUserRequestsPerMinute,
+            maxMessageChars: merged.maxMessageChars,
+            maxMessagesPerRequest: merged.maxMessagesPerRequest,
+            maxAttachmentsPerMessage: merged.maxAttachmentsPerMessage,
+            maxDocImageBytes: merged.maxDocImageBytes,
+            maxTextCodeBytes: merged.maxTextCodeBytes,
+            dailySpendingAlertUsd: merged.dailySpendingAlertUsd,
+            monthlySpendingAlertUsd: merged.monthlySpendingAlertUsd,
+            enforceSpendingHardStop: merged.enforceSpendingHardStop,
+          },
+        });
+      } catch (err) {
+        const code = (err as any)?.code || 'DB_ERROR';
+        console.warn(`[QuantumBot AdminConfig] DB write failed in updateUsageLimitsConfig (${code})`);
+        throw new AdminConfigError(
+          503,
+          'Database is unavailable or schema is not initialized (run prisma db push) for saving usage limits.'
+        );
+      }
     } else {
       await writeLocalSnapshot(snap, options);
     }

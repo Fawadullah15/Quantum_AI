@@ -27,8 +27,8 @@ import {
 } from './conversation-store';
 import { deleteAllBotFilesForOwner, migrateBotFilesOwner } from './file-store';
 import { AuthActor, BotUserStatus, PublicBotUser, UserPreferences } from './types';
+import { resolveWritableStorageDirSync } from './storage-dir';
 
-const DEFAULT_USERS_FILE = path.join(process.cwd(), '.private_storage', 'bot_users', 'users.json');
 const SESSION_MAX_AGE_SECONDS = 30 * 24 * 60 * 60; // 30 days
 
 export interface BotAuthStoreOptions {
@@ -74,7 +74,8 @@ function shouldUseDatabase(options?: BotAuthStoreOptions): boolean {
 }
 
 function getUsersFilePath(options?: BotAuthStoreOptions): string {
-  return options?.storageDir ? path.join(options.storageDir, 'users.json') : DEFAULT_USERS_FILE;
+  const dir = options?.storageDir || resolveWritableStorageDirSync('bot_users');
+  return path.join(dir, 'users.json');
 }
 
 function toConvOpts(options?: BotAuthStoreOptions): ConversationStoreOptions | undefined {
@@ -170,8 +171,14 @@ export async function findBotUserById(
   if (!id) return null;
 
   if (shouldUseDatabase(options)) {
-    const row = await prisma.botUser.findUnique({ where: { id } });
-    return row ? mapDbUserRow(row) : null;
+    try {
+      const row = await prisma.botUser.findUnique({ where: { id } });
+      return row ? mapDbUserRow(row) : null;
+    } catch (err) {
+      const code = (err as any)?.code || 'DB_ERROR';
+      console.warn(`[QuantumBot Auth] DB lookup failed in findBotUserById (${code})`);
+      return null;
+    }
   }
 
   const users = await readLocalUsers(options);
@@ -223,21 +230,31 @@ export async function registerBotUser(
     let createdRecord: StoredBotUserRecord;
 
     if (shouldUseDatabase(options)) {
-      const existing = await prisma.botUser.findUnique({ where: { email: cleanEmail } });
-      if (existing) {
-        throw new BotAuthError(409, 'An account with this email address already exists.');
+      try {
+        const existing = await prisma.botUser.findUnique({ where: { email: cleanEmail } });
+        if (existing) {
+          throw new BotAuthError(409, 'An account with this email address already exists.');
+        }
+        const created = await prisma.botUser.create({
+          data: {
+            email: cleanEmail,
+            name: cleanName,
+            displayName: cleanName,
+            passwordHash,
+            role: 'USER',
+            status: 'ACTIVE',
+          },
+        });
+        createdRecord = mapDbUserRow(created);
+      } catch (err) {
+        if (err instanceof BotAuthError) throw err;
+        const code = (err as any)?.code || 'DB_ERROR';
+        console.warn(`[QuantumBot Auth] DB write failed in registerBotUser (${code})`);
+        throw new BotAuthError(
+          503,
+          'Account registration database is unavailable or awaiting schema setup. You can continue using QuantumBot as a guest.'
+        );
       }
-      const created = await prisma.botUser.create({
-        data: {
-          email: cleanEmail,
-          name: cleanName,
-          displayName: cleanName,
-          passwordHash,
-          role: 'USER',
-          status: 'ACTIVE',
-        },
-      });
-      createdRecord = mapDbUserRow(created);
     } else {
       const users = await readLocalUsers(options);
       if (users.some((u) => u.email === cleanEmail)) {
@@ -333,9 +350,18 @@ export async function loginBotUser(
 
   let record: StoredBotUserRecord | null = null;
   if (shouldUseDatabase(options)) {
-    const row = await prisma.botUser.findUnique({ where: { email: cleanEmail } });
-    if (row) {
-      record = mapDbUserRow(row);
+    try {
+      const row = await prisma.botUser.findUnique({ where: { email: cleanEmail } });
+      if (row) {
+        record = mapDbUserRow(row);
+      }
+    } catch (err) {
+      const code = (err as any)?.code || 'DB_ERROR';
+      console.warn(`[QuantumBot Auth] DB lookup failed in loginBotUser (${code})`);
+      throw new BotAuthError(
+        503,
+        'Account sign-in database is unavailable or awaiting schema setup. You can continue using QuantumBot as a guest.'
+      );
     }
   } else {
     const users = await readLocalUsers(options);
@@ -649,29 +675,35 @@ export async function listBotUsersForGovernance(
   options?: BotAuthStoreOptions
 ): Promise<SafeBotUserGovernanceRecord[]> {
   if (shouldUseDatabase(options)) {
-    const rows = await prisma.botUser.findMany({
-      orderBy: { createdAt: 'desc' },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        status: true,
-        dailyMessageLimitOverride: true,
-        suspendedReason: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-    return rows.map((r) => ({
-      id: r.id,
-      email: r.email,
-      name: r.name,
-      status: normalizeStatus(r.status),
-      dailyMessageLimitOverride: r.dailyMessageLimitOverride ?? null,
-      suspendedReason: r.suspendedReason ?? null,
-      createdAt: r.createdAt.toISOString(),
-      updatedAt: r.updatedAt.toISOString(),
-    }));
+    try {
+      const rows = await prisma.botUser.findMany({
+        orderBy: { createdAt: 'desc' },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          status: true,
+          dailyMessageLimitOverride: true,
+          suspendedReason: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+      return rows.map((r) => ({
+        id: r.id,
+        email: r.email,
+        name: r.name,
+        status: normalizeStatus(r.status),
+        dailyMessageLimitOverride: r.dailyMessageLimitOverride ?? null,
+        suspendedReason: r.suspendedReason ?? null,
+        createdAt: r.createdAt.toISOString(),
+        updatedAt: r.updatedAt.toISOString(),
+      }));
+    } catch (err) {
+      const code = (err as any)?.code || 'DB_ERROR';
+      console.warn(`[QuantumBot Auth] DB lookup failed in listBotUsersForGovernance (${code})`);
+      return [];
+    }
   }
 
   const users = await readLocalUsers(options);

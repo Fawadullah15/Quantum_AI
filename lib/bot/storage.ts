@@ -98,13 +98,15 @@ export function saveConversation(conv: StoredConversation): StoredConversation {
 
     const rawTitle = conv.title?.trim();
     const resolvedTitle =
-      rawTitle && rawTitle !== 'New Conversation'
-        ? rawTitle
-        : existing?.title && existing.title !== 'New Conversation'
-          ? existing.title
-          : conv.messages.length > 0
-            ? generateSmartConversationTitle(conv.messages)
-            : 'New Conversation';
+      conv.messages.length === 0
+        ? rawTitle && rawTitle !== 'New Conversation' && existing?.messages.length === 0
+          ? rawTitle
+          : 'New Conversation'
+        : rawTitle && rawTitle !== 'New Conversation'
+          ? rawTitle
+          : existing?.title && existing.title !== 'New Conversation'
+            ? existing.title
+            : generateSmartConversationTitle(conv.messages);
 
     const updatedConv: StoredConversation = {
       ...conv,

@@ -363,9 +363,7 @@ export function useChat(options: UseChatOptions = {}) {
 
       const restoreUnsentUserTurn = () => {
         setMessages(baseMessages);
-        if (baseMessages.length > 0) {
-          persist(baseMessages);
-        }
+        persist(baseMessages);
         setRestoredDraft({
           key: Date.now() + Math.random(),
           content: trimmedContent,
@@ -603,6 +601,7 @@ export function useChat(options: UseChatOptions = {}) {
   // 7. Regenerate last response (or resend preserved failed draft)
   const retryFailed = useCallback(async () => {
     if (isGenerating) return;
+    setError(null);
     if (restoredDraft) {
       const draft = restoredDraft;
       setRestoredDraft(null);
