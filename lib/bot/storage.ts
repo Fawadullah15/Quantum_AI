@@ -1,15 +1,18 @@
 /**
- * QuantumBot Local Persistence & Storage Layer
- * Manages multi-turn conversation persistence, grouping by date, pinning, and cross-tab sync.
+ * QuantumBot Client + Server Persistence & Storage Layer
+ * Manages multi-turn conversation persistence, smart auto-titling,
+ * chronological grouping, pinning, archiving, restoration, and server sync.
  */
 
-import { BotMessage } from './types';
+import { BotMessage, ServerConversation } from './types';
+import { generateSmartConversationTitle } from './title-generator';
 
 export interface StoredConversation {
   id: string;
   title: string;
   modelId: string;
   pinned?: boolean;
+  archived?: boolean;
   createdAt: number;
   updatedAt: number;
   messages: BotMessage[];
@@ -38,7 +41,7 @@ export function getStoredConversations(): StoredConversation[] {
     if (!raw) return [];
     const parsed: StoredConversation[] = JSON.parse(raw);
     return Array.isArray(parsed)
-      ? parsed.sort((a, b) => b.updatedAt - a.updatedAt)
+      ? parsed.sort((a, b) => (b.updatedAt || b.createdAt) - (a.updatedAt || a.createdAt))
       : [];
   } catch (err) {
     console.error('[QuantumBot Storage] Failed to load conversations:', err);
@@ -55,30 +58,58 @@ export function getStoredConversation(id: string): StoredConversation | null {
 }
 
 /**
- * Save or update a conversation. Dispatches an update event for reactive synchronization.
+ * Replace local cache cleanly with authoritative server conversations for the active identity.
  */
-export function saveConversation(conv: StoredConversation): void {
+export function replaceAllStoredConversations(convs: ServerConversation[]): void {
   if (!isBrowser()) return;
+  try {
+    const mapped: StoredConversation[] = convs.map((c) => ({
+      id: c.id,
+      title: c.title,
+      modelId: c.modelId,
+      pinned: Boolean(c.pinned),
+      archived: Boolean(c.archived),
+      createdAt: c.createdAt,
+      updatedAt: c.updatedAt,
+      messages: c.messages || [],
+    }));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(mapped));
+
+    const active = localStorage.getItem(ACTIVE_CONV_KEY);
+    if (active && mapped.length > 0 && !mapped.some((c) => c.id === active)) {
+      localStorage.removeItem(ACTIVE_CONV_KEY);
+    }
+
+    window.dispatchEvent(new CustomEvent('quantumbot:sync', { detail: { refreshed: true } }));
+  } catch (err) {
+    console.error('[QuantumBot Storage] Failed to replace conversations:', err);
+  }
+}
+
+/**
+ * Save or update a conversation locally and emit reactive sync event.
+ */
+export function saveConversation(conv: StoredConversation): StoredConversation {
+  if (!isBrowser()) return conv;
   try {
     const all = getStoredConversations();
     const index = all.findIndex((c) => c.id === conv.id);
-
     const existing = index >= 0 ? all[index] : null;
+
     const rawTitle = conv.title?.trim();
     const resolvedTitle =
       rawTitle && rawTitle !== 'New Conversation'
         ? rawTitle
-        : conv.messages.length > 0
-        ? generateDefaultTitle(
-            conv.messages[0].content ||
-              (conv.messages[0].attachments?.[0]?.name
-                ? `Analysis: ${conv.messages[0].attachments[0].name}`
-                : '')
-          )
-        : 'New Conversation';
+        : existing?.title && existing.title !== 'New Conversation'
+          ? existing.title
+          : conv.messages.length > 0
+            ? generateSmartConversationTitle(conv.messages)
+            : 'New Conversation';
 
     const updatedConv: StoredConversation = {
       ...conv,
+      pinned: conv.pinned !== undefined ? conv.pinned : existing?.pinned,
+      archived: conv.archived !== undefined ? conv.archived : existing?.archived,
       createdAt: existing?.createdAt || conv.createdAt || Date.now(),
       updatedAt: Date.now(),
       title: resolvedTitle,
@@ -93,17 +124,18 @@ export function saveConversation(conv: StoredConversation): void {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
     localStorage.setItem(ACTIVE_CONV_KEY, updatedConv.id);
 
-    // Notify other components & tabs
     window.dispatchEvent(
       new CustomEvent('quantumbot:sync', { detail: { conversationId: updatedConv.id } })
     );
+    return updatedConv;
   } catch (err) {
     console.error('[QuantumBot Storage] Failed to save conversation:', err);
+    return conv;
   }
 }
 
 /**
- * Delete a conversation by ID.
+ * Delete a conversation by ID locally and on backend.
  */
 export function deleteStoredConversation(id: string): void {
   if (!isBrowser()) return;
@@ -122,31 +154,62 @@ export function deleteStoredConversation(id: string): void {
   } catch (err) {
     console.error('[QuantumBot Storage] Failed to delete conversation:', err);
   }
+  void deleteConversationOnServer(id);
 }
 
 /**
- * Toggle pinned status for a conversation.
+ * Toggle pinned status for a conversation locally and on backend.
  */
 export function togglePinConversation(id: string): void {
   const conv = getStoredConversation(id);
   if (conv) {
+    const nextPinned = !conv.pinned;
     saveConversation({
       ...conv,
-      pinned: !conv.pinned,
+      pinned: nextPinned,
     });
+    void patchConversationOnServer(id, { pinned: nextPinned });
   }
 }
 
 /**
- * Rename a conversation.
+ * Archive or restore a conversation locally and on backend.
  */
-export function renameStoredConversation(id: string, newTitle: string): void {
+export function archiveStoredConversation(id: string): void {
   const conv = getStoredConversation(id);
   if (conv) {
     saveConversation({
       ...conv,
-      title: newTitle.trim() || 'Untitled Conversation',
+      archived: true,
+      pinned: false,
     });
+    void patchConversationOnServer(id, { archived: true, pinned: false });
+  }
+}
+
+export function restoreStoredConversation(id: string): void {
+  const conv = getStoredConversation(id);
+  if (conv) {
+    saveConversation({
+      ...conv,
+      archived: false,
+    });
+    void patchConversationOnServer(id, { archived: false });
+  }
+}
+
+/**
+ * Rename a conversation locally and on backend.
+ */
+export function renameStoredConversation(id: string, newTitle: string): void {
+  const conv = getStoredConversation(id);
+  if (conv) {
+    const clean = newTitle.trim() || 'Untitled Conversation';
+    saveConversation({
+      ...conv,
+      title: clean,
+    });
+    void patchConversationOnServer(id, { title: clean });
   }
 }
 
@@ -176,16 +239,84 @@ export function clearAllStoredConversations(): void {
   window.dispatchEvent(new CustomEvent('quantumbot:sync', { detail: { cleared: true } }));
 }
 
-/**
- * Generate a smart concise title from the user's initial prompt.
- */
-function generateDefaultTitle(firstMessageContent: string): string {
-  const clean = firstMessageContent
-    .replace(/[#*`_~]/g, '')
-    .trim()
-    .split('\n')[0];
-  if (!clean) return 'New Conversation';
-  return clean.length > 36 ? `${clean.slice(0, 36)}...` : clean;
+// ─── Server Persistence Helpers ─────────────────────────────────────────────
+
+export async function fetchServerConversations(): Promise<ServerConversation[] | null> {
+  try {
+    const res = await fetch('/api/bot/conversations?archived=all', {
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return Array.isArray(data?.conversations) ? data.conversations : [];
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchSingleServerConversation(id: string): Promise<ServerConversation | null> {
+  try {
+    const res = await fetch(`/api/bot/conversations/${encodeURIComponent(id)}`, {
+      cache: 'no-store',
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.conversation || null;
+  } catch {
+    return null;
+  }
+}
+
+export async function syncConversationToServer(conv: StoredConversation): Promise<void> {
+  try {
+    await fetch('/api/bot/conversations', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: conv.id,
+        title: conv.title,
+        modelId: conv.modelId,
+        pinned: Boolean(conv.pinned),
+        archived: Boolean(conv.archived),
+        messages: conv.messages,
+      }),
+    });
+  } catch {
+    // Non-blocking best-effort sync
+  }
+}
+
+export async function patchConversationOnServer(
+  id: string,
+  patch: { title?: string; pinned?: boolean; archived?: boolean; modelId?: string }
+): Promise<void> {
+  try {
+    await fetch(`/api/bot/conversations/${encodeURIComponent(id)}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch),
+    });
+  } catch {
+    // Non-blocking sync
+  }
+}
+
+export async function deleteConversationOnServer(id: string): Promise<void> {
+  try {
+    await fetch(`/api/bot/conversations/${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+    });
+  } catch {
+    // Non-blocking sync
+  }
+}
+
+export async function clearAllServerConversations(): Promise<void> {
+  try {
+    await fetch('/api/bot/conversations', { method: 'DELETE' });
+  } catch {
+    // Non-blocking sync
+  }
 }
 
 /**

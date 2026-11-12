@@ -14,6 +14,7 @@ interface MessageComposerProps {
   onSwitchToVisionModel?: () => void;
   enableWebSearch?: boolean;
   onToggleWebSearch?: () => void;
+  enterToSend?: boolean;
 }
 
 const ACCEPTED_FILE_EXTENSIONS =
@@ -30,6 +31,7 @@ export function MessageComposer({
   onSwitchToVisionModel,
   enableWebSearch = false,
   onToggleWebSearch,
+  enterToSend = true,
 }: MessageComposerProps) {
   const [input, setInput] = useState('');
   const [attachments, setAttachments] = useState<BotAttachment[]>([]);
@@ -187,7 +189,12 @@ export function MessageComposer({
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (enterToSend) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSend();
+      }
+    } else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       handleSend();
     }

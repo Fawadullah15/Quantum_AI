@@ -9,7 +9,8 @@ import { ModelSelector } from '@/components/bot/ModelSelector';
 import { MessageItem, describeToolCallLabel } from '@/components/bot/MessageItem';
 import { MessageComposer } from '@/components/bot/MessageComposer';
 import { WelcomeScreen } from '@/components/bot/WelcomeScreen';
-import { SettingsModal } from '@/components/bot/SettingsModal';
+import { SettingsModal, SettingsTab } from '@/components/bot/SettingsModal';
+import { AuthModal } from '@/components/bot/AuthModal';
 import { QuantumBotIcon } from '@/components/bot/QuantumBotIcon';
 
 export default function QuantumBotPage() {
@@ -48,12 +49,23 @@ function QuantumBotWorkspace() {
     startNewConversation,
     switchConversation,
     setModelId,
+    authUser,
+    authType,
+    isAuthenticated,
+    preferences,
+    updatePreferences,
+    refreshSessionAndConversations,
+    signOutUser,
+    clearAllConversations,
   } = useChat({ initialConversationId: queryConversationId });
 
   const [conversations, setConversations] = useState<StoredConversation[]>([]);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [settingsInitialTab, setSettingsInitialTab] = useState<SettingsTab>('engine');
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   const [showScrollBottom, setShowScrollBottom] = useState(false);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -127,7 +139,18 @@ function QuantumBotWorkspace() {
         activeConversationId={conversationId}
         onSelectConversation={(id) => switchConversation(id)}
         onNewChat={() => startNewConversation()}
-        onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenSettings={(tab = 'engine') => {
+          setSettingsInitialTab(tab);
+          setIsSettingsOpen(true);
+        }}
+        onOpenAuthModal={(mode = 'login') => {
+          setAuthModalMode(mode);
+          setIsAuthModalOpen(true);
+        }}
+        onSignOut={() => signOutUser(false)}
+        authUser={authUser}
+        displayName={preferences?.displayName}
+        isAuthenticated={isAuthenticated}
         isCollapsed={isSidebarCollapsed}
         onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         isMobileOpen={isMobileSidebarOpen}
@@ -174,6 +197,34 @@ function QuantumBotWorkspace() {
           </div>
 
           <div className="flex items-center gap-1.5 sm:gap-2">
+            {/* Account / Guest Indicator */}
+            {isAuthenticated && authUser ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setSettingsInitialTab('account');
+                  setIsSettingsOpen(true);
+                }}
+                className="px-2 py-1 text-[11px] font-mono text-cyan-200 bg-cyan-950/30 hover:bg-cyan-950/60 border border-cyan-500/30 rounded-lg transition-colors flex items-center gap-1.5 max-w-[140px]"
+                title={`Signed in as ${authUser.email}`}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                <span className="truncate">{preferences?.displayName || authUser.name}</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setAuthModalMode('login');
+                  setIsAuthModalOpen(true);
+                }}
+                className="px-2.5 py-1.5 text-xs font-mono text-cyan-300 hover:text-black hover:bg-cyan-400 border border-cyan-500/40 rounded-lg transition-colors"
+                title="Sign in or create an account"
+              >
+                Sign In
+              </button>
+            )}
+
             {/* New Chat Quick Button */}
             <button
               type="button"
@@ -190,9 +241,12 @@ function QuantumBotWorkspace() {
             {/* Settings Trigger */}
             <button
               type="button"
-              onClick={() => setIsSettingsOpen(true)}
+              onClick={() => {
+                setSettingsInitialTab('engine');
+                setIsSettingsOpen(true);
+              }}
               className="p-1.5 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800/60 transition-colors"
-              title="Engine Settings"
+              title="Engine & Personalization Settings"
             >
               <svg className="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -305,10 +359,15 @@ function QuantumBotWorkspace() {
               onSwitchToVisionModel={handleSwitchToVisionModel}
               enableWebSearch={enableWebSearch}
               onToggleWebSearch={() => setEnableWebSearch((prev) => !prev)}
+              enterToSend={preferences?.enterToSend !== false}
             />
             <div className="flex items-center justify-between mt-2 px-1 text-[11px] text-gray-500 font-mono">
               <span>QuantumBot can assist with code, mathematics, and complex engineering.</span>
-              <span className="hidden sm:inline">Enter to send, Shift + Enter for new line</span>
+              <span className="hidden sm:inline">
+                {preferences?.enterToSend === false
+                  ? 'Ctrl/Cmd + Enter to send, Enter for new line'
+                  : 'Enter to send, Shift + Enter for new line'}
+              </span>
             </div>
           </div>
         </div>
@@ -318,9 +377,31 @@ function QuantumBotWorkspace() {
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+        initialTab={settingsInitialTab}
         models={availableModels}
         currentModelId={modelId}
         onSelectModel={(id) => setModelId(id)}
+        authUser={authUser}
+        authType={authType}
+        isAuthenticated={isAuthenticated}
+        preferences={preferences}
+        onSavePreferences={updatePreferences}
+        onClearAllConversations={clearAllConversations}
+        onOpenAuthModal={(mode = 'login') => {
+          setAuthModalMode(mode);
+          setIsAuthModalOpen(true);
+        }}
+        onSignOut={signOutUser}
+        onAccountDeleted={() => refreshSessionAndConversations({ forceServerReplace: true })}
+      />
+
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialMode={authModalMode}
+        hasGuestConversations={conversations.length > 0}
+        onSuccess={() => refreshSessionAndConversations({ forceServerReplace: true })}
       />
     </div>
   );

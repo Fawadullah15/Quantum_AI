@@ -1,4 +1,4 @@
-import { ModelDefinition } from './types';
+import { ModelDefinition, ResponseStyle, UserPreferences } from './types';
 
 /**
  * QuantumBot Master Persona & System Instructions
@@ -73,7 +73,16 @@ export interface SystemInstructionOptions {
   enableWebSearch?: boolean;
   availableToolNames?: string[];
   companyContextBlock?: string;
+  userPreferences?: UserPreferences;
 }
+
+const STYLE_DIRECTIVES: Record<ResponseStyle, string> = {
+  balanced: 'Use a clear, well-balanced mix of explanation and practical detail.',
+  concise: 'Be direct, scannable, and concise unless depth is explicitly requested.',
+  detailed: 'Provide thorough explanations, edge cases, examples, and structured breakdowns.',
+  technical: 'Adopt an engineering-first tone with idiomatic code, exact terminology, and architectural rigor.',
+  beginner_friendly: 'Explain concepts step by step in approachable language with intuitive analogies.',
+};
 
 export function buildSystemInstruction(
   input?: string | SystemInstructionOptions
@@ -107,6 +116,30 @@ export function buildSystemInstruction(
 
   if (opts.companyContextBlock && opts.companyContextBlock.trim()) {
     sections.push(opts.companyContextBlock.trim());
+  }
+
+  // Phase 7 explicit personalization preferences (strictly user-configured; never inferred)
+  if (opts.userPreferences) {
+    const prefLines: string[] = [];
+    if (opts.userPreferences.displayName) {
+      prefLines.push(`- Address the user as "${opts.userPreferences.displayName}" when natural.`);
+    }
+    if (opts.userPreferences.responseStyle && STYLE_DIRECTIVES[opts.userPreferences.responseStyle]) {
+      prefLines.push(
+        `- Preferred Response Style (${opts.userPreferences.responseStyle}): ${STYLE_DIRECTIVES[opts.userPreferences.responseStyle]}`
+      );
+    }
+    if (opts.userPreferences.language && opts.userPreferences.language.toLowerCase() !== 'english') {
+      prefLines.push(
+        `- Preferred Response Language: ${opts.userPreferences.language} (respond in ${opts.userPreferences.language} unless the user explicitly writes in another language and asks for it).`
+      );
+    }
+    if (opts.userPreferences.customInstructions?.trim()) {
+      prefLines.push(`- Saved User Preference Instructions: ${opts.userPreferences.customInstructions.trim()}`);
+    }
+    if (prefLines.length > 0) {
+      sections.push(`### User Personalization Settings\n${prefLines.join('\n')}`);
+    }
   }
 
   if (opts.customInstruction && opts.customInstruction.trim()) {

@@ -319,6 +319,76 @@ export async function updateGeminiFileCache(
 }
 
 /**
+ * Permanently deletes every uploaded file owned by a given ownerId (Privacy & Account Deletion).
+ */
+export async function deleteAllBotFilesForOwner(ownerId: string): Promise<number> {
+  if (!ownerId || !ownerId.trim()) return 0;
+  const dir = await resolveStorageDir();
+  let deletedCount = 0;
+
+  try {
+    const entries = await fs.readdir(dir);
+    for (const file of entries) {
+      if (!file.endsWith('.meta.json')) continue;
+      try {
+        const raw = await fs.readFile(path.join(dir, file), 'utf8');
+        const meta = JSON.parse(raw) as StoredBotFileMetadata;
+        if (meta.ownerId === ownerId) {
+          await removeFileArtifacts(dir, meta.fileId);
+          deletedCount++;
+        }
+      } catch {
+        // Ignore single malformed record
+      }
+    }
+  } catch {
+    return 0;
+  }
+
+  return deletedCount;
+}
+
+/**
+ * Transfers verified non-expired anonymous visitor uploads to an authenticated account
+ * ONLY when explicitly triggered for that exact verified anonymous ownerId.
+ */
+export async function migrateBotFilesOwner(
+  fromOwnerId: string,
+  toOwnerId: string
+): Promise<number> {
+  if (!fromOwnerId || !toOwnerId || fromOwnerId === toOwnerId) return 0;
+  const dir = await resolveStorageDir();
+  const now = Date.now();
+  let migratedCount = 0;
+
+  try {
+    const entries = await fs.readdir(dir);
+    for (const file of entries) {
+      if (!file.endsWith('.meta.json')) continue;
+      const metaPath = path.join(dir, file);
+      try {
+        const raw = await fs.readFile(metaPath, 'utf8');
+        const meta = JSON.parse(raw) as StoredBotFileMetadata;
+        if (meta.ownerId !== fromOwnerId) continue;
+        if (!meta.expiresAt || now > new Date(meta.expiresAt).getTime()) {
+          await removeFileArtifacts(dir, meta.fileId);
+          continue;
+        }
+        const updated: StoredBotFileMetadata = { ...meta, ownerId: toOwnerId };
+        await fs.writeFile(metaPath, JSON.stringify(updated, null, 2), 'utf8');
+        migratedCount++;
+      } catch {
+        // Ignore single corrupt record
+      }
+    }
+  } catch {
+    return 0;
+  }
+
+  return migratedCount;
+}
+
+/**
  * Maps server metadata into a safe client-facing BotAttachment (strips ownerId & raw bulk text).
  */
 export function toPublicAttachment(record: StoredBotFileMetadata): BotAttachment {

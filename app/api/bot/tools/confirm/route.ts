@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/lib/rate-limit';
-import { attachOwnerCookie, resolveOwnerIdentity } from '@/lib/bot/file-security';
+import { attachActorCookies, resolveBotActor } from '@/lib/bot/auth';
 import { computeActionKey, executeToolCall, getToolByName } from '@/lib/bot/tools';
 
 export const runtime = 'nodejs';
@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const resolvedOwner = await resolveOwnerIdentity(req, true);
+  const { actor, anonCookieToAttach } = await resolveBotActor(req, true);
   const rawArgs = body.arguments && typeof body.arguments === 'object' ? body.arguments : {};
 
   if (!body.approved) {
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
         message: 'Action cancelled by user. No external action was taken.',
       },
     });
-    attachOwnerCookie(res, resolvedOwner, req);
+    attachActorCookies(res, anonCookieToAttach, req);
     return res;
   }
 
@@ -76,13 +76,13 @@ export async function POST(req: NextRequest) {
       },
       { status: 400 }
     );
-    attachOwnerCookie(res, resolvedOwner, req);
+    attachActorCookies(res, anonCookieToAttach, req);
     return res;
   }
 
   const outcome = await executeToolCall(toolName, rawArgs, {
     conversationId: body.conversationId,
-    ownerId: resolvedOwner?.ownerId,
+    ownerId: actor.ownerId,
     permissions: ['public_read', 'compute', 'external_write'],
     approvedActionKeys: [expectedKey],
   });
@@ -95,6 +95,6 @@ export async function POST(req: NextRequest) {
     durationMs: outcome.durationMs,
     result: outcome.result,
   });
-  attachOwnerCookie(res, resolvedOwner, req);
+  attachActorCookies(res, anonCookieToAttach, req);
   return res;
 }

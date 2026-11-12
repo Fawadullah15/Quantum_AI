@@ -7,7 +7,13 @@ import {
 import { resolveActiveModel } from '@/lib/bot/models';
 import { BotMessage, StreamChunk } from '@/lib/bot/types';
 import { checkRateLimit } from '@/lib/rate-limit';
-import { attachOwnerCookie, resolveOwnerIdentity } from '@/lib/bot/file-security';
+import { attachActorCookies, resolveBotActor } from '@/lib/bot/auth';
+import {
+  ConversationForbiddenError,
+  ConversationValidationError,
+  assertConversationOwnership,
+  upsertConversationForOwner,
+} from '@/lib/bot/conversation-store';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -67,28 +73,46 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 3. Resolve owner identity & preflight-validate attachments (ownership, expiration, vision capability)
-  const resolvedOwner = await resolveOwnerIdentity(req, true);
+  // 3. Resolve actor identity (Bot Account > NextAuth Admin > Isolated Anonymous Session)
+  const { actor, anonCookieToAttach } = await resolveBotActor(req, true);
   const { model } = resolveActiveModel(body.modelId);
+
+  // 3b. Enforce strict conversation ownership BEFORE running model or tools
+  if (body.conversationId) {
+    try {
+      await assertConversationOwnership(body.conversationId, actor.ownerId);
+    } catch (ownErr: any) {
+      if (ownErr instanceof ConversationForbiddenError) {
+        const forbiddenRes = NextResponse.json({ error: ownErr.message }, { status: 403 });
+        attachActorCookies(forbiddenRes, anonCookieToAttach, req);
+        return forbiddenRes;
+      }
+      if (ownErr instanceof ConversationValidationError) {
+        const badRes = NextResponse.json({ error: ownErr.message }, { status: 400 });
+        attachActorCookies(badRes, anonCookieToAttach, req);
+        return badRes;
+      }
+    }
+  }
 
   let validatedMessages: BotMessage[];
   try {
     validatedMessages = await resolveAndValidateChatMessages(
       body.messages,
       model,
-      resolvedOwner?.ownerId
+      actor.ownerId
     );
   } catch (err: any) {
     if (err instanceof AttachmentResolutionError) {
       const errRes = NextResponse.json({ error: err.message }, { status: err.statusCode });
-      attachOwnerCookie(errRes, resolvedOwner, req);
+      attachActorCookies(errRes, anonCookieToAttach, req);
       return errRes;
     }
     const errRes = NextResponse.json(
       { error: err?.message || 'Attachment validation failed.' },
       { status: 400 }
     );
-    attachOwnerCookie(errRes, resolvedOwner, req);
+    attachActorCookies(errRes, anonCookieToAttach, req);
     return errRes;
   }
 
@@ -108,11 +132,12 @@ export async function POST(req: NextRequest) {
       };
 
       try {
-        await executeQuantumBotChat({
+        const chatResponse = await executeQuantumBotChat({
           modelId: body.modelId,
           messages: body.messages,
           validatedMessages,
           customSystemPrompt: body.customSystemPrompt,
+          userPreferences: actor.preferences,
           temperature: typeof body.temperature === 'number' ? body.temperature : 0.7,
           maxTokens: body.maxTokens,
           enableTools: body.enableTools !== false,
@@ -121,10 +146,35 @@ export async function POST(req: NextRequest) {
             ? body.approvedActionKeys.filter((k) => typeof k === 'string')
             : undefined,
           conversationId: body.conversationId,
-          ownerId: resolvedOwner?.ownerId,
+          ownerId: actor.ownerId,
           onChunk: send,
           signal: req.signal,
         });
+
+        // Persist conversation turn safely on the backend for cross-session history
+        if (
+          body.conversationId &&
+          actor.ownerId &&
+          (chatResponse.content || (chatResponse.toolCalls && chatResponse.toolCalls.length > 0))
+        ) {
+          const assistantMsg: BotMessage = {
+            id: `msg_asst_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+            role: 'assistant',
+            content: chatResponse.content,
+            model: chatResponse.model || model.id,
+            toolCalls: chatResponse.toolCalls,
+            toolResults: chatResponse.toolResults,
+            createdAt: new Date().toISOString(),
+          };
+          await upsertConversationForOwner(
+            {
+              id: body.conversationId,
+              modelId: model.id,
+              messages: [...body.messages, assistantMsg],
+            },
+            actor.ownerId
+          ).catch(() => {});
+        }
       } catch (err: any) {
         if (!req.signal.aborted && !isClosed) {
           send({
@@ -156,6 +206,6 @@ export async function POST(req: NextRequest) {
       'X-Accel-Buffering': 'no',
     },
   });
-  attachOwnerCookie(res, resolvedOwner, req);
+  attachActorCookies(res, anonCookieToAttach, req);
   return res;
 }

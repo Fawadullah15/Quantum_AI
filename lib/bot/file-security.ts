@@ -5,6 +5,7 @@ import { authOptions } from '@/lib/auth';
 import { AttachmentKind } from './types';
 
 export const OWNER_COOKIE_NAME = 'qb_owner';
+export const BOT_SESSION_COOKIE_NAME = 'qb_session';
 
 export const MAX_DOCUMENT_IMAGE_BYTES = 15 * 1024 * 1024; // 15 MB for PDF, DOCX, XLSX, Images
 export const MAX_TEXT_CODE_BYTES = 2 * 1024 * 1024; // 2 MB for Text, Markdown, CSV, Source Code
@@ -355,4 +356,47 @@ export function attachOwnerCookie(
     path: '/',
     maxAge: 7 * 24 * 60 * 60, // 7 days
   });
+}
+
+export interface BotSessionTokenPayload {
+  uid: string;
+  tv: number;
+  exp: number;
+}
+
+export function signBotSessionToken(payload: BotSessionTokenPayload): string {
+  const body = Buffer.from(JSON.stringify(payload), 'utf8').toString('base64url');
+  const sig = createHmac('sha256', getSigningSecret()).update(body).digest('hex');
+  return `${body}.${sig}`;
+}
+
+export function verifyBotSessionToken(token: string | undefined | null): BotSessionTokenPayload | null {
+  if (!token || typeof token !== 'string') return null;
+  const dotIdx = token.lastIndexOf('.');
+  if (dotIdx <= 0) return null;
+
+  const body = token.slice(0, dotIdx);
+  const providedSig = token.slice(dotIdx + 1);
+  if (!body || !providedSig || providedSig.length !== 64) return null;
+
+  const expectedSig = createHmac('sha256', getSigningSecret()).update(body).digest('hex');
+  try {
+    const a = Buffer.from(providedSig, 'hex');
+    const b = Buffer.from(expectedSig, 'hex');
+    if (a.length !== b.length || !timingSafeEqual(a, b)) return null;
+
+    const decoded = JSON.parse(Buffer.from(body, 'base64url').toString('utf8')) as Partial<BotSessionTokenPayload>;
+    if (
+      typeof decoded.uid !== 'string' ||
+      !decoded.uid ||
+      typeof decoded.tv !== 'number' ||
+      typeof decoded.exp !== 'number' ||
+      Date.now() > decoded.exp
+    ) {
+      return null;
+    }
+    return { uid: decoded.uid, tv: decoded.tv, exp: decoded.exp };
+  } catch {
+    return null;
+  }
 }

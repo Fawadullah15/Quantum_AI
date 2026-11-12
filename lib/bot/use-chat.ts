@@ -8,6 +8,8 @@ import {
   StreamChunk,
   BotToolCall,
   BotToolResult,
+  PublicBotUser,
+  UserPreferences,
 } from './types';
 import {
   StoredConversation,
@@ -15,6 +17,18 @@ import {
   saveConversation,
   getActiveConversationId,
   setActiveConversationId,
+  replaceAllStoredConversations,
+  clearAllStoredConversations,
+  clearAllServerConversations,
+  fetchServerConversations,
+  fetchSingleServerConversation,
+  syncConversationToServer,
+  patchConversationOnServer,
+  archiveStoredConversation,
+  restoreStoredConversation,
+  deleteStoredConversation,
+  togglePinConversation,
+  renameStoredConversation,
 } from './storage';
 
 export interface UseChatOptions {
@@ -22,9 +36,19 @@ export interface UseChatOptions {
   defaultModelId?: string;
 }
 
+const INITIAL_PREFERENCES: UserPreferences = {
+  responseStyle: 'balanced',
+  language: 'English',
+  defaultWebSearch: false,
+  enterToSend: true,
+};
+
 export function useChat(options: UseChatOptions = {}) {
   const [conversationId, setConversationId] = useState<string>(
-    () => options.initialConversationId || getActiveConversationId() || `conv_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`
+    () =>
+      options.initialConversationId ||
+      getActiveConversationId() ||
+      `conv_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`
   );
   const [title, setTitle] = useState<string>('New Conversation');
   const [messages, setMessages] = useState<BotMessage[]>([]);
@@ -32,6 +56,13 @@ export function useChat(options: UseChatOptions = {}) {
   const [availableModels, setAvailableModels] = useState<ModelDefinition[]>([]);
   const [isFallback, setIsFallback] = useState(false);
   const [fallbackReason, setFallbackReason] = useState<string | undefined>();
+
+  // Phase 7: Account Session & Personalization state
+  const [authUser, setAuthUser] = useState<PublicBotUser | null>(null);
+  const [authType, setAuthType] = useState<'bot_account' | 'admin_session' | 'anonymous'>('anonymous');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [preferences, setPreferences] = useState<UserPreferences>(INITIAL_PREFERENCES);
 
   // Web Search & Streaming generation states
   const [enableWebSearch, setEnableWebSearchState] = useState<boolean>(() => {
@@ -52,6 +83,8 @@ export function useChat(options: UseChatOptions = {}) {
   const [error, setError] = useState<string | null>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
+  const conversationIdRef = useRef<string>(conversationId);
+  conversationIdRef.current = conversationId;
 
   const setEnableWebSearch = useCallback((next: boolean | ((prev: boolean) => boolean)) => {
     setEnableWebSearchState((prev) => {
@@ -90,8 +123,68 @@ export function useChat(options: UseChatOptions = {}) {
     };
   }, [options.defaultModelId]);
 
-  // 2. Load conversation from storage whenever conversationId changes
+  // 1b. Load & restore authenticated/guest session + authoritative conversation history
+  const refreshSessionAndConversations = useCallback(
+    async (opts?: { forceServerReplace?: boolean }) => {
+      setAuthLoading(true);
+      try {
+        const [sessionRes, serverConvs] = await Promise.all([
+          fetch('/api/bot/auth/session', { cache: 'no-store' }),
+          fetchServerConversations(),
+        ]);
+
+        let isAuthedNow = false;
+        if (sessionRes.ok) {
+          const sData = await sessionRes.json();
+          isAuthedNow = Boolean(sData?.authenticated);
+          setIsAuthenticated(isAuthedNow);
+          setAuthType(sData?.authType || 'anonymous');
+          setAuthUser(sData?.user || null);
+          if (sData?.preferences) {
+            setPreferences(sData.preferences);
+            if (sData.preferences.defaultModelId && !options.defaultModelId) {
+              setModelIdState(sData.preferences.defaultModelId);
+            }
+            if (typeof sData.preferences.defaultWebSearch === 'boolean') {
+              try {
+                if (localStorage.getItem('quantumbot_web_search') === null) {
+                  setEnableWebSearch(sData.preferences.defaultWebSearch);
+                }
+              } catch {}
+            }
+          }
+        }
+
+        if (serverConvs !== null) {
+          if (isAuthedNow || opts?.forceServerReplace || serverConvs.length > 0) {
+            replaceAllStoredConversations(serverConvs);
+            const active = serverConvs.find((c) => c.id === conversationIdRef.current);
+            if (active) {
+              setMessages(active.messages || []);
+              setTitle(active.title || 'New Conversation');
+              if (active.modelId) setModelIdState(active.modelId);
+            } else if (isAuthedNow || opts?.forceServerReplace) {
+              setMessages([]);
+              setTitle('New Conversation');
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('[useChat] Session restoration skipped:', err);
+      } finally {
+        setAuthLoading(false);
+      }
+    },
+    [options.defaultModelId, setEnableWebSearch]
+  );
+
   useEffect(() => {
+    void refreshSessionAndConversations();
+  }, [refreshSessionAndConversations]);
+
+  // 2. Load conversation from localStorage or server whenever conversationId changes
+  useEffect(() => {
+    let active = true;
     const stored = getStoredConversation(conversationId);
     if (stored) {
       setMessages(stored.messages || []);
@@ -102,8 +195,27 @@ export function useChat(options: UseChatOptions = {}) {
     } else {
       setMessages([]);
       setTitle('New Conversation');
+      void fetchSingleServerConversation(conversationId).then((remote) => {
+        if (!active || !remote) return;
+        saveConversation({
+          id: remote.id,
+          title: remote.title,
+          modelId: remote.modelId,
+          pinned: remote.pinned,
+          archived: remote.archived,
+          createdAt: remote.createdAt,
+          updatedAt: remote.updatedAt,
+          messages: remote.messages,
+        });
+        setMessages(remote.messages || []);
+        setTitle(remote.title || 'New Conversation');
+        if (remote.modelId) setModelIdState(remote.modelId);
+      });
     }
     setActiveConversationId(conversationId);
+    return () => {
+      active = false;
+    };
   }, [conversationId]);
 
   // 3. Listen for cross-tab or cross-component sync
@@ -115,7 +227,7 @@ export function useChat(options: UseChatOptions = {}) {
         setTitle('New Conversation');
         return;
       }
-      if (detail?.conversationId === conversationId) {
+      if (detail?.conversationId === conversationId || detail?.refreshed) {
         const updated = getStoredConversation(conversationId);
         if (updated) {
           setMessages(updated.messages || []);
@@ -129,7 +241,12 @@ export function useChat(options: UseChatOptions = {}) {
 
   // 4. Save to storage helper (strips heavy raw binary/text payloads to protect localStorage quota; server resolves via fileId)
   const persist = useCallback(
-    (newMessages: BotMessage[], currentTitle?: string, currentModel?: string) => {
+    (
+      newMessages: BotMessage[],
+      currentTitle?: string,
+      currentModel?: string,
+      syncToServerNow = false
+    ) => {
       const compactMessages: BotMessage[] = newMessages.map((msg) => {
         if (!msg.attachments || msg.attachments.length === 0) return msg;
         return {
@@ -160,10 +277,12 @@ export function useChat(options: UseChatOptions = {}) {
         updatedAt: Date.now(),
         messages: compactMessages,
       };
-      saveConversation(conv);
-      const saved = getStoredConversation(conversationId);
+      const saved = saveConversation(conv);
       if (saved?.title && saved.title !== title) {
         setTitle(saved.title);
+      }
+      if (syncToServerNow) {
+        void syncConversationToServer(saved);
       }
     },
     [conversationId, title, modelId]
@@ -182,7 +301,6 @@ export function useChat(options: UseChatOptions = {}) {
       setStreamingToolCalls([]);
       setStreamingToolResults([]);
 
-      // Create and append user message
       const userMessage: BotMessage = {
         id: `msg_user_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
         role: 'user',
@@ -200,6 +318,7 @@ export function useChat(options: UseChatOptions = {}) {
       abortControllerRef.current = controller;
 
       let accumulatedContent = '';
+      let actualResponseModel = modelId;
       const toolCallsAccumulator: BotToolCall[] = [];
       const toolResultsAccumulator: BotToolResult[] = [];
 
@@ -275,7 +394,6 @@ export function useChat(options: UseChatOptions = {}) {
                     setActiveToolResult(chunk.toolResult);
                     toolResultsAccumulator.push(chunk.toolResult);
                     setStreamingToolResults([...toolResultsAccumulator]);
-                    // Clear active call badge status cleanly
                     for (let k = toolCallsAccumulator.length - 1; k >= 0; k--) {
                       if (toolCallsAccumulator[k].id === chunk.toolResult.toolCallId) {
                         toolCallsAccumulator[k] = {
@@ -283,8 +401,8 @@ export function useChat(options: UseChatOptions = {}) {
                           status: chunk.toolResult.confirmationRequired
                             ? 'confirmation_required'
                             : chunk.toolResult.isError
-                            ? 'error'
-                            : 'completed',
+                              ? 'error'
+                              : 'completed',
                         };
                         break;
                       }
@@ -298,6 +416,9 @@ export function useChat(options: UseChatOptions = {}) {
                   break;
 
                 case 'done':
+                  if (chunk.model) {
+                    actualResponseModel = chunk.model;
+                  }
                   break;
               }
             } catch (parseErr) {
@@ -306,13 +427,12 @@ export function useChat(options: UseChatOptions = {}) {
           }
         }
 
-        // Commit final assistant message if content was generated
         if (accumulatedContent || toolCallsAccumulator.length > 0) {
           const assistantMessage: BotMessage = {
             id: `msg_asst_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
             role: 'assistant',
             content: accumulatedContent,
-            model: modelId,
+            model: actualResponseModel || modelId,
             toolCalls: toolCallsAccumulator.length > 0 ? toolCallsAccumulator : undefined,
             toolResults: toolResultsAccumulator.length > 0 ? toolResultsAccumulator : undefined,
             createdAt: new Date().toISOString(),
@@ -324,18 +444,17 @@ export function useChat(options: UseChatOptions = {}) {
         }
       } catch (err: any) {
         if (err?.name === 'AbortError' || controller.signal.aborted) {
-          // If aborted, keep what was generated so far
           if (accumulatedContent) {
             const partialMessage: BotMessage = {
               id: `msg_asst_${Date.now()}`,
               role: 'assistant',
               content: `${accumulatedContent}\n\n*(Generation stopped by user)*`,
-              model: modelId,
+              model: actualResponseModel || modelId,
               createdAt: new Date().toISOString(),
             };
             const finalMessages = [...updatedHistory, partialMessage];
             setMessages(finalMessages);
-            persist(finalMessages);
+            persist(finalMessages, undefined, undefined, true);
           }
         } else {
           const errMsg = err?.message || 'Chat generation failed.';
@@ -397,7 +516,7 @@ export function useChat(options: UseChatOptions = {}) {
             ),
           };
         });
-        persist(next);
+        persist(next, undefined, undefined, true);
         return next;
       });
     },
@@ -415,9 +534,8 @@ export function useChat(options: UseChatOptions = {}) {
   const regenerate = useCallback(async () => {
     if (isGenerating || messages.length === 0) return;
 
-    // Remove trailing assistant message if present
     const lastMsg = messages[messages.length - 1];
-    let trimmedHistory = [...messages];
+    const trimmedHistory = [...messages];
     if (lastMsg.role === 'assistant') {
       trimmedHistory.pop();
       setMessages(trimmedHistory);
@@ -426,10 +544,8 @@ export function useChat(options: UseChatOptions = {}) {
 
     if (trimmedHistory.length === 0) return;
 
-    // Take the last user prompt and re-run
     const lastUserMsg = trimmedHistory[trimmedHistory.length - 1];
     if (lastUserMsg.role === 'user') {
-      // Temporarily remove last user message from history to let sendMessage re-add it
       const baseHistory = trimmedHistory.slice(0, -1);
       setMessages(baseHistory);
       persist(baseHistory);
@@ -445,7 +561,6 @@ export function useChat(options: UseChatOptions = {}) {
       if (index === -1) return;
 
       const targetMsg = messages[index];
-      // Keep everything before this message
       const historyBefore = messages.slice(0, index);
       setMessages(historyBefore);
       persist(historyBefore);
@@ -492,10 +607,67 @@ export function useChat(options: UseChatOptions = {}) {
       const conv = getStoredConversation(conversationId);
       if (conv) {
         saveConversation({ ...conv, modelId: id });
+        void patchConversationOnServer(conversationId, { modelId: id });
       }
     },
     [conversationId]
   );
+
+  // 12. Phase 7: Explicit Personalization, Conversation Lifecycle & Sign Out
+  const updatePreferences = useCallback(async (patch: Partial<UserPreferences>) => {
+    const res = await fetch('/api/bot/preferences', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patch),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data?.preferences) {
+        setPreferences(data.preferences);
+        if (typeof data.preferences.defaultWebSearch === 'boolean') {
+          setEnableWebSearch(data.preferences.defaultWebSearch);
+        }
+        return data.preferences as UserPreferences;
+      }
+    }
+    return null;
+  }, [setEnableWebSearch]);
+
+  const signOutUser = useCallback(
+    async (allDevices = false) => {
+      stopGeneration();
+      await fetch('/api/bot/auth/logout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ allDevices }),
+      }).catch(() => {});
+
+      if (authType === 'admin_session') {
+        try {
+          const { signOut } = await import('next-auth/react');
+          await signOut({ redirect: false });
+        } catch {}
+      }
+
+      clearAllStoredConversations();
+      const freshId = `conv_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      setConversationId(freshId);
+      setMessages([]);
+      setTitle('New Conversation');
+      await refreshSessionAndConversations({ forceServerReplace: true });
+    },
+    [authType, refreshSessionAndConversations, stopGeneration]
+  );
+
+  const clearAllConversations = useCallback(async () => {
+    stopGeneration();
+    clearAllStoredConversations();
+    await clearAllServerConversations();
+    const freshId = `conv_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+    setConversationId(freshId);
+    setMessages([]);
+    setTitle('New Conversation');
+  }, [stopGeneration]);
 
   return {
     conversationId,
@@ -515,6 +687,16 @@ export function useChat(options: UseChatOptions = {}) {
     streamingToolCalls,
     streamingToolResults,
     error,
+    // Auth & Preferences (Phase 7)
+    authUser,
+    authType,
+    isAuthenticated,
+    authLoading,
+    preferences,
+    updatePreferences,
+    refreshSessionAndConversations,
+    signOutUser,
+    // Actions
     sendMessage,
     stopGeneration,
     regenerate,
@@ -523,5 +705,11 @@ export function useChat(options: UseChatOptions = {}) {
     startNewConversation,
     switchConversation,
     setModelId,
+    renameConversation: renameStoredConversation,
+    togglePinConversation,
+    archiveConversation: archiveStoredConversation,
+    restoreConversation: restoreStoredConversation,
+    deleteConversation: deleteStoredConversation,
+    clearAllConversations,
   };
 }

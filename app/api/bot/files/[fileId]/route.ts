@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { resolveOwnerIdentity } from '@/lib/bot/file-security';
+import { resolveBotActor } from '@/lib/bot/auth';
 import {
   deleteBotFileForOwner,
   getBotFileForOwner,
@@ -18,10 +18,10 @@ type RouteContext = {
  */
 export async function GET(req: NextRequest, context: RouteContext) {
   const { fileId } = await context.params;
-  const resolvedOwner = await resolveOwnerIdentity(req, false);
+  const { actor } = await resolveBotActor(req, false);
   const previewMode = req.nextUrl.searchParams.get('preview');
 
-  const lookup = await getBotFileForOwner(fileId, resolvedOwner?.ownerId, {
+  const lookup = await getBotFileForOwner(fileId, actor.ownerId || undefined, {
     includeBuffer: previewMode !== 'text',
   });
 
@@ -82,9 +82,9 @@ export async function GET(req: NextRequest, context: RouteContext) {
  */
 export async function DELETE(req: NextRequest, context: RouteContext) {
   const { fileId } = await context.params;
-  const resolvedOwner = await resolveOwnerIdentity(req, false);
+  const { actor } = await resolveBotActor(req, false);
 
-  const result = await deleteBotFileForOwner(fileId, resolvedOwner?.ownerId);
+  const result = await deleteBotFileForOwner(fileId, actor.ownerId || undefined);
 
   if (result === 'not_found') {
     return NextResponse.json({ error: 'File not found.' }, { status: 404 });

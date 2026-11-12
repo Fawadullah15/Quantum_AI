@@ -282,7 +282,12 @@ export class GeminiProviderAdapter implements ProviderAdapter {
     let totalUsage: TokenUsage | undefined;
     let finishReason: string | undefined;
 
-    for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
+    for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
+      const forceFinalSynthesis = round === MAX_TOOL_ROUNDS;
+      if (forceFinalSynthesis && (fullText.trim().length > 0 || allToolResults.length === 0)) {
+        break;
+      }
+
       const payload: any = {
         contents,
         generationConfig: {
@@ -297,7 +302,7 @@ export class GeminiProviderAdapter implements ProviderAdapter {
         };
       }
 
-      if (geminiTools.length > 0) {
+      if (geminiTools.length > 0 && !forceFinalSynthesis) {
         payload.tools = geminiTools;
       }
 

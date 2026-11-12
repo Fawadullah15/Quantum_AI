@@ -7,6 +7,7 @@ import { QuantumBotIcon } from './QuantumBotIcon';
 import { MessageItem, describeToolCallLabel } from './MessageItem';
 import { MessageComposer } from './MessageComposer';
 import { WelcomeScreen } from './WelcomeScreen';
+import { AuthModal } from './AuthModal';
 
 interface FloatingChatModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ interface FloatingChatModalProps {
 
 export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
   const router = useRouter();
+  const [isAuthModalOpen, setIsAuthModalOpen] = React.useState(false);
   const {
     conversationId,
     messages,
@@ -36,6 +38,10 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
     resolveToolConfirmation,
     startNewConversation,
     setModelId,
+    authUser,
+    isAuthenticated,
+    preferences,
+    refreshSessionAndConversations,
   } = useChat();
 
   const activeModel = availableModels.find((m) => m.id === modelId);
@@ -83,13 +89,27 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
               QuantumBot
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
             </span>
-            <span className="text-[10px] text-cyan-400 font-mono">
-              AI ENGINE
+            <span className="text-[10px] text-cyan-400 font-mono truncate max-w-[160px]">
+              {isAuthenticated && authUser
+                ? `${preferences?.displayName || authUser.name} · SYNCED`
+                : preferences?.displayName
+                ? `${preferences.displayName} · GUEST`
+                : 'AI ENGINE'}
             </span>
           </div>
         </div>
 
         <div className="flex items-center gap-1">
+          {!isAuthenticated && (
+            <button
+              type="button"
+              onClick={() => setIsAuthModalOpen(true)}
+              className="px-2 py-1 text-[10px] font-mono text-cyan-300 hover:text-black hover:bg-cyan-400 border border-cyan-500/40 rounded-md transition-colors mr-0.5"
+              title="Sign in to save history"
+            >
+              Sign In
+            </button>
+          )}
           {/* New Chat Button */}
           <button
             type="button"
@@ -210,8 +230,16 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
           onSwitchToVisionModel={handleSwitchToVisionModel}
           enableWebSearch={enableWebSearch}
           onToggleWebSearch={() => setEnableWebSearch((prev) => !prev)}
+          enterToSend={preferences?.enterToSend !== false}
         />
       </div>
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        hasGuestConversations={messages.length > 0}
+        onSuccess={() => refreshSessionAndConversations({ forceServerReplace: true })}
+      />
     </div>
   );
 }

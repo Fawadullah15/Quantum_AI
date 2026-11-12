@@ -6,6 +6,7 @@ import {
   BotAttachment,
   ModelDefinition,
   BotPermission,
+  UserPreferences,
 } from './types';
 import { resolveActiveModel, getRegisteredModels } from './models';
 import { getProviderAdapter } from './providers';
@@ -190,6 +191,7 @@ export interface ExecuteChatOptions {
   messages: BotMessage[];
   validatedMessages?: BotMessage[];
   customSystemPrompt?: string;
+  userPreferences?: UserPreferences;
   temperature?: number;
   maxTokens?: number;
   enableTools?: boolean;
@@ -212,6 +214,7 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
     messages,
     validatedMessages,
     customSystemPrompt,
+    userPreferences,
     temperature = 0.7,
     maxTokens,
     enableTools = true,
@@ -276,9 +279,10 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
   // 5. Phase 6 Contextual Retrieval (only injects verified company context when relevant; general queries bypass RAG)
   const knowledgeContext = await retrieveContextualCompanyKnowledge(resolvedMessages).catch(() => null);
 
-  // 6. Build master system instruction with Phase 6 identity, active capabilities, and optional company context
+  // 6. Build master system instruction with Phase 6 identity, active capabilities, preferences & company context
   const fullSystemInstruction = buildSystemInstruction({
     customInstruction: customSystemPrompt,
+    userPreferences,
     activeModel: model,
     enableWebSearch,
     availableToolNames: toolsToProvide.map((t) => t.declaration.name),
@@ -389,6 +393,7 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
 
           const fallbackSystemInstruction = buildSystemInstruction({
             customInstruction: customSystemPrompt,
+            userPreferences,
             activeModel: preferredAlt,
             enableWebSearch,
             availableToolNames: fallbackTools.map((t) => t.declaration.name),

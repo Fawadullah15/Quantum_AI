@@ -469,3 +469,56 @@ model Campaign {
   @@index([priority])
   @@index([createdAt])
 }
+
+// ─────────────────────────────────────────────────────────────
+// QUANTUMBOT PHASE 7: USER ACCOUNTS, CONVERSATIONS & PREFERENCES
+// ─────────────────────────────────────────────────────────────
+
+model BotUser {
+  id                 String            @id @default(cuid())
+  email              String            @unique
+  name               String
+  passwordHash       String
+  role               String            @default("USER") // Strictly USER (never grants /admin access)
+  displayName        String?
+  responseStyle      String            @default("balanced") // balanced | concise | detailed | technical | beginner_friendly
+  language           String            @default("English")
+  customInstructions String?
+  defaultModelId     String?
+  defaultWebSearch   Boolean           @default(false)
+  enterToSend        Boolean           @default(true)
+  tokenVersion       Int               @default(1)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  conversations      BotConversation[]
+}
+
+model BotConversation {
+  id                String   @id
+  ownerId           String
+  botUserId         String?
+  botUser           BotUser? @relation(fields: [botUserId], references: [id], onDelete: Cascade)
+  title             String
+  modelId           String
+  pinned            Boolean  @default(false)
+  archived          Boolean  @default(false)
+  messagesJson      String
+  attachmentIdsJson String   @default("[]")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([ownerId, archived, updatedAt])
+  @@index([botUserId])
+}
+
+model BotPreference {
+  ownerId            String   @id
+  displayName        String?
+  responseStyle      String   @default("balanced")
+  language           String   @default("English")
+  customInstructions String?
+  defaultModelId     String?
+  defaultWebSearch   Boolean  @default(false)
+  enterToSend        Boolean  @default(true)
+  updatedAt          DateTime @updatedAt
+}

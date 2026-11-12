@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/lib/rate-limit';
-import {
-  attachOwnerCookie,
-  resolveOwnerIdentity,
-  validateFileUploadPolicy,
-} from '@/lib/bot/file-security';
+import { attachActorCookies, resolveBotActor } from '@/lib/bot/auth';
+import { validateFileUploadPolicy } from '@/lib/bot/file-security';
 import {
   listBotFilesForOwner,
   saveBotFile,
@@ -32,8 +29,8 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const resolvedOwner = await resolveOwnerIdentity(req, true);
-  if (!resolvedOwner) {
+  const { actor, anonCookieToAttach } = await resolveBotActor(req, true);
+  if (!actor.ownerId) {
     return NextResponse.json({ error: 'Unable to establish secure file ownership session.' }, { status: 403 });
   }
 
@@ -73,7 +70,7 @@ export async function POST(req: NextRequest) {
       buffer,
       filename,
       declaredMimeType: declaredMime,
-      ownerId: resolvedOwner.ownerId,
+      ownerId: actor.ownerId,
       conversationId,
     });
 
@@ -84,7 +81,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
-    attachOwnerCookie(response, resolvedOwner, req);
+    attachActorCookies(response, anonCookieToAttach, req);
     return response;
   } catch (err: any) {
     const response = NextResponse.json(
@@ -94,7 +91,7 @@ export async function POST(req: NextRequest) {
       },
       { status: 400 }
     );
-    attachOwnerCookie(response, resolvedOwner, req);
+    attachActorCookies(response, anonCookieToAttach, req);
     return response;
   }
 }
@@ -103,13 +100,13 @@ export async function POST(req: NextRequest) {
  * GET /api/bot/files — Lists active (non-expired) files belonging exclusively to the caller.
  */
 export async function GET(req: NextRequest) {
-  const resolvedOwner = await resolveOwnerIdentity(req, false);
-  if (!resolvedOwner) {
+  const { actor } = await resolveBotActor(req, false);
+  if (!actor.ownerId) {
     return NextResponse.json({ success: true, files: [] });
   }
 
   const conversationId = req.nextUrl.searchParams.get('conversationId') || undefined;
-  const records = await listBotFilesForOwner(resolvedOwner.ownerId, conversationId);
+  const records = await listBotFilesForOwner(actor.ownerId, conversationId);
 
   return NextResponse.json({
     success: true,

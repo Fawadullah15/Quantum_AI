@@ -257,3 +257,52 @@ export interface ProviderAdapter {
   ) => Promise<ChatResponse>;
   chat: (request: ChatRequest, signal?: AbortSignal) => Promise<ChatResponse>;
 }
+
+// ─── Phase 7: User Accounts, Personalization & Conversation Persistence ────────
+
+export type ResponseStyle =
+  | 'balanced'
+  | 'concise'
+  | 'detailed'
+  | 'technical'
+  | 'beginner_friendly';
+
+export interface UserPreferences {
+  displayName?: string;
+  responseStyle: ResponseStyle;
+  language: string;
+  customInstructions?: string;
+  defaultModelId?: string;
+  defaultWebSearch: boolean;
+  enterToSend: boolean;
+  updatedAt?: string;
+}
+
+export interface PublicBotUser {
+  id: string;
+  email: string;
+  name: string;
+  role: 'USER' | 'ADMIN';
+  createdAt: string;
+}
+
+export interface AuthActor {
+  isAuthenticated: boolean;
+  authType: 'bot_account' | 'admin_session' | 'anonymous';
+  ownerId: string;
+  user: PublicBotUser | null;
+  preferences: UserPreferences;
+}
+
+export interface ServerConversation {
+  id: string;
+  ownerId: string;
+  title: string;
+  modelId: string;
+  pinned: boolean;
+  archived: boolean;
+  messages: BotMessage[];
+  attachmentIds: string[];
+  createdAt: number;
+  updatedAt: number;
+}
