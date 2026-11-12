@@ -3,12 +3,16 @@ import {
   ChatRequest,
   ChatResponse,
   StreamChunk,
-  BotMessage,
   TokenUsage,
   BotToolCall,
+  BotToolResult,
+  BotToolContext,
 } from '../types';
 import { executeToolCall } from '../tools';
+import { toProviderParametersSchema } from '../tools/schema-validator';
 import { formatMessageWithAttachments } from '../context-manager';
+
+const MAX_TOOL_ROUNDS = 4;
 
 export interface OpenWeightEndpointConfig {
   baseUrl: string;
@@ -17,7 +21,6 @@ export interface OpenWeightEndpointConfig {
 }
 
 export function resolveOpenWeightEndpoint(): OpenWeightEndpointConfig | null {
-  // 1. Groq (Ultra-fast Llama & Qwen inference)
   if (process.env.GROQ_API_KEY) {
     return {
       baseUrl: 'https://api.groq.com/openai/v1',
@@ -26,7 +29,6 @@ export function resolveOpenWeightEndpoint(): OpenWeightEndpointConfig | null {
     };
   }
 
-  // 2. OpenRouter (Universal open-weight gateway)
   if (process.env.OPENROUTER_API_KEY) {
     return {
       baseUrl: 'https://openrouter.ai/api/v1',
@@ -35,7 +37,6 @@ export function resolveOpenWeightEndpoint(): OpenWeightEndpointConfig | null {
     };
   }
 
-  // 3. Together AI
   if (process.env.TOGETHER_API_KEY) {
     return {
       baseUrl: 'https://api.together.xyz/v1',
@@ -44,7 +45,6 @@ export function resolveOpenWeightEndpoint(): OpenWeightEndpointConfig | null {
     };
   }
 
-  // 4. Local Ollama (if explicitly configured or reachable)
   if (process.env.OLLAMA_BASE_URL) {
     return {
       baseUrl: process.env.OLLAMA_BASE_URL.replace(/\/+$/, '') + '/v1',
@@ -117,7 +117,6 @@ export class OpenWeightProviderAdapter implements ProviderAdapter {
 
     const modelIdentifier = request.modelId.replace(/^openweight\//, '');
 
-    // Format messages
     const messages: any[] = [];
     if (request.systemInstruction) {
       messages.push({
@@ -136,135 +135,165 @@ export class OpenWeightProviderAdapter implements ProviderAdapter {
       }
     }
 
-    const payload: any = {
-      model: modelIdentifier,
-      messages,
-      temperature: request.temperature ?? 0.7,
-      max_tokens: request.maxTokens ?? 4096,
-      stream: true,
-    };
+    const formattedTools =
+      request.tools && request.tools.length > 0
+        ? request.tools.map((t) => ({
+            type: 'function',
+            function: {
+              name: t.declaration.name,
+              description: t.declaration.description,
+              parameters: toProviderParametersSchema(t.declaration.parameters),
+            },
+          }))
+        : undefined;
 
-    if (request.tools && request.tools.length > 0) {
-      payload.tools = request.tools.map((t) => ({
-        type: 'function',
-        function: {
-          name: t.declaration.name,
-          description: t.declaration.description,
-          parameters: t.declaration.parameters,
-        },
-      }));
-    }
+    const toolContext: BotToolContext = {
+      conversationId: request.conversationId,
+      ownerId: request.ownerId,
+      modelId: request.modelId,
+      permissions: request.permissions,
+      enableWebSearch: request.enableWebSearch,
+      approvedActionKeys: request.approvedActionKeys,
+    };
 
     onChunk({ type: 'start', model: modelIdentifier });
 
-    const response = await fetch(`${config.baseUrl}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${config.apiKey}`,
-      },
-      body: JSON.stringify(payload),
-      signal,
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      let errorMsg = `${config.providerName} API Error (HTTP ${response.status}): ${response.statusText}`;
-      try {
-        const parsed = JSON.parse(errText);
-        if (parsed.error?.message) errorMsg = parsed.error.message;
-      } catch {}
-      onChunk({ type: 'error', error: errorMsg });
-      throw new Error(errorMsg);
-    }
-
     let fullText = '';
-    let usage: TokenUsage | undefined;
+    const allToolCalls: BotToolCall[] = [];
+    const allToolResults: BotToolResult[] = [];
+    let totalUsage: TokenUsage | undefined;
     let finishReason: string | undefined;
-    const toolCallsMap: Record<number, { id: string; name: string; argsText: string }> = {};
 
-    const reader = response.body?.getReader();
-    if (!reader) throw new Error('Response stream unavailable.');
+    for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
+      const payload: any = {
+        model: modelIdentifier,
+        messages,
+        temperature: request.temperature ?? 0.7,
+        max_tokens: request.maxTokens ?? 4096,
+        stream: true,
+      };
 
-    const decoder = new TextDecoder();
-    let buffer = '';
+      if (formattedTools) {
+        payload.tools = formattedTools;
+      }
 
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      const response = await fetch(`${config.baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${config.apiKey}`,
+        },
+        body: JSON.stringify(payload),
+        signal,
+      });
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
+      if (!response.ok) {
+        const errText = await response.text();
+        let errorMsg = `${config.providerName} API Error (HTTP ${response.status}): ${response.statusText}`;
+        try {
+          const parsed = JSON.parse(errText);
+          if (parsed.error?.message) errorMsg = parsed.error.message;
+        } catch {}
+        onChunk({ type: 'error', error: errorMsg });
+        throw new Error(errorMsg);
+      }
 
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed.startsWith('data: ')) continue;
-          const jsonStr = trimmed.slice(6);
-          if (jsonStr === '[DONE]') continue;
+      let roundText = '';
+      let roundUsage: TokenUsage | undefined;
+      const toolCallsMap: Record<number, { id: string; name: string; argsText: string }> = {};
 
-          try {
-            const data = JSON.parse(jsonStr);
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error('Response stream unavailable.');
 
-            if (data.usage) {
-              usage = {
-                promptTokens: data.usage.prompt_tokens || 0,
-                completionTokens: data.usage.completion_tokens || 0,
-                totalTokens: data.usage.total_tokens || 0,
-              };
-            }
+      const decoder = new TextDecoder();
+      let buffer = '';
 
-            const choice = data.choices?.[0];
-            if (!choice) continue;
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-            if (choice.finish_reason) finishReason = choice.finish_reason;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
 
-            const delta = choice.delta;
-            if (!delta) continue;
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith('data: ')) continue;
+            const jsonStr = trimmed.slice(6);
+            if (jsonStr === '[DONE]') continue;
 
-            // Text stream
-            if (delta.content) {
-              fullText += delta.content;
-              onChunk({ type: 'text', text: delta.content });
-            }
+            try {
+              const data = JSON.parse(jsonStr);
 
-            // Reasoning content (e.g. DeepSeek R1)
-            if (delta.reasoning_content) {
-              onChunk({ type: 'thought', thought: delta.reasoning_content });
-            }
-
-            // Tool calls
-            if (Array.isArray(delta.tool_calls)) {
-              for (const tc of delta.tool_calls) {
-                const index = tc.index ?? 0;
-                if (!toolCallsMap[index]) {
-                  toolCallsMap[index] = {
-                    id: tc.id || `call_${Date.now()}_${index}`,
-                    name: tc.function?.name || '',
-                    argsText: '',
-                  };
-                }
-                if (tc.function?.name) toolCallsMap[index].name = tc.function.name;
-                if (tc.function?.arguments) toolCallsMap[index].argsText += tc.function.arguments;
+              if (data.usage) {
+                roundUsage = {
+                  promptTokens: data.usage.prompt_tokens || 0,
+                  completionTokens: data.usage.completion_tokens || 0,
+                  totalTokens: data.usage.total_tokens || 0,
+                };
               }
+
+              const choice = data.choices?.[0];
+              if (!choice) continue;
+
+              if (choice.finish_reason) finishReason = choice.finish_reason;
+
+              const delta = choice.delta;
+              if (!delta) continue;
+
+              if (delta.content) {
+                roundText += delta.content;
+                fullText += delta.content;
+                onChunk({ type: 'text', text: delta.content });
+              }
+
+              if (delta.reasoning_content) {
+                onChunk({ type: 'thought', thought: delta.reasoning_content });
+              }
+
+              if (Array.isArray(delta.tool_calls)) {
+                for (const tc of delta.tool_calls) {
+                  const index = tc.index ?? 0;
+                  if (!toolCallsMap[index]) {
+                    toolCallsMap[index] = {
+                      id: tc.id || `call_${Date.now()}_${index}`,
+                      name: tc.function?.name || '',
+                      argsText: '',
+                    };
+                  }
+                  if (tc.function?.name) toolCallsMap[index].name = tc.function.name;
+                  if (tc.function?.arguments) toolCallsMap[index].argsText += tc.function.arguments;
+                }
+              }
+            } catch {
+              // Partial JSON ignored
             }
-          } catch {
-            // Partial JSON ignored
           }
         }
+      } finally {
+        reader.releaseLock();
       }
-    } finally {
-      reader.releaseLock();
-    }
 
-    // Execute tool calls
-    const completedToolCalls: BotToolCall[] = [];
-    const completedToolResults: any[] = [];
+      if (roundUsage) {
+        totalUsage = {
+          promptTokens: (totalUsage?.promptTokens || 0) + roundUsage.promptTokens,
+          completionTokens: (totalUsage?.completionTokens || 0) + roundUsage.completionTokens,
+          totalTokens: (totalUsage?.totalTokens || 0) + roundUsage.totalTokens,
+        };
+      }
 
-    for (const item of Object.values(toolCallsMap)) {
-      if (item.name) {
-        let parsedArgs = {};
+      const pendingItems = Object.values(toolCallsMap).filter((item) => Boolean(item.name));
+      if (pendingItems.length === 0) {
+        break;
+      }
+
+      const roundAssistantToolCalls: any[] = [];
+      const roundToolMessages: any[] = [];
+      let requiresConfirmationPause = false;
+
+      for (const item of pendingItems) {
+        let parsedArgs: Record<string, any> = {};
         try {
           parsedArgs = JSON.parse(item.argsText || '{}');
         } catch {
@@ -275,51 +304,92 @@ export class OpenWeightProviderAdapter implements ProviderAdapter {
           id: item.id,
           name: item.name,
           arguments: parsedArgs,
+          status: 'running',
         };
-        completedToolCalls.push(toolCall);
+        allToolCalls.push(toolCall);
         onChunk({ type: 'tool_call', toolCall });
 
-        const { result, isError } = await executeToolCall(item.name, parsedArgs, {
-          conversationId: request.conversationId,
-          modelId: request.modelId,
+        roundAssistantToolCalls.push({
+          id: item.id,
+          type: 'function',
+          function: {
+            name: item.name,
+            arguments: item.argsText || '{}',
+          },
         });
 
-        const toolResultObj = {
+        const outcome = await executeToolCall(item.name, parsedArgs, toolContext);
+
+        const toolResultObj: BotToolResult = {
           toolCallId: item.id,
           toolName: item.name,
-          result,
-          isError,
+          result: outcome.result,
+          isError: outcome.isError,
+          status: outcome.status,
+          durationMs: outcome.durationMs,
+          confirmationRequired: outcome.confirmationRequired,
+          actionPreview: outcome.actionPreview
+            ? { ...outcome.actionPreview, toolCallId: item.id }
+            : undefined,
         };
-        completedToolResults.push(toolResultObj);
+        allToolResults.push(toolResultObj);
         onChunk({ type: 'tool_result', toolResult: toolResultObj });
+
+        if (outcome.confirmationRequired) {
+          requiresConfirmationPause = true;
+        }
+
+        roundToolMessages.push({
+          role: 'tool',
+          tool_call_id: item.id,
+          content: JSON.stringify(outcome.result),
+        });
+      }
+
+      if (requiresConfirmationPause) {
+        if (!fullText.trim()) {
+          const pauseNote =
+            'Please review the pending action details below and click **Approve & Execute** to proceed, or **Cancel** to discard.';
+          fullText += pauseNote;
+          onChunk({ type: 'text', text: pauseNote });
+        }
+        finishReason = 'confirmation_required';
+        break;
+      }
+
+      messages.push({
+        role: 'assistant',
+        content: roundText || null,
+        tool_calls: roundAssistantToolCalls,
+      });
+      messages.push(...roundToolMessages);
+
+      if (round < MAX_TOOL_ROUNDS - 1) {
+        onChunk({
+          type: 'thought',
+          thought: 'Analyzing retrieved tool results...',
+        });
       }
     }
 
     onChunk({
       type: 'done',
       model: modelIdentifier,
-      usage,
+      usage: totalUsage,
       finishReason,
     });
 
     return {
       content: fullText,
       model: modelIdentifier,
-      toolCalls: completedToolCalls.length > 0 ? completedToolCalls : undefined,
-      toolResults: completedToolResults.length > 0 ? completedToolResults : undefined,
-      usage,
+      toolCalls: allToolCalls.length > 0 ? allToolCalls : undefined,
+      toolResults: allToolResults.length > 0 ? allToolResults : undefined,
+      usage: totalUsage,
       finishReason,
     };
   }
 
   async chat(request: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
-    let text = '';
-    return this.streamChat(
-      request,
-      (c) => {
-        if (c.text) text += c.text;
-      },
-      signal
-    );
+    return this.streamChat(request, () => {}, signal);
   }
 }

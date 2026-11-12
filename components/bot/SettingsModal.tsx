@@ -21,9 +21,23 @@ export function SettingsModal({
 }: SettingsModalProps) {
   const [testingModelId, setTestingModelId] = useState<string | null>(null);
   const [testResult, setTestResult] = useState<{ id: string; success: boolean; latencyMs?: number; error?: string } | null>(null);
+  const [kbStats, setKbStats] = useState<{ verifiedDocuments: number; indexVersion: number } | null>(null);
 
   useEffect(() => {
     setTestResult(null);
+    if (isOpen) {
+      fetch('/api/bot/knowledge')
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (data?.stats) {
+            setKbStats({
+              verifiedDocuments: data.stats.verifiedDocuments ?? 0,
+              indexVersion: data.stats.indexVersion ?? 1,
+            });
+          }
+        })
+        .catch(() => {});
+    }
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -153,6 +167,22 @@ export function SettingsModal({
                 );
               })}
             </div>
+          </div>
+
+          {/* Company Knowledge & Identity Status */}
+          <div className="space-y-1.5 pt-2 border-t border-gray-800/60">
+            <label className="block text-gray-200 font-medium font-mono uppercase tracking-wider text-[11px]">
+              QuantumBot Identity &amp; Knowledge Base
+            </label>
+            <p className="text-gray-300 text-[11px] leading-relaxed">
+              QuantumBot is an AI assistant by Quantum AI. General-purpose queries run freely on your selected model; verified company context activates when you ask about Quantum AI.
+            </p>
+            {kbStats && (
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#060A14] border border-cyan-500/20 text-[10px] font-mono text-cyan-300">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                {kbStats.verifiedDocuments} verified company sources indexed (v{kbStats.indexVersion})
+              </div>
+            )}
           </div>
 
           {/* Data & Storage Management */}

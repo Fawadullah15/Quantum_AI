@@ -95,7 +95,7 @@ export function WelcomeScreen({ onSelectPrompt, compact = false }: WelcomeScreen
           Hello, I&apos;m QuantumBot.
         </h1>
         <p className={`text-gray-400 max-w-md px-2 ${compact ? 'text-xs' : 'text-xs sm:text-base'}`}>
-          What would you like to work on today?
+          An AI assistant by Quantum AI. What would you like to work on today?
         </p>
       </div>
 

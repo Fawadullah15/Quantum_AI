@@ -4,12 +4,17 @@ import {
   ChatResponse,
   StreamChunk,
   TokenUsage,
+  BotToolCall,
+  BotToolResult,
+  BotToolContext,
 } from '../types';
 import { executeToolCall } from '../tools';
+import { toProviderParametersSchema } from '../tools/schema-validator';
 import { formatMessageWithAttachments } from '../context-manager';
 import { updateGeminiFileCache } from '../file-store';
 
 const NATIVE_INLINE_PDF_LIMIT_BYTES = 4 * 1024 * 1024; // 4 MB inline limit; larger PDFs use Gemini Files API
+const MAX_TOOL_ROUNDS = 4;
 
 export function getGeminiApiKey(): string | null {
   return (
@@ -68,6 +73,35 @@ async function uploadBufferToGeminiFilesApi(
   } catch {
     return null;
   }
+}
+
+/**
+ * Merges consecutive plain text parts from SSE deltas while preserving
+ * discrete thoughtSignature / thought / functionCall parts verbatim for multi-turn continuation.
+ */
+function pushRawModelPart(rawParts: any[], part: any) {
+  if (!part || typeof part !== 'object') return;
+
+  const isPlainTextPart =
+    typeof part.text === 'string' &&
+    !part.thought &&
+    !part.thoughtSignature &&
+    !part.functionCall;
+
+  if (isPlainTextPart && rawParts.length > 0) {
+    const prev = rawParts[rawParts.length - 1];
+    const prevPlainText =
+      typeof prev?.text === 'string' &&
+      !prev.thought &&
+      !prev.thoughtSignature &&
+      !prev.functionCall;
+    if (prevPlainText) {
+      prev.text += part.text;
+      return;
+    }
+  }
+
+  rawParts.push(structuredClone(part));
 }
 
 export class GeminiProviderAdapter implements ProviderAdapter {
@@ -132,16 +166,17 @@ export class GeminiProviderAdapter implements ProviderAdapter {
     }
 
     const modelIdentifier = request.modelId.replace(/^gemini\//, '');
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelIdentifier)}:streamGenerateContent?alt=sse`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
+      modelIdentifier
+    )}:streamGenerateContent?alt=sse`;
 
-    // Format messages for Gemini API
+    // Format initial conversation history for Gemini API
     const contents: any[] = [];
     for (const msg of request.messages) {
       if (msg.role === 'system') continue;
 
       const parts: any[] = [];
 
-      // Attach native multimodal inputs (Images & PDFs) before or after text prompt
       if (msg.attachments) {
         for (const att of msg.attachments) {
           if (att.status === 'expired' || att.status === 'error') continue;
@@ -218,164 +253,289 @@ export class GeminiProviderAdapter implements ProviderAdapter {
       }
     }
 
-    // Format tools for Gemini API
+    // Format tools using strict provider-compatible JSON schema subset
     const geminiTools: any[] = [];
     if (request.tools && request.tools.length > 0) {
       geminiTools.push({
         functionDeclarations: request.tools.map((t) => ({
           name: t.declaration.name,
           description: t.declaration.description,
-          parameters: t.declaration.parameters,
+          parameters: toProviderParametersSchema(t.declaration.parameters),
         })),
       });
     }
 
-    const payload: any = {
-      contents,
-      generationConfig: {
-        temperature: request.temperature ?? 0.7,
-        maxOutputTokens: request.maxTokens ?? 4096,
-      },
+    const toolContext: BotToolContext = {
+      conversationId: request.conversationId,
+      ownerId: request.ownerId,
+      modelId: request.modelId,
+      permissions: request.permissions,
+      enableWebSearch: request.enableWebSearch,
+      approvedActionKeys: request.approvedActionKeys,
     };
-
-    if (request.systemInstruction) {
-      payload.systemInstruction = {
-        parts: [{ text: request.systemInstruction }],
-      };
-    }
-
-    if (geminiTools.length > 0) {
-      payload.tools = geminiTools;
-    }
 
     onChunk({ type: 'start', model: modelIdentifier });
 
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': key,
-      },
-      body: JSON.stringify(payload),
-      signal,
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      let errorMsg = `Gemini API Error (HTTP ${response.status}): ${response.statusText}`;
-      try {
-        const parsed = JSON.parse(errText);
-        if (parsed.error?.message) errorMsg = parsed.error.message;
-      } catch {}
-      onChunk({ type: 'error', error: errorMsg });
-      throw new Error(errorMsg);
-    }
-
     let fullText = '';
-    const pendingToolCalls: any[] = [];
-    let usage: TokenUsage | undefined;
+    const allToolCalls: BotToolCall[] = [];
+    const allToolResults: BotToolResult[] = [];
+    let totalUsage: TokenUsage | undefined;
     let finishReason: string | undefined;
 
-    const reader = response.body?.getReader();
-    if (!reader) {
-      throw new Error('Response body stream is unavailable.');
-    }
+    for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
+      const payload: any = {
+        contents,
+        generationConfig: {
+          temperature: request.temperature ?? 0.7,
+          maxOutputTokens: request.maxTokens ?? 4096,
+        },
+      };
 
-    const decoder = new TextDecoder();
-    let buffer = '';
+      if (request.systemInstruction) {
+        payload.systemInstruction = {
+          parts: [{ text: request.systemInstruction }],
+        };
+      }
 
-    try {
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+      if (geminiTools.length > 0) {
+        payload.tools = geminiTools;
+      }
 
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
-
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed.startsWith('data: ')) continue;
-          const jsonStr = trimmed.slice(6);
-          if (jsonStr === '[DONE]') continue;
-
-          try {
-            const data = JSON.parse(jsonStr);
-            const candidate = data.candidates?.[0];
-            if (!candidate) continue;
-
-            if (candidate.finishReason) {
-              finishReason = candidate.finishReason;
-            }
-
-            if (data.usageMetadata) {
-              usage = {
-                promptTokens: data.usageMetadata.promptTokenCount || 0,
-                completionTokens: data.usageMetadata.candidatesTokenCount || 0,
-                totalTokens: data.usageMetadata.totalTokenCount || 0,
-              };
-            }
-
-            const parts = candidate.content?.parts;
-            if (Array.isArray(parts)) {
-              for (const part of parts) {
-                if (part.text) {
-                  fullText += part.text;
-                  onChunk({ type: 'text', text: part.text });
-                }
-
-                if (part.functionCall) {
-                  const call = {
-                    id: `call_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-                    name: part.functionCall.name,
-                    arguments: part.functionCall.args || {},
-                  };
-                  pendingToolCalls.push(call);
-                  onChunk({ type: 'tool_call', toolCall: call });
-                }
-              }
-            }
-          } catch {
-            // Incomplete JSON chunk in stream line; ignored
+      let response: Response | null = null;
+      let fetchErr: any = null;
+      for (let netAttempt = 0; netAttempt < 3; netAttempt++) {
+        if (signal?.aborted) {
+          throw new Error('Generation cancelled by user.');
+        }
+        try {
+          if (netAttempt > 0) {
+            await new Promise((r) => setTimeout(r, netAttempt === 1 ? 800 : 1800));
           }
+          const candidateRes = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-goog-api-key': key,
+            },
+            body: JSON.stringify(payload),
+            signal,
+          });
+          if (candidateRes.status === 500 || candidateRes.status === 503) {
+            fetchErr = new Error(`Gemini API HTTP ${candidateRes.status}: ${candidateRes.statusText}`);
+            continue;
+          }
+          response = candidateRes;
+          break;
+        } catch (err: any) {
+          if (signal?.aborted || err?.name === 'AbortError') throw err;
+          fetchErr = err;
         }
       }
-    } finally {
-      reader.releaseLock();
-    }
 
-    const toolResults: any[] = [];
-    if (pendingToolCalls.length > 0) {
-      for (const call of pendingToolCalls) {
-        const { result, isError } = await executeToolCall(call.name, call.arguments, {
-          conversationId: request.conversationId,
-          modelId: request.modelId,
-        });
+      if (!response) {
+        const msg = fetchErr?.message || 'Gemini connection failed after retries.';
+        onChunk({ type: 'error', error: msg });
+        throw fetchErr || new Error(msg);
+      }
 
-        const toolResObj = {
+      if (!response.ok) {
+        const errText = await response.text();
+        let errorMsg = `Gemini API Error (HTTP ${response.status}): ${response.statusText}`;
+        try {
+          const parsed = JSON.parse(errText);
+          if (parsed.error?.message) errorMsg = parsed.error.message;
+        } catch {}
+        onChunk({ type: 'error', error: errorMsg });
+        throw new Error(errorMsg);
+      }
+
+      const roundRawParts: any[] = [];
+      const roundToolCalls: Array<{
+        id: string;
+        geminiCallId?: string;
+        name: string;
+        arguments: Record<string, any>;
+      }> = [];
+      let roundUsage: TokenUsage | undefined;
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('Response body stream is unavailable.');
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      try {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop() || '';
+
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith('data: ')) continue;
+            const jsonStr = trimmed.slice(6);
+            if (jsonStr === '[DONE]') continue;
+
+            try {
+              const data = JSON.parse(jsonStr);
+              const candidate = data.candidates?.[0];
+              if (!candidate) continue;
+
+              if (candidate.finishReason) {
+                finishReason = candidate.finishReason;
+              }
+
+              if (data.usageMetadata) {
+                roundUsage = {
+                  promptTokens: data.usageMetadata.promptTokenCount || 0,
+                  completionTokens: data.usageMetadata.candidatesTokenCount || 0,
+                  totalTokens: data.usageMetadata.totalTokenCount || 0,
+                };
+              }
+
+              const parts = candidate.content?.parts;
+              if (Array.isArray(parts)) {
+                for (const part of parts) {
+                  pushRawModelPart(roundRawParts, part);
+
+                  if (part.thought && typeof part.text === 'string') {
+                    onChunk({ type: 'thought', thought: part.text });
+                  } else if (typeof part.text === 'string' && part.text.length > 0) {
+                    fullText += part.text;
+                    onChunk({ type: 'text', text: part.text });
+                  }
+
+                  if (part.functionCall) {
+                    const geminiCallId = part.functionCall.id;
+                    const callId =
+                      geminiCallId ||
+                      `call_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+                    const call: BotToolCall = {
+                      id: callId,
+                      name: part.functionCall.name,
+                      arguments: part.functionCall.args || {},
+                      status: 'running',
+                    };
+                    roundToolCalls.push({
+                      id: callId,
+                      geminiCallId,
+                      name: call.name,
+                      arguments: call.arguments,
+                    });
+                    allToolCalls.push(call);
+                    onChunk({ type: 'tool_call', toolCall: call });
+                  }
+                }
+              }
+            } catch {
+              // Incomplete JSON chunk in stream line
+            }
+          }
+        }
+      } finally {
+        reader.releaseLock();
+      }
+
+      if (roundUsage) {
+        totalUsage = {
+          promptTokens: (totalUsage?.promptTokens || 0) + roundUsage.promptTokens,
+          completionTokens: (totalUsage?.completionTokens || 0) + roundUsage.completionTokens,
+          totalTokens: (totalUsage?.totalTokens || 0) + roundUsage.totalTokens,
+        };
+      }
+
+      // No tool calls in this round -> final answer is complete!
+      if (roundToolCalls.length === 0) {
+        break;
+      }
+
+      // Execute requested tool calls via central validated registry
+      const functionResponseParts: any[] = [];
+      let requiresConfirmationPause = false;
+
+      for (const call of roundToolCalls) {
+        const outcome = await executeToolCall(call.name, call.arguments, toolContext);
+
+        const toolResObj: BotToolResult = {
           toolCallId: call.id,
           toolName: call.name,
-          result,
-          isError,
+          result: outcome.result,
+          isError: outcome.isError,
+          status: outcome.status,
+          durationMs: outcome.durationMs,
+          confirmationRequired: outcome.confirmationRequired,
+          actionPreview: outcome.actionPreview
+            ? { ...outcome.actionPreview, toolCallId: call.id }
+            : undefined,
         };
-        toolResults.push(toolResObj);
+
+        allToolResults.push(toolResObj);
         onChunk({ type: 'tool_result', toolResult: toolResObj });
+
+        if (outcome.confirmationRequired) {
+          requiresConfirmationPause = true;
+        }
+
+        functionResponseParts.push({
+          functionResponse: {
+            ...(call.geminiCallId ? { id: call.geminiCallId } : {}),
+            name: call.name,
+            response: outcome.isError
+              ? { error: outcome.result?.error || outcome.result }
+              : { output: outcome.result },
+          },
+        });
+      }
+
+      if (requiresConfirmationPause) {
+        if (!fullText.trim()) {
+          const pauseNote =
+            'Please review the pending action details below and click **Approve & Execute** to proceed, or **Cancel** to discard.';
+          fullText += pauseNote;
+          onChunk({ type: 'text', text: pauseNote });
+        }
+        finishReason = 'CONFIRMATION_REQUIRED';
+        break;
+      }
+
+      // Append exact raw model turn (preserving thoughtSignature) + functionResponse user turn for next synthesis round
+      if (roundRawParts.length > 0) {
+        contents.push({
+          role: 'model',
+          parts: roundRawParts,
+        });
+      }
+      contents.push({
+        role: 'user',
+        parts: functionResponseParts,
+      });
+
+      if (round < MAX_TOOL_ROUNDS - 1) {
+        onChunk({
+          type: 'thought',
+          thought: 'Analyzing retrieved tool results...',
+        });
       }
     }
 
     onChunk({
       type: 'done',
       model: modelIdentifier,
-      usage,
+      usage: totalUsage,
       finishReason,
     });
 
     return {
       content: fullText,
       model: modelIdentifier,
-      toolCalls: pendingToolCalls.length > 0 ? pendingToolCalls : undefined,
-      toolResults: toolResults.length > 0 ? toolResults : undefined,
-      usage,
+      toolCalls: allToolCalls.length > 0 ? allToolCalls : undefined,
+      toolResults: allToolResults.length > 0 ? allToolResults : undefined,
+      usage: totalUsage,
       finishReason,
     };
   }

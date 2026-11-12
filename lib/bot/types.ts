@@ -79,6 +79,39 @@ export interface BotToolCall {
   id: string;
   name: string;
   arguments: Record<string, any>;
+  status?: 'pending' | 'running' | 'completed' | 'error' | 'confirmation_required' | 'denied' | 'timeout' | 'unavailable';
+}
+
+export type BotPermission =
+  | 'public_read'
+  | 'compute'
+  | 'web_research'
+  | 'external_write';
+
+export type ToolCategory =
+  | 'compute'
+  | 'knowledge'
+  | 'web'
+  | 'utility'
+  | 'action';
+
+export type ToolExecutionStatus =
+  | 'success'
+  | 'error'
+  | 'denied'
+  | 'timeout'
+  | 'confirmation_required'
+  | 'unavailable';
+
+export interface ToolActionPreview {
+  toolCallId?: string;
+  toolName: string;
+  title: string;
+  summary: string;
+  actionKey: string;
+  fields: Array<{ label: string; value: string }>;
+  arguments: Record<string, any>;
+  resolution?: 'approved' | 'rejected';
 }
 
 export interface BotToolResult {
@@ -86,6 +119,10 @@ export interface BotToolResult {
   toolName: string;
   result: any;
   isError?: boolean;
+  status?: ToolExecutionStatus;
+  durationMs?: number;
+  confirmationRequired?: boolean;
+  actionPreview?: ToolActionPreview;
 }
 
 export interface BotMessage {
@@ -99,25 +136,53 @@ export interface BotMessage {
   model?: string;
 }
 
+export interface BotToolSchemaProperty {
+  type: 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object';
+  description?: string;
+  enum?: string[];
+  minLength?: number;
+  maxLength?: number;
+  minimum?: number;
+  maximum?: number;
+  pattern?: string;
+  items?: BotToolSchemaProperty;
+}
+
 export interface BotToolDeclaration {
   name: string;
   description: string;
+  category?: ToolCategory;
+  requiredPermissions?: BotPermission[];
+  requiresConfirmation?: boolean;
+  timeoutMs?: number;
+  resultFormat?: string;
   parameters: {
     type: 'object';
-    properties: Record<string, any>;
+    properties: Record<string, BotToolSchemaProperty>;
     required?: string[];
+    additionalProperties?: boolean;
   };
 }
 
 export interface BotTool {
   declaration: BotToolDeclaration;
+  isEnabled?: (context: BotToolContext) => boolean;
+  formatConfirmationPreview?: (args: Record<string, any>) => {
+    title: string;
+    summary: string;
+    fields: Array<{ label: string; value: string }>;
+  };
   execute: (args: Record<string, any>, context: BotToolContext) => Promise<any>;
 }
 
 export interface BotToolContext {
   conversationId?: string;
   userId?: string;
+  ownerId?: string;
   modelId?: string;
+  permissions?: BotPermission[];
+  enableWebSearch?: boolean;
+  approvedActionKeys?: string[];
 }
 
 export interface TokenUsage {
@@ -157,6 +222,9 @@ export interface ChatRequest {
   tools?: BotTool[];
   conversationId?: string;
   ownerId?: string;
+  permissions?: BotPermission[];
+  enableWebSearch?: boolean;
+  approvedActionKeys?: string[];
 }
 
 export interface ChatResponse {

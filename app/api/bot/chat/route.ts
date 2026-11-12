@@ -20,6 +20,8 @@ interface BotChatRequestBody {
   temperature?: number;
   maxTokens?: number;
   enableTools?: boolean;
+  enableWebSearch?: boolean;
+  approvedActionKeys?: string[];
 }
 
 /**
@@ -114,6 +116,10 @@ export async function POST(req: NextRequest) {
           temperature: typeof body.temperature === 'number' ? body.temperature : 0.7,
           maxTokens: body.maxTokens,
           enableTools: body.enableTools !== false,
+          enableWebSearch: body.enableWebSearch === true,
+          approvedActionKeys: Array.isArray(body.approvedActionKeys)
+            ? body.approvedActionKeys.filter((k) => typeof k === 'string')
+            : undefined,
           conversationId: body.conversationId,
           ownerId: resolvedOwner?.ownerId,
           onChunk: send,

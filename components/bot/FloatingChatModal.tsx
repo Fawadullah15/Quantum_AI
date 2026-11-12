@@ -4,7 +4,7 @@ import React, { useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useChat } from '@/lib/bot/use-chat';
 import { QuantumBotIcon } from './QuantumBotIcon';
-import { MessageItem } from './MessageItem';
+import { MessageItem, describeToolCallLabel } from './MessageItem';
 import { MessageComposer } from './MessageComposer';
 import { WelcomeScreen } from './WelcomeScreen';
 
@@ -20,14 +20,20 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
     messages,
     modelId,
     availableModels,
+    enableWebSearch,
+    setEnableWebSearch,
     isGenerating,
     streamingContent,
     streamingThought,
+    activeToolCall,
+    streamingToolCalls,
+    streamingToolResults,
     error,
     sendMessage,
     stopGeneration,
     regenerate,
     editUserMessage,
+    resolveToolConfirmation,
     startNewConversation,
     setModelId,
   } = useChat();
@@ -139,18 +145,21 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
                 message={msg}
                 onRegenerate={regenerate}
                 onEdit={(newContent) => editUserMessage(msg.id, newContent)}
+                onResolveToolConfirmation={resolveToolConfirmation}
                 isLastAssistant={i === messages.length - 1 && msg.role === 'assistant'}
               />
             ))}
 
             {/* Live Streaming Message Bubble */}
-            {isGenerating && streamingContent && (
+            {isGenerating && (streamingContent || streamingToolCalls.length > 0) && (
               <MessageItem
                 message={{
                   id: 'streaming_msg',
                   role: 'assistant',
                   content: streamingContent,
                   model: modelId,
+                  toolCalls: streamingToolCalls.length > 0 ? streamingToolCalls : undefined,
+                  toolResults: streamingToolResults.length > 0 ? streamingToolResults : undefined,
                 }}
                 isStreaming
                 streamingThought={streamingThought}
@@ -158,12 +167,16 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
             )}
 
             {/* Live Thinking Indicator before first token */}
-            {isGenerating && !streamingContent && (
+            {isGenerating && !streamingContent && streamingToolCalls.length === 0 && (
               <div className="flex items-center gap-2.5 my-2 px-1">
                 <QuantumBotIcon size={24} showGlow />
                 <div className="flex items-center gap-2 text-[11px] font-mono text-cyan-400 bg-cyan-950/20 border border-cyan-900/40 px-2.5 py-1.5 rounded-xl">
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-                  <span>{streamingThought || 'QuantumBot is formulating an answer...'}</span>
+                  <span>
+                    {activeToolCall
+                      ? describeToolCallLabel(activeToolCall)
+                      : streamingThought || 'QuantumBot is formulating an answer...'}
+                  </span>
                 </div>
               </div>
             )}
@@ -195,6 +208,8 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
           conversationId={conversationId}
           activeModel={activeModel}
           onSwitchToVisionModel={handleSwitchToVisionModel}
+          enableWebSearch={enableWebSearch}
+          onToggleWebSearch={() => setEnableWebSearch((prev) => !prev)}
         />
       </div>
     </div>

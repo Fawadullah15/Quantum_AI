@@ -1,95 +1,127 @@
+import { getKnowledgeIndexStats, searchKnowledgeBase } from '../knowledge/store';
+import { KNOWLEDGE_CATEGORIES, KnowledgeCategory } from '../knowledge/types';
 import { BotToolImplementation } from './types';
-import { COPILOT_CASE_STUDY } from '@/lib/default-projects';
-import { DEFAULT_SETTINGS } from '@/lib/settings';
 
-const COMPANY_KNOWLEDGE_BASE = [
-  {
-    topic: 'overview',
-    title: 'Quantum AI — Company Overview & Mission',
-    content: `Quantum AI is an advanced software engineering and AI systems company founded by Fawadullah Imraj and Muhammad Murtaza.
-The company specializes in custom enterprise software, workflow automation pipelines, industrial engineering AI systems, and scalable digital products for manufacturers, engineering firms, and businesses with complex operations.
-Headquarters: Hybrid / Global.
-Contact: support@quantumaitech.org
-Website: https://quantumaitech.org`,
-  },
-  {
-    topic: 'copilot',
-    title: 'Flagship Product — Mechanical Engineering Design Copilot',
-    content: `Mechanical Engineering Design Copilot is a specialized engineering intelligence copilot developed by Quantum AI.
-Purpose: Assists mechanical engineers with component sizing, mathematical design calculations (shafts, keys, bearings, gears, fasteners), material evaluation (yield strength, tensile, fatigue, weight), safety factor analysis, and technical report generation.
-Philosophy: Designed as an engineering reasoning workspace, not merely a chatbot. The engineer reviews and validates final designs.`,
-  },
-  {
-    topic: 'services',
-    title: 'Core Services & Capabilities',
-    content: `Quantum AI provides 4 primary service categories:
-1. AI Systems Engineering: Neural workflows, predictive modeling, machine learning pipelines, LLM agent integration, computer vision.
-2. Business & Industrial Software: Custom ERPs, manufacturing telemetry, high-throughput backend APIs, inventory management.
-3. Automation: Robotic process automation, data pipeline orchestrators, event-driven microservices.
-4. Digital Products: Production-ready SaaS platforms, responsive web applications, and intuitive enterprise UI.`,
-  },
-  {
-    topic: 'leadership',
-    title: 'Executive Leadership & Founders',
-    content: `Executive Leadership:
-- Fawadullah Imraj: Co-Founder & Chief Executive Officer. Directs overall technology roadmap, enterprise digital solutions, and systems engineering.
-- Muhammad Murtaza: Co-Founder & Chief Executive Officer. Focuses on neural systems, workflow automation pipelines, and high-concurrency architectures.
-Contact for leadership: support@quantumaitech.org`,
-  },
-  {
-    topic: 'technologies',
-    title: 'Engineering Technology Stack',
-    content: `Core Technology Stack utilized by Quantum AI:
-- Artificial Intelligence & ML: PyTorch, TensorFlow, Google Gen AI (Gemini), OpenAI API, Hugging Face, Scikit-learn.
-- Full-Stack & Frontend: Next.js 16 (Turbopack, App Router), React 19, TypeScript, Three.js / React Three Fiber (3D graphics), Tailwind CSS.
-- Cloud & Infrastructure: Vercel Serverless & Edge, AWS, Docker, Kubernetes, PostgreSQL, Redis, Neon Database.
-- Security & Standards: Zero-trust architecture, OAuth 2.0 / JWT NextAuth, automated CI/CD pipelines.`,
-  },
-];
+// Backward-compatible mapping so older tool calls using overview/capabilities still resolve cleanly
+const CATEGORY_ALIAS_MAP: Record<string, KnowledgeCategory | 'all'> = {
+  all: 'all',
+  overview: 'company_profile',
+  capabilities: 'ai_capabilities',
+  company_profile: 'company_profile',
+  mission_vision: 'mission_vision',
+  services: 'services',
+  ai_capabilities: 'ai_capabilities',
+  software_development: 'software_development',
+  business_automation: 'business_automation',
+  projects: 'projects',
+  mechanical_copilot: 'mechanical_copilot',
+  team: 'team',
+  contact: 'contact',
+  faq: 'faq',
+};
+
+export async function queryCompanyKnowledge(
+  query: string,
+  category: string = 'all'
+) {
+  const mappedCategory = CATEGORY_ALIAS_MAP[category] || 'all';
+  const cleanQuery = query.trim();
+
+  const { hits, stats } = await searchKnowledgeBase(cleanQuery, {
+    category: mappedCategory,
+    limit: 5,
+    includeUnverified: false,
+    minScore: 0.4,
+  });
+
+  if (hits.length > 0) {
+    return {
+      query: cleanQuery,
+      category: mappedCategory,
+      verifiedOnly: true,
+      indexVersion: stats.indexVersion,
+      indexedAt: stats.indexedAt,
+      count: hits.length,
+      results: hits.map((h) => ({
+        id: h.document.id,
+        title: h.document.title,
+        category: h.document.category,
+        source: h.document.source,
+        verificationStatus: h.document.verificationStatus,
+        lastUpdated: h.document.lastUpdated,
+        path: h.document.path,
+        url: h.document.url,
+        score: h.score,
+        content: h.document.content,
+      })),
+    };
+  }
+
+  // Fallback: return matching category verified docs or core overview if no keyword matched
+  const fallbackSearch = await searchKnowledgeBase('', {
+    category: mappedCategory === 'all' ? 'company_profile' : mappedCategory,
+    limit: 3,
+    includeUnverified: false,
+  });
+
+  const indexStats = await getKnowledgeIndexStats();
+
+  return {
+    query: cleanQuery,
+    category: mappedCategory,
+    verifiedOnly: true,
+    indexVersion: indexStats.indexVersion,
+    indexedAt: indexStats.indexedAt,
+    count: fallbackSearch.hits.length,
+    noDirectKeywordMatch: true,
+    note: 'No exact verified Quantum AI record matched all search terms. Do not fabricate unpublished prices, clients, partnerships, or certifications. Share only verified records below or invite direct contact at support@quantumaitech.org.',
+    results: fallbackSearch.hits.map((h) => ({
+      id: h.document.id,
+      title: h.document.title,
+      category: h.document.category,
+      source: h.document.source,
+      verificationStatus: h.document.verificationStatus,
+      lastUpdated: h.document.lastUpdated,
+      path: h.document.path,
+      url: h.document.url,
+      content: h.document.content,
+    })),
+  };
+}
 
 export const companyKnowledgeTool: BotToolImplementation = {
   declaration: {
     name: 'query_quantum_ai_knowledge',
-    description: 'Retrieve verified, detailed information about Quantum AI — including company services, the Mechanical Copilot, leadership, technologies, case studies, and contact options.',
+    description:
+      'Retrieve verified company information about Quantum AI (company profile, mission/vision, services, AI capabilities, software development, automation, Mechanical Engineering Design Copilot, portfolio projects, leadership/team, FAQs, or contact details at support@quantumaitech.org). Only invoke when the user asks about Quantum AI; do NOT call this for unrelated general knowledge, coding, or math questions.',
+    category: 'knowledge',
+    requiredPermissions: ['public_read'],
+    timeoutMs: 5000,
+    resultFormat:
+      'JSON object with verified Quantum AI documents (title, category, source, verificationStatus, lastUpdated, path, url, content).',
     parameters: {
       type: 'object',
+      additionalProperties: false,
       properties: {
         query: {
           type: 'string',
-          description: 'The search query or keyword regarding Quantum AI (e.g. "Mechanical Copilot", "services", "founders", "leadership", "contact", "tech stack").',
+          minLength: 1,
+          maxLength: 250,
+          description:
+            'Search query about Quantum AI (e.g. "services", "Mechanical Engineering Design Copilot", "team leadership", "Peshawar", "contact email").',
+        },
+        category: {
+          type: 'string',
+          enum: ['all', ...KNOWLEDGE_CATEGORIES, 'overview', 'capabilities'],
+          description: 'Optional focus category to narrow retrieved Quantum AI records.',
         },
       },
       required: ['query'],
     },
   },
   execute: async (args: Record<string, any>) => {
-    const q = (args?.query || '').toLowerCase().trim();
-    if (!q) {
-      return { matches: COMPANY_KNOWLEDGE_BASE };
-    }
-
-    // Keyword & semantic relevance ranking
-    const matches = COMPANY_KNOWLEDGE_BASE.filter((entry) => {
-      const matchTopic = entry.topic.includes(q);
-      const matchTitle = entry.title.toLowerCase().includes(q);
-      const matchContent = entry.content.toLowerCase().includes(q);
-      return matchTopic || matchTitle || matchContent;
-    });
-
-    if (matches.length > 0) {
-      return {
-        query: args.query,
-        count: matches.length,
-        results: matches,
-      };
-    }
-
-    // Default fallback return general overview
-    return {
-      query: args.query,
-      count: 1,
-      results: [COMPANY_KNOWLEDGE_BASE[0]],
-      note: 'No exact keyword match found. Providing general Quantum AI overview.',
-    };
+    const query = String(args.query || '').trim();
+    const category = typeof args.category === 'string' ? args.category : 'all';
+    return queryCompanyKnowledge(query, category);
   },
 };

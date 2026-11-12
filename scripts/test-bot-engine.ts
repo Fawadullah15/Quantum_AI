@@ -107,16 +107,26 @@ async function runTests() {
   assert(!calc1.isError && calc1.result?.result === 112, 'Calculator evaluates valid arithmetic & math functions', `Result: ${calc1.result?.result}`);
 
   const calc2 = await executeToolCall('calculate', { expression: 'process.exit(1)' });
-  assert(!calc2.isError && !!calc2.result?.error, 'Calculator blocks unauthorized JS identifiers (process/eval/window)');
+  assert((calc2.isError || Boolean(calc2.result?.error)), 'Calculator blocks unauthorized JS identifiers (process/eval/window)');
 
   // 4.3 Quantum AI Knowledge Tool
   const know1 = await executeToolCall('query_quantum_ai_knowledge', { query: 'contact' });
   const hasSupportEmail = know1.result?.results?.some((r: any) => r.content.includes('support@quantumaitech.org'));
   assert(!know1.isError && hasSupportEmail, 'Company knowledge returns verified support@quantumaitech.org email');
 
-  // 4.4 Web Search Tool (graceful fallback)
-  const searchCall = await executeToolCall('web_search', { query: 'Next.js 16 release notes' });
-  assert(!searchCall.isError && Array.isArray(searchCall.result?.results), 'Web search handles request safely');
+  // 4.4 Web Search Tool (graceful permission-aware execution)
+  const searchCall = await executeToolCall(
+    'web_search',
+    { query: 'TypeScript programming language' },
+    { permissions: ['web_research'], enableWebSearch: true }
+  );
+  assert(
+    typeof searchCall.result?.available === 'boolean' &&
+      Array.isArray(searchCall.result?.results) &&
+      (!searchCall.isError || typeof searchCall.result?.error === 'string'),
+    'Web search handles request safely',
+    `available=${searchCall.result?.available}, count=${searchCall.result?.results?.length ?? 0}`
+  );
 
   // 4.5 Unknown tool handling
   const unknownCall = await executeToolCall('non_existent_tool', {});

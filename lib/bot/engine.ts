@@ -5,13 +5,15 @@ import {
   BotMessage,
   BotAttachment,
   ModelDefinition,
+  BotPermission,
 } from './types';
 import { resolveActiveModel, getRegisteredModels } from './models';
 import { getProviderAdapter } from './providers';
 import { prepareConversationContext } from './context-manager';
 import { buildSystemInstruction } from './prompt';
-import { STANDARD_BOT_TOOLS } from './tools';
+import { getAvailableToolsForContext } from './tools';
 import { getBotFileForOwner } from './file-store';
+import { retrieveContextualCompanyKnowledge } from './knowledge/retriever';
 
 export class AttachmentResolutionError extends Error {
   statusCode: number;
@@ -191,6 +193,9 @@ export interface ExecuteChatOptions {
   temperature?: number;
   maxTokens?: number;
   enableTools?: boolean;
+  enableWebSearch?: boolean;
+  permissions?: BotPermission[];
+  approvedActionKeys?: string[];
   conversationId?: string;
   ownerId?: string;
   onChunk: (chunk: StreamChunk) => void;
@@ -210,6 +215,9 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
     temperature = 0.7,
     maxTokens,
     enableTools = true,
+    enableWebSearch = false,
+    permissions,
+    approvedActionKeys,
     conversationId,
     ownerId,
     onChunk,
@@ -245,10 +253,41 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
     throw err;
   }
 
-  // 4. Build system instruction with master persona
-  const fullSystemInstruction = buildSystemInstruction(customSystemPrompt);
+  // 4. Compute effective permissions and active tools first so system instructions reflect exact capabilities
+  const effectivePermissions: BotPermission[] = permissions || [
+    'public_read',
+    'compute',
+    'external_write',
+    ...(enableWebSearch ? (['web_research'] as BotPermission[]) : []),
+  ];
 
-  // 5. Prepare and trim multi-turn context
+  const toolsToProvide =
+    enableTools && model.capabilities.includes('tools')
+      ? getAvailableToolsForContext({
+          conversationId,
+          ownerId,
+          modelId: model.modelIdentifier,
+          permissions: effectivePermissions,
+          enableWebSearch,
+          approvedActionKeys,
+        })
+      : [];
+
+  // 5. Phase 6 Contextual Retrieval (only injects verified company context when relevant; general queries bypass RAG)
+  const knowledgeContext = await retrieveContextualCompanyKnowledge(resolvedMessages).catch(() => null);
+
+  // 6. Build master system instruction with Phase 6 identity, active capabilities, and optional company context
+  const fullSystemInstruction = buildSystemInstruction({
+    customInstruction: customSystemPrompt,
+    activeModel: model,
+    enableWebSearch,
+    availableToolNames: toolsToProvide.map((t) => t.declaration.name),
+    companyContextBlock: knowledgeContext?.shouldInjectContext
+      ? knowledgeContext.formattedContextBlock
+      : undefined,
+  });
+
+  // 7. Prepare and trim multi-turn context
   const preparedContext = prepareConversationContext(
     resolvedMessages,
     model,
@@ -262,10 +301,6 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
     });
   }
 
-  // 6. Filter tools based on model capabilities
-  const toolsToProvide =
-    enableTools && model.capabilities.includes('tools') ? STANDARD_BOT_TOOLS : [];
-
   const chatRequest: ChatRequest = {
     modelId: model.modelIdentifier,
     messages: preparedContext.messages,
@@ -275,6 +310,9 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
     tools: toolsToProvide,
     conversationId,
     ownerId,
+    permissions: effectivePermissions,
+    enableWebSearch,
+    approvedActionKeys,
   };
 
   // 7. Execute streaming generation with retry backoff for transient errors
@@ -300,7 +338,7 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
         throw new Error('Generation cancelled by user.');
       }
 
-      const errStr = String(err?.message || '').toLowerCase();
+      const errStr = `${err?.message || ''} ${err?.cause?.message || ''} ${err?.cause?.code || ''}`.toLowerCase();
       const isTransient =
         errStr.includes('429') ||
         errStr.includes('rate limit') ||
@@ -308,7 +346,11 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
         errStr.includes('high demand') ||
         errStr.includes('500') ||
         errStr.includes('overloaded') ||
-        errStr.includes('network');
+        errStr.includes('network') ||
+        errStr.includes('fetch failed') ||
+        errStr.includes('timeout') ||
+        errStr.includes('econnreset') ||
+        errStr.includes('etimedout');
 
       if (!isTransient || attempt === maxRetries) {
         break;

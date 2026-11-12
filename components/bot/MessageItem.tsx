@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { BotMessage, BotAttachment } from '@/lib/bot/types';
+import { BotMessage, BotAttachment, BotToolCall, BotToolResult } from '@/lib/bot/types';
 import { MarkdownRenderer } from './MarkdownRenderer';
 import { QuantumBotIcon } from './QuantumBotIcon';
 
@@ -12,7 +12,81 @@ interface MessageItemProps {
   onRegenerate?: () => void;
   onEdit?: (newContent: string) => void;
   onRetry?: () => void;
+  onResolveToolConfirmation?: (
+    messageId: string,
+    toolResult: BotToolResult,
+    approved: boolean
+  ) => Promise<void> | void;
   isLastAssistant?: boolean;
+}
+
+export function describeToolCallLabel(tc: BotToolCall, tr?: BotToolResult): string {
+  const done = Boolean(tr);
+  switch (tc.name) {
+    case 'web_search':
+      return done
+        ? `Web search: "${tc.arguments?.query || ''}"`
+        : `Searching the web for "${tc.arguments?.query || ''}"...`;
+    case 'web_fetch':
+      return done
+        ? `Fetched source: ${tc.arguments?.url || ''}`
+        : `Reading webpage ${tc.arguments?.url || ''}...`;
+    case 'query_quantum_ai_knowledge':
+      return done
+        ? `Quantum AI Knowledge: "${tc.arguments?.query || ''}"`
+        : `Looking up Quantum AI info for "${tc.arguments?.query || ''}"...`;
+    case 'calculate':
+      return done
+        ? `Calculated: ${tc.arguments?.expression || ''}`
+        : `Calculating ${tc.arguments?.expression || ''}...`;
+    case 'get_current_time':
+      return done
+        ? `System clock (${tc.arguments?.timezone || 'UTC'})`
+        : `Checking current time...`;
+    case 'submit_quantum_ai_inquiry':
+      return tr?.actionPreview?.resolution === 'approved'
+        ? 'Submitted inquiry to Quantum AI'
+        : tr?.actionPreview?.resolution === 'rejected'
+        ? 'Cancelled inquiry submission'
+        : tr?.confirmationRequired
+        ? 'Awaiting confirmation to send inquiry'
+        : 'Preparing Quantum AI inquiry...';
+    default:
+      return done ? `Tool: ${tc.name}` : `Running ${tc.name}...`;
+  }
+}
+
+function extractCitedSources(toolResults?: BotToolResult[]) {
+  if (!toolResults || toolResults.length === 0) return [];
+  const seen = new Set<string>();
+  const sources: Array<{ title: string; url: string; domain: string }> = [];
+
+  for (const tr of toolResults) {
+    if (!tr?.result || typeof tr.result !== 'object') continue;
+    if (tr.toolName === 'web_search' && Array.isArray(tr.result.results)) {
+      for (const item of tr.result.results) {
+        if (item?.url && /^https?:\/\//i.test(item.url) && !seen.has(item.url)) {
+          seen.add(item.url);
+          sources.push({
+            title: String(item.title || item.domain || item.url),
+            url: String(item.url),
+            domain: String(item.domain || 'web'),
+          });
+        }
+      }
+    } else if (tr.toolName === 'web_fetch' && tr.result.available && tr.result.url) {
+      const url = String(tr.result.url);
+      if (/^https?:\/\//i.test(url) && !seen.has(url)) {
+        seen.add(url);
+        sources.push({
+          title: String(tr.result.title || tr.result.domain || url),
+          url,
+          domain: String(tr.result.domain || 'web'),
+        });
+      }
+    }
+  }
+  return sources;
 }
 
 export function MessageItem({
@@ -22,6 +96,7 @@ export function MessageItem({
   onRegenerate,
   onEdit,
   onRetry,
+  onResolveToolConfirmation,
   isLastAssistant = false,
 }: MessageItemProps) {
   const isUser = message.role === 'user';
@@ -29,6 +104,7 @@ export function MessageItem({
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
   const [showTools, setShowTools] = useState(false);
+  const [resolvingCallId, setResolvingCallId] = useState<string | null>(null);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(message.content);
@@ -133,36 +209,209 @@ export function MessageItem({
           </div>
         )}
 
-        {/* Tool Invocations Drawer */}
+        {/* Tool Activity Drawer (Live & Completed) */}
         {((message.toolCalls && message.toolCalls.length > 0) ||
-          (message.toolResults && message.toolResults.length > 0)) && (
-          <div className="mb-3 rounded-lg border border-gray-800/80 bg-[#070b16] text-xs font-mono overflow-hidden">
-            <button
-              type="button"
-              onClick={() => setShowTools(!showTools)}
-              className="w-full flex items-center justify-between px-3 py-1.5 bg-[#0b1222] text-gray-400 hover:text-cyan-300 transition-colors"
-            >
-              <span className="flex items-center gap-1.5">
-                <svg className="w-3.5 h-3.5 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Autonomous Tools ({message.toolCalls?.length || 0})
-              </span>
-              <span className="text-[10px] text-gray-500">{showTools ? 'Hide' : 'Inspect'}</span>
-            </button>
-            {showTools && (
-              <div className="p-2.5 space-y-2 text-[11.5px] bg-[#050812]">
-                {message.toolCalls?.map((tc, idx) => (
-                  <div key={idx} className="p-2 rounded bg-gray-900/60 border border-gray-800">
-                    <span className="text-cyan-400 font-semibold">{tc.name}</span>
-                    <pre className="text-gray-400 mt-1 overflow-x-auto">{JSON.stringify(tc.arguments, null, 2)}</pre>
+          (message.toolResults && message.toolResults.length > 0)) && (() => {
+          const toolResults = message.toolResults || [];
+          const hasAnyRunning =
+            isStreaming &&
+            (message.toolCalls || []).some(
+              (tc) => !toolResults.some((tr) => tr.toolCallId === tc.id)
+            );
+          const citedSources = extractCitedSources(toolResults);
+          const pendingConfirmations = toolResults.filter(
+            (tr) => tr.actionPreview && (tr.confirmationRequired || tr.actionPreview.resolution)
+          );
+
+          return (
+            <div className="mb-3 space-y-2.5">
+              <div className="rounded-xl border border-gray-800/80 bg-[#070b16] text-xs font-mono overflow-hidden">
+                <button
+                  type="button"
+                  onClick={() => setShowTools(!showTools)}
+                  className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-[#0b1222] text-gray-300 hover:text-cyan-300 transition-colors"
+                >
+                  <span className="flex items-center gap-2 min-w-0">
+                    <span
+                      className={`w-2 h-2 rounded-full shrink-0 ${
+                        hasAnyRunning
+                          ? 'bg-cyan-400 animate-ping'
+                          : toolResults.some((tr) => tr.isError)
+                          ? 'bg-amber-400'
+                          : 'bg-emerald-400'
+                      }`}
+                    />
+                    <span className="truncate">
+                      {hasAnyRunning
+                        ? describeToolCallLabel(
+                            message.toolCalls![message.toolCalls!.length - 1]
+                          )
+                        : `${message.toolCalls?.length || toolResults.length} Tool${
+                            (message.toolCalls?.length || toolResults.length) > 1 ? 's' : ''
+                          } Used`}
+                    </span>
+                  </span>
+                  <span className="text-[10px] text-gray-500 shrink-0">
+                    {showTools ? 'Hide details' : 'Inspect'}
+                  </span>
+                </button>
+
+                {showTools && (
+                  <div className="p-2.5 space-y-2 text-[11.5px] bg-[#050812] border-t border-gray-800/70">
+                    {(message.toolCalls || []).map((tc, idx) => {
+                      const matchedResult = toolResults.find((tr) => tr.toolCallId === tc.id);
+                      const statusLabel = matchedResult?.status || (isStreaming ? 'running' : 'done');
+
+                      return (
+                        <div key={tc.id || idx} className="p-2.5 rounded-lg bg-gray-900/60 border border-gray-800 space-y-1.5">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-cyan-300 font-semibold truncate">
+                              {describeToolCallLabel(tc, matchedResult)}
+                            </span>
+                            <span
+                              className={`px-1.5 py-0.5 rounded text-[10px] shrink-0 border ${
+                                matchedResult?.isError || statusLabel === 'denied' || statusLabel === 'timeout'
+                                  ? 'bg-rose-950/60 border-rose-800/60 text-rose-300'
+                                  : matchedResult?.confirmationRequired
+                                  ? 'bg-amber-950/60 border-amber-700/60 text-amber-300'
+                                  : 'bg-emerald-950/50 border-emerald-800/50 text-emerald-300'
+                              }`}
+                            >
+                              {statusLabel}
+                              {matchedResult?.durationMs !== undefined
+                                ? ` · ${matchedResult.durationMs}ms`
+                                : ''}
+                            </span>
+                          </div>
+                          <pre className="text-gray-400 text-[11px] overflow-x-auto">
+                            {JSON.stringify(tc.arguments, null, 2)}
+                          </pre>
+                          {matchedResult && (
+                            <pre className="text-gray-300 text-[11px] pt-1.5 border-t border-gray-800/70 overflow-x-auto max-h-40">
+                              {JSON.stringify(matchedResult.result, null, 2)}
+                            </pre>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
-                ))}
+                )}
               </div>
-            )}
-          </div>
-        )}
+
+              {/* Guarded Action Confirmation Cards */}
+              {pendingConfirmations.map((tr) => {
+                const preview = tr.actionPreview!;
+                const isResolving = resolvingCallId === tr.toolCallId;
+                return (
+                  <div
+                    key={tr.toolCallId}
+                    className="p-3.5 rounded-xl bg-[#0c1428] border border-cyan-500/40 shadow-[0_0_20px_rgba(0,240,255,0.08)] space-y-2.5"
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-xs font-mono font-semibold text-cyan-300">
+                        {preview.title}
+                      </span>
+                      {preview.resolution && (
+                        <span
+                          className={`px-2 py-0.5 rounded-md text-[10px] font-mono border ${
+                            preview.resolution === 'approved'
+                              ? 'bg-emerald-950/60 border-emerald-700/60 text-emerald-300'
+                              : 'bg-gray-900 border-gray-700 text-gray-400'
+                          }`}
+                        >
+                          {preview.resolution === 'approved' ? 'Executed' : 'Cancelled'}
+                        </span>
+                      )}
+                    </div>
+
+                    <p className="text-xs text-gray-300 leading-relaxed">{preview.summary}</p>
+
+                    <div className="grid gap-1.5 p-2.5 rounded-lg bg-[#060b18] border border-gray-800 text-[11.5px]">
+                      {preview.fields.map((f, fIdx) => (
+                        <div key={fIdx} className="flex flex-col sm:flex-row sm:gap-2">
+                          <span className="font-mono text-gray-400 sm:w-28 shrink-0">
+                            {f.label}:
+                          </span>
+                          <span className="text-gray-100 break-words">{f.value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {tr.confirmationRequired && !preview.resolution && onResolveToolConfirmation && (
+                      <div className="flex items-center justify-end gap-2 pt-1">
+                        <button
+                          type="button"
+                          disabled={isResolving}
+                          onClick={async () => {
+                            setResolvingCallId(tr.toolCallId);
+                            try {
+                              await onResolveToolConfirmation(message.id, tr, false);
+                            } finally {
+                              setResolvingCallId(null);
+                            }
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-xs font-mono text-gray-200 transition-colors disabled:opacity-50"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="button"
+                          disabled={isResolving}
+                          onClick={async () => {
+                            setResolvingCallId(tr.toolCallId);
+                            try {
+                              await onResolveToolConfirmation(message.id, tr, true);
+                            } finally {
+                              setResolvingCallId(null);
+                            }
+                          }}
+                          className="px-3 py-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-black text-xs font-mono font-semibold transition-colors disabled:opacity-50"
+                        >
+                          {isResolving ? 'Executing...' : 'Approve & Execute'}
+                        </button>
+                      </div>
+                    )}
+
+                    {preview.resolution === 'approved' && tr.result?.summary && (
+                      <p className="text-[11px] font-mono text-emerald-300">
+                        {tr.result.summary}
+                      </p>
+                    )}
+                    {preview.resolution === 'approved' && tr.result?.note && !tr.result?.summary && (
+                      <p className="text-[11px] font-mono text-amber-300">
+                        {tr.result.note}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
+
+              {/* Clickable Retrieved Web Sources */}
+              {citedSources.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 mr-1">
+                    Sources:
+                  </span>
+                  {citedSources.slice(0, 6).map((src, sIdx) => (
+                    <a
+                      key={sIdx}
+                      href={src.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg bg-[#0b1326] border border-gray-800 hover:border-cyan-500/50 text-[11px] text-cyan-300 hover:text-cyan-200 transition-colors max-w-[240px]"
+                      title={src.title}
+                    >
+                      <span className="text-[10px] font-mono text-gray-400 shrink-0">
+                        {src.domain}
+                      </span>
+                      <span className="truncate">{src.title}</span>
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Message Content */}
         <MarkdownRenderer content={message.content} isStreaming={isStreaming} />

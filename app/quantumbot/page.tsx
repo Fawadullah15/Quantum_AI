@@ -6,7 +6,7 @@ import { useChat } from '@/lib/bot/use-chat';
 import { getStoredConversations, StoredConversation } from '@/lib/bot/storage';
 import { Sidebar } from '@/components/bot/Sidebar';
 import { ModelSelector } from '@/components/bot/ModelSelector';
-import { MessageItem } from '@/components/bot/MessageItem';
+import { MessageItem, describeToolCallLabel } from '@/components/bot/MessageItem';
 import { MessageComposer } from '@/components/bot/MessageComposer';
 import { WelcomeScreen } from '@/components/bot/WelcomeScreen';
 import { SettingsModal } from '@/components/bot/SettingsModal';
@@ -31,14 +31,20 @@ function QuantumBotWorkspace() {
     messages,
     modelId,
     availableModels,
+    enableWebSearch,
+    setEnableWebSearch,
     isGenerating,
     streamingContent,
     streamingThought,
+    activeToolCall,
+    streamingToolCalls,
+    streamingToolResults,
     error,
     sendMessage,
     stopGeneration,
     regenerate,
     editUserMessage,
+    resolveToolConfirmation,
     startNewConversation,
     switchConversation,
     setModelId,
@@ -213,18 +219,21 @@ function QuantumBotWorkspace() {
                     message={msg}
                     onRegenerate={regenerate}
                     onEdit={(newContent) => editUserMessage(msg.id, newContent)}
+                    onResolveToolConfirmation={resolveToolConfirmation}
                     isLastAssistant={index === messages.length - 1 && msg.role === 'assistant'}
                   />
                 ))}
 
                 {/* Live Streaming Assistant Message */}
-                {isGenerating && streamingContent && (
+                {isGenerating && (streamingContent || streamingToolCalls.length > 0) && (
                   <MessageItem
                     message={{
                       id: 'streaming_msg',
                       role: 'assistant',
                       content: streamingContent,
                       model: modelId,
+                      toolCalls: streamingToolCalls.length > 0 ? streamingToolCalls : undefined,
+                      toolResults: streamingToolResults.length > 0 ? streamingToolResults : undefined,
                     }}
                     isStreaming
                     streamingThought={streamingThought}
@@ -232,12 +241,16 @@ function QuantumBotWorkspace() {
                 )}
 
                 {/* Live Thinking Indicator without text yet */}
-                {isGenerating && !streamingContent && (
+                {isGenerating && !streamingContent && streamingToolCalls.length === 0 && (
                   <div className="flex items-center gap-3 my-4 px-2">
                     <QuantumBotIcon size={28} showGlow />
                     <div className="flex items-center gap-2 text-xs font-mono text-cyan-400 bg-cyan-950/20 border border-cyan-900/40 px-3 py-2 rounded-xl">
                       <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                      <span>{streamingThought || 'QuantumBot is formulating an answer...'}</span>
+                      <span>
+                        {activeToolCall
+                          ? describeToolCallLabel(activeToolCall)
+                          : streamingThought || 'QuantumBot is formulating an answer...'}
+                      </span>
                     </div>
                   </div>
                 )}
@@ -290,6 +303,8 @@ function QuantumBotWorkspace() {
               conversationId={conversationId}
               activeModel={activeModel}
               onSwitchToVisionModel={handleSwitchToVisionModel}
+              enableWebSearch={enableWebSearch}
+              onToggleWebSearch={() => setEnableWebSearch((prev) => !prev)}
             />
             <div className="flex items-center justify-between mt-2 px-1 text-[11px] text-gray-500 font-mono">
               <span>QuantumBot can assist with code, mathematics, and complex engineering.</span>

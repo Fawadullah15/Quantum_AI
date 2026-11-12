@@ -33,15 +33,35 @@ export function useChat(options: UseChatOptions = {}) {
   const [isFallback, setIsFallback] = useState(false);
   const [fallbackReason, setFallbackReason] = useState<string | undefined>();
 
-  // Streaming generation states
+  // Web Search & Streaming generation states
+  const [enableWebSearch, setEnableWebSearchState] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    try {
+      return localStorage.getItem('quantumbot_web_search') === 'true';
+    } catch {
+      return false;
+    }
+  });
   const [isGenerating, setIsGenerating] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
   const [streamingThought, setStreamingThought] = useState('');
   const [activeToolCall, setActiveToolCall] = useState<BotToolCall | null>(null);
   const [activeToolResult, setActiveToolResult] = useState<BotToolResult | null>(null);
+  const [streamingToolCalls, setStreamingToolCalls] = useState<BotToolCall[]>([]);
+  const [streamingToolResults, setStreamingToolResults] = useState<BotToolResult[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  const setEnableWebSearch = useCallback((next: boolean | ((prev: boolean) => boolean)) => {
+    setEnableWebSearchState((prev) => {
+      const resolved = typeof next === 'function' ? next(prev) : next;
+      try {
+        localStorage.setItem('quantumbot_web_search', String(resolved));
+      } catch {}
+      return resolved;
+    });
+  }, []);
 
   // 1. Fetch available models on mount
   useEffect(() => {
@@ -159,6 +179,8 @@ export function useChat(options: UseChatOptions = {}) {
       setStreamingThought('');
       setActiveToolCall(null);
       setActiveToolResult(null);
+      setStreamingToolCalls([]);
+      setStreamingToolResults([]);
 
       // Create and append user message
       const userMessage: BotMessage = {
@@ -190,6 +212,7 @@ export function useChat(options: UseChatOptions = {}) {
             modelId,
             messages: updatedHistory,
             enableTools: true,
+            enableWebSearch,
           }),
           signal: controller.signal,
         });
@@ -243,6 +266,7 @@ export function useChat(options: UseChatOptions = {}) {
                   if (chunk.toolCall) {
                     setActiveToolCall(chunk.toolCall);
                     toolCallsAccumulator.push(chunk.toolCall);
+                    setStreamingToolCalls([...toolCallsAccumulator]);
                   }
                   break;
 
@@ -250,6 +274,22 @@ export function useChat(options: UseChatOptions = {}) {
                   if (chunk.toolResult) {
                     setActiveToolResult(chunk.toolResult);
                     toolResultsAccumulator.push(chunk.toolResult);
+                    setStreamingToolResults([...toolResultsAccumulator]);
+                    // Clear active call badge status cleanly
+                    for (let k = toolCallsAccumulator.length - 1; k >= 0; k--) {
+                      if (toolCallsAccumulator[k].id === chunk.toolResult.toolCallId) {
+                        toolCallsAccumulator[k] = {
+                          ...toolCallsAccumulator[k],
+                          status: chunk.toolResult.confirmationRequired
+                            ? 'confirmation_required'
+                            : chunk.toolResult.isError
+                            ? 'error'
+                            : 'completed',
+                        };
+                        break;
+                      }
+                    }
+                    setStreamingToolCalls([...toolCallsAccumulator]);
                   }
                   break;
 
@@ -307,10 +347,61 @@ export function useChat(options: UseChatOptions = {}) {
         setStreamingThought('');
         setActiveToolCall(null);
         setActiveToolResult(null);
+        setStreamingToolCalls([]);
+        setStreamingToolResults([]);
         abortControllerRef.current = null;
       }
     },
-    [conversationId, modelId, messages, isGenerating, persist]
+    [conversationId, modelId, messages, isGenerating, enableWebSearch, persist]
+  );
+
+  // 5b. Confirm or cancel a sensitive / external-write tool invocation
+  const resolveToolConfirmation = useCallback(
+    async (messageId: string, toolResult: BotToolResult, approved: boolean) => {
+      const preview = toolResult.actionPreview;
+      if (!preview) return;
+
+      const res = await fetch('/api/bot/tools/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          toolName: toolResult.toolName,
+          arguments: preview.arguments,
+          actionKey: preview.actionKey,
+          approved,
+          conversationId,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+      const resolutionStatus = approved ? 'approved' : 'rejected';
+
+      setMessages((prev) => {
+        const next = prev.map((msg) => {
+          if (msg.id !== messageId || !msg.toolResults) return msg;
+          return {
+            ...msg,
+            toolResults: msg.toolResults.map((tr) =>
+              tr.toolCallId === toolResult.toolCallId
+                ? {
+                    ...tr,
+                    confirmationRequired: false,
+                    status: data.status || (approved ? 'success' : 'denied'),
+                    isError: Boolean(data.isError),
+                    result: data.result ?? tr.result,
+                    actionPreview: tr.actionPreview
+                      ? { ...tr.actionPreview, resolution: resolutionStatus as 'approved' | 'rejected' }
+                      : undefined,
+                  }
+                : tr
+            ),
+          };
+        });
+        persist(next);
+        return next;
+      });
+    },
+    [conversationId, persist]
   );
 
   // 6. Stop generation handler
@@ -414,16 +505,21 @@ export function useChat(options: UseChatOptions = {}) {
     availableModels,
     isFallback,
     fallbackReason,
+    enableWebSearch,
+    setEnableWebSearch,
     isGenerating,
     streamingContent,
     streamingThought,
     activeToolCall,
     activeToolResult,
+    streamingToolCalls,
+    streamingToolResults,
     error,
     sendMessage,
     stopGeneration,
     regenerate,
     editUserMessage,
+    resolveToolConfirmation,
     startNewConversation,
     switchConversation,
     setModelId,

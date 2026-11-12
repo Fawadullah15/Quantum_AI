@@ -12,6 +12,8 @@ interface MessageComposerProps {
   conversationId?: string;
   activeModel?: ModelDefinition;
   onSwitchToVisionModel?: () => void;
+  enableWebSearch?: boolean;
+  onToggleWebSearch?: () => void;
 }
 
 const ACCEPTED_FILE_EXTENSIONS =
@@ -26,6 +28,8 @@ export function MessageComposer({
   conversationId,
   activeModel,
   onSwitchToVisionModel,
+  enableWebSearch = false,
+  onToggleWebSearch,
 }: MessageComposerProps) {
   const [input, setInput] = useState('');
   const [attachments, setAttachments] = useState<BotAttachment[]>([]);
@@ -329,6 +333,37 @@ export function MessageComposer({
             />
           </svg>
         </button>
+
+        {/* Optional Web Research Toggle */}
+        {onToggleWebSearch && (
+          <button
+            type="button"
+            onClick={onToggleWebSearch}
+            disabled={disabled || isGenerating}
+            aria-pressed={enableWebSearch}
+            aria-label={enableWebSearch ? 'Disable Web Research' : 'Enable Web Research'}
+            title={
+              enableWebSearch
+                ? 'Live Web Research is ON — click to turn off'
+                : 'Enable live Web Research with source citations'
+            }
+            className={`px-2 py-1.5 rounded-xl border text-[11px] font-mono flex items-center gap-1 transition-all shrink-0 disabled:opacity-40 ${
+              enableWebSearch
+                ? 'bg-cyan-500/15 border-cyan-400/60 text-cyan-300 shadow-[0_0_10px_rgba(0,240,255,0.18)]'
+                : 'bg-transparent border-gray-800 text-gray-400 hover:text-gray-200 hover:border-gray-700'
+            }`}
+          >
+            <svg className="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.75}
+                d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+              />
+            </svg>
+            <span className="hidden sm:inline">Search</span>
+          </button>
+        )}
 
         {/* Text Area */}
         <textarea
