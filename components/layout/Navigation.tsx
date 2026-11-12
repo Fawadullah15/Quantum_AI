@@ -14,6 +14,7 @@ interface NavItem { href: string; label: string; dropdown?: DropdownItem[]; hide
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/', label: 'Home' },
+  { href: '/quantumbot', label: 'QuantumBot' },
   {
     href: '/services', label: 'Solutions',
     hideOnDesktop: true,

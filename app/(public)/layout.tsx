@@ -5,6 +5,7 @@ import CustomCursor from '@/components/layout/CustomCursor';
 import ClientLayout from '@/components/layout/ClientLayout';
 import { AudioPlayer } from '@/components/layout/AudioPlayer';
 import { SoundToggle } from '@/components/layout/SoundToggle';
+import { QuantumBotLauncher } from '@/components/bot/QuantumBotLauncher';
 import { getOrganizationSchema, getWebSiteSchema } from '@/lib/seo';
 import { getSiteSettings } from '@/lib/settings';
 import { getActiveCampaign } from '@/lib/campaigns';
@@ -25,6 +26,8 @@ export default async function PublicLayout({ children }: { children: React.React
       {/* Global ambient music — invisible player + minimal fixed toggle */}
       <AudioPlayer />
       <SoundToggle />
+      {/* QuantumBot Floating Launcher & Interactive Chat Panel */}
+      <QuantumBotLauncher />
       {/* Schema.org Structured Data */}
       <script
         type="application/ld+json"
