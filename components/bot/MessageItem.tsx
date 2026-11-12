@@ -218,35 +218,181 @@ export function MessageItem({
 }
 
 /**
- * File attachment pill / card
+ * Interactive File Attachment Card + Preview Lightbox / Document Modal
  */
 function AttachmentCard({ attachment }: { attachment: BotAttachment }) {
-  const isImage = attachment.mimeType.startsWith('image/');
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [imgBroken, setImgBroken] = useState(false);
+  const [fullPreviewText, setFullPreviewText] = useState<string | null>(
+    attachment.textPreview || attachment.textContent || null
+  );
+  const [loadingPreview, setLoadingPreview] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
+
+  const isImage = attachment.kind === 'image' || attachment.mimeType.startsWith('image/');
+  const ext = (attachment.extension || attachment.name.split('.').pop() || 'FILE').toUpperCase();
+  const isExpired =
+    attachment.status === 'expired' ||
+    (attachment.expiresAt ? Date.now() > new Date(attachment.expiresAt).getTime() : false);
+
+  const fileUrl =
+    attachment.url || (attachment.fileId ? `/api/bot/files/${attachment.fileId}` : undefined);
+
+  const sizeLabel = `${Math.max(1, Math.round(attachment.size / 1024))} KB`;
+  const summaryParts: string[] = [];
+  if (attachment.extractedSummary?.pageCount) {
+    summaryParts.push(`${attachment.extractedSummary.pageCount}p`);
+  } else if (attachment.extractedSummary?.sheetNames?.length) {
+    summaryParts.push(
+      `${attachment.extractedSummary.sheetNames.length} sheet${attachment.extractedSummary.sheetNames.length > 1 ? 's' : ''}`
+    );
+  } else if (attachment.extractedSummary?.imageDimensions) {
+    const d = attachment.extractedSummary.imageDimensions;
+    summaryParts.push(`${d.width}×${d.height}`);
+  } else if (attachment.extractedSummary?.language) {
+    summaryParts.push(attachment.extractedSummary.language);
+  }
+  summaryParts.push(sizeLabel);
+
+  const handleOpenPreview = async () => {
+    if (isExpired) return;
+    setIsPreviewOpen(true);
+
+    if (!isImage && attachment.fileId && (!fullPreviewText || fullPreviewText.endsWith('...'))) {
+      setLoadingPreview(true);
+      setPreviewError(null);
+      try {
+        const res = await fetch(
+          `/api/bot/files/${encodeURIComponent(attachment.fileId)}?preview=text`
+        );
+        if (res.status === 410) {
+          setPreviewError('This file has expired under retention policy.');
+        } else if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setPreviewError(data?.error || 'Unable to load preview.');
+        } else {
+          const data = await res.json();
+          if (data?.textContent) {
+            setFullPreviewText(data.textContent);
+          }
+        }
+      } catch {
+        setPreviewError('Failed to fetch document preview.');
+      } finally {
+        setLoadingPreview(false);
+      }
+    }
+  };
 
   return (
-    <div className="flex items-center gap-2 p-1.5 rounded-lg bg-gray-900/80 border border-gray-800 text-xs text-gray-300">
-      {isImage && attachment.url ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={attachment.url}
-          alt={attachment.name}
-          className="w-8 h-8 rounded object-cover border border-gray-700"
-        />
-      ) : (
-        <div className="w-8 h-8 rounded bg-cyan-950/40 border border-cyan-800/40 flex items-center justify-center shrink-0">
-          <svg className="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.75} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
+    <>
+      <button
+        type="button"
+        onClick={handleOpenPreview}
+        disabled={isExpired}
+        className={`flex items-center gap-2 p-2 rounded-xl border text-left text-xs transition-colors ${
+          isExpired
+            ? 'bg-gray-900/40 border-gray-800/60 text-gray-500 opacity-70 cursor-not-allowed'
+            : 'bg-gray-900/80 border-gray-800 hover:border-cyan-500/40 text-gray-300 cursor-pointer'
+        }`}
+        title={isExpired ? 'File expired under retention policy' : `Inspect ${attachment.name}`}
+      >
+        {isImage && fileUrl && !imgBroken && !isExpired ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={fileUrl}
+            alt={attachment.name}
+            onError={() => setImgBroken(true)}
+            className="w-10 h-10 rounded-lg object-cover border border-gray-700 shrink-0"
+          />
+        ) : (
+          <div className="w-10 h-10 rounded-lg bg-cyan-950/40 border border-cyan-800/40 flex flex-col items-center justify-center shrink-0">
+            <span className="text-[10px] font-mono font-bold text-cyan-300 leading-none">
+              {ext.slice(0, 4)}
+            </span>
+          </div>
+        )}
+        <div className="flex flex-col min-w-0 pr-1">
+          <span className="font-medium text-gray-100 truncate max-w-[165px]">
+            {attachment.name}
+          </span>
+          <span className="text-[10px] text-gray-400 font-mono">
+            {isExpired ? 'Expired · removed' : summaryParts.join(' · ')}
+          </span>
+        </div>
+      </button>
+
+      {isPreviewOpen && (
+        <div
+          className="fixed inset-0 z-[1200] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setIsPreviewOpen(false)}
+        >
+          <div
+            className="w-full max-w-2xl max-h-[85vh] rounded-2xl bg-[#090E1D] border border-gray-800 shadow-2xl flex flex-col overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800 bg-[#0c1326]">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="px-1.5 py-0.5 rounded bg-cyan-950/60 border border-cyan-800/50 text-[10px] font-mono font-semibold text-cyan-300">
+                  {ext}
+                </span>
+                <span className="text-xs font-medium text-white truncate">
+                  {attachment.name}
+                </span>
+                <span className="text-[10px] font-mono text-gray-400 shrink-0">
+                  ({summaryParts.join(' · ')})
+                </span>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                {fileUrl && !isImage && (
+                  <a
+                    href={fileUrl}
+                    download={attachment.name}
+                    className="px-2.5 py-1 rounded-lg bg-gray-800 hover:bg-cyan-950/50 text-xs font-mono text-cyan-300 border border-gray-700"
+                  >
+                    Download
+                  </a>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setIsPreviewOpen(false)}
+                  className="p-1 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800"
+                  aria-label="Close preview"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <div className="p-4 overflow-y-auto flex-1 bg-[#050812]">
+              {isImage && fileUrl ? (
+                <div className="flex items-center justify-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={fileUrl}
+                    alt={attachment.name}
+                    className="max-w-full max-h-[68vh] rounded-xl border border-gray-800 object-contain"
+                  />
+                </div>
+              ) : loadingPreview ? (
+                <div className="py-8 text-center text-xs font-mono text-cyan-400 animate-pulse">
+                  Loading extracted document content...
+                </div>
+              ) : previewError ? (
+                <div className="p-3 rounded-xl bg-rose-950/30 border border-rose-800/50 text-rose-300 text-xs">
+                  {previewError}
+                </div>
+              ) : (
+                <pre className="text-xs font-mono text-gray-200 whitespace-pre-wrap break-words leading-relaxed">
+                  {fullPreviewText || 'No text preview available for this file.'}
+                </pre>
+              )}
+            </div>
+          </div>
         </div>
       )}
-      <div className="flex flex-col min-w-0 pr-1">
-        <span className="font-medium text-gray-200 truncate max-w-[140px]">
-          {attachment.name}
-        </span>
-        <span className="text-[10px] text-gray-500 font-mono">
-          {(attachment.size / 1024).toFixed(0)} KB
-        </span>
-      </div>
-    </div>
+    </>
   );
 }

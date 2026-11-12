@@ -7,30 +7,56 @@ import { getProviderAdapter } from './providers';
 export const MODEL_REGISTRY: ModelDefinition[] = [
   // ─── Google Gemini ──────────────────────────────────────────
   {
-    id: 'gemini-2.5-flash',
-    name: 'Gemini 2.5 Flash',
+    id: 'gemini-3.5-flash',
+    name: 'Gemini 3.5 Flash',
     provider: 'gemini',
-    modelIdentifier: 'gemini-2.5-flash',
-    description: 'Ultra-fast, high-capability frontier model optimized for real-time conversation and multimodal reasoning.',
+    modelIdentifier: 'gemini-3.5-flash',
+    description: 'High-speed multimodal frontier model with native PDF vision, image understanding, and 1M context.',
     capabilities: ['vision', 'tools', 'streaming', 'json', 'long_context'],
     contextWindow: 1048576, // 1M tokens
     maxOutputTokens: 8192,
     pricing: { inputPerMillion: 0.15, outputPerMillion: 0.6 },
     isDefault: true,
-    recommendedFor: 'Fast general-purpose QA, coding, document synthesis',
+    recommendedFor: 'Fast general-purpose QA, coding, document & image synthesis',
     family: 'Google Gemini',
   },
   {
-    id: 'gemini-2.5-pro',
-    name: 'Gemini 2.5 Pro',
+    id: 'gemini-3.8-flash',
+    name: 'Gemini 3.8 Flash',
     provider: 'gemini',
-    modelIdentifier: 'gemini-2.5-pro',
-    description: 'Premier frontier reasoning model for complex software engineering, scientific math, and deep analysis.',
-    capabilities: ['vision', 'tools', 'streaming', 'json', 'long_context', 'code_execution'],
-    contextWindow: 2097152, // 2M tokens
+    modelIdentifier: 'gemini-3.8-flash',
+    description: 'Latest balanced Gemini Flash model engineered for agentic tool use and multimodal reasoning.',
+    capabilities: ['vision', 'tools', 'streaming', 'json', 'long_context'],
+    contextWindow: 1048576, // 1M tokens
     maxOutputTokens: 8192,
-    pricing: { inputPerMillion: 1.25, outputPerMillion: 5.0 },
-    recommendedFor: 'Complex coding, mathematical proofs, massive context analysis',
+    pricing: { inputPerMillion: 0.2, outputPerMillion: 0.8 },
+    recommendedFor: 'Balanced agentic workflows, coding, multimodal reasoning',
+    family: 'Google Gemini',
+  },
+  {
+    id: 'gemini-3.5-flash-lite',
+    name: 'Gemini 3.5 Flash-Lite',
+    provider: 'gemini',
+    modelIdentifier: 'gemini-3.5-flash-lite',
+    description: 'Ultra-low-latency multimodal Gemini model optimized for rapid responses and high throughput.',
+    capabilities: ['vision', 'tools', 'streaming', 'json', 'long_context'],
+    contextWindow: 1048576,
+    maxOutputTokens: 8192,
+    pricing: { inputPerMillion: 0.075, outputPerMillion: 0.3 },
+    recommendedFor: 'High-speed document Q&A and lightweight tasks',
+    family: 'Google Gemini',
+  },
+  {
+    id: 'gemini-4-argon',
+    name: 'Gemini 4 Argon',
+    provider: 'gemini',
+    modelIdentifier: 'gemini-4-argon',
+    description: 'Flagship deep-reasoning Gemini model for complex software architecture, scientific math, and synthesis.',
+    capabilities: ['vision', 'tools', 'streaming', 'json', 'long_context', 'code_execution'],
+    contextWindow: 1048576,
+    maxOutputTokens: 8192,
+    pricing: { inputPerMillion: 1.5, outputPerMillion: 6.0 },
+    recommendedFor: 'Complex coding, mathematical proofs, deep research',
     family: 'Google Gemini',
   },
 
@@ -209,7 +235,22 @@ export function resolveActiveModel(requestedModelId?: string): {
     }
   }
 
-  // 2. Try default marked model if available
+  // 2. Try configured environment default override (BOT_DEFAULT_MODEL)
+  const envDefaultId = process.env.BOT_DEFAULT_MODEL?.trim();
+  if (envDefaultId) {
+    const envFound = available.find((m) => m.id === envDefaultId);
+    if (envFound) {
+      return {
+        model: envFound,
+        isFallback: requestedModelId !== undefined && requestedModelId !== envFound.id,
+        fallbackReason: requestedModelId
+          ? `Requested model "${requestedModelId}" is not currently configured. Using default ${envFound.name}.`
+          : undefined,
+      };
+    }
+  }
+
+  // 3. Try default marked model if available
   const defaultAvailable = available.find((m) => m.isDefault);
   if (defaultAvailable) {
     return {

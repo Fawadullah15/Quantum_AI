@@ -21,8 +21,8 @@ export interface ModelPricing {
 }
 
 export interface ModelDefinition {
-  id: string;                     // e.g. 'gemini-2.5-flash', 'gpt-4o', 'claude-3-5-sonnet'
-  name: string;                   // Display name e.g. 'Gemini 2.5 Flash'
+  id: string;                     // e.g. 'gemini-3.5-flash', 'gpt-4o', 'claude-3-5-sonnet'
+  name: string;                   // Display name e.g. 'Gemini 3.5 Flash'
   provider: AIProvider;           // Underlying provider adapter
   modelIdentifier: string;        // Exact provider API model string
   description: string;            // Short capability description
@@ -33,16 +33,46 @@ export interface ModelDefinition {
   isDefault?: boolean;            // Whether this is the system default model
   recommendedFor?: string;        // e.g. 'Coding & Deep Reasoning', 'Fast General QA'
   family?: string;                // e.g. 'Google Gemini', 'OpenAI GPT', 'Anthropic Claude', 'Meta Llama'
+  isAvailable?: boolean;          // Dynamically verified server provider configuration
+  unavailabilityReason?: string;  // Clear reason if provider credentials are unconfigured
+}
+
+export type AttachmentKind = 'image' | 'pdf' | 'document' | 'spreadsheet' | 'code' | 'text';
+export type AttachmentStatus = 'uploading' | 'processing' | 'ready' | 'expired' | 'error';
+
+export interface AttachmentExtractionSummary {
+  pageCount?: number;
+  sheetNames?: string[];
+  rowCount?: number;
+  columnCount?: number;
+  charCount?: number;
+  lineCount?: number;
+  truncated?: boolean;
+  isScannedOrImageOnly?: boolean;
+  imageDimensions?: { width: number; height: number };
+  language?: string;
+  note?: string;
 }
 
 export interface BotAttachment {
   id: string;
+  fileId?: string;
   name: string;
   mimeType: string;
+  extension?: string;
   size: number;
+  kind?: AttachmentKind;
+  status?: AttachmentStatus;
+  progress?: number;
   url?: string;
   base64?: string;
   textContent?: string;
+  textPreview?: string;
+  extractedSummary?: AttachmentExtractionSummary;
+  expiresAt?: string;
+  errorMessage?: string;
+  /** Internal server-only Gemini Files URI used when forwarding large PDFs across turns */
+  geminiFileUri?: string;
 }
 
 export interface BotToolCall {
@@ -126,6 +156,7 @@ export interface ChatRequest {
   maxTokens?: number;
   tools?: BotTool[];
   conversationId?: string;
+  ownerId?: string;
 }
 
 export interface ChatResponse {

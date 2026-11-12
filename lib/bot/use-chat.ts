@@ -28,7 +28,7 @@ export function useChat(options: UseChatOptions = {}) {
   );
   const [title, setTitle] = useState<string>('New Conversation');
   const [messages, setMessages] = useState<BotMessage[]>([]);
-  const [modelId, setModelIdState] = useState<string>(options.defaultModelId || 'gemini-2.5-flash');
+  const [modelId, setModelIdState] = useState<string>(options.defaultModelId || 'gemini-3.5-flash');
   const [availableModels, setAvailableModels] = useState<ModelDefinition[]>([]);
   const [isFallback, setIsFallback] = useState(false);
   const [fallbackReason, setFallbackReason] = useState<string | undefined>();
@@ -107,16 +107,38 @@ export function useChat(options: UseChatOptions = {}) {
     return () => window.removeEventListener('quantumbot:sync', handleSync);
   }, [conversationId]);
 
-  // 4. Save to storage helper
+  // 4. Save to storage helper (strips heavy raw binary/text payloads to protect localStorage quota; server resolves via fileId)
   const persist = useCallback(
     (newMessages: BotMessage[], currentTitle?: string, currentModel?: string) => {
+      const compactMessages: BotMessage[] = newMessages.map((msg) => {
+        if (!msg.attachments || msg.attachments.length === 0) return msg;
+        return {
+          ...msg,
+          attachments: msg.attachments.map((att) => ({
+            id: att.id,
+            fileId: att.fileId,
+            name: att.name,
+            mimeType: att.mimeType,
+            extension: att.extension,
+            size: att.size,
+            kind: att.kind,
+            status: att.status,
+            url: att.url || (att.fileId ? `/api/bot/files/${att.fileId}` : undefined),
+            textPreview: att.textPreview?.slice(0, 600),
+            extractedSummary: att.extractedSummary,
+            expiresAt: att.expiresAt,
+            errorMessage: att.errorMessage,
+          })),
+        };
+      });
+
       const conv: StoredConversation = {
         id: conversationId,
         title: currentTitle || title,
         modelId: currentModel || modelId,
         createdAt: Date.now(),
         updatedAt: Date.now(),
-        messages: newMessages,
+        messages: compactMessages,
       };
       saveConversation(conv);
       const saved = getStoredConversation(conversationId);

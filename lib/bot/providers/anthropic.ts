@@ -92,14 +92,11 @@ export class AnthropicProviderAdapter implements ProviderAdapter {
       if (msg.role === 'system') continue;
 
       const contentBlocks: any[] = [];
-      const textContent = formatMessageWithAttachments(msg);
-
-      if (textContent) {
-        contentBlocks.push({ type: 'text', text: textContent });
-      }
+      const textContent = formatMessageWithAttachments(msg, { skipPdfTextWhenNative: true });
 
       if (msg.attachments) {
         for (const att of msg.attachments) {
+          if (att.status === 'expired' || att.status === 'error') continue;
           if (att.mimeType.startsWith('image/') && att.base64) {
             contentBlocks.push({
               type: 'image',
@@ -109,8 +106,21 @@ export class AnthropicProviderAdapter implements ProviderAdapter {
                 data: att.base64.replace(/^data:[^;]+;base64,/, ''),
               },
             });
+          } else if (att.mimeType === 'application/pdf' && att.base64) {
+            contentBlocks.push({
+              type: 'document',
+              source: {
+                type: 'base64',
+                media_type: 'application/pdf',
+                data: att.base64.replace(/^data:[^;]+;base64,/, ''),
+              },
+            });
           }
         }
+      }
+
+      if (textContent) {
+        contentBlocks.push({ type: 'text', text: textContent });
       }
 
       if (contentBlocks.length > 0) {

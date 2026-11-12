@@ -139,23 +139,25 @@ async function runTests() {
   // TEST SUITE 6: Engine Orchestrator
   console.log('\n--- 6. QUANTUMBOT ENGINE ORCHESTRATION TESTS ---');
   const chunksReceived: any[] = [];
+  const geminiAdapter = getProviderAdapter('gemini');
   try {
     const { executeQuantumBotChat } = await import('../lib/bot/engine');
-    await executeQuantumBotChat({
-      messages: [{ id: '1', role: 'user', content: 'What is Quantum AI?' }],
+    const res = await executeQuantumBotChat({
+      messages: [{ id: '1', role: 'user', content: 'In one brief sentence, what is Quantum AI?' }],
       onChunk: (chunk) => {
         chunksReceived.push(chunk);
       },
     });
-  } catch (engineErr: any) {
-    // Should catch the unconfigured provider gracefully
     assert(
-      chunksReceived.some((c) => c.type === 'error'),
-      'Engine pipeline emits structured error chunk on missing provider key'
+      geminiAdapter.isConfigured() && res.content.length > 0 && chunksReceived.some((c) => c.type === 'done'),
+      'Engine pipeline streams live completion cleanly when Gemini key is configured'
     );
+  } catch (engineErr: any) {
     assert(
-      engineErr.message.includes('not configured'),
-      'Engine pipeline throws clear configuration guidance'
+      !geminiAdapter.isConfigured() &&
+        chunksReceived.some((c) => c.type === 'error') &&
+        engineErr.message.includes('not configured'),
+      'Engine pipeline emits structured error chunk & guidance when provider is unconfigured'
     );
   }
 

@@ -69,7 +69,12 @@ export function saveConversation(conv: StoredConversation): void {
       rawTitle && rawTitle !== 'New Conversation'
         ? rawTitle
         : conv.messages.length > 0
-        ? generateDefaultTitle(conv.messages[0].content)
+        ? generateDefaultTitle(
+            conv.messages[0].content ||
+              (conv.messages[0].attachments?.[0]?.name
+                ? `Analysis: ${conv.messages[0].attachments[0].name}`
+                : '')
+          )
         : 'New Conversation';
 
     const updatedConv: StoredConversation = {

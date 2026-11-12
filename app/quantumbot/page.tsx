@@ -103,6 +103,16 @@ function QuantumBotWorkspace() {
     setShowScrollBottom(false);
   };
 
+  const activeModel = availableModels.find((m) => m.id === modelId);
+  const handleSwitchToVisionModel = () => {
+    const visionModel = availableModels.find(
+      (m) => m.isAvailable !== false && m.capabilities.includes('vision')
+    );
+    if (visionModel) {
+      setModelId(visionModel.id);
+    }
+  };
+
   return (
     <div className="flex h-dvh w-full max-w-full overflow-hidden bg-[#030712] font-sans antialiased text-gray-100">
       {/* Left Sidebar */}
@@ -277,6 +287,9 @@ function QuantumBotWorkspace() {
               onStop={stopGeneration}
               isGenerating={isGenerating}
               placeholder="Message QuantumBot..."
+              conversationId={conversationId}
+              activeModel={activeModel}
+              onSwitchToVisionModel={handleSwitchToVisionModel}
             />
             <div className="flex items-center justify-between mt-2 px-1 text-[11px] text-gray-500 font-mono">
               <span>QuantumBot can assist with code, mathematics, and complex engineering.</span>

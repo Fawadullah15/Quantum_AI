@@ -19,6 +19,7 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
     conversationId,
     messages,
     modelId,
+    availableModels,
     isGenerating,
     streamingContent,
     streamingThought,
@@ -28,7 +29,18 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
     regenerate,
     editUserMessage,
     startNewConversation,
+    setModelId,
   } = useChat();
+
+  const activeModel = availableModels.find((m) => m.id === modelId);
+  const handleSwitchToVisionModel = () => {
+    const visionModel = availableModels.find(
+      (m) => m.isAvailable !== false && m.capabilities.includes('vision')
+    );
+    if (visionModel) {
+      setModelId(visionModel.id);
+    }
+  };
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -180,6 +192,9 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
           onStop={stopGeneration}
           isGenerating={isGenerating}
           placeholder="Message QuantumBot..."
+          conversationId={conversationId}
+          activeModel={activeModel}
+          onSwitchToVisionModel={handleSwitchToVisionModel}
         />
       </div>
     </div>

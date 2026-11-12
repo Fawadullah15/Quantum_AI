@@ -3,12 +3,13 @@ import {
   ChatRequest,
   ChatResponse,
   StreamChunk,
-  BotMessage,
-  BotTool,
   TokenUsage,
 } from '../types';
 import { executeToolCall } from '../tools';
 import { formatMessageWithAttachments } from '../context-manager';
+import { updateGeminiFileCache } from '../file-store';
+
+const NATIVE_INLINE_PDF_LIMIT_BYTES = 4 * 1024 * 1024; // 4 MB inline limit; larger PDFs use Gemini Files API
 
 export function getGeminiApiKey(): string | null {
   return (
@@ -17,6 +18,56 @@ export function getGeminiApiKey(): string | null {
     process.env.GOOGLE_AI_API_KEY ||
     null
   );
+}
+
+async function uploadBufferToGeminiFilesApi(
+  key: string,
+  buffer: Buffer,
+  mimeType: string,
+  displayName: string
+): Promise<{ fileUri: string; expirationTime?: string } | null> {
+  try {
+    const startRes = await fetch('https://generativelanguage.googleapis.com/upload/v1beta/files', {
+      method: 'POST',
+      headers: {
+        'x-goog-api-key': key,
+        'X-Goog-Upload-Protocol': 'resumable',
+        'X-Goog-Upload-Command': 'start',
+        'X-Goog-Upload-Header-Content-Length': String(buffer.length),
+        'X-Goog-Upload-Header-Content-Type': mimeType,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ file: { display_name: displayName } }),
+      signal: AbortSignal.timeout(15000),
+    });
+
+    if (!startRes.ok) return null;
+    const uploadUrl = startRes.headers.get('x-goog-upload-url');
+    if (!uploadUrl) return null;
+
+    const finalizeRes = await fetch(uploadUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Length': String(buffer.length),
+        'X-Goog-Upload-Offset': '0',
+        'X-Goog-Upload-Command': 'upload, finalize',
+      },
+      body: new Uint8Array(buffer),
+      signal: AbortSignal.timeout(30000),
+    });
+
+    if (!finalizeRes.ok) return null;
+    const info = await finalizeRes.json().catch(() => null);
+    const fileUri = info?.file?.uri;
+    if (!fileUri) return null;
+
+    return {
+      fileUri,
+      expirationTime: info?.file?.expirationTime,
+    };
+  } catch {
+    return null;
+  }
 }
 
 export class GeminiProviderAdapter implements ProviderAdapter {
@@ -33,13 +84,17 @@ export class GeminiProviderAdapter implements ProviderAdapter {
       return { success: false, error: 'GEMINI_API_KEY is not configured in environment.' };
     }
 
+    const probeModel = process.env.BOT_DEFAULT_MODEL?.trim() || 'gemini-3.5-flash';
     const t0 = Date.now();
     try {
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash?key=${key}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(probeModel)}`,
         {
           method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': key,
+          },
           signal: AbortSignal.timeout(8000),
         }
       );
@@ -76,24 +131,21 @@ export class GeminiProviderAdapter implements ProviderAdapter {
       );
     }
 
-    // Map model ID to supported Gemini identifier
     const modelIdentifier = request.modelId.replace(/^gemini\//, '');
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelIdentifier}:streamGenerateContent?alt=sse&key=${key}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(modelIdentifier)}:streamGenerateContent?alt=sse`;
 
     // Format messages for Gemini API
     const contents: any[] = [];
     for (const msg of request.messages) {
-      if (msg.role === 'system') continue; // Handled via systemInstruction
+      if (msg.role === 'system') continue;
 
       const parts: any[] = [];
-      const textContent = formatMessageWithAttachments(msg);
-      if (textContent) {
-        parts.push({ text: textContent });
-      }
 
-      // Add image attachments as inlineData if available
+      // Attach native multimodal inputs (Images & PDFs) before or after text prompt
       if (msg.attachments) {
         for (const att of msg.attachments) {
+          if (att.status === 'expired' || att.status === 'error') continue;
+
           if (att.mimeType.startsWith('image/') && att.base64) {
             parts.push({
               inlineData: {
@@ -101,8 +153,61 @@ export class GeminiProviderAdapter implements ProviderAdapter {
                 data: att.base64.replace(/^data:[^;]+;base64,/, ''),
               },
             });
+          } else if (att.mimeType === 'application/pdf') {
+            if (att.geminiFileUri) {
+              parts.push({
+                fileData: {
+                  mimeType: 'application/pdf',
+                  fileUri: att.geminiFileUri,
+                },
+              });
+            } else if (att.base64) {
+              const cleanB64 = att.base64.replace(/^data:[^;]+;base64,/, '');
+              const pdfBuf = Buffer.from(cleanB64, 'base64');
+
+              if (pdfBuf.length > NATIVE_INLINE_PDF_LIMIT_BYTES) {
+                const uploaded = await uploadBufferToGeminiFilesApi(
+                  key,
+                  pdfBuf,
+                  'application/pdf',
+                  att.name
+                );
+                if (uploaded?.fileUri) {
+                  if (att.fileId && request.ownerId) {
+                    const expIso =
+                      uploaded.expirationTime ||
+                      new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+                    await updateGeminiFileCache(
+                      att.fileId,
+                      request.ownerId,
+                      uploaded.fileUri,
+                      expIso
+                    ).catch(() => {});
+                  }
+                  parts.push({
+                    fileData: {
+                      mimeType: 'application/pdf',
+                      fileUri: uploaded.fileUri,
+                    },
+                  });
+                  continue;
+                }
+              }
+
+              parts.push({
+                inlineData: {
+                  mimeType: 'application/pdf',
+                  data: cleanB64,
+                },
+              });
+            }
           }
         }
+      }
+
+      const textContent = formatMessageWithAttachments(msg, { skipPdfTextWhenNative: true });
+      if (textContent) {
+        parts.push({ text: textContent });
       }
 
       if (parts.length > 0) {
@@ -147,7 +252,10 @@ export class GeminiProviderAdapter implements ProviderAdapter {
 
     const response = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': key,
+      },
       body: JSON.stringify(payload),
       signal,
     });
@@ -164,7 +272,7 @@ export class GeminiProviderAdapter implements ProviderAdapter {
     }
 
     let fullText = '';
-    let pendingToolCalls: any[] = [];
+    const pendingToolCalls: any[] = [];
     let usage: TokenUsage | undefined;
     let finishReason: string | undefined;
 
@@ -211,13 +319,11 @@ export class GeminiProviderAdapter implements ProviderAdapter {
             const parts = candidate.content?.parts;
             if (Array.isArray(parts)) {
               for (const part of parts) {
-                // Text stream
                 if (part.text) {
                   fullText += part.text;
                   onChunk({ type: 'text', text: part.text });
                 }
 
-                // Tool / Function Call
                 if (part.functionCall) {
                   const call = {
                     id: `call_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
@@ -238,7 +344,6 @@ export class GeminiProviderAdapter implements ProviderAdapter {
       reader.releaseLock();
     }
 
-    // Execute tool calls if any were emitted
     const toolResults: any[] = [];
     if (pendingToolCalls.length > 0) {
       for (const call of pendingToolCalls) {
@@ -276,13 +381,6 @@ export class GeminiProviderAdapter implements ProviderAdapter {
   }
 
   async chat(request: ChatRequest, signal?: AbortSignal): Promise<ChatResponse> {
-    let collectedText = '';
-    return this.streamChat(
-      request,
-      (chunk) => {
-        if (chunk.text) collectedText += chunk.text;
-      },
-      signal
-    );
+    return this.streamChat(request, () => {}, signal);
   }
 }

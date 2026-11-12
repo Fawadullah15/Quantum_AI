@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { executeQuantumBotChat } from '@/lib/bot/engine';
+import {
+  AttachmentResolutionError,
+  executeQuantumBotChat,
+  resolveAndValidateChatMessages,
+} from '@/lib/bot/engine';
+import { resolveActiveModel } from '@/lib/bot/models';
 import { BotMessage, StreamChunk } from '@/lib/bot/types';
 import { checkRateLimit } from '@/lib/rate-limit';
+import { attachOwnerCookie, resolveOwnerIdentity } from '@/lib/bot/file-security';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -59,7 +65,32 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 3. Setup Server-Sent Events (SSE) Response Stream
+  // 3. Resolve owner identity & preflight-validate attachments (ownership, expiration, vision capability)
+  const resolvedOwner = await resolveOwnerIdentity(req, true);
+  const { model } = resolveActiveModel(body.modelId);
+
+  let validatedMessages: BotMessage[];
+  try {
+    validatedMessages = await resolveAndValidateChatMessages(
+      body.messages,
+      model,
+      resolvedOwner?.ownerId
+    );
+  } catch (err: any) {
+    if (err instanceof AttachmentResolutionError) {
+      const errRes = NextResponse.json({ error: err.message }, { status: err.statusCode });
+      attachOwnerCookie(errRes, resolvedOwner, req);
+      return errRes;
+    }
+    const errRes = NextResponse.json(
+      { error: err?.message || 'Attachment validation failed.' },
+      { status: 400 }
+    );
+    attachOwnerCookie(errRes, resolvedOwner, req);
+    return errRes;
+  }
+
+  // 4. Setup Server-Sent Events (SSE) Response Stream
   const encoder = new TextEncoder();
   const stream = new ReadableStream({
     async start(controller) {
@@ -78,11 +109,13 @@ export async function POST(req: NextRequest) {
         await executeQuantumBotChat({
           modelId: body.modelId,
           messages: body.messages,
+          validatedMessages,
           customSystemPrompt: body.customSystemPrompt,
           temperature: typeof body.temperature === 'number' ? body.temperature : 0.7,
           maxTokens: body.maxTokens,
           enableTools: body.enableTools !== false,
           conversationId: body.conversationId,
+          ownerId: resolvedOwner?.ownerId,
           onChunk: send,
           signal: req.signal,
         });
@@ -109,7 +142,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return new Response(stream, {
+  const res = new NextResponse(stream, {
     headers: {
       'Content-Type': 'text/event-stream; charset=utf-8',
       'Cache-Control': 'no-cache, no-transform',
@@ -117,4 +150,6 @@ export async function POST(req: NextRequest) {
       'X-Accel-Buffering': 'no',
     },
   });
+  attachOwnerCookie(res, resolvedOwner, req);
+  return res;
 }

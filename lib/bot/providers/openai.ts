@@ -98,12 +98,15 @@ export class OpenAIProviderAdapter implements ProviderAdapter {
 
       if (msg.attachments) {
         for (const att of msg.attachments) {
+          if (att.status === 'expired' || att.status === 'error') continue;
           if (att.mimeType.startsWith('image/')) {
             const url = att.base64?.startsWith('data:')
               ? att.base64
               : att.base64
               ? `data:${att.mimeType};base64,${att.base64}`
-              : att.url;
+              : att.url?.startsWith('https://')
+              ? att.url
+              : undefined;
             if (url) {
               contentParts.push({
                 type: 'image_url',

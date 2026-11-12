@@ -95,8 +95,13 @@ export function SettingsModal({
               className="w-full bg-[#060A14] text-white border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-cyan-500 font-mono text-xs"
             >
               {models.map((m) => (
-                <option key={m.id} value={m.id} className="bg-[#060A14] text-white">
-                  {m.name} ({m.family || m.provider}) — {(m.contextWindow / 1000).toFixed(0)}k ctx
+                <option
+                  key={m.id}
+                  value={m.id}
+                  disabled={m.isAvailable === false}
+                  className="bg-[#060A14] text-white"
+                >
+                  {m.name} ({m.family || m.provider}) · {m.capabilities.includes('vision') ? 'Vision + Docs' : 'Text + Docs'} · {m.contextWindow >= 1000000 ? '1M' : `${(m.contextWindow / 1000).toFixed(0)}k`} ctx{m.isAvailable === false ? ' [Key Required]' : ''}
                 </option>
               ))}
             </select>
