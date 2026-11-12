@@ -1,5 +1,6 @@
 'use server';
 
+import { revalidatePath } from 'next/cache';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import prisma from '@/lib/db';
@@ -202,6 +203,28 @@ export async function restoreBackup(urlOrBackupData: string | object) {
 
     const adminEmail = session?.user?.email || null;
     const result = await executeRestorePackage(backup, adminEmail);
+
+    try {
+      revalidatePath('/', 'layout');
+      for (const route of [
+        '/',
+        '/services',
+        '/work',
+        '/products',
+        '/technology',
+        '/about',
+        '/leadership',
+        '/team',
+        '/blog',
+        '/case-studies',
+        '/careers',
+        '/announcements',
+      ]) {
+        revalidatePath(route);
+      }
+    } catch {
+      // Non-fatal if invoked outside request lifecycle
+    }
 
     return { success: true, totalRestored: result.totalRestored };
   } catch (error: unknown) {

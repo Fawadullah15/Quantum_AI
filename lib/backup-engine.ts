@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { Prisma } from '@prisma/client';
 import prisma from '@/lib/db';
 import { sanitizeDatabaseMessage, logDatabaseDiagnostic } from '@/lib/db-diagnostics';
 
@@ -112,12 +113,33 @@ export function calculateTablesChecksum(tables: Record<string, any[]>): string {
   return crypto.createHash('sha256').update(JSON.stringify(normalized)).digest('hex');
 }
 
+const MODEL_SCALAR_FIELDS: Record<string, Set<string>> = (() => {
+  const map: Record<string, Set<string>> = {};
+  try {
+    const models = (Prisma as any)?.dmmf?.datamodel?.models;
+    if (Array.isArray(models)) {
+      for (const m of models) {
+        map[m.name] = new Set(
+          (m.fields || [])
+            .filter((f: any) => f.kind !== 'object')
+            .map((f: any) => f.name)
+        );
+      }
+    }
+  } catch {
+    // Fallback gracefully if DMMF is unavailable
+  }
+  return map;
+})();
+
 /**
  * Converts ISO date strings in record arrays to native JavaScript Date objects
- * so Prisma passes strict PostgreSQL datetime serialization.
+ * and (when modelName is provided) strips unknown legacy fields not in schema.prisma
+ * so Prisma passes strict PostgreSQL serialization.
  */
-export function sanitizeTableData(records: any[]): any[] {
+export function sanitizeTableData(records: any[], modelName?: string): any[] {
   if (!Array.isArray(records)) return [];
+  const allowedFields = modelName ? MODEL_SCALAR_FIELDS[modelName] : undefined;
   const dateFieldNames = new Set([
     'createdAt',
     'updatedAt',
@@ -135,16 +157,19 @@ export function sanitizeTableData(records: any[]): any[] {
 
   return records.map((record) => {
     if (!record || typeof record !== 'object') return record;
-    const clean: any = { ...record };
-    for (const [key, val] of Object.entries(clean)) {
+    const clean: any = {};
+    for (const [key, val] of Object.entries(record)) {
+      if (allowedFields && !allowedFields.has(key)) {
+        continue;
+      }
       if (
         typeof val === 'string' &&
         (dateFieldNames.has(key) || /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(val))
       ) {
         const parsed = new Date(val);
-        if (!isNaN(parsed.getTime())) {
-          clean[key] = parsed;
-        }
+        clean[key] = !isNaN(parsed.getTime()) ? parsed : val;
+      } else {
+        clean[key] = val;
       }
     }
     return clean;
@@ -433,7 +458,25 @@ export async function executeRestorePackage(
       await tx.recentlyDeleted.deleteMany();
 
       // ─── STEP D: USER MANAGEMENT ───
-      const rawUsers = sanitizeTableData(tables.User || []);
+      let rawUsers = sanitizeTableData(tables.User || [], 'User').map((u: any) => ({
+        ...u,
+        email: typeof u.email === 'string' ? u.email.trim().toLowerCase() : u.email,
+      }));
+      let remappedOldAdminId: string | null = null;
+
+      if (currentAdmin) {
+        const matchingBackupUser = rawUsers.find(
+          (u: any) => u.email && u.email === currentAdmin.email
+        );
+        if (matchingBackupUser) {
+          if (matchingBackupUser.id && matchingBackupUser.id !== currentAdmin.id) {
+            remappedOldAdminId = matchingBackupUser.id;
+            matchingBackupUser.id = currentAdmin.id;
+          }
+          matchingBackupUser.tokenVersion = currentAdmin.tokenVersion;
+        }
+      }
+
       await tx.user.deleteMany();
 
       if (rawUsers.length > 0) {
@@ -451,128 +494,142 @@ export async function executeRestorePackage(
         }
       }
 
+      const validUserIds = new Set<string>(
+        rawUsers.map((u: any) => u.id).filter(Boolean)
+      );
+      if (currentAdmin?.id) validUserIds.add(currentAdmin.id);
+
       // ─── STEP E: INSERT INDEPENDENT MODELS ───
       if (tables.SiteSettings?.length) {
-        const rows = sanitizeTableData(tables.SiteSettings);
+        const rows = sanitizeTableData(tables.SiteSettings, 'SiteSettings');
         await tx.siteSettings.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.NavigationItem?.length) {
-        const rows = sanitizeTableData(tables.NavigationItem);
+        const rows = sanitizeTableData(tables.NavigationItem, 'NavigationItem');
         await tx.navigationItem.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.Founder?.length) {
-        const rows = sanitizeTableData(tables.Founder);
+        const rows = sanitizeTableData(tables.Founder, 'Founder');
         await tx.founder.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.TeamMember?.length) {
-        const rows = sanitizeTableData(tables.TeamMember);
+        const rows = sanitizeTableData(tables.TeamMember, 'TeamMember');
         await tx.teamMember.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.Leadership?.length) {
-        const rows = sanitizeTableData(tables.Leadership);
+        const rows = sanitizeTableData(tables.Leadership, 'Leadership');
         await tx.leadership.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.Service?.length) {
-        const rows = sanitizeTableData(tables.Service);
+        const rows = sanitizeTableData(tables.Service, 'Service');
         await tx.service.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.Technology?.length) {
-        const rows = sanitizeTableData(tables.Technology);
+        const rows = sanitizeTableData(tables.Technology, 'Technology');
         await tx.technology.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.BlogPost?.length) {
-        const rows = sanitizeTableData(tables.BlogPost);
+        const rows = sanitizeTableData(tables.BlogPost, 'BlogPost');
         await tx.blogPost.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.Testimonial?.length) {
-        const rows = sanitizeTableData(tables.Testimonial);
+        const rows = sanitizeTableData(tables.Testimonial, 'Testimonial');
         await tx.testimonial.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.Client?.length) {
-        const rows = sanitizeTableData(tables.Client);
+        const rows = sanitizeTableData(tables.Client, 'Client');
         await tx.client.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.ContactSubmission?.length) {
-        const rows = sanitizeTableData(tables.ContactSubmission);
+        const rows = sanitizeTableData(tables.ContactSubmission, 'ContactSubmission');
         await tx.contactSubmission.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.Notification?.length) {
-        const rows = sanitizeTableData(tables.Notification);
+        const rows = sanitizeTableData(tables.Notification, 'Notification');
         await tx.notification.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.Media?.length) {
-        const rows = sanitizeTableData(tables.Media);
+        const rows = sanitizeTableData(tables.Media, 'Media');
         await tx.media.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.CareerPosition?.length) {
-        const rows = sanitizeTableData(tables.CareerPosition);
+        const rows = sanitizeTableData(tables.CareerPosition, 'CareerPosition');
         await tx.careerPosition.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.Campaign?.length) {
-        const rows = sanitizeTableData(tables.Campaign);
+        const rows = sanitizeTableData(tables.Campaign, 'Campaign');
         await tx.campaign.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.RecentlyDeleted?.length) {
-        const rows = sanitizeTableData(tables.RecentlyDeleted);
+        const rows = sanitizeTableData(tables.RecentlyDeleted, 'RecentlyDeleted');
         await tx.recentlyDeleted.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
 
       // ─── STEP F: INSERT RELATIONAL PARENTS ───
       if (tables.Product?.length) {
-        const rows = sanitizeTableData(tables.Product);
+        const rows = sanitizeTableData(tables.Product, 'Product');
         await tx.product.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.CaseStudy?.length) {
-        const rows = sanitizeTableData(tables.CaseStudy);
+        const rows = sanitizeTableData(tables.CaseStudy, 'CaseStudy');
         await tx.caseStudy.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.CareerApplication?.length) {
-        const rows = sanitizeTableData(tables.CareerApplication);
+        const rows = sanitizeTableData(tables.CareerApplication, 'CareerApplication');
         await tx.careerApplication.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.PartnershipRequest?.length) {
-        const rows = sanitizeTableData(tables.PartnershipRequest);
+        const rows = sanitizeTableData(tables.PartnershipRequest, 'PartnershipRequest');
         await tx.partnershipRequest.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
 
       // ─── STEP G: INSERT RELATIONAL CHILDREN ───
       if (tables.ProductFeature?.length) {
-        const rows = sanitizeTableData(tables.ProductFeature);
+        const rows = sanitizeTableData(tables.ProductFeature, 'ProductFeature');
         await tx.productFeature.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.CaseStudyMetric?.length) {
-        const rows = sanitizeTableData(tables.CaseStudyMetric);
+        const rows = sanitizeTableData(tables.CaseStudyMetric, 'CaseStudyMetric');
         await tx.caseStudyMetric.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.SubmissionNote?.length) {
-        const rows = sanitizeTableData(tables.SubmissionNote);
+        const rows = sanitizeTableData(tables.SubmissionNote, 'SubmissionNote');
         await tx.submissionNote.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }
       if (tables.ActivityLog?.length) {
-        const rows = sanitizeTableData(tables.ActivityLog);
+        const rows = sanitizeTableData(tables.ActivityLog, 'ActivityLog').map((row: any) => {
+          let uid = row.userId;
+          if (uid && remappedOldAdminId && uid === remappedOldAdminId && currentAdmin) {
+            uid = currentAdmin.id;
+          }
+          return {
+            ...row,
+            userId: uid && validUserIds.has(uid) ? uid : null,
+          };
+        });
         await tx.activityLog.createMany({ data: rows, skipDuplicates: true });
         totalRestored += rows.length;
       }

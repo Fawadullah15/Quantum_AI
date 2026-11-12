@@ -394,34 +394,39 @@ Our long term goal is to build an intelligent design companion that reduces rout
   ];
 
   for (const cs of caseStudyRecords) {
+    const csData = {
+      title: cs.title,
+      client: cs.client,
+      industry: cs.industry,
+      year: cs.year,
+      order: cs.order,
+      heroImage: (cs as any).heroImage,
+      gallery: (cs as any).gallery,
+      featured: (cs as any).featured ?? false,
+      status: (cs as any).status ?? 'Completed',
+      fullDescription: (cs as any).fullDescription,
+      problem: cs.problem,
+      solution: cs.solution,
+      implementation: cs.implementation,
+      results: cs.results,
+      technologies: cs.technologies,
+      services: cs.services,
+      primaryCtaLabel: (cs as any).primaryCtaLabel,
+      primaryCtaUrl: (cs as any).primaryCtaUrl,
+      secondaryCtaLabel: (cs as any).secondaryCtaLabel,
+      secondaryCtaUrl: (cs as any).secondaryCtaUrl,
+      seoTitle: (cs as any).seoTitle,
+      seoDescription: (cs as any).seoDescription,
+      published: cs.published,
+    };
+
     await prisma.caseStudy.upsert({
       where: { slug: cs.slug },
-      update: {
-        title: cs.title,
-        client: cs.client,
-        industry: cs.industry,
-        year: cs.year,
-        order: cs.order,
-        heroImage: (cs as any).heroImage,
-        gallery: (cs as any).gallery,
-        featured: (cs as any).featured ?? false,
-        status: (cs as any).status ?? 'Completed',
-        fullDescription: (cs as any).fullDescription,
-        problem: cs.problem,
-        solution: cs.solution,
-        implementation: cs.implementation,
-        results: cs.results,
-        technologies: cs.technologies,
-        services: cs.services,
-        primaryCtaLabel: (cs as any).primaryCtaLabel,
-        primaryCtaUrl: (cs as any).primaryCtaUrl,
-        secondaryCtaLabel: (cs as any).secondaryCtaLabel,
-        secondaryCtaUrl: (cs as any).secondaryCtaUrl,
-        seoTitle: (cs as any).seoTitle,
-        seoDescription: (cs as any).seoDescription,
-        published: cs.published,
+      update: csData,
+      create: {
+        slug: cs.slug,
+        ...csData,
       },
-      create: cs as any,
     });
   }
 
