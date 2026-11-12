@@ -83,8 +83,13 @@ function QuantumBotWorkspace() {
 
   // Auto-scroll on new message or during streaming IF user isn't scrolled up
   useEffect(() => {
-    if (!scrollContainerRef.current || isUserScrolledUpRef.current) return;
+    if (!scrollContainerRef.current) return;
     const el = scrollContainerRef.current;
+    if (messages.length === 0 && !streamingContent) {
+      el.scrollTop = 0;
+      return;
+    }
+    if (isUserScrolledUpRef.current) return;
     el.scrollTop = el.scrollHeight;
   }, [messages, streamingContent]);
 
@@ -99,7 +104,7 @@ function QuantumBotWorkspace() {
   };
 
   return (
-    <div className="flex h-dvh w-full overflow-hidden bg-[#030712] font-sans antialiased text-gray-100">
+    <div className="flex h-dvh w-full max-w-full overflow-hidden bg-[#030712] font-sans antialiased text-gray-100">
       {/* Left Sidebar */}
       <Sidebar
         conversations={conversations}
@@ -114,9 +119,9 @@ function QuantumBotWorkspace() {
       />
 
       {/* Main Conversation Container */}
-      <main className="flex-1 flex flex-col h-full min-w-0 bg-[#040816] relative">
+      <main className="flex-1 flex flex-col h-full min-w-0 max-w-full overflow-hidden bg-[#040816] relative">
         {/* Workspace Top Navigation Bar */}
-        <header className="h-14 border-b border-gray-800/80 bg-[#060A18]/80 backdrop-blur-md px-3 sm:px-5 flex items-center justify-between shrink-0 z-20 select-none">
+        <header className="h-14 w-full border-b border-gray-800/80 bg-[#060A18]/80 backdrop-blur-md px-3 sm:px-5 flex items-center justify-between shrink-0 z-20 select-none">
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             {/* Mobile Menu Toggle */}
             <button
@@ -185,9 +190,9 @@ function QuantumBotWorkspace() {
         <div
           ref={scrollContainerRef}
           onScroll={handleScroll}
-          className="flex-1 overflow-y-auto px-3 sm:px-6 py-6 scroll-smooth"
+          className="flex-1 overflow-y-auto overflow-x-hidden px-3 sm:px-6 py-4 sm:py-6 scroll-smooth flex flex-col"
         >
-          <div className="max-w-4xl mx-auto w-full">
+          <div className={`max-w-4xl mx-auto w-full min-w-0 ${messages.length === 0 ? 'sm:my-auto' : ''}`}>
             {messages.length === 0 ? (
               <WelcomeScreen onSelectPrompt={(prompt) => sendMessage(prompt)} />
             ) : (
@@ -271,7 +276,7 @@ function QuantumBotWorkspace() {
               onSend={(content, attachments) => sendMessage(content, attachments)}
               onStop={stopGeneration}
               isGenerating={isGenerating}
-              placeholder="Ask QuantumBot anything... (Shift + Enter for new line)"
+              placeholder="Message QuantumBot..."
             />
             <div className="flex items-center justify-between mt-2 px-1 text-[11px] text-gray-500 font-mono">
               <span>QuantumBot can assist with code, mathematics, and complex engineering.</span>

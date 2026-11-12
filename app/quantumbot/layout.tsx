@@ -13,7 +13,7 @@ export default function QuantumBotLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#030712] text-white overflow-hidden">
+    <div className="quantumbot-root min-h-screen bg-[#030712] text-white overflow-hidden">
       {children}
     </div>
   );

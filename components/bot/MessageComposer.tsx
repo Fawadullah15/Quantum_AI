@@ -16,7 +16,7 @@ export function MessageComposer({
   onStop,
   isGenerating = false,
   disabled = false,
-  placeholder = 'Ask QuantumBot anything... (Shift + Enter for new line)',
+  placeholder = 'Message QuantumBot...',
 }: MessageComposerProps) {
   const [input, setInput] = useState('');
   const [attachments, setAttachments] = useState<BotAttachment[]>([]);
@@ -117,7 +117,7 @@ export function MessageComposer({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0">
       {/* Attachments preview tray */}
       {attachments.length > 0 && (
         <div className="flex flex-wrap gap-2 mb-2 px-1">
@@ -143,7 +143,7 @@ export function MessageComposer({
       )}
 
       {/* Main Composer Box */}
-      <div className="relative flex items-end gap-2 p-2 rounded-2xl bg-[#090E1D] border border-gray-800 focus-within:border-cyan-500/50 shadow-lg transition-all duration-150">
+      <div className="relative flex items-end gap-1.5 sm:gap-2 p-2 w-full min-w-0 rounded-2xl bg-[#090E1D] border border-gray-800 focus-within:border-cyan-500/50 shadow-lg transition-all duration-150">
         {/* Hidden File Input */}
         <input
           ref={fileInputRef}
@@ -176,7 +176,7 @@ export function MessageComposer({
           disabled={disabled}
           placeholder={placeholder}
           rows={1}
-          className="flex-1 bg-transparent text-[14.5px] leading-relaxed text-white placeholder-gray-500 outline-none resize-none py-1.5 px-1 max-h-[220px] font-sans"
+          className="flex-1 min-w-0 w-full bg-transparent text-[14px] sm:text-[14.5px] leading-relaxed text-white placeholder-gray-500 outline-none resize-none py-1.5 px-1 max-h-[220px] font-sans"
         />
 
         {/* Send / Stop Button */}

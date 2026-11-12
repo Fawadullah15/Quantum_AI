@@ -5,6 +5,7 @@ import { QuantumBotIcon } from './QuantumBotIcon';
 
 interface WelcomeScreenProps {
   onSelectPrompt: (prompt: string) => void;
+  compact?: boolean;
 }
 
 const STARTER_SUGGESTIONS = [
@@ -70,45 +71,86 @@ const STARTER_SUGGESTIONS = [
   },
 ];
 
-export function WelcomeScreen({ onSelectPrompt }: WelcomeScreenProps) {
+export function WelcomeScreen({ onSelectPrompt, compact = false }: WelcomeScreenProps) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] max-w-2xl mx-auto px-4 py-8 select-none">
+    <div
+      className={`w-full min-w-0 flex flex-col items-center justify-center max-w-2xl mx-auto select-none ${
+        compact ? 'px-0.5 py-1' : 'px-1 sm:px-4 py-2 sm:py-8'
+      }`}
+    >
       {/* Brand Icon Header */}
-      <div className="flex flex-col items-center text-center mb-8">
-        <div className="mb-4 p-3 rounded-2xl bg-gradient-to-b from-cyan-950/40 to-transparent border border-cyan-500/20 shadow-[0_0_24px_rgba(0,240,255,0.12)]">
-          <QuantumBotIcon size={44} showGlow />
+      <div className={`flex flex-col items-center text-center ${compact ? 'mb-4' : 'mb-6 sm:mb-8'}`}>
+        <div
+          className={`rounded-2xl bg-gradient-to-b from-cyan-950/40 to-transparent border border-cyan-500/20 shadow-[0_0_24px_rgba(0,240,255,0.12)] ${
+            compact ? 'mb-2 p-2' : 'mb-3 sm:mb-4 p-2.5 sm:p-3'
+          }`}
+        >
+          <QuantumBotIcon size={compact ? 30 : 40} showGlow />
         </div>
-        <h1 className="text-2xl sm:text-3xl font-semibold text-white tracking-tight font-mono mb-2">
+        <h1
+          className={`font-semibold text-white tracking-tight font-mono ${
+            compact ? 'text-lg mb-1' : 'text-xl sm:text-3xl mb-1.5 sm:mb-2'
+          }`}
+        >
           Hello, I&apos;m QuantumBot.
         </h1>
-        <p className="text-sm sm:text-base text-gray-400 max-w-md">
+        <p className={`text-gray-400 max-w-md px-2 ${compact ? 'text-xs' : 'text-xs sm:text-base'}`}>
           What would you like to work on today?
         </p>
       </div>
 
       {/* 6 Starter Suggestions Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full">
+      <div
+        className={`grid w-full min-w-0 ${
+          compact ? 'grid-cols-1 gap-2' : 'grid-cols-1 sm:grid-cols-2 gap-2.5'
+        }`}
+      >
         {STARTER_SUGGESTIONS.map((item, idx) => (
           <button
             key={idx}
             type="button"
             onClick={() => onSelectPrompt(item.prompt)}
-            className="group flex flex-col items-start text-left p-3.5 rounded-xl bg-[#090E1B]/70 hover:bg-[#0E172B] border border-gray-800/80 hover:border-cyan-500/40 transition-all duration-150 shadow-sm hover:shadow-cyan-950/20"
+            className={`w-full min-w-0 overflow-hidden group text-left rounded-xl bg-[#090E1B]/70 hover:bg-[#0E172B] border border-gray-800/80 hover:border-cyan-500/40 transition-all duration-150 shadow-sm hover:shadow-cyan-950/20 ${
+              compact ? 'flex items-center gap-2.5 p-2.5' : 'flex flex-col items-start p-3 sm:p-3.5'
+            }`}
           >
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="p-1 rounded-md bg-gray-900/90 border border-gray-800/80 group-hover:border-cyan-500/30 transition-colors">
-                {item.icon}
-              </span>
-              <span className="text-xs text-gray-400 font-mono tracking-wider uppercase group-hover:text-cyan-400 transition-colors">
-                {item.category}
-              </span>
-            </div>
-            <span className="text-sm font-medium text-gray-200 group-hover:text-white transition-colors">
-              {item.title}
-            </span>
-            <span className="text-xs text-gray-400 line-clamp-1 mt-0.5">
-              {item.prompt}
-            </span>
+            {compact ? (
+              <>
+                <span className="p-1.5 rounded-lg bg-gray-900/90 border border-gray-800/80 group-hover:border-cyan-500/30 transition-colors shrink-0">
+                  {item.icon}
+                </span>
+                <div className="flex flex-col min-w-0 flex-1">
+                  <div className="flex items-center justify-between gap-2 min-w-0">
+                    <span className="text-xs font-medium text-gray-200 group-hover:text-white transition-colors truncate">
+                      {item.title}
+                    </span>
+                    <span className="text-[10px] text-cyan-400/75 font-mono uppercase tracking-wider shrink-0">
+                      {item.category.split(' ')[0]}
+                    </span>
+                  </div>
+                  <span className="text-[11px] text-gray-400 truncate w-full mt-0.5 block">
+                    {item.prompt}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2 mb-1 sm:mb-1.5 max-w-full">
+                  <span className="p-1 rounded-md bg-gray-900/90 border border-gray-800/80 group-hover:border-cyan-500/30 transition-colors shrink-0">
+                    {item.icon}
+                  </span>
+                  <span className="text-[11px] sm:text-xs text-gray-400 font-mono tracking-wider uppercase group-hover:text-cyan-400 transition-colors truncate">
+                    {item.category}
+                  </span>
+                </div>
+                <span className="text-xs sm:text-sm font-medium text-gray-200 group-hover:text-white transition-colors truncate w-full">
+                  {item.title}
+                </span>
+                <span className="text-[11px] sm:text-xs text-gray-400 truncate w-full mt-0.5 block">
+                  {item.prompt}
+                </span>
+              </>
+            )}
           </button>
         ))}
       </div>

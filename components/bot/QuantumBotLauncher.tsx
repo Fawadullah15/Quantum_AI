@@ -20,8 +20,8 @@ export function QuantumBotLauncher() {
   }
 
   return (
-    <>
-      <div className="quantumbot-launcher-root">
+    <div className="quantumbot-root">
+      <div className={`quantumbot-launcher-root ${isOpen ? 'max-md:opacity-0 max-md:pointer-events-none' : ''}`}>
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -75,6 +75,6 @@ export function QuantumBotLauncher() {
           }
         }
       `}</style>
-    </>
+    </div>
   );
 }

@@ -95,7 +95,7 @@ export function SettingsModal({
               className="w-full bg-[#060A14] text-white border border-gray-800 rounded-lg px-3 py-2 outline-none focus:border-cyan-500 font-mono text-xs"
             >
               {models.map((m) => (
-                <option key={m.id} value={m.id}>
+                <option key={m.id} value={m.id} className="bg-[#060A14] text-white">
                   {m.name} ({m.family || m.provider}) — {(m.contextWindow / 1000).toFixed(0)}k ctx
                 </option>
               ))}
@@ -156,7 +156,7 @@ export function SettingsModal({
               Local Cache & Conversation History
             </label>
             <p className="text-gray-400 text-[11px]">
-              All multi-turn conversations are encrypted and stored locally in your browser.
+              Multi-turn conversations are persisted locally in your browser&apos;s local storage.
             </p>
             <button
               type="button"

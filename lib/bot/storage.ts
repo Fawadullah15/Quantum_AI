@@ -63,14 +63,20 @@ export function saveConversation(conv: StoredConversation): void {
     const all = getStoredConversations();
     const index = all.findIndex((c) => c.id === conv.id);
 
+    const existing = index >= 0 ? all[index] : null;
+    const rawTitle = conv.title?.trim();
+    const resolvedTitle =
+      rawTitle && rawTitle !== 'New Conversation'
+        ? rawTitle
+        : conv.messages.length > 0
+        ? generateDefaultTitle(conv.messages[0].content)
+        : 'New Conversation';
+
     const updatedConv: StoredConversation = {
       ...conv,
+      createdAt: existing?.createdAt || conv.createdAt || Date.now(),
       updatedAt: Date.now(),
-      title:
-        conv.title ||
-        (conv.messages.length > 0
-          ? generateDefaultTitle(conv.messages[0].content)
-          : 'New Conversation'),
+      title: resolvedTitle,
     };
 
     if (index >= 0) {

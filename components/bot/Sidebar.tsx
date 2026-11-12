@@ -401,7 +401,9 @@ function ConversationRow({
 
       {/* Options Menu Trigger */}
       <div
-        className="opacity-0 group-hover:opacity-100 transition-opacity"
+        className={`transition-opacity ${
+          isMenuOpen ? 'opacity-100' : 'opacity-75 sm:opacity-0 sm:group-hover:opacity-100'
+        }`}
         onClick={(e) => e.stopPropagation()}
       >
         <button

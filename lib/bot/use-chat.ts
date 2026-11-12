@@ -90,6 +90,11 @@ export function useChat(options: UseChatOptions = {}) {
   useEffect(() => {
     const handleSync = (e: any) => {
       const detail = e.detail;
+      if (detail?.cleared || detail?.deletedId === conversationId) {
+        setMessages([]);
+        setTitle('New Conversation');
+        return;
+      }
       if (detail?.conversationId === conversationId) {
         const updated = getStoredConversation(conversationId);
         if (updated) {
@@ -114,6 +119,10 @@ export function useChat(options: UseChatOptions = {}) {
         messages: newMessages,
       };
       saveConversation(conv);
+      const saved = getStoredConversation(conversationId);
+      if (saved?.title && saved.title !== title) {
+        setTitle(saved.title);
+      }
     },
     [conversationId, title, modelId]
   );

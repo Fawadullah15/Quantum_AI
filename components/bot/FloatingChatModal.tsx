@@ -32,13 +32,16 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom on new message or streaming
+  // Auto-scroll to bottom on new message or streaming, keep WelcomeScreen scrolled to top
   useEffect(() => {
     if (!scrollRef.current) return;
     const el = scrollRef.current;
-    // Only auto-scroll if near bottom or streaming
+    if (messages.length === 0 && !streamingContent) {
+      el.scrollTop = 0;
+      return;
+    }
     el.scrollTop = el.scrollHeight;
-  }, [messages, streamingContent]);
+  }, [messages, streamingContent, isOpen]);
 
   if (!isOpen) return null;
 
@@ -51,7 +54,7 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
     <div
       role="dialog"
       aria-label="QuantumBot Assistant"
-      className="fixed z-50 bottom-4 right-4 w-[calc(100vw-2rem)] sm:w-[420px] h-[580px] max-h-[85vh] flex flex-col rounded-2xl bg-[#070B16]/95 border border-cyan-500/30 shadow-[0_12px_40px_rgba(0,0,0,0.8),0_0_24px_rgba(0,240,255,0.15)] backdrop-blur-xl overflow-hidden animate-in fade-in slide-in-from-bottom-5 duration-200"
+      className="fixed z-[1100] bottom-4 left-4 right-4 sm:left-auto sm:w-[420px] md:bottom-[5.5rem] md:right-6 h-[min(78dvh,540px)] md:h-[540px] md:max-h-[calc(100vh-11rem)] flex flex-col rounded-2xl bg-[#070B16]/95 border border-cyan-500/30 shadow-[0_12px_40px_rgba(0,0,0,0.8),0_0_24px_rgba(0,240,255,0.15)] backdrop-blur-xl overflow-hidden transition-all duration-200"
     >
       {/* Header Bar */}
       <div className="flex items-center justify-between px-3.5 py-2.5 bg-[#0A1020]/90 border-b border-gray-800/80 select-none">
@@ -113,8 +116,8 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
         className="flex-1 overflow-y-auto p-3 space-y-3 scroll-smooth text-xs"
       >
         {messages.length === 0 ? (
-          <div className="py-6">
-            <WelcomeScreen onSelectPrompt={(p) => sendMessage(p)} />
+          <div className="py-1">
+            <WelcomeScreen compact onSelectPrompt={(p) => sendMessage(p)} />
           </div>
         ) : (
           <>
@@ -142,6 +145,17 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
               />
             )}
 
+            {/* Live Thinking Indicator before first token */}
+            {isGenerating && !streamingContent && (
+              <div className="flex items-center gap-2.5 my-2 px-1">
+                <QuantumBotIcon size={24} showGlow />
+                <div className="flex items-center gap-2 text-[11px] font-mono text-cyan-400 bg-cyan-950/20 border border-cyan-900/40 px-2.5 py-1.5 rounded-xl">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                  <span>{streamingThought || 'QuantumBot is formulating an answer...'}</span>
+                </div>
+              </div>
+            )}
+
             {/* Error Banner */}
             {error && (
               <div className="p-2.5 rounded-xl bg-rose-950/30 border border-rose-800/50 text-rose-300 text-xs flex items-center justify-between">
@@ -165,7 +179,7 @@ export function FloatingChatModal({ isOpen, onClose }: FloatingChatModalProps) {
           onSend={(content, attachments) => sendMessage(content, attachments)}
           onStop={stopGeneration}
           isGenerating={isGenerating}
-          placeholder="Ask QuantumBot anything..."
+          placeholder="Message QuantumBot..."
         />
       </div>
     </div>

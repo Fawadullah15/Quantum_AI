@@ -1,0 +1,41 @@
+/* Scoped Tailwind-compatible reset for QuantumBot UI (zero specificity via :where) */
+:where(.quantumbot-root) :where(*, ::before, ::after) {
+  border-width: 0;
+  border-style: solid;
+  border-color: #1f2937;
+}
+
+:where(.quantumbot-root) :where(button, [type='button'], [type='reset'], [type='submit']) {
+  -webkit-appearance: button;
+  background-color: transparent;
+  background-image: none;
+  cursor: pointer;
+}
+
+:where(.quantumbot-root) :where(input, textarea, select) {
+  background-color: transparent;
+}
+
+:where(.quantumbot-root) :where(input:focus, textarea:focus, select:focus) {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Custom sleek dark scrollbar inside QuantumBot containers */
+:where(.quantumbot-root) ::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+:where(.quantumbot-root) ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+:where(.quantumbot-root) ::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 9999px;
+}
+
+:where(.quantumbot-root) ::-webkit-scrollbar-thumb:hover {
+  background: rgba(34, 211, 238, 0.4);
+}
