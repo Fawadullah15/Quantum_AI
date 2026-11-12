@@ -34,6 +34,13 @@ export function tokenizeKnowledgeText(text: string): string[] {
         const singular = tok.slice(0, -1);
         if (!STOP_WORDS.has(singular)) tokens.push(singular);
       }
+      // Common inflection normalization ("founded" -> "founder" / "found")
+      if (tok === 'founded' || tok === 'founding') {
+        tokens.push('found', 'founder', 'founders');
+      } else if (tok.length >= 6 && tok.endsWith('ed')) {
+        const stem = tok.slice(0, -2);
+        if (stem.length >= 3 && !STOP_WORDS.has(stem)) tokens.push(stem);
+      }
     }
   }
   return tokens;

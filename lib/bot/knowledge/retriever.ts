@@ -155,7 +155,11 @@ function selectPreferredCategories(query: string): KnowledgeCategory[] {
   const lower = query.toLowerCase();
   const preferred: KnowledgeCategory[] = [];
 
-  if (/\b(?:co-?founders?|founders?|ceo|team|leadership|staff|executives?|engineer|fawadullah|fahad|abdullah|anisa|waqas)\b/.test(lower)) {
+  if (
+    /\b(?:co-?founders?|founders?|founded|founding|started|owns|runs|leads|ceo|team|leadership|staff|executives?|engineer\w*|fawadullah|fahad|abdullah|anisa|waqas)\b/.test(
+      lower
+    )
+  ) {
     preferred.push('team');
   }
   if (/\b(?:copilot|mechanical|shaft|sizing|material|safety\s+factor)\b/.test(lower)) {

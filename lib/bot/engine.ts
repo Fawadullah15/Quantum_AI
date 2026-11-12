@@ -315,9 +315,21 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
     approvedActionKeys,
   };
 
-  // 7. Execute streaming generation with retry backoff for transient errors
+  // 7. Execute streaming generation with retry backoff + automatic same-provider quota fallback
   const maxRetries = 2;
   let lastError: any = null;
+  let activeModel = model;
+  let activeAdapter = adapter;
+  let activeRequest = chatRequest;
+  let hasEmittedResponseContent = false;
+  let quotaFallbackAttempted = false;
+
+  const trackedOnChunk = (chunk: StreamChunk) => {
+    if (chunk.type === 'text' || chunk.type === 'tool_call') {
+      hasEmittedResponseContent = true;
+    }
+    onChunk(chunk);
+  };
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
@@ -329,7 +341,7 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
         await new Promise((r) => setTimeout(r, attempt === 1 ? 1200 : 2500));
       }
 
-      const response = await adapter.streamChat(chatRequest, onChunk, signal);
+      const response = await activeAdapter.streamChat(activeRequest, trackedOnChunk, signal);
       return response;
     } catch (err: any) {
       lastError = err;
@@ -339,18 +351,93 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
       }
 
       const errStr = `${err?.message || ''} ${err?.cause?.message || ''} ${err?.cause?.code || ''}`.toLowerCase();
+      const isQuotaError =
+        errStr.includes('quota') || errStr.includes('resource_exhausted') || errStr.includes('429');
+
+      // If primary model hits quota/rate limit before producing output, fail over seamlessly
+      // to an alternate lightweight model on the same configured provider (e.g. gemini-3.5-flash-lite).
+      if (isQuotaError && !hasEmittedResponseContent && !quotaFallbackAttempted) {
+        quotaFallbackAttempted = true;
+        const providerAlternatives = getRegisteredModels().filter(
+          (m) => m.isAvailable && m.provider === activeModel.provider && m.id !== activeModel.id
+        );
+        const preferredAlt =
+          providerAlternatives.find((m) => m.id === 'gemini-3.5-flash-lite') ||
+          providerAlternatives.find((m) => !m.id.includes('argon')) ||
+          providerAlternatives[0];
+
+        if (preferredAlt) {
+          onChunk({
+            type: 'thought',
+            thought: `System Notice: ${activeModel.name} hit an upstream quota limit; automatically continuing with ${preferredAlt.name}.`,
+          });
+
+          activeModel = preferredAlt;
+          activeAdapter = getProviderAdapter(preferredAlt.provider);
+
+          const fallbackTools =
+            enableTools && preferredAlt.capabilities.includes('tools')
+              ? getAvailableToolsForContext({
+                  conversationId,
+                  ownerId,
+                  modelId: preferredAlt.modelIdentifier,
+                  permissions: effectivePermissions,
+                  enableWebSearch,
+                  approvedActionKeys,
+                })
+              : [];
+
+          const fallbackSystemInstruction = buildSystemInstruction({
+            customInstruction: customSystemPrompt,
+            activeModel: preferredAlt,
+            enableWebSearch,
+            availableToolNames: fallbackTools.map((t) => t.declaration.name),
+            companyContextBlock: knowledgeContext?.shouldInjectContext
+              ? knowledgeContext.formattedContextBlock
+              : undefined,
+          });
+
+          const fallbackPrepared = prepareConversationContext(
+            resolvedMessages,
+            preferredAlt,
+            fallbackSystemInstruction
+          );
+
+          activeRequest = {
+            ...chatRequest,
+            modelId: preferredAlt.modelIdentifier,
+            messages: fallbackPrepared.messages,
+            systemInstruction: fallbackSystemInstruction,
+            maxTokens: maxTokens ?? preferredAlt.maxOutputTokens,
+            tools: fallbackTools,
+          };
+
+          try {
+            const fallbackResponse = await activeAdapter.streamChat(
+              activeRequest,
+              trackedOnChunk,
+              signal
+            );
+            return fallbackResponse;
+          } catch (fallbackErr: any) {
+            lastError = fallbackErr;
+          }
+        }
+      }
+
       const isTransient =
-        errStr.includes('429') ||
-        errStr.includes('rate limit') ||
-        errStr.includes('503') ||
-        errStr.includes('high demand') ||
-        errStr.includes('500') ||
-        errStr.includes('overloaded') ||
-        errStr.includes('network') ||
-        errStr.includes('fetch failed') ||
-        errStr.includes('timeout') ||
-        errStr.includes('econnreset') ||
-        errStr.includes('etimedout');
+        !errStr.includes('exceeded your current quota') &&
+        (errStr.includes('429') ||
+          errStr.includes('rate limit') ||
+          errStr.includes('503') ||
+          errStr.includes('high demand') ||
+          errStr.includes('500') ||
+          errStr.includes('overloaded') ||
+          errStr.includes('network') ||
+          errStr.includes('fetch failed') ||
+          errStr.includes('timeout') ||
+          errStr.includes('econnreset') ||
+          errStr.includes('etimedout'));
 
       if (!isTransient || attempt === maxRetries) {
         break;

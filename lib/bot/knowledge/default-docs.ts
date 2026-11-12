@@ -204,8 +204,9 @@ Technologies: ${COPILOT_CASE_STUDY.technologies}.`,
     verificationStatus: 'verified',
     lastUpdated: VERIFIED_BASELINE_DATE,
     origin: 'builtin',
-    tags: ['team', 'leadership', 'founders', 'ceo', 'fawadullah imraj', 'fahad khan', 'abdullah mahmood', 'anisa safdar', 'waqas ali khan'],
-    content: `Verified Quantum AI Leadership & Team Directory (/leadership):
+    tags: ['team', 'leadership', 'founders', 'founder', 'founded', 'co-founder', 'co-founders', 'ceo', 'fawadullah imraj', 'fahad khan', 'abdullah mahmood', 'anisa safdar', 'waqas ali khan'],
+    content: `Verified Quantum AI Leadership & Founders Directory (/leadership):
+Quantum AI was co-founded by Fawadullah Imraj (Co-Founder & CEO) and Fahad Khan (Co-Founder & Engineering Strategy Lead).
 1. Fawadullah Imraj (QA-001) — Co-Founder & Chief Executive Officer (Executive Leadership, Global / Hybrid). Directs proprietary AI systems engineering, autonomous workflow architectures, and enterprise software products.
 2. Fahad Khan (QA-002) — Co-Founder & Engineering Strategy Lead (Executive Leadership, Peshawar). Guides technical architecture, engineering strategy, and scalable systems development.
 3. Abdullah Mahmood (QA-003) — Lead Software Engineer (Software Development, Peshawar). Focuses on reliable modern web applications, scalable backends, and full-stack operational platforms.

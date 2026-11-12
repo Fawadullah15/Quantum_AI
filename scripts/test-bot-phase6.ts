@@ -205,11 +205,17 @@ async function runPhase6Tests() {
     assert.equal(companyQuery.intent, 'company');
     assert.equal(companyQuery.shouldInjectContext, true);
     assert.ok(companyQuery.hits.length >= 2);
-    assert.ok(
-      companyQuery.formattedContextBlock.includes('Fawadullah Imraj') ||
-        companyQuery.formattedContextBlock.includes('Mechanical Engineering Design Copilot')
+    assert.ok(companyQuery.formattedContextBlock.includes('Fawadullah Imraj'));
+    assert.ok(companyQuery.formattedContextBlock.includes('Mechanical Engineering Design Copilot'));
+
+    const foundedOnlyQuery = await retrieveContextualCompanyKnowledge(
+      [{ role: 'user', content: 'Who are you and who founded Quantum AI?' }],
+      storeOpts
     );
-    pass('Company query retrieves verified Quantum AI context docs accurately');
+    assert.equal(foundedOnlyQuery.intent, 'company');
+    assert.ok(foundedOnlyQuery.formattedContextBlock.includes('Fawadullah Imraj'));
+    assert.ok(foundedOnlyQuery.formattedContextBlock.includes('Fahad Khan'));
+    pass('Company query retrieves verified Quantum AI context docs (including founders on "founded") accurately');
 
     // Pronoun follow-up in multi-turn chat
     const followupQuery = classifyQueryIntent('What services do they offer and what is their contact email?', [
