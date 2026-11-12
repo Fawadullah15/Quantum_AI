@@ -12,6 +12,7 @@ import {
   preflightValidateAction,
 } from './actions';
 import { PreflightValidationResult } from '@/lib/backup-engine';
+import { preflightValidateBackupClient } from '@/lib/backup-preflight';
 
 interface BackupRecord {
   url: string;
@@ -36,6 +37,7 @@ export default function BackupClient() {
   const [isCreating, setIsCreating] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
+  const [restoreProgressText, setRestoreProgressText] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
   // Preflight and Restore Confirmation Modal State
@@ -206,7 +208,8 @@ export default function BackupClient() {
 
     try {
       const text = await file.text();
-      const preflight = await preflightValidateAction(text);
+      const parsed = JSON.parse(text);
+      const preflight = await preflightValidateBackupClient(parsed);
 
       if (!preflight.valid || !preflight.summary) {
         toast.error('Invalid Backup File', preflight.error || 'Corrupted or incompatible format.');
@@ -264,26 +267,111 @@ export default function BackupClient() {
     }
 
     setIsRestoring(true);
+    setRestoreProgressText('PREPARING DATABASE RESTORE...');
     toast.info('Restoring database...', 'Executing atomic transaction. Please do not close or refresh this tab.');
 
+    let activeChunkedUploadId: string | null = null;
+
     try {
-      const res = await restoreBackup(preflightData.source);
-      if (res.success) {
+      const source = preflightData.source;
+      const isRemoteUrl =
+        typeof source === 'string' &&
+        (source.startsWith('http://') || source.startsWith('https://'));
+
+      if (isRemoteUrl || typeof source !== 'string') {
+        setRestoreProgressText('RESTORING DATABASE (TRANSACTION IN PROGRESS)...');
+        const res = await restoreBackup(source);
+        if (!res.success) {
+          throw new Error(res.error || 'Failed to restore database.');
+        }
         toast.success(
           'Database restored successfully!',
           `Restored ${res.totalRestored} records. Current admin session preserved.`
         );
-        setPreflightData(null);
-        await loadData();
+      } else if (source.length <= 2_000_000) {
+        setRestoreProgressText('RESTORING DATABASE (TRANSACTION IN PROGRESS)...');
+        const response = await fetch('/api/admin/backup/restore', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ mode: 'direct', backupJson: source }),
+        });
+        const res = await response.json().catch(() => ({}));
+        if (!response.ok || !res.success) {
+          throw new Error(res.error || `Restore failed (HTTP ${response.status})`);
+        }
+        toast.success(
+          'Database restored successfully!',
+          `Restored ${res.totalRestored} records. Current admin session preserved.`
+        );
       } else {
-        toast.error('Restore Failed', res.error || 'Failed to restore database.');
+        // Chunked upload under Vercel's 4.5MB serverless limit
+        const CHUNK_SIZE = 1_400_000;
+        const totalChunks = Math.ceil(source.length / CHUNK_SIZE);
+        const uploadId = `up_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+        activeChunkedUploadId = uploadId;
+
+        for (let i = 0; i < totalChunks; i++) {
+          setRestoreProgressText(`UPLOADING BACKUP CHUNK ${i + 1} / ${totalChunks}...`);
+          const chunkData = source.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+          const chunkRes = await fetch('/api/admin/backup/restore', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              mode: 'chunk',
+              uploadId,
+              chunkIndex: i,
+              totalChunks,
+              chunkData,
+            }),
+          });
+          const chunkJson = await chunkRes.json().catch(() => ({}));
+          if (!chunkRes.ok || !chunkJson.success) {
+            throw new Error(chunkJson.error || `Failed uploading chunk ${i + 1}/${totalChunks}`);
+          }
+        }
+
+        setRestoreProgressText('COMMITTING ATOMIC DATABASE RESTORE...');
+        const commitRes = await fetch('/api/admin/backup/restore', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            mode: 'commit',
+            uploadId,
+            totalChunks,
+          }),
+        });
+        const commitJson = await commitRes.json().catch(() => ({}));
+        activeChunkedUploadId = null;
+        if (!commitRes.ok || !commitJson.success) {
+          throw new Error(commitJson.error || `Restore commit failed (HTTP ${commitRes.status})`);
+        }
+
+        toast.success(
+          'Database restored successfully!',
+          `Restored ${commitJson.totalRestored} records. Current admin session preserved.`
+        );
       }
+
+      setPreflightData(null);
+      await loadData();
     } catch (err: unknown) {
+      if (activeChunkedUploadId) {
+        void fetch('/api/admin/backup/restore', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ mode: 'abort', uploadId: activeChunkedUploadId }),
+        }).catch(() => undefined);
+      }
       console.error(err);
       const msg = err instanceof Error ? err.message : 'Restore failed';
       toast.error('Restore Failed', msg);
     } finally {
       setIsRestoring(false);
+      setRestoreProgressText(null);
     }
   };
 
@@ -346,7 +434,7 @@ export default function BackupClient() {
             {isDownloading
               ? 'GENERATING & DOWNLOADING BACKUP...'
               : isRestoring
-              ? 'RESTORING DATABASE (TRANSACTION IN PROGRESS)...'
+              ? restoreProgressText || 'RESTORING DATABASE (TRANSACTION IN PROGRESS)...'
               : isCreating
               ? 'CREATING CLOUD SNAPSHOT...'
               : 'INSPECTING FILE...'}

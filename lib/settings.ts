@@ -149,7 +149,13 @@ export async function getSiteSettings(): Promise<SiteSettingsMap> {
   }
 
   try {
-    const dbSettings = await prisma.siteSettings.findMany();
+    const dbSettings = await prisma.siteSettings.findMany({
+      where: {
+        NOT: {
+          key: { startsWith: '__qb_restore_stage:' },
+        },
+      },
+    });
     const result = { ...DEFAULT_SETTINGS };
 
     // Database is connected: process records if any exist (handles empty table gracefully)

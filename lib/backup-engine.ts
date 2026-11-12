@@ -1,7 +1,10 @@
 import crypto from 'crypto';
 import { Prisma } from '@prisma/client';
 import prisma from '@/lib/db';
+import { clearSettingsCache } from '@/lib/settings';
 import { sanitizeDatabaseMessage, logDatabaseDiagnostic } from '@/lib/db-diagnostics';
+
+export const RESTORE_STAGING_PREFIX = '__qb_restore_stage:';
 
 export const BACKUP_FORMAT_VERSION = '2.0.0';
 
@@ -186,7 +189,11 @@ export async function generateBackupPackage(): Promise<BackupPackage> {
   const tables: Record<string, any[]> = {
     // 1. Core & Access
     User: await prisma.user.findMany().catch(() => []),
-    SiteSettings: await prisma.siteSettings.findMany().catch(() => []),
+    SiteSettings: await prisma.siteSettings
+      .findMany({
+        where: { NOT: { key: { startsWith: RESTORE_STAGING_PREFIX } } },
+      })
+      .catch(() => []),
     NavigationItem: await prisma.navigationItem.findMany().catch(() => []),
 
     // 2. Organization & Team
@@ -393,6 +400,34 @@ export function preflightValidateBackup(data: any): PreflightValidationResult {
   };
 }
 
+async function insertRowsBatched(
+  rows: any[],
+  insertFn: (batch: any[]) => Promise<unknown>,
+  maxBatchBytes = 1_500_000
+): Promise<number> {
+  if (!rows || rows.length === 0) return 0;
+
+  let currentBatch: any[] = [];
+  let currentBytes = 0;
+
+  for (const row of rows) {
+    const rowBytes = Buffer.byteLength(JSON.stringify(row), 'utf8');
+    if (currentBatch.length > 0 && currentBytes + rowBytes > maxBatchBytes) {
+      await insertFn(currentBatch);
+      currentBatch = [];
+      currentBytes = 0;
+    }
+    currentBatch.push(row);
+    currentBytes += rowBytes;
+  }
+
+  if (currentBatch.length > 0) {
+    await insertFn(currentBatch);
+  }
+
+  return rows.length;
+}
+
 /**
  * Executes an atomic, transactional restoration of the backup package into PostgreSQL.
  *
@@ -499,125 +534,150 @@ export async function executeRestorePackage(
       );
       if (currentAdmin?.id) validUserIds.add(currentAdmin.id);
 
-      // ─── STEP E: INSERT INDEPENDENT MODELS ───
+      // ─── STEP E: INSERT INDEPENDENT MODELS (batched to respect driver payload limits) ───
       if (tables.SiteSettings?.length) {
-        const rows = sanitizeTableData(tables.SiteSettings, 'SiteSettings');
-        await tx.siteSettings.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        const rows = sanitizeTableData(tables.SiteSettings, 'SiteSettings').filter(
+          (r: any) => typeof r.key !== 'string' || !r.key.startsWith(RESTORE_STAGING_PREFIX)
+        );
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.siteSettings.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.NavigationItem?.length) {
         const rows = sanitizeTableData(tables.NavigationItem, 'NavigationItem');
-        await tx.navigationItem.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.navigationItem.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.Founder?.length) {
         const rows = sanitizeTableData(tables.Founder, 'Founder');
-        await tx.founder.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.founder.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.TeamMember?.length) {
         const rows = sanitizeTableData(tables.TeamMember, 'TeamMember');
-        await tx.teamMember.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.teamMember.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.Leadership?.length) {
         const rows = sanitizeTableData(tables.Leadership, 'Leadership');
-        await tx.leadership.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.leadership.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.Service?.length) {
         const rows = sanitizeTableData(tables.Service, 'Service');
-        await tx.service.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.service.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.Technology?.length) {
         const rows = sanitizeTableData(tables.Technology, 'Technology');
-        await tx.technology.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.technology.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.BlogPost?.length) {
         const rows = sanitizeTableData(tables.BlogPost, 'BlogPost');
-        await tx.blogPost.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.blogPost.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.Testimonial?.length) {
         const rows = sanitizeTableData(tables.Testimonial, 'Testimonial');
-        await tx.testimonial.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.testimonial.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.Client?.length) {
         const rows = sanitizeTableData(tables.Client, 'Client');
-        await tx.client.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.client.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.ContactSubmission?.length) {
         const rows = sanitizeTableData(tables.ContactSubmission, 'ContactSubmission');
-        await tx.contactSubmission.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.contactSubmission.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.Notification?.length) {
         const rows = sanitizeTableData(tables.Notification, 'Notification');
-        await tx.notification.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.notification.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.Media?.length) {
         const rows = sanitizeTableData(tables.Media, 'Media');
-        await tx.media.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.media.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.CareerPosition?.length) {
         const rows = sanitizeTableData(tables.CareerPosition, 'CareerPosition');
-        await tx.careerPosition.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.careerPosition.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.Campaign?.length) {
         const rows = sanitizeTableData(tables.Campaign, 'Campaign');
-        await tx.campaign.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.campaign.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.RecentlyDeleted?.length) {
         const rows = sanitizeTableData(tables.RecentlyDeleted, 'RecentlyDeleted');
-        await tx.recentlyDeleted.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.recentlyDeleted.createMany({ data: batch, skipDuplicates: true })
+        );
       }
 
       // ─── STEP F: INSERT RELATIONAL PARENTS ───
       if (tables.Product?.length) {
         const rows = sanitizeTableData(tables.Product, 'Product');
-        await tx.product.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.product.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.CaseStudy?.length) {
         const rows = sanitizeTableData(tables.CaseStudy, 'CaseStudy');
-        await tx.caseStudy.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.caseStudy.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.CareerApplication?.length) {
         const rows = sanitizeTableData(tables.CareerApplication, 'CareerApplication');
-        await tx.careerApplication.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.careerApplication.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.PartnershipRequest?.length) {
         const rows = sanitizeTableData(tables.PartnershipRequest, 'PartnershipRequest');
-        await tx.partnershipRequest.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.partnershipRequest.createMany({ data: batch, skipDuplicates: true })
+        );
       }
 
       // ─── STEP G: INSERT RELATIONAL CHILDREN ───
       if (tables.ProductFeature?.length) {
         const rows = sanitizeTableData(tables.ProductFeature, 'ProductFeature');
-        await tx.productFeature.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.productFeature.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.CaseStudyMetric?.length) {
         const rows = sanitizeTableData(tables.CaseStudyMetric, 'CaseStudyMetric');
-        await tx.caseStudyMetric.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.caseStudyMetric.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.SubmissionNote?.length) {
         const rows = sanitizeTableData(tables.SubmissionNote, 'SubmissionNote');
-        await tx.submissionNote.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.submissionNote.createMany({ data: batch, skipDuplicates: true })
+        );
       }
       if (tables.ActivityLog?.length) {
         const rows = sanitizeTableData(tables.ActivityLog, 'ActivityLog').map((row: any) => {
@@ -630,8 +690,9 @@ export async function executeRestorePackage(
             userId: uid && validUserIds.has(uid) ? uid : null,
           };
         });
-        await tx.activityLog.createMany({ data: rows, skipDuplicates: true });
-        totalRestored += rows.length;
+        totalRestored += await insertRowsBatched(rows, (batch) =>
+          tx.activityLog.createMany({ data: batch, skipDuplicates: true })
+        );
       }
 
       // ─── STEP H: AUDIT LOG ENTRY ───
@@ -650,8 +711,10 @@ export async function executeRestorePackage(
         },
       });
     },
-    { timeout: 60000, maxWait: 10000 }
+    { timeout: 55000, maxWait: 10000 }
   );
+
+  clearSettingsCache();
 
   return { success: true, totalRestored };
 }
