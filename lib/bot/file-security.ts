@@ -3,6 +3,7 @@ import type { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { AttachmentKind } from './types';
+import { getEffectiveUsageLimits } from './admin-config';
 
 export const OWNER_COOKIE_NAME = 'qb_owner';
 export const BOT_SESSION_COOKIE_NAME = 'qb_session';
@@ -131,13 +132,19 @@ export interface ValidatedFilePolicy {
   maxBytes: number;
 }
 
+export interface FileUploadLimitsOverride {
+  maxDocImageBytes?: number;
+  maxTextCodeBytes?: number;
+}
+
 /**
  * Validates filename extension, declared MIME type, and file size policy before extraction.
  */
 export function validateFileUploadPolicy(
   filename: string,
   declaredMimeType: string,
-  byteSize: number
+  byteSize: number,
+  limitsOverride?: FileUploadLimitsOverride
 ): ValidatedFilePolicy {
   const sanitizedName = sanitizeFilename(filename);
   const extension = extractExtension(sanitizedName);
@@ -165,14 +172,23 @@ export function validateFileUploadPolicy(
     throw new Error(`File "${sanitizedName}" is empty (0 bytes).`);
   }
 
+  const adminLimits = getEffectiveUsageLimits();
+  const effectiveDocImageLimit =
+    limitsOverride?.maxDocImageBytes ?? adminLimits.maxDocImageBytes ?? MAX_DOCUMENT_IMAGE_BYTES;
+  const effectiveTextCodeLimit =
+    limitsOverride?.maxTextCodeBytes ?? adminLimits.maxTextCodeBytes ?? MAX_TEXT_CODE_BYTES;
+
   const maxBytes =
     entry.kind === 'text' || entry.kind === 'code' || (entry.kind === 'spreadsheet' && extension !== 'xlsx')
-      ? MAX_TEXT_CODE_BYTES
-      : MAX_DOCUMENT_IMAGE_BYTES;
+      ? effectiveTextCodeLimit
+      : effectiveDocImageLimit;
 
   if (byteSize > maxBytes) {
-    const maxMb = (maxBytes / (1024 * 1024)).toFixed(0);
-    throw new Error(`File "${sanitizedName}" exceeds the ${maxMb} MB size limit for .${extension} uploads.`);
+    const maxMb =
+      maxBytes >= 1024 * 1024
+        ? `${(maxBytes / (1024 * 1024)).toFixed(1).replace(/\.0$/, '')} MB`
+        : `${Math.round(maxBytes / 1024)} KB`;
+    throw new Error(`File "${sanitizedName}" exceeds the ${maxMb} size limit for .${extension} uploads.`);
   }
 
   const normMime = (declaredMimeType || '').split(';')[0].trim().toLowerCase();

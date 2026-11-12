@@ -654,3 +654,58 @@ export async function deletePreferencesForOwner(
   }
   await fs.unlink(getLocalPrefsPath(ownerId, options)).catch(() => {});
 }
+
+/**
+ * Strictly aggregate metadata counts ONLY for Phase 8 Admin analytics.
+ * Respects user privacy: NEVER returns titles, prompts, responses, or message transcripts.
+ */
+export async function getConversationAggregateCounts(
+  options?: ConversationStoreOptions
+): Promise<{ totalConversations: number; byBotUserId: Record<string, number> }> {
+  if (shouldUseDatabase(options)) {
+    try {
+      const [totalConversations, grouped] = await Promise.all([
+        prisma.botConversation.count(),
+        prisma.botConversation.groupBy({
+          by: ['botUserId'],
+          where: { botUserId: { not: null } },
+          _count: { _all: true },
+        }),
+      ]);
+      const byBotUserId: Record<string, number> = {};
+      for (const row of grouped) {
+        if (row.botUserId) {
+          byBotUserId[row.botUserId] = row._count._all;
+        }
+      }
+      return { totalConversations, byBotUserId };
+    } catch {
+      return { totalConversations: 0, byBotUserId: {} };
+    }
+  }
+
+  const chatsDir = path.join(options?.storageDir || DEFAULT_STORE_DIR, 'chats');
+  try {
+    const entries = await fs.readdir(chatsDir);
+    const byBotUserId: Record<string, number> = {};
+    let totalConversations = 0;
+
+    for (const entry of entries) {
+      if (!entry.endsWith('.json')) continue;
+      totalConversations++;
+      try {
+        const raw = await fs.readFile(path.join(chatsDir, entry), 'utf8');
+        const parsed = JSON.parse(raw) as { ownerId?: string };
+        if (parsed?.ownerId?.startsWith('qbuser:')) {
+          const uid = parsed.ownerId.slice('qbuser:'.length);
+          byBotUserId[uid] = (byBotUserId[uid] || 0) + 1;
+        }
+      } catch {
+        // Ignore corrupt single record
+      }
+    }
+    return { totalConversations, byBotUserId };
+  } catch {
+    return { totalConversations: 0, byBotUserId: {} };
+  }
+}

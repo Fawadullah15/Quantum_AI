@@ -4,6 +4,7 @@ import os from 'os';
 import path from 'path';
 import { AttachmentExtractionSummary, AttachmentKind, BotAttachment } from './types';
 import { processUploadedFile } from './extractors';
+import type { FileUploadLimitsOverride } from './file-security';
 
 export interface StoredBotFileMetadata {
   fileId: string;
@@ -127,6 +128,7 @@ export interface SaveBotFileInput {
   ownerId: string;
   conversationId?: string;
   ttlMs?: number;
+  limitsOverride?: FileUploadLimitsOverride;
 }
 
 /**
@@ -143,7 +145,8 @@ export async function saveBotFile(input: SaveBotFileInput): Promise<StoredBotFil
   const processed = await processUploadedFile(
     input.buffer,
     input.filename,
-    input.declaredMimeType
+    input.declaredMimeType,
+    input.limitsOverride
   );
 
   const fileId = `qbf_${randomUUID()}`;

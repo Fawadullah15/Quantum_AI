@@ -26,7 +26,7 @@ import {
   updateUserPreferencesForOwner,
 } from './conversation-store';
 import { deleteAllBotFilesForOwner, migrateBotFilesOwner } from './file-store';
-import { AuthActor, PublicBotUser, UserPreferences } from './types';
+import { AuthActor, BotUserStatus, PublicBotUser, UserPreferences } from './types';
 
 const DEFAULT_USERS_FILE = path.join(process.cwd(), '.private_storage', 'bot_users', 'users.json');
 const SESSION_MAX_AGE_SECONDS = 30 * 24 * 60 * 60; // 30 days
@@ -42,6 +42,9 @@ export interface StoredBotUserRecord {
   name: string;
   passwordHash: string;
   role: 'USER';
+  status: BotUserStatus;
+  dailyMessageLimitOverride: number | null;
+  suspendedReason: string | null;
   tokenVersion: number;
   createdAt: string;
   updatedAt: string;
@@ -111,10 +114,18 @@ function validateEmailFormat(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function normalizeStatus(raw?: string | null): BotUserStatus {
+  if (raw === 'LIMITED' || raw === 'SUSPENDED') return raw;
+  return 'ACTIVE';
+}
+
 function toPublicUser(record: {
   id: string;
   email: string;
   name: string;
+  status?: string | null;
+  dailyMessageLimitOverride?: number | null;
+  suspendedReason?: string | null;
   createdAt: string | Date;
 }): PublicBotUser {
   return {
@@ -122,10 +133,33 @@ function toPublicUser(record: {
     email: record.email,
     name: record.name,
     role: 'USER',
+    status: normalizeStatus(record.status),
+    dailyMessageLimitOverride:
+      typeof record.dailyMessageLimitOverride === 'number'
+        ? record.dailyMessageLimitOverride
+        : null,
+    suspendedReason: record.suspendedReason || null,
     createdAt:
       record.createdAt instanceof Date
         ? record.createdAt.toISOString()
         : String(record.createdAt),
+  };
+}
+
+function mapDbUserRow(row: any): StoredBotUserRecord {
+  return {
+    id: row.id,
+    email: row.email,
+    name: row.name,
+    passwordHash: row.passwordHash,
+    role: 'USER',
+    status: normalizeStatus(row.status),
+    dailyMessageLimitOverride:
+      typeof row.dailyMessageLimitOverride === 'number' ? row.dailyMessageLimitOverride : null,
+    suspendedReason: row.suspendedReason || null,
+    tokenVersion: row.tokenVersion,
+    createdAt: row.createdAt.toISOString(),
+    updatedAt: row.updatedAt.toISOString(),
   };
 }
 
@@ -137,21 +171,18 @@ export async function findBotUserById(
 
   if (shouldUseDatabase(options)) {
     const row = await prisma.botUser.findUnique({ where: { id } });
-    if (!row) return null;
-    return {
-      id: row.id,
-      email: row.email,
-      name: row.name,
-      passwordHash: row.passwordHash,
-      role: 'USER',
-      tokenVersion: row.tokenVersion,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
-    };
+    return row ? mapDbUserRow(row) : null;
   }
 
   const users = await readLocalUsers(options);
-  return users.find((u) => u.id === id) || null;
+  const found = users.find((u) => u.id === id);
+  if (!found) return null;
+  return {
+    ...found,
+    status: normalizeStatus(found.status),
+    dailyMessageLimitOverride: found.dailyMessageLimitOverride ?? null,
+    suspendedReason: found.suspendedReason ?? null,
+  };
 }
 
 export async function registerBotUser(
@@ -203,18 +234,10 @@ export async function registerBotUser(
           displayName: cleanName,
           passwordHash,
           role: 'USER',
+          status: 'ACTIVE',
         },
       });
-      createdRecord = {
-        id: created.id,
-        email: created.email,
-        name: created.name,
-        passwordHash: created.passwordHash,
-        role: 'USER',
-        tokenVersion: created.tokenVersion,
-        createdAt: created.createdAt.toISOString(),
-        updatedAt: created.updatedAt.toISOString(),
-      };
+      createdRecord = mapDbUserRow(created);
     } else {
       const users = await readLocalUsers(options);
       if (users.some((u) => u.email === cleanEmail)) {
@@ -227,6 +250,9 @@ export async function registerBotUser(
         name: cleanName,
         passwordHash,
         role: 'USER',
+        status: 'ACTIVE',
+        dailyMessageLimitOverride: null,
+        suspendedReason: null,
         tokenVersion: 1,
         createdAt: nowIso,
         updatedAt: nowIso,
@@ -309,20 +335,19 @@ export async function loginBotUser(
   if (shouldUseDatabase(options)) {
     const row = await prisma.botUser.findUnique({ where: { email: cleanEmail } });
     if (row) {
-      record = {
-        id: row.id,
-        email: row.email,
-        name: row.name,
-        passwordHash: row.passwordHash,
-        role: 'USER',
-        tokenVersion: row.tokenVersion,
-        createdAt: row.createdAt.toISOString(),
-        updatedAt: row.updatedAt.toISOString(),
-      };
+      record = mapDbUserRow(row);
     }
   } else {
     const users = await readLocalUsers(options);
-    record = users.find((u) => u.email === cleanEmail) || null;
+    const found = users.find((u) => u.email === cleanEmail);
+    if (found) {
+      record = {
+        ...found,
+        status: normalizeStatus(found.status),
+        dailyMessageLimitOverride: found.dailyMessageLimitOverride ?? null,
+        suspendedReason: found.suspendedReason ?? null,
+      };
+    }
   }
 
   if (!record) {
@@ -332,6 +357,14 @@ export async function loginBotUser(
   const valid = await bcrypt.compare(password, record.passwordHash);
   if (!valid) {
     throw new BotAuthError(401, 'Invalid email or password.');
+  }
+
+  if (record.status === 'SUSPENDED') {
+    throw new BotAuthError(
+      403,
+      record.suspendedReason ||
+        'This account has been suspended by an administrator. Please contact support.'
+    );
   }
 
   resetRateLimit(rateKey);
@@ -597,4 +630,162 @@ export function attachActorCookies(
   if (anonCookieToAttach) {
     attachOwnerCookie(res, anonCookieToAttach, req);
   }
+}
+
+// ─── Phase 8: Privacy-Respecting User Governance ─────────────────────────────
+
+export interface SafeBotUserGovernanceRecord {
+  id: string;
+  email: string;
+  name: string;
+  status: BotUserStatus;
+  dailyMessageLimitOverride: number | null;
+  suspendedReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export async function listBotUsersForGovernance(
+  options?: BotAuthStoreOptions
+): Promise<SafeBotUserGovernanceRecord[]> {
+  if (shouldUseDatabase(options)) {
+    const rows = await prisma.botUser.findMany({
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        status: true,
+        dailyMessageLimitOverride: true,
+        suspendedReason: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return rows.map((r) => ({
+      id: r.id,
+      email: r.email,
+      name: r.name,
+      status: normalizeStatus(r.status),
+      dailyMessageLimitOverride: r.dailyMessageLimitOverride ?? null,
+      suspendedReason: r.suspendedReason ?? null,
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
+    }));
+  }
+
+  const users = await readLocalUsers(options);
+  return users
+    .map((u) => ({
+      id: u.id,
+      email: u.email,
+      name: u.name,
+      status: normalizeStatus(u.status),
+      dailyMessageLimitOverride:
+        typeof u.dailyMessageLimitOverride === 'number' ? u.dailyMessageLimitOverride : null,
+      suspendedReason: u.suspendedReason || null,
+      createdAt: u.createdAt,
+      updatedAt: u.updatedAt,
+    }))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
+
+export async function updateBotUserGovernance(
+  userId: string,
+  patch: {
+    status?: BotUserStatus;
+    dailyMessageLimitOverride?: number | null;
+    suspendedReason?: string | null;
+  },
+  options?: BotAuthStoreOptions
+): Promise<SafeBotUserGovernanceRecord> {
+  if (!userId) {
+    throw new BotAuthError(400, 'User ID is required.');
+  }
+
+  const nextStatus = patch.status !== undefined ? normalizeStatus(patch.status) : undefined;
+  const nextLimit =
+    patch.dailyMessageLimitOverride !== undefined
+      ? patch.dailyMessageLimitOverride === null
+        ? null
+        : Math.min(100000, Math.max(0, Math.round(Number(patch.dailyMessageLimitOverride))))
+      : undefined;
+  const nextReason =
+    patch.suspendedReason !== undefined
+      ? patch.suspendedReason
+        ? String(patch.suspendedReason).trim().slice(0, 240)
+        : null
+      : undefined;
+
+  return enqueueUserWrite(async () => {
+    if (shouldUseDatabase(options)) {
+      const existing = await prisma.botUser.findUnique({ where: { id: userId } });
+      if (!existing) {
+        throw new BotAuthError(404, 'Registered QuantumBot user not found.');
+      }
+      const updated = await prisma.botUser.update({
+        where: { id: userId },
+        data: {
+          ...(nextStatus !== undefined ? { status: nextStatus } : {}),
+          ...(nextLimit !== undefined ? { dailyMessageLimitOverride: nextLimit } : {}),
+          ...(nextReason !== undefined ? { suspendedReason: nextReason } : {}),
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          status: true,
+          dailyMessageLimitOverride: true,
+          suspendedReason: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+      return {
+        id: updated.id,
+        email: updated.email,
+        name: updated.name,
+        status: normalizeStatus(updated.status),
+        dailyMessageLimitOverride: updated.dailyMessageLimitOverride ?? null,
+        suspendedReason: updated.suspendedReason ?? null,
+        createdAt: updated.createdAt.toISOString(),
+        updatedAt: updated.updatedAt.toISOString(),
+      };
+    }
+
+    const users = await readLocalUsers(options);
+    const idx = users.findIndex((u) => u.id === userId);
+    if (idx === -1) {
+      throw new BotAuthError(404, 'Registered QuantumBot user not found.');
+    }
+
+    const current = users[idx];
+    const resolvedStatus = nextStatus !== undefined ? nextStatus : normalizeStatus(current.status);
+    const updatedRecord: StoredBotUserRecord = {
+      ...current,
+      status: resolvedStatus,
+      dailyMessageLimitOverride:
+        nextLimit !== undefined ? nextLimit : (current.dailyMessageLimitOverride ?? null),
+      suspendedReason:
+        nextReason !== undefined
+          ? nextReason
+          : resolvedStatus === 'ACTIVE'
+            ? null
+            : (current.suspendedReason ?? null),
+      updatedAt: new Date().toISOString(),
+    };
+    users[idx] = updatedRecord;
+    await writeLocalUsers(users, options);
+
+    return {
+      id: updatedRecord.id,
+      email: updatedRecord.email,
+      name: updatedRecord.name,
+      status: updatedRecord.status,
+      dailyMessageLimitOverride: updatedRecord.dailyMessageLimitOverride,
+      suspendedReason: updatedRecord.suspendedReason,
+      createdAt: updatedRecord.createdAt,
+      updatedAt: updatedRecord.updatedAt,
+    };
+  });
 }

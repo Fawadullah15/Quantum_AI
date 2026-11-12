@@ -228,7 +228,8 @@ export default async function AdminDashboardPage() {
 
   // Quick Actions
   const quickActions = [
-    { label: '💬 Inquiries', href: '/admin/messages', variant: 'primary' },
+    { label: '🤖 QuantumBot AI', href: '/admin/quantumbot', variant: 'primary' },
+    { label: '💬 Inquiries', href: '/admin/messages', variant: 'secondary' },
     { label: '📢 Announcements', href: '/admin/campaigns', variant: 'secondary' },
     { label: '🤝 Careers / Partnerships', href: '/admin/careers-partnerships', variant: 'secondary' },
     { label: '+ Add Leader', href: '/admin/leadership/new', variant: 'secondary' },

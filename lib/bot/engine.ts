@@ -15,6 +15,7 @@ import { buildSystemInstruction } from './prompt';
 import { getAvailableToolsForContext } from './tools';
 import { getBotFileForOwner } from './file-store';
 import { retrieveContextualCompanyKnowledge } from './knowledge/retriever';
+import { ensureAdminConfigLoaded } from './admin-config';
 
 export class AttachmentResolutionError extends Error {
   statusCode: number;
@@ -227,6 +228,9 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
     signal,
   } = options;
 
+  // 0. Ensure dynamic Admin Panel model/provider config & limits are hydrated
+  await ensureAdminConfigLoaded().catch(() => {});
+
   // 1. Resolve and verify active model
   const { model, isFallback, fallbackReason } = resolveActiveModel(modelId);
 
@@ -363,7 +367,11 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
       if (isQuotaError && !hasEmittedResponseContent && !quotaFallbackAttempted) {
         quotaFallbackAttempted = true;
         const providerAlternatives = getRegisteredModels().filter(
-          (m) => m.isAvailable && m.provider === activeModel.provider && m.id !== activeModel.id
+          (m) =>
+            m.enabled !== false &&
+            m.isAvailable &&
+            m.provider === activeModel.provider &&
+            m.id !== activeModel.id
         );
         const preferredAlt =
           providerAlternatives.find((m) => m.id === 'gemini-3.5-flash-lite') ||

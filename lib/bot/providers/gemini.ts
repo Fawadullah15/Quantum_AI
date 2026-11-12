@@ -12,17 +12,20 @@ import { executeToolCall } from '../tools';
 import { toProviderParametersSchema } from '../tools/schema-validator';
 import { formatMessageWithAttachments } from '../context-manager';
 import { updateGeminiFileCache } from '../file-store';
+import { getAdminConfigSnapshot, resolveProviderRuntimeConfig } from '../admin-config';
 
 const NATIVE_INLINE_PDF_LIMIT_BYTES = 4 * 1024 * 1024; // 4 MB inline limit; larger PDFs use Gemini Files API
 const MAX_TOOL_ROUNDS = 4;
 
 export function getGeminiApiKey(): string | null {
+  return resolveProviderRuntimeConfig('gemini').apiKey;
+}
+
+export function getGeminiBaseUrl(): string {
   return (
-    process.env.GEMINI_API_KEY ||
-    process.env.GOOGLE_API_KEY ||
-    process.env.GOOGLE_AI_API_KEY ||
-    null
-  );
+    resolveProviderRuntimeConfig('gemini').baseUrl ||
+    'https://generativelanguage.googleapis.com'
+  ).replace(/\/+$/, '');
 }
 
 async function uploadBufferToGeminiFilesApi(
@@ -113,16 +116,24 @@ export class GeminiProviderAdapter implements ProviderAdapter {
   }
 
   async verifyConnection(): Promise<{ success: boolean; latencyMs?: number; error?: string }> {
-    const key = getGeminiApiKey();
+    const cfg = resolveProviderRuntimeConfig('gemini');
+    if (!cfg.enabled) {
+      return { success: false, error: 'Google Gemini provider is disabled in Admin settings.' };
+    }
+    const key = cfg.apiKey;
     if (!key) {
-      return { success: false, error: 'GEMINI_API_KEY is not configured in environment.' };
+      return { success: false, error: 'Gemini API key is not configured.' };
     }
 
-    const probeModel = process.env.BOT_DEFAULT_MODEL?.trim() || 'gemini-3.5-flash';
+    const snap = getAdminConfigSnapshot();
+    const probeModel = snap.defaultModelId?.startsWith('gemini')
+      ? snap.defaultModelId
+      : process.env.BOT_DEFAULT_MODEL?.trim() || 'gemini-3.5-flash';
+    const baseUrl = getGeminiBaseUrl();
     const t0 = Date.now();
     try {
       const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(probeModel)}`,
+        `${baseUrl}/v1beta/models/${encodeURIComponent(probeModel)}`,
         {
           method: 'GET',
           headers: {
@@ -165,8 +176,9 @@ export class GeminiProviderAdapter implements ProviderAdapter {
       );
     }
 
+    const baseUrl = getGeminiBaseUrl();
     const modelIdentifier = request.modelId.replace(/^gemini\//, '');
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
+    const url = `${baseUrl}/v1beta/models/${encodeURIComponent(
       modelIdentifier
     )}:streamGenerateContent?alt=sse`;
 

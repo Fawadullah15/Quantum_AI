@@ -11,6 +11,7 @@ import {
 import { executeToolCall } from '../tools';
 import { toProviderParametersSchema } from '../tools/schema-validator';
 import { formatMessageWithAttachments } from '../context-manager';
+import { resolveProviderRuntimeConfig } from '../admin-config';
 
 const MAX_TOOL_ROUNDS = 4;
 
@@ -20,10 +21,44 @@ export interface OpenWeightEndpointConfig {
   providerName: string;
 }
 
+const BACKEND_BASE_URLS: Record<string, { url: string; label: string }> = {
+  groq: { url: 'https://api.groq.com/openai/v1', label: 'Groq' },
+  openrouter: { url: 'https://openrouter.ai/api/v1', label: 'OpenRouter' },
+  together: { url: 'https://api.together.xyz/v1', label: 'Together AI' },
+  ollama: { url: 'http://127.0.0.1:11434/v1', label: 'Ollama Local' },
+};
+
 export function resolveOpenWeightEndpoint(): OpenWeightEndpointConfig | null {
+  const runtimeCfg = resolveProviderRuntimeConfig('openweight');
+  if (!runtimeCfg.enabled) {
+    return null;
+  }
+
+  // Admin-configured API key and/or backend take precedence
+  if (runtimeCfg.keySource === 'admin' && runtimeCfg.apiKey) {
+    const backendKey = runtimeCfg.openweightBackend || 'groq';
+    const backendMeta = BACKEND_BASE_URLS[backendKey] || BACKEND_BASE_URLS.groq;
+    const baseUrl = (runtimeCfg.baseUrl || backendMeta.url).replace(/\/+$/, '');
+    return {
+      baseUrl:
+        backendKey === 'ollama' && !baseUrl.endsWith('/v1') ? `${baseUrl}/v1` : baseUrl,
+      apiKey: runtimeCfg.apiKey,
+      providerName: backendMeta.label,
+    };
+  }
+
+  if (runtimeCfg.openweightBackend === 'ollama' && runtimeCfg.baseUrl) {
+    const normalized = runtimeCfg.baseUrl.replace(/\/+$/, '');
+    return {
+      baseUrl: normalized.endsWith('/v1') ? normalized : `${normalized}/v1`,
+      apiKey: 'ollama',
+      providerName: 'Ollama Local',
+    };
+  }
+
   if (process.env.GROQ_API_KEY) {
     return {
-      baseUrl: 'https://api.groq.com/openai/v1',
+      baseUrl: (runtimeCfg.baseUrl || 'https://api.groq.com/openai/v1').replace(/\/+$/, ''),
       apiKey: process.env.GROQ_API_KEY,
       providerName: 'Groq',
     };
@@ -31,7 +66,7 @@ export function resolveOpenWeightEndpoint(): OpenWeightEndpointConfig | null {
 
   if (process.env.OPENROUTER_API_KEY) {
     return {
-      baseUrl: 'https://openrouter.ai/api/v1',
+      baseUrl: (runtimeCfg.baseUrl || 'https://openrouter.ai/api/v1').replace(/\/+$/, ''),
       apiKey: process.env.OPENROUTER_API_KEY,
       providerName: 'OpenRouter',
     };
@@ -39,7 +74,7 @@ export function resolveOpenWeightEndpoint(): OpenWeightEndpointConfig | null {
 
   if (process.env.TOGETHER_API_KEY) {
     return {
-      baseUrl: 'https://api.together.xyz/v1',
+      baseUrl: (runtimeCfg.baseUrl || 'https://api.together.xyz/v1').replace(/\/+$/, ''),
       apiKey: process.env.TOGETHER_API_KEY,
       providerName: 'Together AI',
     };
@@ -47,7 +82,8 @@ export function resolveOpenWeightEndpoint(): OpenWeightEndpointConfig | null {
 
   if (process.env.OLLAMA_BASE_URL) {
     return {
-      baseUrl: process.env.OLLAMA_BASE_URL.replace(/\/+$/, '') + '/v1',
+      baseUrl:
+        (runtimeCfg.baseUrl || process.env.OLLAMA_BASE_URL).replace(/\/+$/, '') + '/v1',
       apiKey: 'ollama',
       providerName: 'Ollama Local',
     };

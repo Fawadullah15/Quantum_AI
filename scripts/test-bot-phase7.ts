@@ -46,7 +46,6 @@ async function runPhase7Tests() {
     // ─── 1. Automatic Title Generation ───────────────────────────────────────
     const t1 = generateSmartConversationTitle([
       {
-        id: 'm1',
         role: 'user',
         content: 'Hey QuantumBot, could you please explain how inverse kinematics works in robotic arms?',
       },
@@ -57,7 +56,6 @@ async function runPhase7Tests() {
 
     const tAttachOnly = generateSmartConversationTitle([
       {
-        id: 'm2',
         role: 'user',
         content: '',
         attachments: [

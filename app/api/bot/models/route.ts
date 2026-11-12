@@ -1,13 +1,15 @@
 import { NextResponse } from 'next/server';
-import { getRegisteredModels, resolveActiveModel, getModelById } from '@/lib/bot/models';
+import { getRegisteredModels, resolveActiveModel, getModelById, isModelExplicitlyDisabled } from '@/lib/bot/models';
 import { getProviderAdapter } from '@/lib/bot/providers';
+import { ensureAdminConfigLoaded, recordProviderConnectivityCheck } from '@/lib/bot/admin-config';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const models = getRegisteredModels();
+    await ensureAdminConfigLoaded();
+    const models = getRegisteredModels().filter((m) => m.enabled !== false);
     const active = resolveActiveModel();
 
     return NextResponse.json({
@@ -27,6 +29,7 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    await ensureAdminConfigLoaded();
     const body = await req.json().catch(() => ({}));
     const modelId = body?.modelId;
 
@@ -34,6 +37,14 @@ export async function POST(req: Request) {
       return NextResponse.json(
         { success: false, error: 'modelId is required for connection testing.' },
         { status: 400 }
+      );
+    }
+
+    const disabledCheck = isModelExplicitlyDisabled(modelId);
+    if (disabledCheck.disabled) {
+      return NextResponse.json(
+        { success: false, error: disabledCheck.reason },
+        { status: 403 }
       );
     }
 
@@ -47,6 +58,7 @@ export async function POST(req: Request) {
 
     const adapter = getProviderAdapter(model.provider);
     const verification = await adapter.verifyConnection();
+    await recordProviderConnectivityCheck(model.provider, verification).catch(() => {});
 
     return NextResponse.json({
       success: verification.success,

@@ -475,22 +475,25 @@ model Campaign {
 // ─────────────────────────────────────────────────────────────
 
 model BotUser {
-  id                 String            @id @default(cuid())
-  email              String            @unique
-  name               String
-  passwordHash       String
-  role               String            @default("USER") // Strictly USER (never grants /admin access)
-  displayName        String?
-  responseStyle      String            @default("balanced") // balanced | concise | detailed | technical | beginner_friendly
-  language           String            @default("English")
-  customInstructions String?
-  defaultModelId     String?
-  defaultWebSearch   Boolean           @default(false)
-  enterToSend        Boolean           @default(true)
-  tokenVersion       Int               @default(1)
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
-  conversations      BotConversation[]
+  id                        String            @id @default(cuid())
+  email                     String            @unique
+  name                      String
+  passwordHash              String
+  role                      String            @default("USER") // Strictly USER (never grants /admin access)
+  status                    String            @default("ACTIVE") // ACTIVE | LIMITED | SUSPENDED
+  dailyMessageLimitOverride Int?
+  suspendedReason           String?
+  displayName               String?
+  responseStyle             String            @default("balanced") // balanced | concise | detailed | technical | beginner_friendly
+  language                  String            @default("English")
+  customInstructions        String?
+  defaultModelId            String?
+  defaultWebSearch          Boolean           @default(false)
+  enterToSend               Boolean           @default(true)
+  tokenVersion              Int               @default(1)
+  createdAt                 DateTime          @default(now())
+  updatedAt                 DateTime          @updatedAt
+  conversations             BotConversation[]
 }
 
 model BotConversation {
@@ -521,4 +524,87 @@ model BotPreference {
   defaultWebSearch   Boolean  @default(false)
   enterToSend        Boolean  @default(true)
   updatedAt          DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────────────────────
+// QUANTUMBOT PHASE 8: ADMIN GOVERNANCE, MODELS, LIMITS & USAGE
+// ─────────────────────────────────────────────────────────────
+
+model BotProviderConfig {
+  provider          String    @id // gemini | openai | anthropic | openweight
+  enabled           Boolean   @default(true)
+  encryptedApiKey   String?   // AES-256-GCM encrypted API key; never exposed in plaintext
+  maskedKeyHint     String?   // e.g. "••••8Hw"
+  baseUrl           String?
+  openweightBackend String?   // groq | openrouter | together | ollama
+  monthlyBudgetUsd  Float?
+  alertThresholdPct Int       @default(80)
+  lastCheckedAt     DateTime?
+  lastStatusOk      Boolean?
+  lastLatencyMs     Int?
+  lastError         String?
+  updatedAt         DateTime  @updatedAt
+}
+
+model BotModelConfig {
+  id               String   @id
+  name             String
+  provider         String
+  modelIdentifier  String
+  description      String
+  capabilitiesJson String   // JSON ModelCapability[]
+  contextWindow    Int
+  maxOutputTokens  Int
+  inputPerMillion  Float    @default(0)
+  outputPerMillion Float    @default(0)
+  family           String?
+  recommendedFor   String?
+  enabled          Boolean  @default(true)
+  isDefault        Boolean  @default(false)
+  isCustom         Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model BotUsageLimits {
+  id                      String   @id @default("default")
+  anonMessagesPerHour     Int      @default(15)
+  anonMessagesPerDay      Int      @default(40)
+  authMessagesPerHour     Int      @default(60)
+  authMessagesPerDay      Int      @default(250)
+  perUserRequestsPerMinute Int     @default(12)
+  maxMessageChars         Int      @default(16000)
+  maxMessagesPerRequest   Int      @default(60)
+  maxAttachmentsPerMessage Int     @default(5)
+  maxDocImageBytes        Int      @default(15728640)
+  maxTextCodeBytes        Int      @default(2097152)
+  dailySpendingAlertUsd   Float    @default(10.0)
+  monthlySpendingAlertUsd Float    @default(100.0)
+  enforceSpendingHardStop Boolean  @default(false)
+  updatedAt               DateTime @updatedAt
+}
+
+model BotUsageEvent {
+  id               String   @id @default(cuid())
+  createdAt        DateTime @default(now())
+  eventType        String   // chat_success | chat_error | rate_limit | limit_exceeded | file_upload | file_rejected | spending_alert
+  actorHash        String   // Irreversible digest of ownerId (respects privacy)
+  botUserId        String?
+  authType         String   // anonymous | bot_account | admin_session
+  conversationId   String?  // ID only, never prompt/response contents
+  modelId          String?
+  provider         String?
+  promptTokens     Int      @default(0)
+  completionTokens Int      @default(0)
+  totalTokens      Int      @default(0)
+  estimatedCostUsd Float    @default(0)
+  latencyMs        Int?
+  statusCode       Int?
+  errorMessage     String?
+
+  @@index([createdAt])
+  @@index([eventType, createdAt])
+  @@index([modelId, createdAt])
+  @@index([provider, createdAt])
+  @@index([botUserId, createdAt])
 }

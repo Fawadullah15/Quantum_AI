@@ -1,162 +1,18 @@
-import { ModelDefinition, AIProvider } from './types';
+import { ModelDefinition } from './types';
 import { getProviderAdapter } from './providers';
+import { BUILT_IN_MODELS } from './default-models';
+import {
+  AdminConfigStoreOptions,
+  getAdminConfigSnapshot,
+  getEffectiveModelsFromSnapshot,
+  resolveProviderRuntimeConfig,
+} from './admin-config';
 
 /**
- * Master Registry of Supported Frontier & Open-Weight Models
+ * Master Static Catalog of Built-In Frontier & Open-Weight Models
+ * (Merged at runtime with dynamic Admin Panel overrides & custom models)
  */
-export const MODEL_REGISTRY: ModelDefinition[] = [
-  // ─── Google Gemini ──────────────────────────────────────────
-  {
-    id: 'gemini-3.5-flash',
-    name: 'Gemini 3.5 Flash',
-    provider: 'gemini',
-    modelIdentifier: 'gemini-3.5-flash',
-    description: 'High-speed multimodal frontier model with native PDF vision, image understanding, and 1M context.',
-    capabilities: ['vision', 'tools', 'streaming', 'json', 'long_context'],
-    contextWindow: 1048576, // 1M tokens
-    maxOutputTokens: 8192,
-    pricing: { inputPerMillion: 0.15, outputPerMillion: 0.6 },
-    isDefault: true,
-    recommendedFor: 'Fast general-purpose QA, coding, document & image synthesis',
-    family: 'Google Gemini',
-  },
-  {
-    id: 'gemini-3.8-flash',
-    name: 'Gemini 3.8 Flash',
-    provider: 'gemini',
-    modelIdentifier: 'gemini-3.8-flash',
-    description: 'Latest balanced Gemini Flash model engineered for agentic tool use and multimodal reasoning.',
-    capabilities: ['vision', 'tools', 'streaming', 'json', 'long_context'],
-    contextWindow: 1048576, // 1M tokens
-    maxOutputTokens: 8192,
-    pricing: { inputPerMillion: 0.2, outputPerMillion: 0.8 },
-    recommendedFor: 'Balanced agentic workflows, coding, multimodal reasoning',
-    family: 'Google Gemini',
-  },
-  {
-    id: 'gemini-3.5-flash-lite',
-    name: 'Gemini 3.5 Flash-Lite',
-    provider: 'gemini',
-    modelIdentifier: 'gemini-3.5-flash-lite',
-    description: 'Ultra-low-latency multimodal Gemini model optimized for rapid responses and high throughput.',
-    capabilities: ['vision', 'tools', 'streaming', 'json', 'long_context'],
-    contextWindow: 1048576,
-    maxOutputTokens: 8192,
-    pricing: { inputPerMillion: 0.075, outputPerMillion: 0.3 },
-    recommendedFor: 'High-speed document Q&A and lightweight tasks',
-    family: 'Google Gemini',
-  },
-  {
-    id: 'gemini-4-argon',
-    name: 'Gemini 4 Argon',
-    provider: 'gemini',
-    modelIdentifier: 'gemini-4-argon',
-    description: 'Flagship deep-reasoning Gemini model for complex software architecture, scientific math, and synthesis.',
-    capabilities: ['vision', 'tools', 'streaming', 'json', 'long_context', 'code_execution'],
-    contextWindow: 1048576,
-    maxOutputTokens: 8192,
-    pricing: { inputPerMillion: 1.5, outputPerMillion: 6.0 },
-    recommendedFor: 'Complex coding, mathematical proofs, deep research',
-    family: 'Google Gemini',
-  },
-
-  // ─── OpenAI ────────────────────────────────────────────────
-  {
-    id: 'gpt-4o',
-    name: 'GPT-4o',
-    provider: 'openai',
-    modelIdentifier: 'gpt-4o',
-    description: 'Flagship versatile multimodal model with strong cross-domain reasoning and tool calling.',
-    capabilities: ['vision', 'tools', 'streaming', 'json', 'long_context'],
-    contextWindow: 128000,
-    maxOutputTokens: 4096,
-    pricing: { inputPerMillion: 2.5, outputPerMillion: 10.0 },
-    recommendedFor: 'Broad general reasoning, technical problem-solving, structured data',
-    family: 'OpenAI GPT',
-  },
-  {
-    id: 'gpt-4o-mini',
-    name: 'GPT-4o Mini',
-    provider: 'openai',
-    modelIdentifier: 'gpt-4o-mini',
-    description: 'Lightweight, rapid-response model designed for efficient multi-turn dialogue.',
-    capabilities: ['vision', 'tools', 'streaming', 'json'],
-    contextWindow: 128000,
-    maxOutputTokens: 4096,
-    pricing: { inputPerMillion: 0.15, outputPerMillion: 0.6 },
-    recommendedFor: 'Cost-efficient rapid chat and everyday queries',
-    family: 'OpenAI GPT',
-  },
-
-  // ─── Anthropic Claude ──────────────────────────────────────
-  {
-    id: 'claude-3-5-sonnet',
-    name: 'Claude 3.5 Sonnet',
-    provider: 'anthropic',
-    modelIdentifier: 'claude-3-5-sonnet-20241022',
-    description: 'State-of-the-art coding, nuanced writing, and visual chart/document interpretation.',
-    capabilities: ['vision', 'tools', 'streaming', 'long_context'],
-    contextWindow: 200000,
-    maxOutputTokens: 8192,
-    pricing: { inputPerMillion: 3.0, outputPerMillion: 15.0 },
-    recommendedFor: 'Exceptional programming, nuanced prose, structural architectural planning',
-    family: 'Anthropic Claude',
-  },
-  {
-    id: 'claude-3-5-haiku',
-    name: 'Claude 3.5 Haiku',
-    provider: 'anthropic',
-    modelIdentifier: 'claude-3-5-haiku-20241022',
-    description: 'Fastest Anthropic model with blazing response generation for rapid interactions.',
-    capabilities: ['tools', 'streaming'],
-    contextWindow: 200000,
-    maxOutputTokens: 4096,
-    pricing: { inputPerMillion: 0.8, outputPerMillion: 4.0 },
-    recommendedFor: 'Fast iterative writing and lightweight technical Q&A',
-    family: 'Anthropic Claude',
-  },
-
-  // ─── Open-Weight Models (Groq / OpenRouter) ────────────────
-  {
-    id: 'llama-3.3-70b',
-    name: 'Llama 3.3 70B',
-    provider: 'openweight',
-    modelIdentifier: 'llama-3.3-70b-versatile',
-    description: 'Leading open-weight instruction model with competitive frontier reasoning and high speed.',
-    capabilities: ['tools', 'streaming', 'long_context'],
-    contextWindow: 128000,
-    maxOutputTokens: 4096,
-    pricing: { inputPerMillion: 0.59, outputPerMillion: 0.79 },
-    recommendedFor: 'Open-source general intelligence and fast dialogue',
-    family: 'Meta Llama',
-  },
-  {
-    id: 'qwen-2.5-coder-32b',
-    name: 'Qwen 2.5 Coder 32B',
-    provider: 'openweight',
-    modelIdentifier: 'qwen/qwen-2.5-coder-32b-instruct',
-    description: 'Specialized code generation, debugging, refactoring, and software system modeling.',
-    capabilities: ['tools', 'streaming', 'long_context'],
-    contextWindow: 131072,
-    maxOutputTokens: 4096,
-    pricing: { inputPerMillion: 0.35, outputPerMillion: 0.55 },
-    recommendedFor: 'Code assistance, algorithm development, repository analysis',
-    family: 'Alibaba Qwen',
-  },
-  {
-    id: 'deepseek-r1',
-    name: 'DeepSeek R1',
-    provider: 'openweight',
-    modelIdentifier: 'deepseek/deepseek-r1',
-    description: 'Reinforcement-learning driven open reasoning model with explicit verification steps.',
-    capabilities: ['streaming', 'long_context'],
-    contextWindow: 65536,
-    maxOutputTokens: 8192,
-    pricing: { inputPerMillion: 0.55, outputPerMillion: 2.19 },
-    recommendedFor: 'Deep step-by-step mathematical reasoning and logic proofs',
-    family: 'DeepSeek',
-  },
-];
+export const MODEL_REGISTRY: ModelDefinition[] = BUILT_IN_MODELS;
 
 export interface VerifiedModelEntry extends ModelDefinition {
   isAvailable: boolean;
@@ -164,19 +20,40 @@ export interface VerifiedModelEntry extends ModelDefinition {
 }
 
 /**
- * Returns all models accompanied by dynamic availability status based on configured credentials.
+ * Returns all built-in + custom models accompanied by dynamic availability & admin governance status.
  */
-export function getRegisteredModels(): VerifiedModelEntry[] {
-  return MODEL_REGISTRY.map((model) => {
+export function getRegisteredModels(options?: AdminConfigStoreOptions): VerifiedModelEntry[] {
+  const snap = getAdminConfigSnapshot(options);
+  const effectiveModels = getEffectiveModelsFromSnapshot(snap);
+
+  return effectiveModels.map((model) => {
     try {
       const adapter = getProviderAdapter(model.provider);
-      const isConfigured = adapter.isConfigured();
+      const providerRuntime = resolveProviderRuntimeConfig(model.provider, options);
+
+      if (!providerRuntime.enabled) {
+        return {
+          ...model,
+          isAvailable: false,
+          unavailabilityReason: `Provider "${adapter.name}" is disabled by administrator.`,
+        };
+      }
+
+      if (model.enabled === false) {
+        return {
+          ...model,
+          isAvailable: false,
+          unavailabilityReason: `Model "${model.name}" is disabled by administrator.`,
+        };
+      }
+
+      const isConfigured = options ? Boolean(providerRuntime.apiKey) : adapter.isConfigured();
       return {
         ...model,
         isAvailable: isConfigured,
         unavailabilityReason: isConfigured
           ? undefined
-          : `Provider "${adapter.name}" credentials are not configured in environment.`,
+          : `Provider "${adapter.name}" credentials are not configured.`,
       };
     } catch (err: any) {
       return {
@@ -189,45 +66,77 @@ export function getRegisteredModels(): VerifiedModelEntry[] {
 }
 
 /**
- * Returns ONLY models whose provider credentials have been verified and configured.
- * Strictly adheres to rule: "Never advertise a model as available unless its credentials and connection have been verified."
+ * Returns ONLY enabled models whose provider credentials are configured and active.
  */
-export function getAvailableModels(): ModelDefinition[] {
-  return getRegisteredModels().filter((m) => m.isAvailable);
+export function getAvailableModels(options?: AdminConfigStoreOptions): ModelDefinition[] {
+  return getRegisteredModels(options).filter((m) => m.enabled !== false && m.isAvailable);
 }
 
 /**
- * Finds a model definition by ID. Returns undefined if not recognized.
+ * Finds a model definition by ID across both built-in and admin custom models.
  */
-export function getModelById(id: string): ModelDefinition | undefined {
-  return MODEL_REGISTRY.find((m) => m.id === id);
+export function getModelById(
+  id: string,
+  options?: AdminConfigStoreOptions
+): ModelDefinition | undefined {
+  const snap = getAdminConfigSnapshot(options);
+  return getEffectiveModelsFromSnapshot(snap).find((m) => m.id === id);
+}
+
+/**
+ * Checks whether a requested model ID (or its provider) was explicitly disabled by an administrator.
+ */
+export function isModelExplicitlyDisabled(
+  requestedModelId?: string,
+  options?: AdminConfigStoreOptions
+): { disabled: boolean; reason?: string } {
+  if (!requestedModelId) return { disabled: false };
+  const snap = getAdminConfigSnapshot(options);
+  const model = getEffectiveModelsFromSnapshot(snap).find((m) => m.id === requestedModelId);
+  if (!model) return { disabled: false };
+
+  const providerRuntime = resolveProviderRuntimeConfig(model.provider, options);
+  if (!providerRuntime.enabled) {
+    return {
+      disabled: true,
+      reason: `Provider "${model.provider}" is currently disabled by an administrator.`,
+    };
+  }
+  if (model.enabled === false) {
+    return {
+      disabled: true,
+      reason: `Model "${model.name}" is currently disabled by an administrator. Please choose another active model.`,
+    };
+  }
+  return { disabled: false };
 }
 
 /**
  * Resolves the active model to execute against.
- * If the requested model is configured and available, returns it.
- * Otherwise, falls back gracefully to the first available model.
+ * Respects admin-configured default, enabled flags, custom models, and provider credentials.
  */
-export function resolveActiveModel(requestedModelId?: string): {
+export function resolveActiveModel(
+  requestedModelId?: string,
+  options?: AdminConfigStoreOptions
+): {
   model: ModelDefinition;
   isFallback: boolean;
   fallbackReason?: string;
 } {
-  const available = getAvailableModels();
+  const registered = getRegisteredModels(options);
+  const available = registered.filter((m) => m.enabled !== false && m.isAvailable);
 
   if (available.length === 0) {
-    // If no external providers have keys set, return default Gemini model definition
-    // with a clear indicator so callers can handle or return instructional guidance.
-    const defaultDef = MODEL_REGISTRY[0];
+    const enabledFallback = registered.find((m) => m.enabled !== false) || BUILT_IN_MODELS[0];
     return {
-      model: defaultDef,
+      model: enabledFallback,
       isFallback: true,
       fallbackReason:
-        'No AI provider API keys configured on server. Configure GEMINI_API_KEY or OPENAI_API_KEY in .env.local.',
+        'No active AI provider credentials configured. Configure provider keys in Admin → QuantumBot or .env.local.',
     };
   }
 
-  // 1. Try requested model if available
+  // 1. Try requested model if enabled and available
   if (requestedModelId) {
     const found = available.find((m) => m.id === requestedModelId);
     if (found) {
@@ -235,7 +144,19 @@ export function resolveActiveModel(requestedModelId?: string): {
     }
   }
 
-  // 2. Try configured environment default override (BOT_DEFAULT_MODEL)
+  // 2. Respect admin-designated default model if available
+  const defaultAvailable = available.find((m) => m.isDefault);
+  if (defaultAvailable) {
+    return {
+      model: defaultAvailable,
+      isFallback: requestedModelId !== undefined && requestedModelId !== defaultAvailable.id,
+      fallbackReason: requestedModelId
+        ? `Requested model "${requestedModelId}" is unavailable. Using default ${defaultAvailable.name}.`
+        : undefined,
+    };
+  }
+
+  // 3. Environment default override fallback
   const envDefaultId = process.env.BOT_DEFAULT_MODEL?.trim();
   if (envDefaultId) {
     const envFound = available.find((m) => m.id === envDefaultId);
@@ -244,30 +165,18 @@ export function resolveActiveModel(requestedModelId?: string): {
         model: envFound,
         isFallback: requestedModelId !== undefined && requestedModelId !== envFound.id,
         fallbackReason: requestedModelId
-          ? `Requested model "${requestedModelId}" is not currently configured. Using default ${envFound.name}.`
+          ? `Requested model "${requestedModelId}" is unavailable. Using default ${envFound.name}.`
           : undefined,
       };
     }
   }
 
-  // 3. Try default marked model if available
-  const defaultAvailable = available.find((m) => m.isDefault);
-  if (defaultAvailable) {
-    return {
-      model: defaultAvailable,
-      isFallback: requestedModelId !== undefined && requestedModelId !== defaultAvailable.id,
-      fallbackReason: requestedModelId
-        ? `Requested model "${requestedModelId}" is not currently configured. Using default ${defaultAvailable.name}.`
-        : undefined,
-    };
-  }
-
-  // 3. Fallback to first available model
+  // 4. First available active model
   return {
     model: available[0],
     isFallback: true,
     fallbackReason: requestedModelId
-      ? `Requested model "${requestedModelId}" is not configured. Falling back to ${available[0].name}.`
+      ? `Requested model "${requestedModelId}" is unavailable. Falling back to ${available[0].name}.`
       : undefined,
   };
 }

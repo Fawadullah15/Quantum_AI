@@ -1,6 +1,10 @@
 import { createHash } from 'crypto';
 import { AttachmentExtractionSummary, AttachmentKind } from '../types';
-import { scanBufferSecurity, validateFileUploadPolicy } from '../file-security';
+import {
+  FileUploadLimitsOverride,
+  scanBufferSecurity,
+  validateFileUploadPolicy,
+} from '../file-security';
 import { extractPdfText } from './pdf';
 import { extractDocxText } from './docx';
 import { extractXlsxData } from './xlsx';
@@ -28,10 +32,16 @@ const PREVIEW_CHAR_LIMIT = 2400;
 export async function processUploadedFile(
   buffer: Buffer,
   filename: string,
-  declaredMimeType: string
+  declaredMimeType: string,
+  limitsOverride?: FileUploadLimitsOverride
 ): Promise<ProcessedFileResult> {
   // 1. Enforce extension, declared MIME, and size limits
-  const policy = validateFileUploadPolicy(filename, declaredMimeType, buffer.length);
+  const policy = validateFileUploadPolicy(
+    filename,
+    declaredMimeType,
+    buffer.length,
+    limitsOverride
+  );
 
   // 2. Scan magic headers and block masqueraded executables
   scanBufferSecurity(buffer, policy.kind, policy.extension);

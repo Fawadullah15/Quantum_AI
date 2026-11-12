@@ -96,19 +96,27 @@ export function useChat(options: UseChatOptions = {}) {
     });
   }, []);
 
-  // 1. Fetch available models on mount
+  // 1. Fetch available models on mount & keep active model synced if admin disables a model
   useEffect(() => {
     let mounted = true;
     async function loadModels() {
       try {
-        const res = await fetch('/api/bot/models');
+        const res = await fetch('/api/bot/models', { cache: 'no-store' });
         if (res.ok) {
           const data = await res.json();
-          if (mounted && data.models) {
+          if (mounted && Array.isArray(data.models)) {
             setAvailableModels(data.models);
-            if (data.defaultModelId && !options.defaultModelId) {
-              setModelIdState(data.defaultModelId);
-            }
+            const activeIds = new Set(
+              (data.models as ModelDefinition[])
+                .filter((m) => m.enabled !== false)
+                .map((m) => m.id)
+            );
+            setModelIdState((prev) => {
+              if (!options.defaultModelId && (!activeIds.has(prev) || !prev)) {
+                return data.defaultModelId || data.models[0]?.id || prev;
+              }
+              return prev;
+            });
             setIsFallback(!!data.isDefaultFallback);
             setFallbackReason(data.fallbackReason);
           }
@@ -122,6 +130,20 @@ export function useChat(options: UseChatOptions = {}) {
       mounted = false;
     };
   }, [options.defaultModelId]);
+
+  useEffect(() => {
+    if (availableModels.length === 0) return;
+    const enabledModels = availableModels.filter((m) => m.enabled !== false);
+    if (enabledModels.length > 0 && !enabledModels.some((m) => m.id === modelId)) {
+      const fallback =
+        enabledModels.find((m) => m.isDefault && m.isAvailable) ||
+        enabledModels.find((m) => m.isAvailable) ||
+        enabledModels[0];
+      if (fallback) {
+        setModelIdState(fallback.id);
+      }
+    }
+  }, [availableModels, modelId]);
 
   // 1b. Load & restore authenticated/guest session + authoritative conversation history
   const refreshSessionAndConversations = useCallback(

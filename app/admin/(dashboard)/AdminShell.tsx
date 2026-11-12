@@ -14,6 +14,7 @@ export const navSections = [
     label: 'OVERVIEW',
     links: [
       { href: '/admin', label: 'Dashboard', icon: '📊' },
+      { href: '/admin/quantumbot', label: 'QuantumBot AI', icon: '🤖' },
       { href: '/admin/messages', label: 'Contact Messages', icon: '💬' },
       { href: '/admin/careers-partnerships', label: 'Careers & Partnerships', icon: '🤝' },
     ],
@@ -94,6 +95,8 @@ export function AdminShell({
         .replace(/\b\w/g, (c) => c.toUpperCase());
       if (parts[i] === 'campaigns') {
         name = 'Announcements & Ads';
+      } else if (parts[i] === 'quantumbot') {
+        name = 'QuantumBot AI';
       }
       crumbs.push({ label: name, href: currentPath });
     }

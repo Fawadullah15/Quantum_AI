@@ -11,15 +11,20 @@ import {
 import { executeToolCall } from '../tools';
 import { toProviderParametersSchema } from '../tools/schema-validator';
 import { formatMessageWithAttachments } from '../context-manager';
+import { resolveProviderRuntimeConfig } from '../admin-config';
 
 const MAX_TOOL_ROUNDS = 4;
 
 export function getAnthropicApiKey(): string | null {
-  return process.env.ANTHROPIC_API_KEY || null;
+  return resolveProviderRuntimeConfig('anthropic').apiKey;
 }
 
 export function getAnthropicBaseUrl(): string {
-  return (process.env.ANTHROPIC_BASE_URL || 'https://api.anthropic.com/v1').replace(/\/+$/, '');
+  return (
+    resolveProviderRuntimeConfig('anthropic').baseUrl ||
+    process.env.ANTHROPIC_BASE_URL ||
+    'https://api.anthropic.com/v1'
+  ).replace(/\/+$/, '');
 }
 
 export class AnthropicProviderAdapter implements ProviderAdapter {
@@ -31,9 +36,13 @@ export class AnthropicProviderAdapter implements ProviderAdapter {
   }
 
   async verifyConnection(): Promise<{ success: boolean; latencyMs?: number; error?: string }> {
-    const key = getAnthropicApiKey();
+    const cfg = resolveProviderRuntimeConfig('anthropic');
+    if (!cfg.enabled) {
+      return { success: false, error: 'Anthropic provider is disabled in Admin settings.' };
+    }
+    const key = cfg.apiKey;
     if (!key) {
-      return { success: false, error: 'ANTHROPIC_API_KEY is not configured in environment.' };
+      return { success: false, error: 'Anthropic API key is not configured.' };
     }
 
     const baseUrl = getAnthropicBaseUrl();

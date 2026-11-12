@@ -31,6 +31,8 @@ export interface ModelDefinition {
   maxOutputTokens: number;        // Max generation tokens
   pricing: ModelPricing;          // USD per million tokens
   isDefault?: boolean;            // Whether this is the system default model
+  enabled?: boolean;              // Admin governance: enabled/disabled toggle (default true)
+  isCustom?: boolean;             // Whether added dynamically via Admin Panel
   recommendedFor?: string;        // e.g. 'Coding & Deep Reasoning', 'Fast General QA'
   family?: string;                // e.g. 'Google Gemini', 'OpenAI GPT', 'Anthropic Claude', 'Meta Llama'
   isAvailable?: boolean;          // Dynamically verified server provider configuration
@@ -278,11 +280,16 @@ export interface UserPreferences {
   updatedAt?: string;
 }
 
+export type BotUserStatus = 'ACTIVE' | 'LIMITED' | 'SUSPENDED';
+
 export interface PublicBotUser {
   id: string;
   email: string;
   name: string;
   role: 'USER' | 'ADMIN';
+  status?: BotUserStatus;
+  dailyMessageLimitOverride?: number | null;
+  suspendedReason?: string | null;
   createdAt: string;
 }
 
@@ -305,4 +312,155 @@ export interface ServerConversation {
   attachmentIds: string[];
   createdAt: number;
   updatedAt: number;
+}
+
+// ─── Phase 8: Admin Management, Usage Limits, Analytics & Governance ───────────
+
+export type OpenWeightBackend = 'groq' | 'openrouter' | 'together' | 'ollama';
+
+export interface SafeProviderConfig {
+  provider: AIProvider;
+  name: string;
+  enabled: boolean;
+  hasAdminKey: boolean;
+  hasEnvKey: boolean;
+  isConfigured: boolean;
+  keySource: 'admin' | 'env' | 'none';
+  maskedKeyHint: string | null;
+  baseUrl?: string | null;
+  openweightBackend?: OpenWeightBackend | null;
+  monthlyBudgetUsd?: number | null;
+  alertThresholdPct: number;
+  lastCheckedAt?: string | null;
+  lastStatusOk?: boolean | null;
+  lastLatencyMs?: number | null;
+  lastError?: string | null;
+}
+
+export interface BotUsageLimitsConfig {
+  anonMessagesPerHour: number;
+  anonMessagesPerDay: number;
+  authMessagesPerHour: number;
+  authMessagesPerDay: number;
+  perUserRequestsPerMinute: number;
+  maxMessageChars: number;
+  maxMessagesPerRequest: number;
+  maxAttachmentsPerMessage: number;
+  maxDocImageBytes: number;
+  maxTextCodeBytes: number;
+  dailySpendingAlertUsd: number;
+  monthlySpendingAlertUsd: number;
+  enforceSpendingHardStop: boolean;
+  updatedAt?: string;
+}
+
+export type BotUsageEventType =
+  | 'chat_success'
+  | 'chat_error'
+  | 'rate_limit'
+  | 'limit_exceeded'
+  | 'file_upload'
+  | 'file_rejected'
+  | 'spending_alert';
+
+export interface BotUsageEventRecord {
+  id: string;
+  createdAt: string;
+  eventType: BotUsageEventType;
+  actorHash: string;
+  botUserId?: string | null;
+  authType: 'anonymous' | 'bot_account' | 'admin_session';
+  conversationId?: string | null;
+  modelId?: string | null;
+  provider?: string | null;
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  estimatedCostUsd: number;
+  latencyMs?: number | null;
+  statusCode?: number | null;
+  errorMessage?: string | null;
+}
+
+export interface DailyAnalyticsPoint {
+  date: string; // YYYY-MM-DD
+  messages: number;
+  activeUsers: number;
+  tokens: number;
+  estimatedCostUsd: number;
+  errors: number;
+  rateLimits: number;
+}
+
+export interface ModelUsageSummary {
+  modelId: string;
+  modelName: string;
+  provider: string;
+  requests: number;
+  errors: number;
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  estimatedCostUsd: number;
+  avgLatencyMs: number | null;
+}
+
+export interface ProviderUsageSummary {
+  provider: AIProvider;
+  requests: number;
+  errors: number;
+  totalTokens: number;
+  estimatedCostUsd: number;
+  monthlyBudgetUsd: number | null;
+  alertTriggered: boolean;
+}
+
+export interface SpendingAlertItem {
+  scope: 'daily' | 'monthly' | 'provider';
+  severity: 'warning' | 'critical';
+  provider?: AIProvider;
+  currentUsd: number;
+  thresholdUsd: number;
+  message: string;
+}
+
+export interface BotAdminAnalytics {
+  windowDays: number;
+  dailyActiveUsersToday: number;
+  totalConversations: number;
+  registeredUsersCount: number;
+  suspendedUsersCount: number;
+  messagesToday: number;
+  messagesInWindow: number;
+  totalTokensToday: number;
+  totalTokensInWindow: number;
+  estimatedCostTodayUsd: number;
+  estimatedCostMonthUsd: number;
+  estimatedCostWindowUsd: number;
+  averageResponseTimeMs: number | null;
+  failedRequestsInWindow: number;
+  rateLimitEventsInWindow: number;
+  dailySeries: DailyAnalyticsPoint[];
+  mostUsedModels: ModelUsageSummary[];
+  providerUsage: ProviderUsageSummary[];
+  spendingAlerts: SpendingAlertItem[];
+  recentErrors: BotUsageEventRecord[];
+}
+
+export interface AdminBotUserSummary {
+  id: string;
+  email: string;
+  name: string;
+  status: BotUserStatus;
+  dailyMessageLimitOverride: number | null;
+  suspendedReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+  /** Strictly aggregate counts only; administrators cannot read private message transcripts. */
+  conversationCount: number;
+  messagesToday: number;
+  messagesTotal: number;
+  tokensTotal: number;
+  estimatedCostUsd: number;
+  lastActiveAt: string | null;
 }

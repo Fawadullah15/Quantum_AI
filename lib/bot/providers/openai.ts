@@ -11,15 +11,20 @@ import {
 import { executeToolCall } from '../tools';
 import { toProviderParametersSchema } from '../tools/schema-validator';
 import { formatMessageWithAttachments } from '../context-manager';
+import { resolveProviderRuntimeConfig } from '../admin-config';
 
 const MAX_TOOL_ROUNDS = 4;
 
 export function getOpenAIApiKey(): string | null {
-  return process.env.OPENAI_API_KEY || null;
+  return resolveProviderRuntimeConfig('openai').apiKey;
 }
 
 export function getOpenAIBaseUrl(): string {
-  return (process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1').replace(/\/+$/, '');
+  return (
+    resolveProviderRuntimeConfig('openai').baseUrl ||
+    process.env.OPENAI_BASE_URL ||
+    'https://api.openai.com/v1'
+  ).replace(/\/+$/, '');
 }
 
 export class OpenAIProviderAdapter implements ProviderAdapter {
@@ -31,9 +36,13 @@ export class OpenAIProviderAdapter implements ProviderAdapter {
   }
 
   async verifyConnection(): Promise<{ success: boolean; latencyMs?: number; error?: string }> {
-    const key = getOpenAIApiKey();
+    const cfg = resolveProviderRuntimeConfig('openai');
+    if (!cfg.enabled) {
+      return { success: false, error: 'OpenAI provider is disabled in Admin settings.' };
+    }
+    const key = cfg.apiKey;
     if (!key) {
-      return { success: false, error: 'OPENAI_API_KEY is not configured in environment.' };
+      return { success: false, error: 'OpenAI API key is not configured.' };
     }
 
     const baseUrl = getOpenAIBaseUrl();
