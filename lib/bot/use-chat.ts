@@ -46,8 +46,9 @@ const INITIAL_PREFERENCES: UserPreferences = {
 export function useChat(options: UseChatOptions = {}) {
   const [conversationId, setConversationId] = useState<string>(
     () =>
+      // If a specific conversation ID was passed via URL (?c=...), use it.
+      // Otherwise always start a fresh conversation on page load — never resume the last one.
       options.initialConversationId ||
-      getActiveConversationId() ||
       `conv_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`
   );
   const [title, setTitle] = useState<string>('New Conversation');
@@ -481,6 +482,8 @@ export function useChat(options: UseChatOptions = {}) {
         }
 
         if (accumulatedContent || toolCallsAccumulator.length > 0) {
+          // Content was delivered — clear any transient error (e.g. from quota fallback)
+          setError(null);
           const assistantMessage: BotMessage = {
             id: `msg_asst_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
             role: 'assistant',

@@ -237,7 +237,7 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
   if (isFallback && fallbackReason) {
     onChunk({
       type: 'thought',
-      thought: `System Notice: ${fallbackReason}`,
+      thought: `Using ${model.name} instead — continuing your request.`,
     });
   }
 
@@ -381,7 +381,7 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
         if (preferredAlt) {
           onChunk({
             type: 'thought',
-            thought: `System Notice: ${activeModel.name} hit an upstream quota limit; automatically continuing with ${preferredAlt.name}.`,
+            thought: `Switching to ${preferredAlt.name} — continuing your request...`,
           });
 
           activeModel = preferredAlt;
@@ -458,7 +458,21 @@ export async function executeQuantumBotChat(options: ExecuteChatOptions): Promis
     }
   }
 
-  const finalMessage = lastError?.message || 'Generation failed due to provider error.';
-  onChunk({ type: 'error', error: finalMessage });
+  // Build a clean user-facing error — never expose raw quota/API error strings
+  const rawFinal = lastError?.message || 'Generation failed due to provider error.';
+  const lowerFinal = rawFinal.toLowerCase();
+  const isQuotaFinal =
+    lowerFinal.includes('quota') ||
+    lowerFinal.includes('resource_exhausted') ||
+    lowerFinal.includes('rate limit') ||
+    lowerFinal.includes('429');
+  const finalMessage = isQuotaFinal
+    ? 'All available AI models are currently at their usage limit. Please try again in a few minutes.'
+    : rawFinal;
+
+  // Only emit the error chunk if no response content was produced at all
+  if (!hasEmittedResponseContent) {
+    onChunk({ type: 'error', error: finalMessage });
+  }
   throw new Error(finalMessage);
 }
